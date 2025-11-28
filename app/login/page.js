@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebaseAuth";
+  loginWithEmailPassword,
+  loginWithGooglePopup,
+  sendResetPassword,
+} from "@/lib/auth/service";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,8 +28,8 @@ export default function LoginPage() {
     setStatus({ type: "", message: "" });
     setLoading(true);
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      handleAuthSuccess(cred.user);
+      const user = await loginWithEmailPassword(email, password);
+      handleAuthSuccess(user);
     } catch (error) {
       setStatus({
         type: "error",
@@ -46,8 +45,8 @@ export default function LoginPage() {
     setStatus({ type: "", message: "" });
     setLoading(true);
     try {
-      const cred = await signInWithPopup(auth, googleProvider);
-      handleAuthSuccess(cred.user);
+      const user = await loginWithGooglePopup();
+      handleAuthSuccess(user);
     } catch (error) {
       setStatus({
         type: "error",
@@ -68,7 +67,7 @@ export default function LoginPage() {
     }
     setLoading(true);
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendResetPassword(email);
       setStatus({
         type: "success",
         message:
@@ -157,13 +156,23 @@ export default function LoginPage() {
             <p className={statusClassName}>{status.message}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="auth-primary-btn"
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </button>
+          <div className="auth-actions-row">
+            <button
+              type="submit"
+              disabled={loading}
+              className="auth-btn-main"
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              className="auth-btn-ghost"
+              onClick={() => router.push("/register")}
+            >
+              Create account
+            </button>
+          </div>
         </form>
 
         <div className="mt-4">
@@ -187,11 +196,6 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
-
-      <p className="auth-footnote">
-        Tidak punya akun?{" "}
-        <a href="/register" className="auth-link">Create account</a>
-      </p>
     </div>
   );
 }

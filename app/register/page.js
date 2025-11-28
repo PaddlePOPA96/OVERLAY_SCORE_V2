@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  createUserWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebaseAuth";
+  registerWithEmailPassword,
+  loginWithGooglePopup,
+} from "@/lib/auth/service";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,8 +36,8 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      handleAuthSuccess(cred.user);
+      const user = await registerWithEmailPassword(email, password);
+      handleAuthSuccess(user);
     } catch (err) {
       setStatus({
         type: "error",
@@ -53,8 +52,8 @@ export default function RegisterPage() {
     setStatus({ type: "", message: "" });
     setLoading(true);
     try {
-      const cred = await signInWithPopup(auth, googleProvider);
-      handleAuthSuccess(cred.user);
+      const user = await loginWithGooglePopup();
+      handleAuthSuccess(user);
     } catch (err) {
       setStatus({
         type: "error",
@@ -136,13 +135,23 @@ export default function RegisterPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="auth-primary-btn"
-          >
-            {loading ? "Creating account..." : "Create Account"}
-          </button>
+          <div className="auth-actions-row">
+            <button
+              type="submit"
+              disabled={loading}
+              className="auth-btn-main"
+            >
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              className="auth-btn-ghost"
+              onClick={() => router.push("/login")}
+            >
+              Sign in
+            </button>
+          </div>
         </form>
 
         <div style={{ marginTop: 16 }}>
