@@ -3,17 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signInWithPopup,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebaseAuth";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
@@ -24,70 +23,47 @@ export default function LoginPage() {
     router.push(`/operator?room=${roomId}`);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setStatus({ type: "", message: "" });
-    setLoading(true);
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      handleAuthSuccess(cred.user);
-    } catch (error) {
+
+    if (password !== confirmPassword) {
       setStatus({
         type: "error",
-        message:
-          error?.message || "Gagal login, periksa kembali email dan password.",
+        message: "Password dan konfirmasi password tidak sama.",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      handleAuthSuccess(cred.user);
+    } catch (err) {
+      setStatus({
+        type: "error",
+        message: err?.message || "Gagal membuat akun baru.",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogle = async () => {
     setStatus({ type: "", message: "" });
     setLoading(true);
     try {
       const cred = await signInWithPopup(auth, googleProvider);
       handleAuthSuccess(cred.user);
-    } catch (error) {
+    } catch (err) {
       setStatus({
         type: "error",
-        message: error?.message || "Gagal login dengan Google.",
+        message: err?.message || "Gagal menggunakan Google.",
       });
     } finally {
       setLoading(false);
     }
   };
-
-  const handleResetPassword = async () => {
-    if (!email) {
-      setStatus({
-        type: "error",
-        message: "Isi email terlebih dahulu untuk reset password.",
-      });
-      return;
-    }
-    setLoading(true);
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setStatus({
-        type: "success",
-        message:
-          "Link reset password telah dikirim ke email jika terdaftar.",
-      });
-    } catch (error) {
-      setStatus({
-        type: "error",
-        message: error?.message || "Gagal mengirim email reset password.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const statusClassName =
-    status.type === "error"
-      ? "auth-status auth-status-error"
-      : "auth-status auth-status-success";
 
   return (
     <div className="auth-shell">
@@ -96,8 +72,10 @@ export default function LoginPage() {
           <div className="auth-icon">
             <span>⚽</span>
           </div>
-          <h1 className="auth-title">Scoreboard Panel</h1>
-          <p className="auth-subtitle">Access your operator dashboard securely.</p>
+          <h1 className="auth-title">Create Account</h1>
+          <p className="auth-subtitle">
+            Register to start managing your scoreboard.
+          </p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -107,7 +85,7 @@ export default function LoginPage() {
               type="email"
               className="auth-input"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@example.com"
             />
@@ -120,13 +98,13 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 className="auth-input auth-input-password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Enter your password"
+                placeholder="Minimal 6 karakter"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowPassword((v) => !v)}
                 className="auth-toggle-visibility"
               >
                 {showPassword ? "Hide" : "Show"}
@@ -134,27 +112,28 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="auth-remember-row">
-            <label>
-              <input
-                type="checkbox"
-                className="rounded border-slate-300 text-indigo-500 focus:ring-indigo-500"
-                checked={remember}
-                onChange={(event) => setRemember(event.target.checked)}
-              />
-              <span>Remember this device</span>
-            </label>
-            <button
-              type="button"
-              onClick={handleResetPassword}
-              className="text-xs font-medium text-indigo-500 hover:text-indigo-600"
-            >
-              Reset password
-            </button>
+          <div className="auth-field">
+            <label className="auth-label">Confirm password</label>
+            <input
+              type="password"
+              className="auth-input"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              placeholder="Repeat your password"
+            />
           </div>
 
           {status.message && (
-            <p className={statusClassName}>{status.message}</p>
+            <p
+              className={`auth-status ${
+                status.type === "error"
+                  ? "auth-status-error"
+                  : "auth-status-success"
+              }`}
+            >
+              {status.message}
+            </p>
           )}
 
           <button
@@ -162,15 +141,15 @@ export default function LoginPage() {
             disabled={loading}
             className="auth-primary-btn"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
-        <div className="mt-4">
+        <div style={{ marginTop: 16 }}>
           <button
             type="button"
             disabled={loading}
-            onClick={handleGoogleLogin}
+            onClick={handleGoogle}
             className="auth-secondary-btn"
           >
             <span style={{ fontSize: 15 }}>G</span>
@@ -182,15 +161,15 @@ export default function LoginPage() {
           <div className="auth-security-icon">
             <span>✓</span>
           </div>
-          <p>
-            Your connection is secured with 256-bit SSL encryption.
-          </p>
+          <p>Your connection is secured with 256-bit SSL encryption.</p>
         </div>
       </div>
 
       <p className="auth-footnote">
-        Tidak punya akun?{" "}
-        <a href="/register" className="auth-link">Create account</a>
+        Sudah punya akun?{" "}
+        <a href="/login" className="auth-link">
+          Sign in
+        </a>
       </p>
     </div>
   );
