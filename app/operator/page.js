@@ -3,6 +3,677 @@ import { useScoreboard } from "@/hooks/useScoreboard";
 import LayoutA from "../overlay/LayoutA";
 import LayoutB from "../overlay/LayoutB";
 import { useState, useEffect } from "react";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebaseAuth";
+
+// Data logo ter-generate otomatis dari struktur folder public/logo
+const LOGO_DATA = {
+  "Austria - Bundesliga": [
+    "Austria Vienna",
+    "FC Blau-Weiss Linz",
+    "Grazer AK 1902",
+    "LASK",
+    "Rapid Vienna",
+    "Red Bull Salzburg",
+    "SCR Altach",
+    "SK Sturm Graz",
+    "SV Ried",
+    "TSV Hartberg",
+    "Wolfsberger AC",
+    "WSG Tirol"
+  ],
+  "Belgium - Jupiler Pro League": [
+    "Cercle Brugge",
+    "Club Brugge KV",
+    "FCV Dender EH",
+    "KAA Gent",
+    "KRC Genk",
+    "KV Mechelen",
+    "KVC Westerlo",
+    "Oud-Heverlee Leuven",
+    "RAAL La Louvière",
+    "Royal Antwerp FC",
+    "Royal Charleroi SC",
+    "RSC Anderlecht",
+    "Sint-Truidense VV",
+    "Standard Liège",
+    "Union Saint-Gilloise",
+    "Zulte Waregem"
+  ],
+  "Bulgaria - efbet Liga": [
+    "Arda Kardzhali",
+    "Beroe Stara Zagora",
+    "Botev Plovdiv",
+    "Botev Vratsa",
+    "Cherno More Varna",
+    "CSKA 1948",
+    "CSKA-Sofia",
+    "Dobrudzha Dobrich",
+    "Levski Sofia",
+    "Lokomotiv Plovdiv",
+    "Lokomotiv Sofia",
+    "Ludogorets Razgrad",
+    "Montana",
+    "Septemvri Sofia",
+    "Slavia Sofia",
+    "Spartak Varna"
+  ],
+  "Croatia - SuperSport HNL": [
+    "GNK Dinamo Zagreb",
+    "HNK Gorica",
+    "HNK Hajduk Split",
+    "HNK Rijeka",
+    "HNK Vukovar 1991",
+    "NK Istra 1961",
+    "NK Lokomotiva Zagreb",
+    "NK Osijek",
+    "NK Varazdin",
+    "Slaven Belupo Koprivnica"
+  ],
+  "Czech Republic - Chance Liga": [
+    "1.FC Slovacko",
+    "AC Sparta Prague",
+    "Bohemians Prague 1905",
+    "FC Banik Ostrava",
+    "FC Hradec Kralove",
+    "FC Slovan Liberec",
+    "FC Viktoria Plzen",
+    "FC Zlin",
+    "FK Dukla Prague",
+    "FK Jablonec",
+    "FK Mlada Boleslav",
+    "FK Pardubice",
+    "FK Teplice",
+    "MFK Karvina",
+    "SK Sigma Olomouc",
+    "SK Slavia Prague"
+  ],
+  "Denmark - Superliga": [
+    "Aarhus GF",
+    "Bröndby IF",
+    "FC Copenhagen",
+    "FC Fredericia",
+    "FC Midtjylland",
+    "FC Nordsjaelland",
+    "Odense Boldklub",
+    "Randers FC",
+    "Silkeborg IF",
+    "Sönderjyske",
+    "Vejle Boldklub",
+    "Viborg FF"
+  ],
+  "England - Premier League": [
+    "AFC Bournemouth",
+    "Arsenal FC",
+    "Aston Villa",
+    "Brentford FC",
+    "Brighton & Hove Albion",
+    "Burnley FC",
+    "Chelsea FC",
+    "Crystal Palace",
+    "Everton FC",
+    "Fulham FC",
+    "Leeds United",
+    "Liverpool FC",
+    "Manchester City",
+    "Manchester United",
+    "Newcastle United",
+    "Nottingham Forest",
+    "Sunderland",
+    "Tottenham Hotspur",
+    "West Ham United",
+    "Wolverhampton Wanderers"
+  ],
+  "France - Ligue 1": [
+    "AJ Auxerre",
+    "Angers SCO",
+    "AS Monaco",
+    "FC Lorient",
+    "FC Metz",
+    "FC Nantes",
+    "FC Toulouse",
+    "Le Havre AC",
+    "LOSC Lille",
+    "OGC Nice",
+    "Olympique Lyon",
+    "Olympique Marseille",
+    "Paris FC",
+    "Paris Saint-Germain",
+    "RC Lens",
+    "RC Strasbourg Alsace",
+    "Stade Brestois 29",
+    "Stade Rennais FC"
+  ],
+  "Germany - Bundesliga": [
+    "1.FC Heidenheim 1846",
+    "1.FC Köln",
+    "1.FC Union Berlin",
+    "1.FSV Mainz 05",
+    "Bayer 04 Leverkusen",
+    "Bayern Munich",
+    "Borussia Dortmund",
+    "Borussia Mönchengladbach",
+    "Eintracht Frankfurt",
+    "FC Augsburg",
+    "FC St. Pauli",
+    "Hamburger SV",
+    "RB Leipzig",
+    "SC Freiburg",
+    "SV Werder Bremen",
+    "TSG 1899 Hoffenheim",
+    "VfB Stuttgart",
+    "VfL Wolfsburg"
+  ],
+  "Greece - Super League 1": [
+    "AE Kifisias",
+    "AE Larisa",
+    "AEK Athens",
+    "APO Levadiakos",
+    "Aris Thessaloniki",
+    "Asteras Aktor",
+    "Atromitos Athens",
+    "OFI Crete FC",
+    "Olympiacos Piraeus",
+    "Panathinaikos FC",
+    "Panetolikos GFS",
+    "Panserraikos",
+    "PAOK Thessaloniki",
+    "Volos NPS"
+  ],
+  "Israel - Ligat ha'Al": [
+    "Beitar Jerusalem",
+    "FC Ashdod",
+    "Hapoel Beer Sheva",
+    "Hapoel Haifa",
+    "Hapoel Jerusalem",
+    "Hapoel Petah Tikva",
+    "Hapoel Tel Aviv",
+    "Ihud Bnei Sakhnin",
+    "Ironi Kiryat Shmona",
+    "Ironi Tiberias",
+    "Maccabi Bnei Reineh",
+    "Maccabi Haifa",
+    "Maccabi Netanya",
+    "Maccabi Tel Aviv"
+  ],
+  "Italy - Serie A": [
+    "AC Milan",
+    "ACF Fiorentina",
+    "AS Roma",
+    "Atalanta BC",
+    "Bologna FC 1909",
+    "Cagliari Calcio",
+    "Como 1907",
+    "Genoa CFC",
+    "Hellas Verona",
+    "Inter Milan",
+    "Juventus FC",
+    "Parma Calcio 1913",
+    "Pisa Sporting Club",
+    "SS Lazio",
+    "SSC Napoli",
+    "Torino FC",
+    "Udinese Calcio",
+    "US Cremonese",
+    "US Lecce",
+    "US Sassuolo"
+  ],
+  "Netherlands - Eredivisie": [
+    "Ajax Amsterdam",
+    "AZ Alkmaar",
+    "Excelsior Rotterdam",
+    "FC Groningen",
+    "FC Utrecht",
+    "FC Volendam",
+    "Feyenoord Rotterdam",
+    "Fortuna Sittard",
+    "Go Ahead Eagles",
+    "Heracles Almelo",
+    "NAC Breda",
+    "NEC Nijmegen",
+    "PEC Zwolle",
+    "PSV Eindhoven",
+    "SC Heerenveen",
+    "SC Telstar",
+    "Sparta Rotterdam",
+    "Twente Enschede FC"
+  ],
+  "Norway - Eliteserien": [
+    "Bryne FK",
+    "FK BodøGlimt",
+    "FK Haugesund",
+    "Fredrikstad FK",
+    "Hamarkameratene",
+    "KFUM-Kameratene Oslo",
+    "Kristiansund BK",
+    "Molde FK",
+    "Rosenborg BK",
+    "Sandefjord Fotball",
+    "Sarpsborg 08 FF",
+    "SK Brann",
+    "Strømsgodset IF",
+    "Tromsø IL",
+    "Vålerenga Fotball Elite",
+    "Viking FK"
+  ],
+  "Poland - PKO BP Ekstraklasa": [
+    "Arka Gdynia",
+    "Bruk-Bet Termalica Nieciecza",
+    "Cracovia",
+    "GKS Katowice",
+    "Górnik Zabrze",
+    "Jagiellonia Bialystok",
+    "Korona Kielce",
+    "Lech Poznan",
+    "Lechia Gdansk",
+    "Legia Warszawa",
+    "Motor Lublin",
+    "Piast Gliwice",
+    "Pogon Szczecin",
+    "Radomiak Radom",
+    "Raków Częstochowa",
+    "Widzew Lodz",
+    "Wisla Plock",
+    "Zaglebie Lubin"
+  ],
+  "Portugal - Liga Portugal": [
+    "Avs Futebol",
+    "Casa Pia AC",
+    "CD Nacional",
+    "CD Santa Clara",
+    "CD Tondela",
+    "CF Estrela Amadora",
+    "FC Alverca",
+    "FC Arouca",
+    "FC Famalicão",
+    "FC Porto",
+    "GD Estoril Praia",
+    "Gil Vicente FC",
+    "Moreirense FC",
+    "Rio Ave FC",
+    "SC Braga",
+    "SL Benfica",
+    "Sporting CP",
+    "Vitória Guimarães SC"
+  ],
+  "Romania - SuperLiga": [
+    "ACSC FC Arges",
+    "AFC Unirea 04 Slobozia",
+    "AFK Csikszereda Miercurea Ciuc",
+    "CFR Cluj",
+    "CS Universitatea Craiova",
+    "FC Botosani",
+    "FC Dinamo 1948",
+    "FC Hermannstadt",
+    "FC Metaloglobus Bucharest",
+    "FC Rapid 1923",
+    "FC Universitatea Cluj",
+    "FCSB",
+    "FCV Farul Constanta",
+    "Petrolul Ploiesti",
+    "SC Otelul Galati",
+    "UTA Arad"
+  ],
+  "Russia - Premier Liga": [
+    "Akhmat Grozny",
+    "Akron Togliatti",
+    "Baltika Kaliningrad",
+    "CSKA Moscow",
+    "Dinamo Makhachkala",
+    "Dynamo Moscow",
+    "FC Krasnodar",
+    "FC Pari Nizhniy Novgorod",
+    "FC Rostov",
+    "FC Sochi",
+    "Krylya Sovetov Samara",
+    "Lokomotiv Moscow",
+    "Rubin Kazan",
+    "Spartak Moscow",
+    "Torpedo Moscow",
+    "Zenit St. Petersburg"
+  ],
+  "Scotland - Scottish Premiership": [
+    "Aberdeen FC",
+    "Celtic FC",
+    "Dundee FC",
+    "Dundee United FC",
+    "Falkirk FC",
+    "Heart of Midlothian FC",
+    "Hibernian FC",
+    "Kilmarnock FC",
+    "Livingston FC",
+    "Motherwell FC",
+    "Rangers FC",
+    "St. Mirren FC"
+  ],
+  "Serbia - Super liga Srbije": [
+    "FK Cukaricki",
+    "FK IMT Belgrad",
+    "FK Javor-Matis Ivanjica",
+    "FK Mladost Lucani",
+    "FK Napredak Krusevac",
+    "FK Novi Pazar",
+    "FK Partizan Belgrade",
+    "FK Radnicki 1923 Kragujevac",
+    "FK Radnicki Nis",
+    "FK Radnik Surdulica",
+    "FK Spartak Subotica",
+    "FK TSC Backa Topola",
+    "FK Vojvodina Novi Sad",
+    "OFK Beograd",
+    "Red Star Belgrade",
+    "Zeleznicar Pancevo"
+  ],
+  "Spain - LaLiga": [
+    "Athletic Bilbao",
+    "Atlético de Madrid",
+    "CA Osasuna",
+    "Celta de Vigo",
+    "Deportivo Alavés",
+    "Elche CF",
+    "FC Barcelona",
+    "Getafe CF",
+    "Girona FC",
+    "Levante UD",
+    "Rayo Vallecano",
+    "RCD Espanyol Barcelona",
+    "RCD Mallorca",
+    "Real Betis Balompié",
+    "Real Madrid",
+    "Real Oviedo",
+    "Real Sociedad",
+    "Sevilla FC",
+    "Valencia CF",
+    "Villarreal CF"
+  ],
+  "Sweden - Allsvenskan": [
+    "AIK",
+    "BK Häcken",
+    "Degerfors IF",
+    "Djurgårdens IF",
+    "GAIS",
+    "Halmstads BK",
+    "Hammarby IF",
+    "IF Brommapojkarna",
+    "IF Elfsborg",
+    "IFK Göteborg",
+    "IFK Norrköping",
+    "IFK Värnamo",
+    "IK Sirius",
+    "Malmö FF",
+    "Mjällby AIF",
+    "Östers IF"
+  ],
+  "Switzerland - Super League": [
+    "BSC Young Boys",
+    "FC Basel 1893",
+    "FC Lausanne-Sport",
+    "FC Lugano",
+    "FC Luzern",
+    "FC Sion",
+    "FC St. Gallen 1879",
+    "FC Thun",
+    "FC Winterthur",
+    "FC Zürich",
+    "Grasshopper Club Zurich",
+    "Servette FC"
+  ],
+  "Türkiye - Süper Lig": [
+    "Alanyaspor",
+    "Antalyaspor",
+    "Basaksehir FK",
+    "Besiktas JK",
+    "Caykur Rizespor",
+    "Eyüpspor",
+    "Fatih Karagümrük",
+    "Fenerbahce",
+    "Galatasaray",
+    "Gaziantep FK",
+    "Genclerbirligi Ankara",
+    "Göztepe",
+    "Kasimpasa",
+    "Kayserispor",
+    "Kocaelispor",
+    "Konyaspor",
+    "Samsunspor",
+    "Trabzonspor"
+  ],
+  "Ukraine - Premier Liga": [
+    "Dynamo Kyiv",
+    "Epicentr Kamyanets-Podilskyi",
+    "FC Kudrivka",
+    "FC Oleksandriya",
+    "Karpaty Lviv",
+    "Kolos Kovalivka",
+    "Kryvbas Kryvyi Rig",
+    "LNZ Cherkasy",
+    "Metalist 1925 Kharkiv",
+    "NK Veres Rivne",
+    "Obolon Kyiv",
+    "Polissya Zhytomyr",
+    "Rukh Lviv",
+    "SC Poltava",
+    "Shakhtar Donetsk",
+    "Zorya Lugansk"
+  ]
+};
+
+function buildLogoSrc(league, club) {
+  if (!league || !club) return "";
+  const leagueSegment = encodeURIComponent(league);
+  const clubSegment = encodeURIComponent(club);
+  return `/logo/${leagueSegment}/${clubSegment}.png`;
+}
+
+function makeTeamAbbr(club) {
+  if (!club) return "";
+  const cleaned = club
+    .replace(/[()]/g, " ")
+    .replace(/[^A-Za-zÀ-ÿ\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleaned) return "";
+
+  const stopWords = new Set([
+    "fc",
+    "cf",
+    "sc",
+    "ac",
+    "as",
+    "bc",
+    "ss",
+    "afc",
+    "nk",
+    "fk",
+    "sv",
+    "if",
+    "bk",
+    "cd",
+    "sd",
+    "ud",
+    "uc",
+    "us",
+  ]);
+
+  const words = cleaned.split(" ");
+  const mainWords =
+    words.filter((w) => !stopWords.has(w.toLowerCase())) || words;
+
+  const target = mainWords.length > 0 ? mainWords : words;
+
+  let letters = "";
+  if (target.length >= 3) {
+    letters =
+      (target[0][0] || "") + (target[1][0] || "") + (target[2][0] || "");
+  } else if (target.length === 2) {
+    letters =
+      (target[0][0] || "") +
+      (target[1][0] || "") +
+      (target[1][1] || target[0][1] || "");
+  } else {
+    letters = (target[0] || "").slice(0, 3);
+  }
+
+  return letters.toUpperCase();
+}
+
+function LogoPickerModal({ isOpen, onClose, onSelect }) {
+  const [league, setLeague] = useState(Object.keys(LOGO_DATA)[0] || "");
+
+  if (!isOpen) return null;
+
+  const clubs = LOGO_DATA[league] || [];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+    >
+      <div
+        style={{
+          background: "#020617",
+          color: "#e5e7eb",
+          padding: "18px",
+          borderRadius: "14px",
+          width: "92%",
+          maxWidth: "980px",
+          maxHeight: "80vh",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          border: "1px solid #1f2937",
+          boxShadow: "0 22px 55px rgba(0,0,0,0.7)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 4,
+          }}
+        >
+          <span style={{ fontWeight: 600, fontSize: 14 }}>
+            Pilih Logo Klub (Layout B)
+          </span>
+          <button className="op-btn" onClick={onClose}>
+            Tutup
+          </button>
+        </div>
+
+        <div style={{ display: "flex", gap: 10, fontSize: 12 }}>
+          <div
+            style={{
+              width: "32%",
+              borderRight: "1px solid #1f2937",
+              paddingRight: 10,
+              overflowY: "auto",
+              maxHeight: "60vh",
+            }}
+          >
+            {Object.keys(LOGO_DATA).map((lg) => (
+              <div
+                key={lg}
+                onClick={() => setLeague(lg)}
+                style={{
+                  padding: "7px 10px",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  marginBottom: 5,
+                  background: lg === league ? "#1d4ed8" : "#020617",
+                  border:
+                    lg === league ? "1px solid #60a5fa" : "1px solid #1f2937",
+                  color: lg === league ? "#f9fafb" : "#e5e7eb",
+                }}
+              >
+                {lg}
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              flex: 1,
+              overflowY: "auto",
+              maxHeight: "60vh",
+              display: "grid",
+              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+              gap: 10,
+              paddingLeft: 4,
+            }}
+          >
+            {clubs.map((club) => {
+              const src = buildLogoSrc(league, club);
+              return (
+                <button
+                  key={club}
+                  type="button"
+                  onClick={() => onSelect({ src, club, league })}
+                  style={{
+                    background: "#020817",
+                    borderRadius: 10,
+                    border: "1px solid #1f2937",
+                    padding: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                    cursor: "pointer",
+                    minHeight: 150,
+                    transition: "border-color 0.15s ease, background 0.15s ease",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 12,
+                      background: "#020617",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                      border: "1px solid #1f2937",
+                    }}
+                  >
+                    <img
+                      src={src}
+                      alt={club}
+                      style={{
+                        maxWidth: "90%",
+                        maxHeight: "90%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 600,
+                      textAlign: "center",
+                      lineHeight: 1.3,
+                      color: "#f9fafb",
+                      textShadow: "0 1px 2px rgba(0,0,0,0.9)",
+                      marginTop: 4,
+                    }}
+                  >
+                    {club}
+                  </span>
+                </button>
+              );
+            })}
+            {clubs.length === 0 && (
+              <span style={{ fontSize: 12, opacity: 0.7 }}>
+                Belum ada klub untuk liga ini.
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Komponen kecil untuk kontrol Overlay + Copy URL (room berasal dari UID user)
 function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, compact }) {
@@ -79,7 +750,7 @@ function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, compact }) {
 // ==========================================
 // KOMPONEN OPERATOR A (Mirip operator.html)
 // ==========================================
-function OperatorA({ data, actions, displayTime, formatTime, roomId }) {
+function OperatorA({ data, actions, displayTime, formatTime, roomId, onLogout }) {
   // State lokal untuk input waktu manual (biar gak nge-lag saat ngetik)
   const [localTime, setLocalTime] = useState({ m: 0, s: 0 });
 
@@ -107,7 +778,12 @@ function OperatorA({ data, actions, displayTime, formatTime, roomId }) {
 
   return (
     <div className="operator-a-container">
-      <h2 className="text-xl font-bold mb-4">⚽ Operator Panel – EPL Scoreboard</h2>
+      <div className="w-full max-w-[900px] flex items-center justify-between mb-3">
+        <h2 className="text-xl font-bold">⚽ Operator Panel – EPL Scoreboard</h2>
+        <button className="op-btn" onClick={onLogout}>
+          Logout
+        </button>
+      </div>
 
       {/* PREVIEW AREA */}
       <div className="operator-a-preview-box">
@@ -201,9 +877,11 @@ function OperatorA({ data, actions, displayTime, formatTime, roomId }) {
 // ==========================================
 // KOMPONEN OPERATOR B (Mirip operator-B.html)
 // ==========================================
-function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
+function OperatorB({ data, actions, displayTime, formatTime, roomId, onLogout }) {
   const [manualM, setManualM] = useState(0);
   const [manualS, setManualS] = useState(0);
+  const [logoModalOpen, setLogoModalOpen] = useState(false);
+  const [logoTarget, setLogoTarget] = useState("home");
 
   const handleSetTime = () => {
     const total = (parseInt(manualM) || 0) * 60 + (parseInt(manualS) || 0);
@@ -216,7 +894,13 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
 
   return (
     <div className="operator-b-container">
-      
+      <div className="w-full max-w-[900px] flex items-center justify-between mb-3">
+        <h2 className="text-xl font-bold">⚽ Operator Panel – EPL Scoreboard</h2>
+        <button className="op-btn" onClick={onLogout}>
+          Logout
+        </button>
+      </div>
+
       {/* PREVIEW WRAPPER */}
       <div className="operator-b-preview-box">
           <LayoutB data={{...data, showOverlay: true}} displayTime={displayTime} formatTime={formatTime} />
@@ -308,10 +992,28 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
          <div className="op-section">
             <label className="op-label">Logo Home</label>
             <input className="op-input" style={{width:'200px'}} value={data.homeLogo} onChange={e => actions.updateMatch({homeLogo: e.target.value})} />
+            <button
+              className="op-btn"
+              onClick={() => {
+                setLogoTarget("home");
+                setLogoModalOpen(true);
+              }}
+            >
+              Pilih
+            </button>
          </div>
          <div className="op-section">
             <label className="op-label">Logo Away</label>
             <input className="op-input" style={{width:'200px'}} value={data.awayLogo} onChange={e => actions.updateMatch({awayLogo: e.target.value})} />
+            <button
+              className="op-btn"
+              onClick={() => {
+                setLogoTarget("away");
+                setLogoModalOpen(true);
+              }}
+            >
+              Pilih
+            </button>
          </div>
 
          {/* Sync Button (Dummy untuk UI karena Firebase sudah auto-sync) */}
@@ -321,6 +1023,21 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
          </div>
 
       </div>
+
+      <LogoPickerModal
+        isOpen={logoModalOpen}
+        onClose={() => setLogoModalOpen(false)}
+        onSelect={({ src, club }) => {
+          if (!src || !club) return;
+          const abbr = makeTeamAbbr(club);
+          if (logoTarget === "home") {
+            actions.updateMatch({ homeLogo: src, homeName: abbr });
+          } else {
+            actions.updateMatch({ awayLogo: src, awayName: abbr });
+          }
+          setLogoModalOpen(false);
+        }}
+      />
     </div>
   );
 }
@@ -340,6 +1057,31 @@ export default function OperatorPage() {
   }
 
   const roomId = roomFromQuery || roomFromHash || "default";
+
+  const [isAuthReady, setIsAuthReady] = useState(false);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        if (typeof window !== "undefined") {
+          window.location.replace("/login");
+        }
+      } else {
+        setIsAuthReady(true);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } finally {
+      if (typeof window !== "undefined") {
+        window.location.replace("/login");
+      }
+    }
+  };
 
   const {
     data,
@@ -361,6 +1103,10 @@ export default function OperatorPage() {
     toggleOverlay,
   };
 
+  if (!isAuthReady) {
+    return <div className="text-white p-10">Memeriksa sesi login...</div>;
+  }
+
   if (!data)
     return <div className="text-white p-10">Loading Scoreboard System...</div>;
 
@@ -373,6 +1119,7 @@ export default function OperatorPage() {
         displayTime={displayTime}
         formatTime={formatTime}
         roomId={roomId}
+        onLogout={handleLogout}
       />
     );
   }
@@ -384,6 +1131,7 @@ export default function OperatorPage() {
       displayTime={displayTime}
       formatTime={formatTime}
       roomId={roomId}
+      onLogout={handleLogout}
     />
   );
 }
