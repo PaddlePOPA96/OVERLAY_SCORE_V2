@@ -1,0 +1,203 @@
+/* Layout B styles */
+#layout-b-root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layout-b-wrapper {
+  position: relative;
+  display: inline-block;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.layout-b-wrapper.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.layout-b-scoreboard {
+  width: 860px;
+  height: 270px;
+  background: #000;
+  display: grid;
+  grid-template-columns: 2fr 1.8fr 1.8fr;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  color: white;
+}
+
+.layout-b-scoreboard * {
+  line-height: normal;
+}
+
+.layout-b-time-panel {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  transform-origin: right center;
+}
+
+.layout-b-time-top {
+  background: #004535;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 42px;
+}
+
+.layout-b-time-bottom {
+  background: #f8f8f8;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.layout-b-teams-panel {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  transform-origin: center center;
+}
+
+.layout-b-teams-panel::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  bottom: 25%;
+  width: 10px;
+  /* accent garis vertikal ikut warna home */
+  background: var(--layout-b-home-bg, #ff4b4b);
+}
+
+.layout-b-team-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.4));
+  display: block;
+}
+
+.layout-b-score-panel {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  transform-origin: left center;
+}
+
+.layout-b-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  font-weight: 700;
+}
+
+.layout-b-home-row {
+  background: var(--layout-b-home-bg, #ff4b4b);
+}
+
+.layout-b-away-row {
+  background: var(--layout-b-away-bg, #e5e5e5);
+  position: relative;
+}
+
+.layout-b-away-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 4px;
+  background: #000;
+}
+
+.layout-b-wrapper.animate-in .layout-b-time-panel {
+  /* muncul duluan (panel kiri) */
+  animation: leftReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards 0s;
+  opacity: 0;
+}
+
+.layout-b-wrapper.animate-in .layout-b-teams-panel {
+  /* lalu panel tengah */
+  animation: midReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.25s;
+  opacity: 0;
+}
+
+.layout-b-wrapper.animate-in .layout-b-score-panel {
+  /* terakhir panel kanan */
+  animation: rightReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.5s;
+  opacity: 0;
+}
+
+@keyframes midReveal {
+  0% { transform: scale(0.7); opacity: 0; filter: blur(8px); }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; filter: blur(0px); }
+}
+
+@keyframes rightReveal {
+  0% { transform: scaleX(0.2) translateX(-20px); opacity: 0; filter: blur(4px); }
+  70% { transform: scaleX(1.05) translateX(0); opacity: 1; }
+  100% { transform: scaleX(1) translateX(0); opacity: 1; filter: blur(0); }
+}
+
+@keyframes leftReveal {
+  0% { transform: scaleX(0.2) translateX(20px); opacity: 0; filter: blur(4px); }
+  70% { transform: scaleX(1.05) translateX(0); opacity: 1; }
+  100% { transform: scaleX(1) translateX(0); opacity: 1; filter: blur(0); }
+}
+
+.layout-b-goal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(255, 0, 0, 0.95);
+  z-index: 2;
+}
+
+.layout-b-goal-overlay span {
+  font-size: 72px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 6px;
+  text-shadow: 0 0 20px rgba(0,0,0,0.9);
+}
+
+.layout-b-goal-overlay.active {
+  animation: goalBgB 3s ease-in-out forwards;
+}
+
+.layout-b-goal-overlay.active span {
+  animation: goalTextB 3s ease-in-out forwards 0.1s;
+}
+
+@keyframes goalBgB {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes goalTextB {
+  0% { opacity: 0; transform: scale(0.4); }
+  20% { opacity: 1; transform: scale(1.2); }
+  60% { opacity: 1; transform: scale(1.0); }
+  100% { opacity: 0; transform: scale(1.1); }
+}

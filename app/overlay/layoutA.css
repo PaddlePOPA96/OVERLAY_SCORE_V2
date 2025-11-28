@@ -1,0 +1,351 @@
+#layout-a-root {
+  --overlay-scale: 0.9;
+  --score-left-color: #ff4b4b;
+  --score-right-color: #2946ff;
+  --pill-color: #350038;
+
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide16-9 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transform: scale(var(--overlay-scale));
+  transform-origin: center center;
+  opacity: 0;
+  /* slightly slower fade/scale when appearing */
+  animation: slideDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.15s;
+}
+
+.slide16-9 * {
+  box-sizing: border-box;
+  line-height: normal;
+}
+
+.slide16-9.hidden {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.4s ease;
+}
+
+/* animasi saat hide: urutan kebalikan intro (time -> bar -> logo) */
+.slide16-9.layout-a-hide .layout-a-time-pill {
+  animation: layoutATimeOut 0.7s ease-in forwards;
+}
+
+.slide16-9.layout-a-hide .layout-a-team-left {
+  animation: layoutABarLeftOut 0.7s ease-in forwards 0.2s;
+}
+
+.slide16-9.layout-a-hide .layout-a-team-right {
+  animation: layoutABarRightOut 0.7s ease-in forwards 0.2s;
+}
+
+.slide16-9.layout-a-hide .layout-a-center {
+  animation: layoutALogoOut 0.7s ease-in forwards 0.5s;
+}
+
+/* layout A intro sequence: logo -> bars -> time */
+.slide16-9.layout-a-animate-in .layout-a-center {
+  opacity: 0;
+  /* logo in a bit slower */
+  animation: layoutALogoIn 0.8s ease-out forwards;
+}
+
+.slide16-9.layout-a-animate-in .layout-a-team-left,
+.slide16-9.layout-a-animate-in .layout-a-team-right {
+  opacity: 0;
+}
+
+.slide16-9.layout-a-animate-in .layout-a-team-left {
+  animation: layoutABarLeftIn 0.7s ease-out forwards 0.4s;
+}
+
+.slide16-9.layout-a-animate-in .layout-a-team-right {
+  animation: layoutABarRightIn 0.7s ease-out forwards 0.4s;
+}
+
+.slide16-9.layout-a-animate-in .layout-a-time-pill {
+  opacity: 0;
+  transform: translateY(-8px);
+  /* time appears last & slower */
+  animation: layoutATimeIn 0.7s ease-out forwards 1s;
+}
+
+/* MAIN BAR ------------------------------------------------------- */
+.layout-a-board {
+  position: relative;
+  width: 960px;
+  height: 110px;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.55));
+  z-index: 2;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.layout-a-board.goal-anim {
+  animation: goalBoardPulse 0.7s ease-out forwards;
+}
+
+.layout-a-team {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  overflow: visible;
+}
+
+.layout-a-team-left {
+  background: linear-gradient(90deg, var(--score-left-color), #ff9f9f);
+  border-radius: 6px 0 0 6px;
+  justify-content: flex-start;
+  padding-left: 40px;
+}
+
+.layout-a-team-right {
+  background: linear-gradient(270deg, var(--score-right-color), #9fb2ff);
+  border-radius: 0 6px 6px 0;
+  justify-content: flex-end;
+  padding-right: 40px;
+}
+
+/* Saat GOAL teks muncul, pusatkan teks di dalam half-bar */
+.layout-a-team.goal-center {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden; /* supaya running text tidak keluar dari bar */
+}
+
+/* central chevron cuts */
+.layout-a-team-left::after,
+.layout-a-team-right::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 70px;
+  height: 100%;
+  background: inherit;
+}
+
+.layout-a-team-left::after {
+  right: -35px;
+  clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%, 40% 50%);
+}
+
+.layout-a-team-right::after {
+  left: -35px;
+  clip-path: polygon(40% 0, 100% 0, 100% 100%, 40% 100%, 0 50%);
+}
+
+.layout-a-team-name {
+  opacity: 0.9;
+  font-size: 80px;
+}
+
+/* CENTER LOGO + SCORES ------------------------------------------- */
+.layout-a-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -62%);
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.layout-a-center-logo {
+  width: 140px;
+}
+
+.layout-a-center-logo img {
+  width: 100%;
+  display: block;
+}
+
+.layout-a-score-overlay {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* lebih sempit supaya angka mepet logo */
+  width: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 4;
+}
+
+.layout-a-score-num {
+  /* perbesar ~10% dari sebelumnya */
+  font-size: 154px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+}
+
+.layout-a-score-num.score-hidden {
+  visibility: hidden;
+}
+
+/* TIME PANEL ----------------------------------------------------- */
+.layout-a-time-pill {
+  background: #350038;
+  color: #ffffff;
+  padding: 18px 90px;
+  border-radius: 24px;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.goal-text-anim {
+  display: inline-block;
+  color: #fff !important;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 100px;
+  letter-spacing: 6px;
+  white-space: nowrap;
+  /* running text (marquee) across the team bar */
+  animation: goalRun 2.4s linear infinite;
+}
+
+/* GOAL OVERLAY --------------------------------------------------- */
+.layout-a-goal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 0.25s ease;
+}
+
+.layout-a-goal-overlay.active {
+  /* just show/hide, no keyframe animation */
+  opacity: 1;
+}
+
+.layout-a-goal-box {
+  padding: 28px 80px;
+  border-radius: 32px;
+  background: linear-gradient(90deg, #5b1414 0%, #a40606 50%, #5b1414 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+.layout-a-goal-label {
+  font-size: 140px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #ffffff;
+  text-shadow: 0 0 26px rgba(255, 255, 255, 0.9);
+}
+
+.layout-a-goal-team {
+  margin-top: 10px;
+  font-size: 40px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #ffe8e8;
+}
+
+@keyframes slideDown {
+  0%   { opacity: 0; transform: translateY(-22px) scale(calc(var(--overlay-scale) * 0.9)); }
+  55%  { opacity: 1; transform: translateY(4px) scale(calc(var(--overlay-scale) * 1.02)); }
+  100% { opacity: 1; transform: translateY(0) scale(var(--overlay-scale)); }
+}
+
+@keyframes pulseGoal {
+  0% { transform: scale(1); text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); }
+  100% { transform: scale(1.08); text-shadow: 0 0 26px rgba(255, 255, 255, 0.9); }
+}
+
+/* running GOAL text inside the team bar */
+@keyframes goalRun {
+  0%   { transform: translateX(110%); }
+  100% { transform: translateX(-110%); }
+}
+
+@keyframes layoutALogoIn {
+  0%   { opacity: 0; transform: translate(-50%, -62%) scale(0.4); }
+  60%  { opacity: 1; transform: translate(-50%, -62%) scale(1.12); }
+  100% { opacity: 1; transform: translate(-50%, -62%) scale(1); }
+}
+
+@keyframes layoutABarLeftIn {
+  0%   { opacity: 0; transform: translateX(90px); }
+  70%  { opacity: 1; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes layoutABarRightIn {
+  0%   { opacity: 0; transform: translateX(-90px); }
+  70%  { opacity: 1; transform: translateX(10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes layoutATimeIn {
+  0%   { opacity: 0; transform: translateY(-12px); }
+  65%  { opacity: 1; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* HIDING (kebalikan intro) */
+@keyframes layoutATimeOut {
+  0%   { opacity: 1; transform: translateY(0); }
+  40%  { opacity: 1; transform: translateY(6px); }
+  100% { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes layoutABarLeftOut {
+  0%   { opacity: 1; transform: translateX(0); }
+  60%  { opacity: 1; transform: translateX(-10px); }
+  100% { opacity: 0; transform: translateX(90px); }
+}
+
+@keyframes layoutABarRightOut {
+  0%   { opacity: 1; transform: translateX(0); }
+  60%  { opacity: 1; transform: translateX(10px); }
+  100% { opacity: 0; transform: translateX(-90px); }
+}
+
+@keyframes layoutALogoOut {
+  0%   { opacity: 1; transform: translate(-50%, -62%) scale(1); }
+  40%  { opacity: 1; transform: translate(-50%, -62%) scale(1.12); }
+  100% { opacity: 0; transform: translate(-50%, -62%) scale(0.4); }
+}
+
+@keyframes goalBoardPulse {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+  70% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
