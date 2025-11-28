@@ -3,15 +3,20 @@ import { useScoreboard } from "@/hooks/useScoreboard";
 import LayoutA from "../overlay/LayoutA";
 import LayoutB from "../overlay/LayoutB";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
-// Komponen kecil untuk kontrol Room + Overlay + Copy URL (seperti kalkulator)
-function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, setRoomId, compact }) {
+// Komponen kecil untuk kontrol Overlay + Copy URL (room berasal dari UID user)
+function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, compact }) {
   const [copied, setCopied] = useState(false);
 
   const overlayPath = `/overlay/${roomId || "default"}`;
   const baseUrl =
     typeof window !== "undefined" ? window.location.origin : "";
   const overlayUrl = baseUrl ? `${baseUrl}${overlayPath}` : overlayPath;
+
+  const handleToggleOverlay = () => {
+    toggleOverlay();
+  };
 
   const handleCopy = async () => {
     try {
@@ -27,15 +32,12 @@ function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, setRoomId, co
     // Versi B: baris lebih ringkas di kanan atas
     return (
       <div className="op-room-compact">
-        <button className="op-btn op-b-btn-main" onClick={toggleOverlay}>
+        <button className="op-btn op-b-btn-main" onClick={handleToggleOverlay}>
           {showOverlay ? "Hide Overlay" : "Show Overlay"}
         </button>
-        <input
-          className="op-input op-room-input"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value.trim())}
-          placeholder="room-id"
-        />
+        <span className="op-room-display op-room-url">
+          {overlayPath}
+        </span>
         <button className="op-btn" onClick={handleCopy}>
           {copied ? "Copied" : "Copy URL"}
         </button>
@@ -47,19 +49,14 @@ function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, setRoomId, co
   return (
     <div className="op-room-row">
       <label className="op-label">Overlay</label>
-      <button className="op-btn op-btn-main" onClick={toggleOverlay}>
+      <button className="op-btn op-btn-main" onClick={handleToggleOverlay}>
         {showOverlay ? "HIDE" : "SHOW"}
       </button>
 
       <div className="op-room-box">
         <div className="op-room-display">
           <span className="op-room-display-label">ROOM</span>
-          <input
-            className="op-input op-room-input"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value.trim())}
-            placeholder="default"
-          />
+          <span className="op-tiny">{roomId || "default"}</span>
         </div>
         <div className="op-room-display op-room-url">
           {overlayPath}
@@ -83,7 +80,7 @@ function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, setRoomId, co
 // ==========================================
 // KOMPONEN OPERATOR A (Mirip operator.html)
 // ==========================================
-function OperatorA({ data, actions, displayTime, formatTime, roomId, setRoomId }) {
+function OperatorA({ data, actions, displayTime, formatTime, roomId }) {
   // State lokal untuk input waktu manual (biar gak nge-lag saat ngetik)
   const [localTime, setLocalTime] = useState({ m: 0, s: 0 });
 
@@ -195,7 +192,6 @@ function OperatorA({ data, actions, displayTime, formatTime, roomId, setRoomId }
           showOverlay={data.showOverlay}
           toggleOverlay={actions.toggleOverlay}
           roomId={roomId}
-          setRoomId={setRoomId}
         />
 
       </div>
@@ -206,7 +202,7 @@ function OperatorA({ data, actions, displayTime, formatTime, roomId, setRoomId }
 // ==========================================
 // KOMPONEN OPERATOR B (Mirip operator-B.html)
 // ==========================================
-function OperatorB({ data, actions, displayTime, formatTime, roomId, setRoomId }) {
+function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
   const [manualM, setManualM] = useState(0);
   const [manualS, setManualS] = useState(0);
 
@@ -233,7 +229,6 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId, setRoomId }
           showOverlay={data.showOverlay}
           toggleOverlay={actions.toggleOverlay}
           roomId={roomId}
-          setRoomId={setRoomId}
         />
       </div>
 
@@ -336,11 +331,13 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId, setRoomId }
 // PAGE UTAMA (Layout Router)
 // ==========================================
 export default function OperatorPage() {
+  const searchParams = useSearchParams();
+  const roomFromQuery = searchParams.get("room") || "";
   const roomFromHash =
     typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
-  const initialRoom = roomFromHash || "default";
+  const initialRoom = roomFromQuery || roomFromHash || "default";
 
-  const [roomId, setRoomId] = useState(initialRoom);
+  const roomId = initialRoom;
 
   const {
     data,
@@ -374,7 +371,6 @@ export default function OperatorPage() {
         displayTime={displayTime}
         formatTime={formatTime}
         roomId={roomId}
-        setRoomId={setRoomId}
       />
     );
   }
@@ -386,7 +382,6 @@ export default function OperatorPage() {
       displayTime={displayTime}
       formatTime={formatTime}
       roomId={roomId}
-      setRoomId={setRoomId}
     />
   );
 }
