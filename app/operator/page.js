@@ -3,7 +3,6 @@ import { useScoreboard } from "@/hooks/useScoreboard";
 import LayoutA from "../overlay/LayoutA";
 import LayoutB from "../overlay/LayoutB";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 // Komponen kecil untuk kontrol Overlay + Copy URL (room berasal dari UID user)
 function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, compact }) {
@@ -331,13 +330,16 @@ function OperatorB({ data, actions, displayTime, formatTime, roomId }) {
 // PAGE UTAMA (Layout Router)
 // ==========================================
 export default function OperatorPage() {
-  const searchParams = useSearchParams();
-  const roomFromQuery = searchParams.get("room") || "";
-  const roomFromHash =
-    typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
-  const initialRoom = roomFromQuery || roomFromHash || "default";
+  let roomFromQuery = "";
+  let roomFromHash = "";
 
-  const roomId = initialRoom;
+  if (typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    roomFromQuery = params.get("room") || "";
+    roomFromHash = window.location.hash.replace("#", "") || "";
+  }
+
+  const roomId = roomFromQuery || roomFromHash || "default";
 
   const {
     data,
