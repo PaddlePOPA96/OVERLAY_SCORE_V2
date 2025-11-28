@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { ref, onValue, update } from "firebase/database";
 import { db } from "@/lib/firebase";
 
-export function useScoreboard() {
+// roomId / sessionId dipakai supaya beberapa pertandingan bisa jalan paralel
+export function useScoreboard(roomId = "default") {
   const [data, setData] = useState({
     layout: "B", // Default Layout
     showOverlay: true,
@@ -34,18 +35,19 @@ export function useScoreboard() {
 
   const [displayTime, setDisplayTime] = useState(0);
 
-  // Sync Firebase
+  // Sync Firebase untuk room tertentu
   useEffect(() => {
-    const matchRef = ref(db, "match_live");
+    if (!roomId) return;
+    const matchRef = ref(db, `match_live/${roomId}`);
     const unsubscribe = onValue(matchRef, (snapshot) => {
       if (snapshot.exists()) {
         const val = snapshot.val();
         setData((prev) => ({ ...prev, ...val }));
-        calculateTime(val); 
+        calculateTime(val);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [roomId]);
 
   // Interval Lokal
   useEffect(() => {
@@ -67,7 +69,10 @@ export function useScoreboard() {
     }
   };
 
-  const updateMatch = (updates) => { update(ref(db, "match_live"), updates); };
+  const updateMatch = (updates) => {
+    if (!roomId) return;
+    update(ref(db, `match_live/${roomId}`), updates);
+  };
 
   const triggerGoal = (team) => {
     const newScore = team === "home" ? (data.homeScore || 0) + 1 : (data.awayScore || 0) + 1;

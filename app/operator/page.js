@@ -4,10 +4,86 @@ import LayoutA from "../overlay/LayoutA";
 import LayoutB from "../overlay/LayoutB";
 import { useState, useEffect } from "react";
 
+// Komponen kecil untuk kontrol Room + Overlay + Copy URL (seperti kalkulator)
+function OverlayRoomControls({ showOverlay, toggleOverlay, roomId, setRoomId, compact }) {
+  const [copied, setCopied] = useState(false);
+
+  const overlayPath = `/overlay/${roomId || "default"}`;
+  const baseUrl =
+    typeof window !== "undefined" ? window.location.origin : "";
+  const overlayUrl = baseUrl ? `${baseUrl}${overlayPath}` : overlayPath;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(overlayUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch (e) {
+      console.error("Copy failed", e);
+    }
+  };
+
+  if (compact) {
+    // Versi B: baris lebih ringkas di kanan atas
+    return (
+      <div className="op-room-compact">
+        <button className="op-btn op-b-btn-main" onClick={toggleOverlay}>
+          {showOverlay ? "Hide Overlay" : "Show Overlay"}
+        </button>
+        <input
+          className="op-input op-room-input"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value.trim())}
+          placeholder="room-id"
+        />
+        <button className="op-btn" onClick={handleCopy}>
+          {copied ? "Copied" : "Copy URL"}
+        </button>
+      </div>
+    );
+  }
+
+  // Versi A: tampilan seperti kalkulator di blok kontrol
+  return (
+    <div className="op-room-row">
+      <label className="op-label">Overlay</label>
+      <button className="op-btn op-btn-main" onClick={toggleOverlay}>
+        {showOverlay ? "HIDE" : "SHOW"}
+      </button>
+
+      <div className="op-room-box">
+        <div className="op-room-display">
+          <span className="op-room-display-label">ROOM</span>
+          <input
+            className="op-input op-room-input"
+            value={roomId}
+            onChange={(e) => setRoomId(e.target.value.trim())}
+            placeholder="default"
+          />
+        </div>
+        <div className="op-room-display op-room-url">
+          {overlayPath}
+        </div>
+        <button className="op-btn op-btn-main" onClick={handleCopy}>
+          {copied ? "COPIED" : "COPY"}
+        </button>
+      </div>
+
+      <span
+        className={`op-tiny font-bold ${
+          showOverlay ? "text-green-500" : "text-red-500"
+        }`}
+      >
+        STATUS: {showOverlay ? "TAMPIL" : "SEMBUNYI"}
+      </span>
+    </div>
+  );
+}
+
 // ==========================================
 // KOMPONEN OPERATOR A (Mirip operator.html)
 // ==========================================
-function OperatorA({ data, actions, displayTime, formatTime }) {
+function OperatorA({ data, actions, displayTime, formatTime, roomId, setRoomId }) {
   // State lokal untuk input waktu manual (biar gak nge-lag saat ngetik)
   const [localTime, setLocalTime] = useState({ m: 0, s: 0 });
 
@@ -114,16 +190,13 @@ function OperatorA({ data, actions, displayTime, formatTime }) {
           </span>
         </div>
 
-        {/* OVERLAY TOGGLE */}
-        <div className="op-section">
-           <label className="op-label">Overlay</label>
-           <button className="op-btn" onClick={actions.toggleOverlay}>
-              {data.showOverlay ? "HIDE OVERLAY" : "SHOW OVERLAY"}
-           </button>
-           <span className={`op-tiny font-bold ${data.showOverlay ? 'text-green-500' : 'text-red-500'}`}>
-              STATUS: {data.showOverlay ? "TAMPIL" : "SEMBUNYI"}
-           </span>
-        </div>
+        {/* OVERLAY TOGGLE + ROOM / LINK */}
+        <OverlayRoomControls
+          showOverlay={data.showOverlay}
+          toggleOverlay={actions.toggleOverlay}
+          roomId={roomId}
+          setRoomId={setRoomId}
+        />
 
       </div>
     </div>
@@ -133,7 +206,7 @@ function OperatorA({ data, actions, displayTime, formatTime }) {
 // ==========================================
 // KOMPONEN OPERATOR B (Mirip operator-B.html)
 // ==========================================
-function OperatorB({ data, actions, displayTime, formatTime }) {
+function OperatorB({ data, actions, displayTime, formatTime, roomId, setRoomId }) {
   const [manualM, setManualM] = useState(0);
   const [manualS, setManualS] = useState(0);
 
@@ -155,9 +228,13 @@ function OperatorB({ data, actions, displayTime, formatTime }) {
       </div>
 
       <div className="top-controls w-full flex justify-end max-w-[860px] mt-4">
-         <button className="op-btn op-b-btn-main" onClick={actions.toggleOverlay}>
-             {data.showOverlay ? "Hide Overlay" : "Show Overlay"}
-         </button>
+        <OverlayRoomControls
+          compact
+          showOverlay={data.showOverlay}
+          toggleOverlay={actions.toggleOverlay}
+          roomId={roomId}
+          setRoomId={setRoomId}
+        />
       </div>
 
       <div className="operator-b-controls">
@@ -259,19 +336,57 @@ function OperatorB({ data, actions, displayTime, formatTime }) {
 // PAGE UTAMA (Layout Router)
 // ==========================================
 export default function OperatorPage() {
-  const { data, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay } = useScoreboard();
+  const roomFromHash =
+    typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
+  const initialRoom = roomFromHash || "default";
+
+  const [roomId, setRoomId] = useState(initialRoom);
+
+  const {
+    data,
+    displayTime,
+    formatTime,
+    updateMatch,
+    toggleTimer,
+    resetTimer,
+    triggerGoal,
+    toggleOverlay,
+  } = useScoreboard(roomId);
 
   // Kelompokkan actions biar rapi saat dipassing ke props
   const actions = {
-      updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay
+    updateMatch,
+    toggleTimer,
+    resetTimer,
+    triggerGoal,
+    toggleOverlay,
   };
 
-  if (!data) return <div className="text-white p-10">Loading Scoreboard System...</div>;
+  if (!data)
+    return <div className="text-white p-10">Loading Scoreboard System...</div>;
 
   // Render sesuai Layout yang dipilih di state
   if (data.layout === "A") {
-      return <OperatorA data={data} actions={actions} displayTime={displayTime} formatTime={formatTime} />;
-  } else {
-      return <OperatorB data={data} actions={actions} displayTime={displayTime} formatTime={formatTime} />;
+    return (
+      <OperatorA
+        data={data}
+        actions={actions}
+        displayTime={displayTime}
+        formatTime={formatTime}
+        roomId={roomId}
+        setRoomId={setRoomId}
+      />
+    );
   }
+
+  return (
+    <OperatorB
+      data={data}
+      actions={actions}
+      displayTime={displayTime}
+      formatTime={formatTime}
+      roomId={roomId}
+      setRoomId={setRoomId}
+    />
+  );
 }

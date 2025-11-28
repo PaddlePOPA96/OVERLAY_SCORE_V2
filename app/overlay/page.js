@@ -1,28 +1,25 @@
-"use client";
-import { useScoreboard } from "@/hooks/useScoreboard";
-import LayoutA from "./LayoutA";
-import LayoutB from "./LayoutB";
-import { useEffect, useState } from "react";
-
-export default function OverlayPage() {
-  const { data, displayTime, formatTime } = useScoreboard();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
-  // Tidak perlu wrapper div dengan class CSS yang ribet
-  // Karena styling sudah dihandle di dalam masing-masing komponen Layout
+// Halaman ini bisa dipakai sebagai helper untuk kasih info ke user
+// bahwa URL overlay sekarang pakai roomId, contoh: /overlay/room123
+export default function OverlayRootInfo() {
   return (
-    <>
-      {data.layout === "A" ? (
-        <LayoutA data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : (
-        <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
-      )}
-    </>
+    <div style={{ padding: 32, fontFamily: "system-ui, sans-serif" }}>
+      <h1 style={{ fontSize: 24, marginBottom: 16 }}>Overlay Multi Room</h1>
+      <p>Gunakan URL seperti:</p>
+      <pre
+        style={{
+          background: "#111",
+          color: "#0f0",
+          padding: 12,
+          borderRadius: 8,
+          marginTop: 8,
+        }}
+      >
+        /overlay/&lt;roomId&gt;
+      </pre>
+      <p style={{ marginTop: 12 }}>
+        Contoh: <code>/overlay/test-match</code> atau{" "}
+        <code>/overlay/001</code>.
+      </p>
+    </div>
   );
 }
