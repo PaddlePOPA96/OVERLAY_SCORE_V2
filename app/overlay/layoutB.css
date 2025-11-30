@@ -1,6 +1,7 @@
 /* Layout B styles */
 #layout-b-root {
   width: 100vw;
+  background-color: transparent;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -21,14 +22,13 @@
 .layout-b-scoreboard {
   width: 860px;
   height: 270px;
-  background: #000;
+  background: transparent;
   display: grid;
   grid-template-columns: 2fr 1.8fr 1.8fr;
   overflow: hidden;
   border-radius: 8px;
   position: relative;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  color: white;
 }
 
 .layout-b-scoreboard * {
@@ -72,16 +72,7 @@
   transform-origin: center center;
 }
 
-.layout-b-teams-panel::before {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 25%;
-  bottom: 25%;
-  width: 10px;
-  /* accent garis vertikal ikut warna home */
-  background: var(--layout-b-home-bg, #ff4b4b);
-}
+
 
 .layout-b-team-logo {
   width: 90px;
@@ -114,15 +105,7 @@
   position: relative;
 }
 
-.layout-b-away-row::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 12%;
-  right: 12%;
-  height: 4px;
-  background: #000;
-}
+
 
 .layout-b-wrapper.animate-in .layout-b-time-panel {
   /* muncul duluan (panel kiri) */
