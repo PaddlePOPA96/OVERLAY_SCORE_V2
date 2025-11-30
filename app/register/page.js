@@ -6,6 +6,8 @@ import {
   registerWithEmailPassword,
   loginWithGooglePopup,
 } from "@/lib/auth/service";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,8 +20,7 @@ export default function RegisterPage() {
 
   const handleAuthSuccess = (user) => {
     if (!user) return;
-    const roomId = user.uid;
-    router.push(`/operator?room=${roomId}`);
+    router.push("/dashboard");
   };
 
   const handleSubmit = async (e) => {
@@ -66,7 +67,7 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-card">
+      <Card className="auth-card">
         <div className="auth-header">
           <div className="auth-icon">
             <span>⚽</span>
@@ -136,26 +137,26 @@ export default function RegisterPage() {
           )}
 
           <div className="auth-actions-row">
-            <button
+            <Button
               type="submit"
               disabled={loading}
               className="auth-btn-main"
             >
               {loading ? "Creating account..." : "Create Account"}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               disabled={loading}
               className="auth-btn-ghost"
               onClick={() => router.push("/login")}
             >
               Sign in
-            </button>
+            </Button>
           </div>
         </form>
 
         <div style={{ marginTop: 16 }}>
-          <button
+          <Button
             type="button"
             disabled={loading}
             onClick={handleGoogle}
@@ -163,7 +164,7 @@ export default function RegisterPage() {
           >
             <span style={{ fontSize: 15 }}>G</span>
             <span>Continue with Google</span>
-          </button>
+          </Button>
         </div>
 
         <div className="auth-security">
@@ -172,7 +173,7 @@ export default function RegisterPage() {
           </div>
           <p>Your connection is secured with 256-bit SSL encryption.</p>
         </div>
-      </div>
+      </Card>
 
       <p className="auth-footnote">
         Sudah punya akun?{" "}

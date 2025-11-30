@@ -7,6 +7,8 @@ import {
   loginWithGooglePopup,
   sendResetPassword,
 } from "@/lib/auth/service";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,8 +21,7 @@ export default function LoginPage() {
 
   const handleAuthSuccess = (user) => {
     if (!user) return;
-    const roomId = user.uid;
-    router.push(`/operator?room=${roomId}`);
+    router.push("/dashboard");
   };
 
   const handleSubmit = async (event) => {
@@ -90,7 +91,7 @@ export default function LoginPage() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-card">
+      <Card className="auth-card">
         <div className="auth-header">
           <div className="auth-icon">
             <span>⚽</span>
@@ -157,34 +158,34 @@ export default function LoginPage() {
           )}
 
           <div className="auth-actions-row">
-            <button
+            <Button
               type="submit"
               disabled={loading}
               className="auth-btn-main"
             >
               {loading ? "Signing in..." : "Sign In"}
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               disabled={loading}
               className="auth-btn-ghost"
               onClick={() => router.push("/register")}
             >
               Create account
-            </button>
+            </Button>
           </div>
         </form>
 
         <div className="mt-4">
-          <button
+          <Button
             type="button"
             disabled={loading}
             onClick={handleGoogleLogin}
             className="auth-secondary-btn"
-          >
+            >
             <span style={{ fontSize: 15 }}>G</span>
             <span>Continue with Google</span>
-          </button>
+          </Button>
         </div>
 
         <div className="auth-security">
@@ -195,7 +196,7 @@ export default function LoginPage() {
             Your connection is secured with 256-bit SSL encryption.
           </p>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

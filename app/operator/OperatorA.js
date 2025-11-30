@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import LayoutA from "../overlay/LayoutA";
 import OverlayRoomControls from "./OverlayRoomControls";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export default function OperatorA({
   data,
@@ -40,20 +42,20 @@ export default function OperatorA({
         <h2 className="text-xl font-bold">
           ⚽ Operator Panel – EPL Scoreboard
         </h2>
-        <button className="op-btn" onClick={onLogout}>
+        <Button className="op-btn" variant="ghost" size="sm" onClick={onLogout}>
           Logout
-        </button>
+        </Button>
       </div>
 
-      <div className="operator-a-preview-box">
+      <Card className="operator-a-preview-box">
         <LayoutA
           data={{ ...data, showOverlay: true }}
           displayTime={displayTime}
           formatTime={formatTime}
         />
-      </div>
+      </Card>
 
-      <div className="operator-a-controls">
+      <Card className="operator-a-controls">
         <div
           className="op-section"
           style={{
@@ -101,8 +103,9 @@ export default function OperatorA({
 
         <div className="op-section">
           <label className="op-label">Score Left</label>
-          <button
+          <Button
             className="op-btn"
+            variant="ghost"
             onClick={() =>
               actions.updateMatch({
                 homeScore: Math.max(0, data.homeScore - 1),
@@ -110,7 +113,7 @@ export default function OperatorA({
             }
           >
             -
-          </button>
+          </Button>
           <input
             className="op-input"
             type="number"
@@ -122,26 +125,29 @@ export default function OperatorA({
             }
             style={{ width: "50px" }}
           />
-          <button
+          <Button
             className="op-btn"
+            variant="ghost"
             onClick={() =>
               actions.updateMatch({ homeScore: data.homeScore + 1 })
             }
           >
             +
-          </button>
-          <button
+          </Button>
+          <Button
             className="op-btn op-btn-main"
+            variant="default"
             onClick={() => actions.triggerGoal("home")}
           >
             GOAL L +1
-          </button>
+          </Button>
         </div>
 
         <div className="op-section">
           <label className="op-label">Score Right</label>
-          <button
+          <Button
             className="op-btn"
+            variant="ghost"
             onClick={() =>
               actions.updateMatch({
                 awayScore: Math.max(0, data.awayScore - 1),
@@ -149,7 +155,7 @@ export default function OperatorA({
             }
           >
             -
-          </button>
+          </Button>
           <input
             className="op-input"
             type="number"
@@ -161,20 +167,22 @@ export default function OperatorA({
             }
             style={{ width: "50px" }}
           />
-          <button
+          <Button
             className="op-btn"
+            variant="ghost"
             onClick={() =>
               actions.updateMatch({ awayScore: data.awayScore + 1 })
             }
           >
             +
-          </button>
-          <button
+          </Button>
+          <Button
             className="op-btn op-btn-main"
+            variant="default"
             onClick={() => actions.triggerGoal("away")}
           >
             GOAL R +1
-          </button>
+          </Button>
         </div>
 
         <div className="op-section">
@@ -185,7 +193,10 @@ export default function OperatorA({
             className="op-input"
             value={data.homeColor}
             onChange={(e) =>
-              actions.updateMatch({ homeColor: e.target.value })
+              actions.updateMatch({
+                homeColor: e.target.value,
+                homeBg: e.target.value,
+              })
             }
           />
           <span className="op-tiny">Right:</span>
@@ -194,7 +205,10 @@ export default function OperatorA({
             className="op-input"
             value={data.awayColor}
             onChange={(e) =>
-              actions.updateMatch({ awayColor: e.target.value })
+              actions.updateMatch({
+                awayColor: e.target.value,
+                awayBg: e.target.value,
+              })
             }
           />
         </div>
@@ -220,19 +234,26 @@ export default function OperatorA({
               setLocalTime({ ...localTime, s: e.target.value })
             }
           />
-          <button className="op-btn" onClick={handleManualTime}>
+          <Button className="op-btn" variant="outline" size="sm" onClick={handleManualTime}>
             Set Time
-          </button>
+          </Button>
           <div style={{ display: "flex", gap: "5px", marginLeft: "10px" }}>
-            <button className="op-btn op-btn-main" onClick={actions.toggleTimer}>
+            <Button
+              className="op-btn op-btn-main"
+              variant="default"
+              size="sm"
+              onClick={actions.toggleTimer}
+            >
               {data.timer.isRunning ? "PAUSE" : "START"}
-            </button>
-            <button
+            </Button>
+            <Button
               className="op-btn op-btn-danger"
+              variant="outline"
+              size="sm"
               onClick={actions.resetTimer}
             >
               Reset
-            </button>
+            </Button>
           </div>
           <span className="op-tiny text-green-400 font-mono ml-2">
             LIVE: {formatTime(displayTime)}
@@ -244,8 +265,7 @@ export default function OperatorA({
           toggleOverlay={actions.toggleOverlay}
           roomId={roomId}
         />
-      </div>
+      </Card>
     </div>
   );
 }
-

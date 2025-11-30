@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premier League Dashboard</title>
+    <style>
+      :root {
+        --primary: #37003c;
+        --accent: #00ff85;
+        --bg: #f4f4f4;
+        --card-bg: #ffffff;
+        --text: #1f2933;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 16px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #f9f5ff 0, #f4f4f5 40%, #e5e7eb 100%);
+        color: var(--text);
+      }
+
+      .shell {
+        max-width: 960px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+        overflow: hidden;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary), #50025c);
+        color: #fff;
+        padding: 20px 24px;
+      }
+
+      .header h1 {
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+
+      .header p {
+        margin: 0;
+        font-size: 13px;
+        opacity: 0.85;
+      }
+
+      .tabs {
+        display: flex;
+        background: #f1f5f9;
+      }
+
+      .tab-button {
+        flex: 1;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+      }
+
+      .tab-button.active {
+        background: #ffffff;
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+      }
+
+      .content {
+        padding: 14px 16px 18px;
+        flex: 1;
+        overflow: auto;
+        font-size: 13px;
+      }
+
+      .section-title {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0 0 8px;
+        color: #6b7280;
+      }
+
+      .card {
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        padding: 10px 12px;
+      }
+
+      .table-scroll {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      th,
+      td {
+        padding: 8px 6px;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      th {
+        background: #f3f4f6;
+        font-weight: 600;
+      }
+
+      td:first-child,
+      th:first-child {
+        width: 32px;
+      }
+
+      td.club-cell {
+        text-align: left;
+        font-weight: 500;
+      }
+
+      tr:nth-child(even) td {
+        background: #fafafa;
+      }
+
+      .muted {
+        color: #9ca3af;
+      }
+
+      .error-text {
+        color: #b91c1c;
+        text-align: center;
+        padding: 12px 0;
+      }
+
+      .matches-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .match-card {
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .match-meta {
+        font-size: 11px;
+        color: #6b7280;
+        min-width: 76px;
+      }
+
+      .match-teams {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 0 8px;
+      }
+
+      .team-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 600;
+        max-width: 90px;
+        text-align: center;
+      }
+
+      .team-label span {
+        white-space: normal;
+        line-height: 1.25;
+      }
+
+      .score-pill {
+        background: var(--primary);
+        color: #fff;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .vs-pill {
+        font-weight: 600;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .section-heading {
+        margin: 12px 0 6px;
+        font-size: 13px;
+        font-weight: 600;
+        border-left: 3px solid var(--accent);
+        padding-left: 8px;
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          border-radius: 14px;
+        }
+
+        .content {
+          padding: 10px;
+        }
+
+        .match-meta {
+          font-size: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="header">
+        <h1>🦁 Premier League Live</h1>
+        <p>Klasemen dan jadwal dalam satu tempat.</p>
+      </header>
+
+      <div class="tabs">
+        <button
+          class="tab-button active"
+          data-tab="standings"
+          type="button"
+        >
+          Klasemen
+        </button>
+        <button class="tab-button" data-tab="matches" type="button">
+          Jadwal &amp; Hasil
+        </button>
+      </div>
+
+      <main class="content">
+        <section id="standings-section">
+          <p class="section-title">Klasemen liga</p>
+          <div class="card">
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th style="text-align: left">Klub</th>
+                    <th>M</th>
+                    <th>Poin</th>
+                  </tr>
+                </thead>
+                <tbody id="standings-body">
+                  <tr>
+                    <td colspan="4" class="muted">
+                      Memuat data klasemen...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="matches-section" style="display: none">
+          <p class="section-title">Pertandingan</p>
+          <div class="card">
+            <div id="matches-container" class="matches-list">
+              <p class="muted" style="text-align: center">
+                Memuat jadwal dan hasil...
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const API_BASE =
+        window.TABLE_API_BASE || "http://localhost:3000/api";
+
+      function selectTab(tab) {
+        const buttons = document.querySelectorAll(".tab-button");
+        const standings = document.getElementById("standings-section");
+        const matches = document.getElementById("matches-section");
+
+        buttons.forEach((btn) => {
+          if (btn.dataset.tab === tab) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+
+        if (tab === "standings") {
+          standings.style.display = "";
+          matches.style.display = "none";
+        } else {
+          standings.style.display = "none";
+          matches.style.display = "";
+        }
+      }
+
+      document.querySelectorAll(".tab-button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          selectTab(btn.dataset.tab);
+        });
+      });
+
+      async function fetchStandings() {
+        const body = document.getElementById("standings-body");
+        body.innerHTML =
+          '<tr><td colspan="4" class="muted">Memuat data klasemen...</td></tr>';
+
+        try {
+          const res = await fetch(API_BASE + "/klasemen");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+
+          const tableObj = (data.standings || []).find(
+            (s) => s.type === "TOTAL"
+          );
+          if (!tableObj || !Array.isArray(tableObj.table)) {
+            body.innerHTML =
+              '<tr><td colspan="4" class="muted">Data klasemen tidak tersedia.</td></tr>';
+            return;
+          }
+
+          body.innerHTML = "";
+          tableObj.table.forEach((row) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${row.position}</td>
+              <td class="club-cell">${row.team.name}</td>
+              <td>${row.playedGames}</td>
+              <td style="font-weight:700;">${row.points}</td>
+            `;
+            body.appendChild(tr);
+          });
+        } catch (e) {
+          console.error(e);
+          body.innerHTML =
+            '<tr><td colspan="4" class="error-text">Gagal memuat klasemen.</td></tr>';
+        }
+      }
+
+      function renderMatchCard(m) {
+        const date = new Date(m.utcDate).toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "short",
+        });
+
+        const isFinished = m.status === "FINISHED";
+        const score = isFinished
+          ? `<div class="score-pill">${m.score.fullTime.home} - ${m.score.fullTime.away}</div>`
+          : `<div class="vs-pill">VS</div>`;
+
+        return `
+          <article class="match-card">
+            <div class="match-meta">
+              <div>${date}</div>
+              <div>${isFinished ? "FT" : m.status}</div>
+            </div>
+            <div class="match-teams">
+              <div class="team-label">
+                <span>${m.homeTeam.shortName || m.homeTeam.name}</span>
+              </div>
+              ${score}
+              <div class="team-label">
+                <span>${m.awayTeam.shortName || m.awayTeam.name}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      async function fetchMatches() {
+        const container = document.getElementById("matches-container");
+        container.innerHTML =
+          '<p class="muted" style="text-align:center;">Memuat jadwal dan hasil...</p>';
+
+        try {
+          const res = await fetch(API_BASE + "/pertandingan");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+
+          const matches = data.matches || [];
+          container.innerHTML = "";
+
+          if (!matches.length) {
+            container.innerHTML =
+              '<p class="muted" style="text-align:center;">Tidak ada pertandingan dalam waktu dekat.</p>';
+            return;
+          }
+
+          const finished = matches
+            .filter((m) => m.status === "FINISHED")
+            .reverse();
+          const scheduled = matches.filter((m) => m.status !== "FINISHED");
+
+          if (finished.length) {
+            container.innerHTML +=
+              '<h3 class="section-heading">Hasil terkini</h3>';
+            finished.forEach((m) => {
+              container.innerHTML += renderMatchCard(m);
+            });
+          }
+
+          if (scheduled.length) {
+            container.innerHTML +=
+              '<h3 class="section-heading">Jadwal mendatang</h3>';
+            scheduled.forEach((m) => {
+              container.innerHTML += renderMatchCard(m);
+            });
+          }
+        } catch (e) {
+          console.error(e);
+          container.innerHTML =
+            '<p class="error-text">Gagal memuat jadwal dan hasil pertandingan.</p>';
+        }
+      }
+
+      fetchStandings();
+      fetchMatches();
+    </script>
+  </body>
+</html>
+
