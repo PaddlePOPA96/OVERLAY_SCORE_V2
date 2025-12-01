@@ -89,6 +89,25 @@ const INITIAL_PLAYERS = [
   },
 ];
 
+// Override khusus untuk beberapa legenda yang susah dicari akurat via API
+const SPECIAL_PLAYERS = {
+  // Ronaldo Luís Nazário de Lima
+  "ronaldo nazario": {
+    id: "special-ronaldo-nazario",
+    name: "Ronaldo Nazário",
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
+    mappedPos: "FWD",
+  },
+  "ronaldo luis nazario": {
+    id: "special-ronaldo-nazario",
+    name: "Ronaldo Nazário",
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
+    mappedPos: "FWD",
+  },
+};
+
 // Database formasi (koordinat persentase)
 const FORMATIONS = {
   "4-3-3": [
@@ -244,6 +263,9 @@ export default function DreamElevenBuilder() {
   const [isSearching, setIsSearching] = useState(false);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [isCapturing, setIsCapturing] = useState(false);
+  const [candidateOptions, setCandidateOptions] = useState([]);
+  const [candidateBase, setCandidateBase] = useState(null);
+  const [showCandidateModal, setShowCandidateModal] = useState(false);
 
   // Auto save ke localStorage
   useEffect(() => {
@@ -327,6 +349,22 @@ export default function DreamElevenBuilder() {
   };
 
   const fetchPlayerData = async (name) => {
+    const normalize = (value) =>
+      (value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    const queryNorm = normalize(name);
+
+    // Cek dulu override legenda
+    if (SPECIAL_PLAYERS[queryNorm]) {
+      return [SPECIAL_PLAYERS[queryNorm]];
+    }
+
     try {
       const response = await fetch(
         `https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(
@@ -334,12 +372,28 @@ export default function DreamElevenBuilder() {
         )}`
       );
       const data = await response.json();
-      if (data.player && data.player.length > 0) {
-        const playerData = data.player[0];
-        const imgUrl =
-          playerData.strCutout || playerData.strThumb || null;
+      const players = Array.isArray(data.player) ? data.player : [];
+      if (!players.length) {
+        return [];
+      }
+      const tokens = queryNorm.split(" ").filter(Boolean);
+      const firstToken = tokens[0] || "";
+      const extraTokens = tokens.slice(1);
 
-        const rawPosition = (playerData.strPosition || "").toUpperCase();
+      const scored = players.map((player) => {
+        const nameNorm = normalize(player.strPlayer);
+        let score = 0;
+
+        if (firstToken && nameNorm.includes(firstToken)) {
+          score += 2;
+        }
+        extraTokens.forEach((token) => {
+          if (nameNorm.includes(token)) {
+            score += 1;
+          }
+        });
+
+        const rawPosition = (player.strPosition || "").toUpperCase();
         let mappedPos = null;
 
         if (
@@ -363,12 +417,31 @@ export default function DreamElevenBuilder() {
           mappedPos = "FWD";
         }
 
-        return { imgUrl, mappedPos };
-      }
-      return { imgUrl: null, mappedPos: null };
+        return {
+          score,
+          candidate: {
+            id: player.idPlayer,
+            name: player.strPlayer,
+            imgUrl: player.strCutout || player.strThumb || null,
+            mappedPos,
+            rawPosition: player.strPosition || "",
+            team: player.strTeam || "",
+            nationality: player.strNationality || "",
+          },
+        };
+      });
+
+      // Urutkan kandidat berdasar skor (paling relevan dulu)
+      scored.sort((a, b) => b.score - a.score);
+
+      // Kalau semua skor 0 (nama beda banget), tetap balikin semua sebagai fallback
+      const hasPositiveScore = scored.some((item) => item.score > 0);
+      const effective = hasPositiveScore ? scored : scored;
+
+      return effective.map((item) => item.candidate);
     } catch (error) {
       console.error("Error fetching image:", error);
-      return { imgUrl: null, mappedPos: null };
+      return [];
     }
   };
 
@@ -377,23 +450,48 @@ export default function DreamElevenBuilder() {
     if (!newPlayerName.trim()) return;
 
     setIsSearching(true);
-    const { imgUrl, mappedPos } = await fetchPlayerData(newPlayerName);
-    const finalPosition = mappedPos || newPlayerPos;
-
-    const newPlayer = {
-      id: Date.now().toString(),
-      name: newPlayerName,
-      position: finalPosition,
-      rating: Math.floor(Math.random() * (95 - 80 + 1) + 80),
-      imgUrl,
-    };
-
-    setBench((prev) => [...prev, newPlayer]);
-    setNewPlayerName("");
-    if (mappedPos) {
-      setNewPlayerPos(mappedPos);
-    }
+    const candidates = await fetchPlayerData(newPlayerName);
     setIsSearching(false);
+
+    if (!candidates || !candidates.length) {
+      // fallback: tidak ada hasil, pakai nama manual
+      const newPlayer = {
+        id: Date.now().toString(),
+        name: newPlayerName,
+        position: newPlayerPos,
+        rating: Math.floor(Math.random() * (95 - 80 + 1) + 80),
+        imgUrl: null,
+      };
+      setBench((prev) => [...prev, newPlayer]);
+      setNewPlayerName("");
+      return;
+    }
+
+    if (candidates.length === 1) {
+      const chosen = candidates[0];
+      const finalPosition = chosen.mappedPos || newPlayerPos;
+      const newPlayer = {
+        id: Date.now().toString(),
+        name: chosen.displayName || chosen.name || newPlayerName,
+        position: finalPosition,
+        rating: Math.floor(Math.random() * (95 - 80 + 1) + 80),
+        imgUrl: chosen.imgUrl || null,
+      };
+      setBench((prev) => [...prev, newPlayer]);
+      setNewPlayerName("");
+      if (chosen.mappedPos) {
+        setNewPlayerPos(chosen.mappedPos);
+      }
+      return;
+    }
+
+    // Lebih dari satu kandidat -> buka modal pemilihan
+    setCandidateOptions(candidates);
+    setCandidateBase({
+      nameInput: newPlayerName,
+      basePos: newPlayerPos,
+    });
+    setShowCandidateModal(true);
   };
 
   const resetBoard = () => {
@@ -426,6 +524,34 @@ export default function DreamElevenBuilder() {
     }
   };
 
+  const handleChooseCandidate = (candidate) => {
+    const basePos = candidateBase?.basePos || "ST";
+    const finalPosition = candidate.mappedPos || basePos;
+
+    const newPlayer = {
+      id: Date.now().toString(),
+      name: candidate.displayName || candidate.name || candidateBase?.nameInput,
+      position: finalPosition,
+      rating: Math.floor(Math.random() * (95 - 80 + 1) + 80),
+      imgUrl: candidate.imgUrl || null,
+    };
+
+    setBench((prev) => [...prev, newPlayer]);
+    setNewPlayerName("");
+    if (candidate.mappedPos) {
+      setNewPlayerPos(candidate.mappedPos);
+    }
+    setCandidateOptions([]);
+    setCandidateBase(null);
+    setShowCandidateModal(false);
+  };
+
+  const handleCancelCandidate = () => {
+    setCandidateOptions([]);
+    setCandidateBase(null);
+    setShowCandidateModal(false);
+  };
+
   const handleScreenshot = async () => {
     if (!fieldRef.current || isCapturing) return;
 
@@ -452,6 +578,7 @@ export default function DreamElevenBuilder() {
   };
 
   return (
+    <>
     <div className="bg-slate-950/90 text-slate-100 font-sans p-3 md:p-5 rounded-2xl border border-slate-800 shadow-2xl select-none">
       <div className="flex flex-col md:flex-row gap-6">
         <div className="flex-1 flex flex-col">
@@ -669,5 +796,79 @@ export default function DreamElevenBuilder() {
         </div>
       </div>
     </div>
+      {showCandidateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="bg-slate-950 border border-slate-700 rounded-2xl p-4 w-full max-w-lg max-h-[80vh] flex flex-col gap-3 shadow-2xl">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-100">
+                  Pilih pemain
+                </h3>
+                <p className="text-[11px] text-slate-400">
+                  Untuk kata kunci:{" "}
+                  <span className="font-mono text-slate-200">
+                    {candidateBase?.nameInput}
+                  </span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCancelCandidate}
+                className="w-6 h-6 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs flex items-center justify-center"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-2 space-y-2 overflow-y-auto pr-1">
+              {candidateOptions.map((candidate) => (
+                <button
+                  type="button"
+                  key={candidate.id}
+                  onClick={() => handleChooseCandidate(candidate)}
+                  className="w-full flex items-center gap-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-left text-xs transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden flex items-center justify-center flex-shrink-0">
+                    {candidate.imgUrl ? (
+                      <img
+                        src={candidate.imgUrl}
+                        alt={candidate.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-[10px] text-slate-400">
+                        NO PHOTO
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-slate-100">
+                        {candidate.name}
+                      </span>
+                      <span className="text-[10px] text-cyan-400 font-mono">
+                        {candidate.mappedPos || candidate.rawPosition || "?"}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 text-[10px] text-slate-400 flex flex-wrap gap-2">
+                      {candidate.team && (
+                        <span className="truncate max-w-[120px]">
+                          {candidate.team}
+                        </span>
+                      )}
+                      {candidate.nationality && (
+                        <span className="px-2 py-[1px] rounded-full border border-slate-600 text-[9px]">
+                          {candidate.nationality}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
