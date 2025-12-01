@@ -4,7 +4,7 @@ import {
   usePremierLeagueMatches,
   usePremierLeagueStandings,
 } from "@/hooks/pl-data";
-import { PremierLeagueMain } from "@/components/dashboard/PremierLeagueSection";
+import { PremierLeagueMain } from "@/app/dashboard/_components/PremierLeagueSection";
 
 // Halaman lain-lain Premier League (jadwal & hasil) di dalam dashboard
 export default function PremierLeagueMiscPage() {
