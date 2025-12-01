@@ -51,6 +51,17 @@ export function LeftSidebar({ active, setActive, onLogout, theme }) {
             isDark={isDark}
             onClick={() => setActive("pl-table")}
           />
+
+          <div className="text-xs text-gray-500 uppercase tracking-wider mt-4 mb-1">
+            Dream Eleven
+          </div>
+          <NavItem
+            icon="⭐"
+            label="Dream Eleven"
+            active={active === "dream-eleven"}
+            isDark={isDark}
+            onClick={() => setActive("dream-eleven")}
+          />
         </nav>
       </div>
 

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { PremierLeagueMain } from "./PremierLeagueSection";
+import DreamElevenBuilder from "./DreamElevenBuilder";
 
 export function MainColumn({
   active,
@@ -44,6 +45,16 @@ export function MainColumn({
           <div className="pr-2">
             <OperatorRoot initialRoomId={roomId} requireAuth={false} />
           </div>
+        </>
+      ) : active === "dream-eleven" ? (
+        <>
+          <header className="mb-8">
+            <h1 className={titleClass}>Dream Eleven</h1>
+            <p className={subtitleClass}>
+              Susun tim impian Premier League kamu di sini.
+            </p>
+          </header>
+          <DreamElevenBuilder />
         </>
       ) : (
         <>

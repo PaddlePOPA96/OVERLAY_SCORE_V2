@@ -96,7 +96,7 @@ export default function DashboardPage() {
         roomId={roomId}
         matches={matches}
         loadingMatches={loadingMatches}
-        fullWidth={active === "operator"}
+        fullWidth={active === "operator" || active === "dream-eleven"}
         theme={theme}
         standings={standings}
         loadingStandings={loadingStandings}
