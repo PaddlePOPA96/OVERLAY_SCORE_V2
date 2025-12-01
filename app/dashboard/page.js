@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
-import { LeftSidebar } from "./LeftSidebar";
-import { MainColumn } from "./MainColumn";
-import { RightColumn } from "./RightColumn";
+import { LeftSidebar } from "@/components/dashboard/LeftSidebar";
+import { MainColumn } from "@/components/dashboard/MainColumn";
+import { RightColumn } from "@/components/dashboard/RightColumn";
 import {
   usePremierLeagueMatches,
   usePremierLeagueNews,
   usePremierLeagueStandings,
-} from "./pl-data";
+} from "@/hooks/pl-data";
 
 export default function DashboardPage() {
   const router = useRouter();

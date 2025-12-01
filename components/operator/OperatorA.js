@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import LayoutA from "../overlay/LayoutA";
+import LayoutA from "@/components/overlay/LayoutA";
 import OverlayRoomControls from "./OverlayRoomControls";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./layoutB.css";
+import "@/app/dashboard/operator/overlay/layoutB.css";
 
 // Pilih warna teks (hitam/putih) agar kontras dengan warna background
 function getContrastColor(hex) {

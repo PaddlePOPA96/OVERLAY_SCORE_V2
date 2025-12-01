@@ -1,5 +1,6 @@
-// Halaman ini bisa dipakai sebagai helper untuk kasih info ke user
-// bahwa URL overlay sekarang pakai roomId, contoh: /overlay/room123
+// Halaman ini memberi info ke user
+// bahwa URL overlay sekarang pakai roomId, contoh:
+// /dashboard/operator/overlay/room123
 export default function OverlayRootInfo() {
   return (
     <div style={{ padding: 32, fontFamily: "system-ui, sans-serif" }}>
@@ -14,11 +15,11 @@ export default function OverlayRootInfo() {
           marginTop: 8,
         }}
       >
-        /overlay/&lt;roomId&gt;
+        /dashboard/operator/overlay/&lt;roomId&gt;
       </pre>
       <p style={{ marginTop: 12 }}>
-        Contoh: <code>/overlay/test-match</code> atau{" "}
-        <code>/overlay/001</code>.
+        Contoh: <code>/dashboard/operator/overlay/test-match</code> atau{" "}
+        <code>/dashboard/operator/overlay/001</code>.
       </p>
     </div>
   );

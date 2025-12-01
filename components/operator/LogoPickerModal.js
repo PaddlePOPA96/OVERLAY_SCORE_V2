@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LOGO_DATA, buildLogoSrc } from "./logoData";
+import { LOGO_DATA, buildLogoSrc } from "@/lib/logoData";
 
 export default function LogoPickerModal({ isOpen, onClose, onSelect }) {
   const [league, setLeague] = useState(Object.keys(LOGO_DATA)[0] || "");
@@ -160,4 +160,3 @@ export default function LogoPickerModal({ isOpen, onClose, onSelect }) {
     </div>
   );
 }
-

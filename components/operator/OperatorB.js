@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import LayoutB from "../overlay/LayoutB";
+import LayoutB from "@/components/overlay/LayoutB";
 import LogoPickerModal from "./LogoPickerModal";
-import { makeTeamAbbr } from "./logoData";
+import { makeTeamAbbr } from "@/lib/logoData";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import OverlayRoomControls from "./OverlayRoomControls";

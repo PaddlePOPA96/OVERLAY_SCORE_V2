@@ -11,7 +11,7 @@ export default function OverlayRoomControls({
 }) {
   const [copied, setCopied] = useState(false);
 
-  const overlayPath = `/overlay/${roomId || "default"}`;
+  const overlayPath = `/dashboard/operator/overlay/${roomId || "default"}`;
   const baseUrl =
     typeof window !== "undefined" ? window.location.origin : "";
   const overlayUrl = baseUrl ? `${baseUrl}${overlayPath}` : overlayPath;
@@ -72,4 +72,3 @@ export default function OverlayRoomControls({
     </div>
   );
 }
-

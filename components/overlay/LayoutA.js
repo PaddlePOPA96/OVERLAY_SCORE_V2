@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import "./layoutA.css";
+import "@/app/dashboard/operator/overlay/layoutA.css";
 
 export default function LayoutA({ data, displayTime, formatTime }) {
   const [showGoal, setShowGoal] = useState(false);

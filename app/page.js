@@ -13,7 +13,10 @@ export default function Home() {
           <Link href="/login" className="home-btn home-btn-primary">
             Login Operator
           </Link>
-          <Link href="/overlay" className="home-btn home-btn-secondary">
+          <Link
+            href="/dashboard/operator/overlay"
+            className="home-btn home-btn-secondary"
+          >
             Buka Overlay OBS
           </Link>
         </div>

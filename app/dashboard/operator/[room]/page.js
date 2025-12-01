@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import OperatorRoot from "../OperatorRoot";
+import OperatorRoot from "@/components/operator/OperatorRoot";
 
 // Halaman Operator versi dynamic route: /operator/[room]
 export default function OperatorRoomPage() {
