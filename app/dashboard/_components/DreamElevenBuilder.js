@@ -3,7 +3,91 @@
 import { useState, useEffect, useRef } from "react";
 import * as htmlToImage from "html-to-image";
 
-
+// Data awal pemain
+const INITIAL_PLAYERS = [
+  {
+    id: "p1",
+    name: "L. Messi",
+    position: "RW",
+    rating: 99,
+    imgUrl: "https://media.api-sports.io/football/players/154.png",
+  },
+  {
+    id: "p2",
+    name: "C. Ronaldo",
+    position: "ST",
+    rating: 98,
+    imgUrl: "https://media.api-sports.io/football/players/874.png",
+  },
+  {
+    id: "p3",
+    name: "P. Maldini",
+    position: "CB",
+    rating: 97,
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/PaoloMaldini.jpg/200px-PaoloMaldini.jpg",
+  },
+  {
+    id: "p4",
+    name: "Z. Zidane",
+    position: "CAM",
+    rating: 96,
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/f/f3/Zinedine_Zidane_by_Tasnim_03.jpg",
+  },
+  {
+    id: "p5",
+    name: "R. Nazario",
+    position: "ST",
+    rating: 98,
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
+  },
+  {
+    id: "p6",
+    name: "T. Henry",
+    position: "ST",
+    rating: 94,
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Thierry_Henry_2012.jpg/440px-Thierry_Henry_2012.jpg",
+  },
+  {
+    id: "p7",
+    name: "A. Iniesta",
+    position: "CM",
+    rating: 95,
+    imgUrl: "https://media.api-sports.io/football/players/8.png",
+  },
+  {
+    id: "p8",
+    name: "R. Carlos",
+    position: "LB",
+    rating: 93,
+    imgUrl:
+      "https://upload.wikimedia.org/wikipedia/commons/6/66/Roberto_Carlos_2019.jpg",
+  },
+  {
+    id: "p9",
+    name: "V. Van Dijk",
+    position: "CB",
+    rating: 91,
+    imgUrl: "https://media.api-sports.io/football/players/293.png",
+  },
+  {
+    id: "p10",
+    name: "K. De Bruyne",
+    position: "CM",
+    rating: 92,
+    imgUrl: "https://media.api-sports.io/football/players/629.png",
+  },
+  {
+    id: "p11",
+    name: "E. Haaland",
+    position: "ST",
+    rating: 93,
+    imgUrl: "https://media.api-sports.io/football/players/1100.png",
+  },
+];
 
 // Database formasi (koordinat persentase)
 const FORMATIONS = {
@@ -61,7 +145,7 @@ const FORMATIONS = {
   ],
 };
 
-function PlayerCard({ player, onDragStart, small = false }) {
+function PlayerCard({ player, onDragStart, small = false, onRemove }) {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -109,6 +193,21 @@ function PlayerCard({ player, onDragStart, small = false }) {
           </span>
         </div>
       </div>
+
+      {onRemove && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            onRemove();
+          }}
+          className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-600 text-[10px] text-white flex items-center justify-center shadow hover:bg-red-500"
+          title="Hapus dari cadangan"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }
@@ -223,6 +322,10 @@ export default function DreamElevenBuilder() {
     setSourceType(null);
   };
 
+  const handleRemoveFromBench = (id) => {
+    setBench((prev) => prev.filter((player) => player.id !== id));
+  };
+
   const fetchPlayerData = async (name) => {
     try {
       const response = await fetch(
@@ -313,6 +416,13 @@ export default function DreamElevenBuilder() {
         window.localStorage.removeItem("football_bench_v2");
         window.location.reload();
       }
+    }
+  };
+
+  const clearBench = () => {
+    // eslint-disable-next-line no-restricted-globals
+    if (confirm("Hapus semua pemain di cadangan?")) {
+      setBench([]);
     }
   };
 
@@ -512,10 +622,21 @@ export default function DreamElevenBuilder() {
           </div>
 
           <div className="flex-1 bg-slate-900/90 p-4 rounded-xl border border-slate-700 flex flex-col shadow-xl">
-            <h2 className="text-lg font-bold mb-3 text-slate-300 flex items-center gap-2">
-              <div className="w-2 h-5 bg-yellow-500 rounded-sm" />
-              Cadangan ({bench.length})
-            </h2>
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-lg font-bold text-slate-300 flex items-center gap-2">
+                <div className="w-2 h-5 bg-yellow-500 rounded-sm" />
+                Cadangan ({bench.length})
+              </h2>
+              {bench.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearBench}
+                  className="text-[10px] px-2 py-1 rounded-full border border-slate-600 text-slate-300 hover:bg-red-600/80 hover:text-white hover:border-red-500 transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
             <div
               className="flex-1 overflow-y-auto max-h-[500px] min-h-[200px] bg-black/30 p-2 rounded-lg grid grid-cols-3 gap-2 content-start custom-scrollbar"
               onDragOver={handleDragOver}
@@ -536,6 +657,7 @@ export default function DreamElevenBuilder() {
                     onDragStart={(event) =>
                       handleDragStart(event, item, "bench")
                     }
+                    onRemove={() => handleRemoveFromBench(item.id)}
                   />
                 </div>
               ))}
