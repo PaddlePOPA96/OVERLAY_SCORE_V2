@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   loginWithEmailPassword,
@@ -21,8 +21,32 @@ export default function LoginPage() {
 
   const handleAuthSuccess = (user) => {
     if (!user) return;
+    if (typeof window !== "undefined") {
+      if (remember) {
+        window.localStorage.setItem("scoreboard-remember", "1");
+        window.localStorage.setItem(
+          "scoreboard-email",
+          user.email || email || ""
+        );
+      } else {
+        window.localStorage.removeItem("scoreboard-remember");
+        window.localStorage.removeItem("scoreboard-email");
+      }
+    }
     router.push("/dashboard");
   };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const savedRemember = window.localStorage.getItem("scoreboard-remember");
+    const savedEmail = window.localStorage.getItem("scoreboard-email") || "";
+    if (savedRemember === "1") {
+      setRemember(true);
+      if (savedEmail) {
+        setEmail(savedEmail);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
