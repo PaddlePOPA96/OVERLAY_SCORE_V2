@@ -559,12 +559,19 @@ body {
   overflow: hidden; 
 }
 
+.operator-a-preview-box {
+  height: auto;
+  overflow: visible;
+}
+
 .operator-a-preview-box #layout-a-root { 
-  transform: scale(0.6); 
-  transform-origin: center; 
-  width: auto; 
-  height: auto; 
-  position: static; 
+  width: auto;
+  height: auto;
+  overflow: visible;
+  position: static;
+  transform: scale(0.7);
+  transform-origin: center;
+  margin-top: 20px;
 }
 
 .operator-b-preview-box #layout-b-root { 

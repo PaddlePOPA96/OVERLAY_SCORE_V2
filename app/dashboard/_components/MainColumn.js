@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import OperatorRoot from "@/components/operator/OperatorRoot";
+import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { PremierLeagueMain } from "./PremierLeagueSection";
 
 export function MainColumn({

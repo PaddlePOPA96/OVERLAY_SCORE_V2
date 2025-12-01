@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
-import { LeftSidebar } from "@/components/dashboard/LeftSidebar";
-import { MainColumn } from "@/components/dashboard/MainColumn";
-import { RightColumn } from "@/components/dashboard/RightColumn";
+import { LeftSidebar } from "@/app/dashboard/_components/LeftSidebar";
+import { MainColumn } from "@/app/dashboard/_components/MainColumn";
+import { RightColumn } from "@/app/dashboard/_components/RightColumn";
 import {
   usePremierLeagueMatches,
   usePremierLeagueNews,

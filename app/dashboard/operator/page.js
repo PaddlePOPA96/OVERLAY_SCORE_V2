@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import OperatorRoot from "@/components/operator/OperatorRoot";
+import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 
 // Halaman utama Operator: memilih layout A/B dan mengelola auth + room
 export default function OperatorPage() {

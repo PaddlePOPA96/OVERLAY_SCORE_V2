@@ -1,8 +1,8 @@
 "use client";
 
 import { useScoreboard } from "@/hooks/useScoreboard";
-import LayoutA from "@/components/overlay/LayoutA";
-import LayoutB from "@/components/overlay/LayoutB";
+import LayoutA from "../../_components/LayoutA";
+import LayoutB from "../../_components/LayoutB";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
