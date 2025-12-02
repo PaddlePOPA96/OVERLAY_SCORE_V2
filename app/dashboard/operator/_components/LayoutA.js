@@ -62,6 +62,9 @@ export default function LayoutA({ data, displayTime, formatTime }) {
     "--score-right-color": data.awayColor || "#b00024",
   };
 
+  const homeScoreText = String(data.homeScore ?? 0);
+  const awayScoreText = String(data.awayScore ?? 0);
+
   const renderLeftContent = () => {
     if (showGoal && goalTeam === data.homeName) {
       return <span className="goal-text-anim">GOAL</span>;
@@ -104,17 +107,25 @@ export default function LayoutA({ data, displayTime, formatTime }) {
             <div className="layout-a-score-overlay">
               <span
                 className={`layout-a-score-num layout-a-score-left ${
+                  homeScoreText.length > 1
+                    ? "layout-a-score-num-double"
+                    : ""
+                } ${
                   showGoal && goalTeam === data.homeName ? "score-hidden" : ""
                 }`}
               >
-                {data.homeScore}
+                {homeScoreText}
               </span>
               <span
                 className={`layout-a-score-num layout-a-score-right ${
+                  awayScoreText.length > 1
+                    ? "layout-a-score-num-double"
+                    : ""
+                } ${
                   showGoal && goalTeam === data.awayName ? "score-hidden" : ""
                 }`}
               >
-                {data.awayScore}
+                {awayScoreText}
               </span>
             </div>
           </div>

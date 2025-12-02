@@ -187,11 +187,10 @@
 
 .layout-a-score-overlay {
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  /* lebih sempit supaya angka mepet logo */
-  width: 380px;
+  transform: translate(-50%, -55%);
+  width: 420px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,11 +198,14 @@
 }
 
 .layout-a-score-num {
-  /* perbesar ~10% dari sebelumnya */
-  font-size: 154px;
+  font-size: 160px;
   font-weight: 900;
   color: #ffffff;
   text-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+}
+
+.layout-a-score-num-double {
+  font-size: 120px;
 }
 
 .layout-a-score-num.score-hidden {

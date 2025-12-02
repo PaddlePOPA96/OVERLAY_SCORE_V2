@@ -119,7 +119,7 @@ export default function OperatorA({
             variant="ghost"
             onClick={() =>
               actions.updateMatch({
-                homeScore: Math.max(0, data.homeScore - 1),
+                homeScore: Math.max(0, (data.homeScore || 0) - 1),
               })
             }
           >
@@ -129,10 +129,15 @@ export default function OperatorA({
             id="score-left"
             className="op-input"
             type="number"
+            min={0}
+            max={20}
             value={data.homeScore}
             onChange={(e) =>
               actions.updateMatch({
-                homeScore: parseInt(e.target.value, 10) || 0,
+                homeScore: Math.max(
+                  0,
+                  Math.min(20, parseInt(e.target.value, 10) || 0),
+                ),
               })
             }
             style={{ width: "50px" }}
@@ -141,7 +146,9 @@ export default function OperatorA({
             className="op-btn"
             variant="ghost"
             onClick={() =>
-              actions.updateMatch({ homeScore: data.homeScore + 1 })
+              actions.updateMatch({
+                homeScore: Math.min(20, (data.homeScore || 0) + 1),
+              })
             }
           >
             +
@@ -164,7 +171,7 @@ export default function OperatorA({
             variant="ghost"
             onClick={() =>
               actions.updateMatch({
-                awayScore: Math.max(0, data.awayScore - 1),
+                awayScore: Math.max(0, (data.awayScore || 0) - 1),
               })
             }
           >
@@ -174,10 +181,15 @@ export default function OperatorA({
             id="score-right"
             className="op-input"
             type="number"
+            min={0}
+            max={20}
             value={data.awayScore}
             onChange={(e) =>
               actions.updateMatch({
-                awayScore: parseInt(e.target.value, 10) || 0,
+                awayScore: Math.max(
+                  0,
+                  Math.min(20, parseInt(e.target.value, 10) || 0),
+                ),
               })
             }
             style={{ width: "50px" }}
@@ -186,7 +198,9 @@ export default function OperatorA({
             className="op-btn"
             variant="ghost"
             onClick={() =>
-              actions.updateMatch({ awayScore: data.awayScore + 1 })
+              actions.updateMatch({
+                awayScore: Math.min(20, (data.awayScore || 0) + 1),
+              })
             }
           >
             +

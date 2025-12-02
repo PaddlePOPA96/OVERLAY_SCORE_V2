@@ -77,7 +77,9 @@ export function useScoreboard(roomId = "default") {
   };
 
   const triggerGoal = (team) => {
-    const newScore = team === "home" ? (data.homeScore || 0) + 1 : (data.awayScore || 0) + 1;
+    const current =
+      team === "home" ? data.homeScore || 0 : data.awayScore || 0;
+    const newScore = Math.min(20, current + 1);
     updateMatch({
       [team === "home" ? "homeScore" : "awayScore"]: newScore,
       goalTrigger: Date.now(),

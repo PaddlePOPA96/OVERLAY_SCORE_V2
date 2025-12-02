@@ -87,7 +87,9 @@ export default function OperatorB({
             className="op-btn"
             variant="ghost"
             onClick={() =>
-              actions.updateMatch({ homeScore: data.homeScore + 1 })
+              actions.updateMatch({
+                homeScore: Math.min(20, (data.homeScore || 0) + 1),
+              })
             }
           >
             +1 (No Anim)
@@ -97,7 +99,7 @@ export default function OperatorB({
             variant="ghost"
             onClick={() =>
               actions.updateMatch({
-                homeScore: Math.max(0, data.homeScore - 1),
+                homeScore: Math.max(0, (data.homeScore || 0) - 1),
               })
             }
           >
@@ -127,7 +129,9 @@ export default function OperatorB({
             className="op-btn"
             variant="ghost"
             onClick={() =>
-              actions.updateMatch({ awayScore: data.awayScore + 1 })
+              actions.updateMatch({
+                awayScore: Math.min(20, (data.awayScore || 0) + 1),
+              })
             }
           >
             +1 (No Anim)
@@ -137,7 +141,7 @@ export default function OperatorB({
             variant="ghost"
             onClick={() =>
               actions.updateMatch({
-                awayScore: Math.max(0, data.awayScore - 1),
+                awayScore: Math.max(0, (data.awayScore || 0) - 1),
               })
             }
           >
