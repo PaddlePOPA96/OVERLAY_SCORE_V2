@@ -15,7 +15,7 @@ export function BuilderHeader({
     <header className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 flex items-center gap-2">
-          FREE-FORM BUILDER
+         STARTING ELEVEN BUILDER  
           <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700 font-normal normal-case flex items-center gap-1">
             <span
               className={
@@ -30,7 +30,7 @@ export function BuilderHeader({
           </span>
         </h2>
         <p className="text-slate-400 text-sm">
-          Drag &amp; drop bebas tanpa batas slot!
+          Drag &amp; drop bebas tanpa batas slot! karna kita bukan arne slot
         </p>
       </div>
 
