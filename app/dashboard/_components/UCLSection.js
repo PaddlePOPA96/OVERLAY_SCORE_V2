@@ -16,18 +16,18 @@ export function ChampionsLeagueTable({
     : "bg-white border border-slate-200 shadow-lg";
 
   const headingClass = isDark
-    ? "text-xs uppercase tracking-[0.16em] text-gray-100"
-    : "text-xs uppercase tracking-[0.16em] text-gray-500";
+    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-100"
+    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-500";
 
   const thClass = isDark
-    ? "text-left py-1 pr-1 font-semibold text-slate-200 text-xs"
-    : "text-left py-1 pr-1 font-semibold text-slate-600 text-xs";
+    ? "text-left py-2 px-2 font-semibold text-slate-200 text-[13px]"
+    : "text-left py-2 px-2 font-semibold text-slate-600 text-[13px]";
 
   const thCenterClass = `${thClass} text-center`;
 
   const cellText = isDark
-    ? "py-1 pr-1 text-slate-100 text-xs"
-    : "py-1 pr-1 text-slate-800 text-xs";
+    ? "py-2 pr-2 text-slate-100 text-sm"
+    : "py-2 pr-2 text-slate-800 text-sm";
 
   const cellCenter = `${cellText} text-center`;
 
@@ -129,7 +129,7 @@ export function ChampionsLeagueTable({
 
   return (
     <div
-      className={`${cardClass} rounded-xl p-4 space-y-4 w-full`}
+      className={`${cardClass} rounded-xl p-5 space-y-5 w-full max-w-[1040px] mx-auto`}
     >
       <div className="flex items-center justify-between">
         <p className={headingClass}>UEFA Champions League - Group Stage</p>
@@ -175,12 +175,13 @@ export function ChampionsLeagueTable({
                     <tr className="border-b border-slate-700/50">
                       <th className={thClass}>#</th>
                       <th className={thClass}>Klub</th>
+                      <th className={thCenterClass}>T</th>
                       <th className={thCenterClass}>M</th>
-                      <th className={thCenterClass}>W</th>
-                      <th className={thCenterClass}>D</th>
-                      <th className={thCenterClass}>L</th>
-                      <th className={thCenterClass}>GF</th>
-                      <th className={thCenterClass}>GA</th>
+                      <th className={thCenterClass}>S</th>
+                      <th className={thCenterClass}>K</th>
+                      <th className={thCenterClass}>GM</th>
+                      <th className={thCenterClass}>GK</th>
+                      <th className={thCenterClass}>SG</th>
                       <th className={thCenterClass}>Poin</th>
                     </tr>
                   </thead>
@@ -195,7 +196,7 @@ export function ChampionsLeagueTable({
                           <div className="flex items-center gap-2">
                             {(() => {
                               const logoSrc = resolveAnyClubLogo(
-                                row.team.name
+                                row.team.name,
                               );
                               if (!logoSrc) return null;
                               return (
@@ -215,6 +216,7 @@ export function ChampionsLeagueTable({
                         <td className={cellCenter}>{row.lost}</td>
                         <td className={cellCenter}>{row.goalsFor}</td>
                         <td className={cellCenter}>{row.goalsAgainst}</td>
+                        <td className={cellCenter}>{row.goalDifference}</td>
                         <td className={cellCenter}>{row.points}</td>
                       </tr>
                     ))}
@@ -441,7 +443,9 @@ export function ChampionsLeagueMatches({
   };
 
   return (
-    <div className={`${cardClass} rounded-xl p-4 space-y-4 w-full`}>
+    <div
+      className={`${cardClass} rounded-xl p-4 space-y-4 w-full max-w-[1040px] mx-auto`}
+    >
       <p className={headingClass}>Jadwal &amp; Hasil UCL (−7 sampai +7 hari)</p>
 
       {loadingMatches ? (

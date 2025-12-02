@@ -81,8 +81,15 @@ export default function DashboardPage() {
     );
   }
 
-  const isPremierLeagueView =
-    active === "pl-matches" || active === "pl-table";
+  const showRightColumn =
+    active === "pl-matches" ||
+    active === "pl-table" ||
+    active === "ucl-table";
+
+  const sideMatches =
+    active === "ucl-table" ? uclMatches : matches;
+  const sideLoadingMatches =
+    active === "ucl-table" ? loadingUclMatches : loadingMatches;
 
   const rootClass = [
     "min-h-screen flex font-sans overflow-x-hidden",
@@ -130,11 +137,11 @@ export default function DashboardPage() {
             onRefreshStandings={reloadStandings}
             onRefreshUclStandings={reloadUclStandings}
           />
-          {isPremierLeagueView && (
+          {showRightColumn && (
             <RightColumn
               active={active}
-              matches={matches}
-              loadingMatches={loadingMatches}
+              matches={sideMatches}
+              loadingMatches={sideLoadingMatches}
               news={news}
               loadingNews={loadingNews}
               theme={theme}

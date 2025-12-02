@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export function PremierLeagueRight({
   matches,
   loading,
@@ -11,6 +13,21 @@ export function PremierLeagueRight({
   const headingClass = isDark
     ? "text-gray-400"
     : "text-slate-700";
+
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [showNewsModal, setShowNewsModal] = useState(false);
+
+  useEffect(() => {
+    if (!showNewsModal) return;
+    const handler = (event) => {
+      if (event.key === "Escape") {
+        setShowNewsModal(false);
+        setSelectedNews(null);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [showNewsModal]);
 
   const liveMatch =
     matches?.find(
@@ -106,6 +123,10 @@ export function PremierLeagueRight({
                 title={item.title}
                 date={item.published}
                 image={item.image}
+                onClick={() => {
+                  setSelectedNews(item);
+                  setShowNewsModal(true);
+                }}
               />
             ))
           ) : !loadingNews ? (
@@ -115,11 +136,21 @@ export function PremierLeagueRight({
           ) : null}
         </div>
       </div>
+      {showNewsModal && selectedNews && (
+        <NewsModal
+          item={selectedNews}
+          onClose={() => {
+            setShowNewsModal(false);
+            setSelectedNews(null);
+          }}
+          dark={isDark}
+        />
+      )}
     </>
   );
 }
 
-function NewsItem({ title, date, image }) {
+function NewsItem({ title, date, image, onClick }) {
   const dateLabel = date
     ? new Date(date).toLocaleDateString("id-ID", {
         day: "numeric",
@@ -129,7 +160,11 @@ function NewsItem({ title, date, image }) {
     : "";
 
   return (
-    <div className="flex gap-4 group cursor-pointer">
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex gap-4 group cursor-pointer text-left w-full"
+    >
       {image ? (
         <img
           src={image}
@@ -144,8 +179,74 @@ function NewsItem({ title, date, image }) {
           {title}
         </h4>
         <span className="text-[10px] text-gray-500">
-          Premier League • {dateLabel || "Berita terkini"}
+          Sepak bola • {dateLabel || "Berita terkini"}
         </span>
+      </div>
+    </button>
+  );
+}
+
+function NewsModal({ item, onClose, dark }) {
+  const dateLabel = item.published
+    ? new Date(item.published).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
+  const containerClass = dark
+    ? "bg-slate-950 border border-slate-700 text-slate-100"
+    : "bg-white border border-slate-300 text-slate-900";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className={`${containerClass} rounded-2xl p-4 w-full max-w-lg shadow-2xl`}>
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div>
+            <h3 className="text-sm font-semibold leading-snug">
+              {item.title}
+            </h3>
+            {dateLabel && (
+              <p className="text-[11px] text-slate-400 mt-1">
+                Sepak bola • {dateLabel}
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-6 h-6 rounded-full bg-slate-800 text-slate-200 hover:bg-slate-700 text-xs flex items-center justify-center"
+            aria-label="Tutup berita"
+          >
+            ×
+          </button>
+        </div>
+        {item.image && (
+          <div className="mb-3">
+            <img
+              src={item.image}
+              alt={item.title}
+              className="w-full max-h-60 object-cover rounded-xl"
+            />
+          </div>
+        )}
+        {item.description && (
+          <p className="text-xs leading-relaxed text-slate-200 mb-3">
+            {item.description}
+          </p>
+        )}
+        {item.url && (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-400 hover:text-cyan-300"
+          >
+            Baca selengkapnya
+            <span aria-hidden="true">↗</span>
+          </a>
+        )}
       </div>
     </div>
   );

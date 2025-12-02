@@ -50,6 +50,9 @@ export function MainColumn({
     ? "text-gray-500"
     : "text-slate-600";
 
+  const [plMode, setPlMode] = useState(
+    active === "pl-table" ? "table" : "matches"
+  ); // "matches" | "table"
   const [uclMode, setUclMode] = useState("table"); // "table" | "matches"
 
   return (
@@ -124,6 +127,49 @@ export function MainColumn({
             />
           )}
         </>
+      ) : active === "pl-matches" || active === "pl-table" ? (
+        <>
+          <header className="mb-8">
+            <h1 className={titleClass}>Premier League</h1>
+            <p className={subtitleClass}>
+              Lihat jadwal, hasil, dan klasemen Premier League.
+            </p>
+            <div className="mt-4 inline-flex rounded-full bg-slate-900/60 border border-slate-700 p-1 text-xs">
+              <button
+                type="button"
+                onClick={() => setPlMode("matches")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
+                  plMode === "matches"
+                    ? "bg-purple-600 text-white shadow"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                Jadwal &amp; Hasil
+              </button>
+              <button
+                type="button"
+                onClick={() => setPlMode("table")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
+                  plMode === "table"
+                    ? "bg-purple-600 text-white shadow"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                Premier League Table
+              </button>
+            </div>
+          </header>
+          <PremierLeagueMain
+            matches={matches}
+            loading={loadingMatches}
+            theme={theme}
+            standings={standings}
+            loadingStandings={loadingStandings}
+            mode={plMode}
+            isAdmin={isAdmin}
+            onRefreshStandings={onRefreshStandings}
+          />
+        </>
       ) : (
         <>
           <header className="mb-8">
@@ -136,7 +182,7 @@ export function MainColumn({
             theme={theme}
             standings={standings}
             loadingStandings={loadingStandings}
-            mode={active === "pl-table" ? "table" : "matches"}
+            mode="matches"
             isAdmin={isAdmin}
             onRefreshStandings={onRefreshStandings}
           />

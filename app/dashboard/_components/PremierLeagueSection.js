@@ -215,30 +215,30 @@ function PremierLeagueTableCard({
   onRefreshStandings,
 }) {
   const headingClass = isDark
-    ? "text-xs uppercase tracking-[0.16em] text-gray-100"
-    : "text-xs uppercase tracking-[0.16em] text-gray-400";
+    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-100"
+    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-500";
 
   const thClass = isDark
-    ? "text-left py-1 pr-1 font-semibold text-slate-200 text-sm"
-    : "text-left py-1 pr-1 font-semibold text-slate-500 text-sm";
+    ? "text-left py-2 px-2 font-semibold text-slate-200 text-[13px]"
+    : "text-left py-2 px-2 font-semibold text-slate-600 text-[13px]";
 
   const thCenterClass = `${thClass} text-center`;
 
   const posClass = isDark
-    ? "py-1 pr-1 text-slate-300 text-sm"
-    : "py-1 pr-1 text-slate-500 text-sm";
+    ? "py-2 px-2 text-slate-300 text-sm"
+    : "py-2 px-2 text-slate-600 text-sm";
 
   const clubClass = isDark
-    ? "py-1 pr-1 text-slate-50 font-medium text-sm"
-    : "py-1 pr-1 text-slate-800 font-medium text-sm";
+    ? "py-2 pr-2 text-slate-50 font-medium text-sm"
+    : "py-2 pr-2 text-slate-800 font-medium text-sm";
 
   const playedClass = isDark
-    ? "py-1 px-1 text-center text-slate-200 text-sm"
-    : "py-1 px-1 text-center text-slate-700 text-sm";
+    ? "py-2 px-2 text-center text-slate-200 text-sm"
+    : "py-2 px-2 text-center text-slate-700 text-sm";
 
   const pointsClass = isDark
-    ? "py-1 px-1 text-center font-bold text-white text-sm"
-    : "py-1 px-1 text-center font-bold text-slate-900 text-sm";
+    ? "py-2 px-2 text-center font-bold text-white text-sm"
+    : "py-2 px-2 text-center font-bold text-slate-900 text-sm";
 
   const logoBgClass = isDark
     ? "bg-slate-900"
@@ -250,7 +250,7 @@ function PremierLeagueTableCard({
 
   return (
     <div
-      className={`${cardClass} rounded-xl p-4 space-y-4 max-w-[720px] mx-auto`}
+      className={`${cardClass} rounded-xl p-5 space-y-5 max-w-[1040px] mx-auto`}
     >
       <div className="flex items-center justify-between">
         <p className={headingClass}>Klasemen Premier League</p>
@@ -281,10 +281,12 @@ function PremierLeagueTableCard({
                 <tr className="border-b border-slate-200/50">
                   <th className={thClass}>#</th>
                   <th className={thClass}>Klub</th>
+                  <th className={thCenterClass}>T</th>
                   <th className={thCenterClass}>M</th>
-                  <th className={thCenterClass}>W</th>
-                  <th className={thCenterClass}>D</th>
-                  <th className={thCenterClass}>L</th>
+                  <th className={thCenterClass}>S</th>
+                  <th className={thCenterClass}>K</th>
+                  <th className={thCenterClass}>GM</th>
+                  <th className={thCenterClass}>GK</th>
                   <th className={thCenterClass}>SG</th>
                   <th className={thCenterClass}>Poin</th>
                 </tr>
@@ -319,6 +321,8 @@ function PremierLeagueTableCard({
                     <td className={playedClass}>{row.won}</td>
                     <td className={playedClass}>{row.draw}</td>
                     <td className={playedClass}>{row.lost}</td>
+                    <td className={playedClass}>{row.goalsFor}</td>
+                    <td className={playedClass}>{row.goalsAgainst}</td>
                     <td className={playedClass}>{row.goalDifference}</td>
                     <td className={pointsClass}>{row.points}</td>
                   </tr>
@@ -358,7 +362,7 @@ function PremierLeagueTableCard({
 
 function SectionLabel({ title }) {
   return (
-    <p className="text-xs uppercase tracking-[0.16em] text-gray-400 mt-1">
+    <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">
       {title}
     </p>
   );

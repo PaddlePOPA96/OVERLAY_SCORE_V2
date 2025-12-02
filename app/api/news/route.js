@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     const data = await res.json();
-    const articles = (data.articles || []).slice(0, 4).map((a) => ({
+    const articles = (data.articles || []).slice(0, 8).map((a) => ({
       id: a.id ?? a.headline,
       title: a.headline,
       description: a.description,
@@ -34,4 +34,3 @@ export async function GET() {
     );
   }
 }
-

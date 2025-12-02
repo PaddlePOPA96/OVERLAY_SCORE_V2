@@ -30,18 +30,11 @@ export function LeftSidebar({ active, setActive, theme }) {
             Premier League
           </div>
           <NavItem
-            icon="📅"
-            label="Jadwal & Hasil"
-            active={active === "pl-matches"}
+            icon="🏆"
+            label="Premier League"
+            active={active === "pl-matches" || active === "pl-table"}
             isDark={isDark}
             onClick={() => setActive("pl-matches")}
-          />
-          <NavItem
-            icon="📊"
-            label="Premier League Table"
-            active={active === "pl-table"}
-            isDark={isDark}
-            onClick={() => setActive("pl-table")}
           />
           <NavItem
             icon="🏆"
