@@ -64,7 +64,7 @@ export function PremierLeagueMain({
   futureMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
 
   const lastMatch = pastFinished[0] || null;
-  const nextMatch = futureMatches[0] || null;
+  const nextMatches = futureMatches.slice(0, 5);
 
   const sectionTitleClass = isDark
     ? "text-lg font-semibold text-white"
@@ -159,15 +159,17 @@ export function PremierLeagueMain({
 
               <SectionLabel title="Next Match" />
               <div className="space-y-2">
-                {nextMatch ? (
-                  <PremierLeagueMatchRow
-                    key={`next-${nextMatch.id}`}
-                    match={nextMatch}
-                    theme={theme}
-                  />
+                {nextMatches.length ? (
+                  nextMatches.map((m) => (
+                    <PremierLeagueMatchRow
+                      key={`next-${m.id}`}
+                      match={m}
+                      theme={theme}
+                    />
+                  ))
                 ) : (
                   <p className="text-xs text-gray-400">
-                    Tidak ada jadwal mendatang dalam jendela waktu ini.
+                    Tidak ada jadwal mendatang dalam 7 hari ke depan.
                   </p>
                 )}
               </div>
@@ -244,12 +246,14 @@ function PremierLeagueTableCard({
 
   const league = "England - Premier League";
 
+  const uclSpots = standings.slice(0, 4);
+
   return (
     <div
-      className={`${cardClass} rounded-xl p-4 space-y-3 max-w-[720px] mx-auto`}
+      className={`${cardClass} rounded-xl p-4 space-y-4 max-w-[720px] mx-auto`}
     >
       <div className="flex items-center justify-between">
-        <p className={headingClass}>Klasemen</p>
+        <p className={headingClass}>Klasemen Premier League</p>
         {isAdmin && (
           <button
             type="button"
@@ -270,54 +274,83 @@ function PremierLeagueTableCard({
           Data klasemen tidak tersedia.
         </p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm leading-tight">
-            <thead>
-              <tr className="border-b border-slate-200/50">
-                <th className={thClass}>#</th>
-                <th className={thClass}>Klub</th>
-                <th className={thCenterClass}>M</th>
-                <th className={thCenterClass}>W</th>
-                <th className={thCenterClass}>D</th>
-                <th className={thCenterClass}>L</th>
-                <th className={thCenterClass}>SG</th>
-                <th className={thCenterClass}>Poin</th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings.map((row) => (
-                <tr key={row.team.id} className="border-b border-slate-100/40">
-                  <td className={posClass}>{row.position}</td>
-                  <td className={clubClass}>
-                    <div className="flex items-center gap-2">
-                      {(() => {
-                        const logoSrc = resolveClubLogo(
-                          league,
-                          row.team.name
-                        );
-                        if (!logoSrc) return null;
-                        return (
-                          <img
-                            src={logoSrc}
-                            alt={row.team.name}
-                            className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
-                          />
-                        );
-                      })()}
-                      <span>{row.team.name}</span>
-                    </div>
-                  </td>
-                  <td className={playedClass}>{row.playedGames}</td>
-                  <td className={playedClass}>{row.won}</td>
-                  <td className={playedClass}>{row.draw}</td>
-                  <td className={playedClass}>{row.lost}</td>
-                  <td className={playedClass}>{row.goalDifference}</td>
-                  <td className={pointsClass}>{row.points}</td>
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm leading-tight">
+              <thead>
+                <tr className="border-b border-slate-200/50">
+                  <th className={thClass}>#</th>
+                  <th className={thClass}>Klub</th>
+                  <th className={thCenterClass}>M</th>
+                  <th className={thCenterClass}>W</th>
+                  <th className={thCenterClass}>D</th>
+                  <th className={thCenterClass}>L</th>
+                  <th className={thCenterClass}>SG</th>
+                  <th className={thCenterClass}>Poin</th>
                 </tr>
+              </thead>
+              <tbody>
+                {standings.map((row) => (
+                  <tr
+                    key={row.team.id}
+                    className="border-b border-slate-100/40"
+                  >
+                    <td className={posClass}>{row.position}</td>
+                    <td className={clubClass}>
+                      <div className="flex items-center gap-2">
+                        {(() => {
+                          const logoSrc = resolveClubLogo(
+                            league,
+                            row.team.name
+                          );
+                          if (!logoSrc) return null;
+                          return (
+                            <img
+                              src={logoSrc}
+                              alt={row.team.name}
+                              className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
+                            />
+                          );
+                        })()}
+                        <span>{row.team.name}</span>
+                      </div>
+                    </td>
+                    <td className={playedClass}>{row.playedGames}</td>
+                    <td className={playedClass}>{row.won}</td>
+                    <td className={playedClass}>{row.draw}</td>
+                    <td className={playedClass}>{row.lost}</td>
+                    <td className={playedClass}>{row.goalDifference}</td>
+                    <td className={pointsClass}>{row.points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pt-3 border-t border-slate-700/50 mt-3">
+            <p className={headingClass}>UCL Spots (Top 4)</p>
+            <ul className="mt-2 space-y-1 text-xs">
+              {uclSpots.map((row) => (
+                <li
+                  key={`ucl-${row.team.id}`}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 text-[11px] text-slate-400">
+                      {row.position}.
+                    </span>
+                    <span className="font-medium text-slate-100">
+                      {row.team.name}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-emerald-400">
+                    {row.points} pts
+                  </span>
+                </li>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </ul>
+          </div>
+        </>
       )}
     </div>
   );

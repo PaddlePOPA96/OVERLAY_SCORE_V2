@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 
-export function LeftSidebar({ active, setActive, onLogout, theme }) {
+export function LeftSidebar({ active, setActive, theme }) {
   const isDark = theme === "dark";
   const asideClass = [
     "w-1/5 p-6 flex flex-col justify-between border-r",
@@ -12,15 +12,7 @@ export function LeftSidebar({ active, setActive, onLogout, theme }) {
   return (
     <aside className={asideClass}>
       <div>
-        <div
-          className={`flex items-center gap-2 mb-10 font-bold text-xl ${
-            isDark ? "text-white" : "text-slate-900"
-          }`}
-        >
-          <div className="w-6 h-6 bg-purple-600 rounded-full" />
-          SCOREBOARD
-        </div>
-
+       
         <nav className="space-y-2">
           <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
             Main Menu
@@ -51,6 +43,13 @@ export function LeftSidebar({ active, setActive, onLogout, theme }) {
             isDark={isDark}
             onClick={() => setActive("pl-table")}
           />
+          <NavItem
+            icon="🏆"
+            label="UCL Table"
+            active={active === "ucl-table"}
+            isDark={isDark}
+            onClick={() => setActive("ucl-table")}
+          />
 
           <div className="text-xs text-gray-500 uppercase tracking-wider mt-4 mb-1">
             Dream Eleven
@@ -65,16 +64,7 @@ export function LeftSidebar({ active, setActive, onLogout, theme }) {
         </nav>
       </div>
 
-      <div className="space-y-2 mt-auto">
-        <Button
-          type="button"
-          onClick={onLogout}
-          className="w-full text-red-400 border border-transparent hover:border-red-400 cursor-pointer pt-2 mt-4 flex items-center justify-center gap-2 text-sm bg-transparent"
-          variant="ghost"
-        >
-          <span>←</span> Log Out
-        </Button>
-      </div>
+      <div className="space-y-2 mt-auto" />
     </aside>
   );
 }

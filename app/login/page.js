@@ -10,6 +10,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// Matikan login/register via Google agar akun harus dibuat admin (setelah bayar)
+const GOOGLE_LOGIN_DISABLED = true;
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -67,6 +70,14 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    if (GOOGLE_LOGIN_DISABLED) {
+      setStatus({
+        type: "error",
+        message:
+          "Login dengan Google dinonaktifkan. Gunakan email & password akun yang dibuat admin.",
+      });
+      return;
+    }
     setStatus({ type: "", message: "" });
     setLoading(true);
     try {
@@ -203,7 +214,7 @@ export default function LoginPage() {
         <div className="mt-4">
           <Button
             type="button"
-            disabled={loading}
+            disabled={loading || GOOGLE_LOGIN_DISABLED}
             onClick={handleGoogleLogin}
             className="auth-secondary-btn"
             >

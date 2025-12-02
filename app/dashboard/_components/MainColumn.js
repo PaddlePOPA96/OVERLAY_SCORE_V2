@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { PremierLeagueMain } from "./PremierLeagueSection";
 import DreamElevenBuilder from "./DreamElevenBuilder";
+import { ChampionsLeagueTable, ChampionsLeagueMatches } from "./UCLSection";
 
 export function MainColumn({
   active,
@@ -15,8 +16,13 @@ export function MainColumn({
   theme,
   standings,
   loadingStandings,
+  uclStandings,
+  loadingUclStandings,
+  uclMatches,
+  loadingUclMatches,
   isAdmin,
   onRefreshStandings,
+  onRefreshUclStandings,
 }) {
   const isDark = theme === "dark";
   const username = useMemo(
@@ -31,6 +37,8 @@ export function MainColumn({
   const subtitleClass = isDark
     ? "text-gray-500"
     : "text-slate-600";
+
+  const [uclMode, setUclMode] = useState("table"); // "table" | "matches"
 
   return (
     <main className={`${fullWidth ? "flex-1" : "w-1/2"} p-8`}>
@@ -55,6 +63,54 @@ export function MainColumn({
             </p>
           </header>
           <DreamElevenBuilder />
+        </>
+      ) : active === "ucl-table" ? (
+        <>
+          <header className="mb-8">
+            <h1 className={titleClass}>UEFA Champions League Table</h1>
+            <p className={subtitleClass}>
+              Lihat klasemen fase grup Liga Champions.
+            </p>
+            <div className="mt-4 inline-flex rounded-full bg-slate-900/60 border border-slate-700 p-1 text-xs">
+              <button
+                type="button"
+                onClick={() => setUclMode("table")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
+                  uclMode === "table"
+                    ? "bg-purple-600 text-white shadow"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                Table
+              </button>
+              <button
+                type="button"
+                onClick={() => setUclMode("matches")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
+                  uclMode === "matches"
+                    ? "bg-purple-600 text-white shadow"
+                    : "text-slate-400 hover:text-slate-100"
+                }`}
+              >
+                Jadwal &amp; Hasil
+              </button>
+            </div>
+          </header>
+          {uclMode === "table" ? (
+            <ChampionsLeagueTable
+              standings={uclStandings}
+              loadingStandings={loadingUclStandings}
+              theme={theme}
+              isAdmin={isAdmin}
+              onRefreshStandings={onRefreshUclStandings}
+            />
+          ) : (
+            <ChampionsLeagueMatches
+              matches={uclMatches}
+              loadingMatches={loadingUclMatches}
+              theme={theme}
+            />
+          )}
         </>
       ) : (
         <>

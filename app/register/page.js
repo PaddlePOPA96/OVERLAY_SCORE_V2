@@ -9,6 +9,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// Toggle untuk menonaktifkan register mandiri (harus bayar dulu / via admin)
+const REGISTRATION_DISABLED = true;
+
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -26,6 +29,15 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: "", message: "" });
+
+    if (REGISTRATION_DISABLED) {
+      setStatus({
+        type: "error",
+        message:
+          "Registrasi mandiri dimatikan. Silakan hubungi admin via Telegram (081331890624) untuk aktivasi akun setelah pembayaran.",
+      });
+      return;
+    }
 
     if (password !== confirmPassword) {
       setStatus({
@@ -52,6 +64,15 @@ export default function RegisterPage() {
   const handleGoogle = async () => {
     setStatus({ type: "", message: "" });
     setLoading(true);
+    if (REGISTRATION_DISABLED) {
+      setLoading(false);
+      setStatus({
+        type: "error",
+        message:
+          "Registrasi via Google dimatikan. Silakan hubungi admin via Telegram (081331890624) untuk aktivasi akun setelah pembayaran.",
+      });
+      return;
+    }
     try {
       const user = await loginWithGooglePopup();
       handleAuthSuccess(user);
@@ -76,6 +97,13 @@ export default function RegisterPage() {
           <p className="auth-subtitle">
             Register to start managing your scoreboard.
           </p>
+        </div>
+
+        <div className="mb-4 text-xs text-amber-300 bg-amber-950/60 border border-amber-700/70 rounded-lg px-3 py-2">
+          Registrasi hanya bisa dilakukan oleh admin setelah pembayaran.
+          Silakan kirim pesan ke Telegram admin di{" "}
+          <span className="font-mono font-semibold">081331890624</span>{" "}
+          untuk informasi harga dan aktivasi akun.
         </div>
 
         <form onSubmit={handleSubmit}>

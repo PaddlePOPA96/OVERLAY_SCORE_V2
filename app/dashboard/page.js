@@ -7,10 +7,13 @@ import { auth } from "@/lib/firebaseAuth";
 import { LeftSidebar } from "@/app/dashboard/_components/LeftSidebar";
 import { MainColumn } from "@/app/dashboard/_components/MainColumn";
 import { RightColumn } from "@/app/dashboard/_components/RightColumn";
+import { TopBar } from "@/app/dashboard/_components/TopBar";
 import {
   usePremierLeagueMatches,
   usePremierLeagueNews,
   usePremierLeagueStandings,
+  useChampionsLeagueMatches,
+  useChampionsLeagueStandings,
 } from "@/hooks/pl-data";
 
 export default function DashboardPage() {
@@ -44,6 +47,12 @@ export default function DashboardPage() {
   const { news, loadingNews } = usePremierLeagueNews();
   const { standings, loadingStandings, reloadStandings } =
     usePremierLeagueStandings();
+  const {
+    uclStandings,
+    loadingUclStandings,
+    reloadUclStandings,
+  } = useChampionsLeagueStandings();
+  const { uclMatches, loadingUclMatches } = useChampionsLeagueMatches();
 
   // theme persistence
   useEffect(() => {
@@ -84,39 +93,55 @@ export default function DashboardPage() {
 
   return (
     <div className={rootClass}>
-      <LeftSidebar
-        active={active}
-        setActive={setActive}
-        onLogout={handleLogout}
-        theme={theme}
-      />
-      <MainColumn
-        active={active}
-        user={user}
-        roomId={roomId}
-        matches={matches}
-        loadingMatches={loadingMatches}
-        fullWidth={active === "operator" || active === "dream-eleven"}
-        theme={theme}
-        standings={standings}
-        loadingStandings={loadingStandings}
-        isAdmin={isAdmin}
-        onRefreshStandings={reloadStandings}
-      />
-      {isPremierLeagueView && (
-        <RightColumn
-          active={active}
+      <div className="flex flex-col flex-1 w-full">
+        <TopBar
           user={user}
-          matches={matches}
-          loadingMatches={loadingMatches}
-          news={news}
-          loadingNews={loadingNews}
           theme={theme}
           onToggleTheme={() =>
             setTheme((prev) => (prev === "dark" ? "light" : "dark"))
           }
+          onLogout={handleLogout}
         />
-      )}
+        <div className="flex flex-1">
+          <LeftSidebar
+            active={active}
+            setActive={setActive}
+            theme={theme}
+          />
+          <MainColumn
+            active={active}
+            user={user}
+            roomId={roomId}
+            matches={matches}
+            loadingMatches={loadingMatches}
+            fullWidth={
+              active === "operator" ||
+              active === "dream-eleven" ||
+              active === "ucl-table"
+            }
+            theme={theme}
+            standings={standings}
+            loadingStandings={loadingStandings}
+            uclStandings={uclStandings}
+            loadingUclStandings={loadingUclStandings}
+            uclMatches={uclMatches}
+            loadingUclMatches={loadingUclMatches}
+            isAdmin={isAdmin}
+            onRefreshStandings={reloadStandings}
+            onRefreshUclStandings={reloadUclStandings}
+          />
+          {isPremierLeagueView && (
+            <RightColumn
+              active={active}
+              matches={matches}
+              loadingMatches={loadingMatches}
+              news={news}
+              loadingNews={loadingNews}
+              theme={theme}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
