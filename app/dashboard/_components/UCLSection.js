@@ -1,6 +1,6 @@
 "use client";
 
-import { LOGO_DATA, buildLogoSrc } from "@/lib/logoData";
+import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from "@/lib/logoData";
 
 const TEAM_STOP_WORDS = new Set([
   "fc",
@@ -88,9 +88,16 @@ const resolveAnyClubLogo = (apiName) => {
     }
   }
 
-  return bestLeague && bestClub
-    ? buildLogoSrc(bestLeague, bestClub)
-    : "";
+  if (bestLeague && bestClub) {
+    // Beberapa klub (misalnya FK Kairat) logonya disimpan di logo/other
+    if (bestLeague === "Kazakhstan - Premier League") {
+      return buildOtherLogoSrc(bestClub);
+    }
+    return buildLogoSrc(bestLeague, bestClub);
+  }
+
+  // Fallback: pakai logo di /logo/other jika tidak ada di LOGO_DATA
+  return buildOtherLogoSrc(apiName);
 };
 
 export function ChampionsLeagueTable({
@@ -214,6 +221,10 @@ export function ChampionsLeagueTable({
                                   src={logoSrc}
                                   alt={row.team.name}
                                   className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.style.display = "none";
+                                  }}
                                 />
                               );
                             })()}
@@ -314,48 +325,54 @@ export function ChampionsLeagueMatches({
     return (
       <div
         key={match.id}
-        className="flex items-center justify-between py-5 px-5 rounded-2xl hover:bg-slate-800/80 transition-colors"
+        className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 py-4 md:py-5 px-4 md:px-5 rounded-2xl hover:bg-slate-800/80 transition-colors"
       >
-        <div className="flex items-center gap-5 w-2/5">
+        <div className="flex items-center gap-3 md:gap-5 flex-1 min-w-0">
           <span className={badgeClass}>
             {isFinished ? "FT" : isLive ? "LIVE" : "UPCOMING"}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             {homeLogo && (
               <img
                 src={homeLogo}
                 alt={match.homeTeam.name}
                 className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.style.display = "none";
+                }}
               />
             )}
             <span
               className={
                 isDark
-                  ? "text-slate-50 text-base md:text-lg"
-                  : "text-slate-900 text-base md:text-lg"
+                  ? "text-slate-50 text-sm md:text-base lg:text-lg"
+                  : "text-slate-900 text-sm md:text-base lg:text-lg"
               }
+              style={{ wordBreak: "break-word" }}
             >
               {match.homeTeam.shortName || match.homeTeam.name}
             </span>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center w-1/5">
-          <span className="text-xs md:text-sm text-slate-400">
+        <div className="flex flex-col items-center justify-center md:flex-none">
+          <span className="text-[11px] md:text-xs lg:text-sm text-slate-400">
             {formatDateTime(match)}
           </span>
-          <span className="mt-1 text-xl md:text-2xl font-semibold text-slate-50 bg-slate-950 px-5 py-2 rounded-2xl shadow-lg">
+          <span className="mt-1 text-lg md:text-xl lg:text-2xl font-semibold text-slate-50 bg-slate-950 px-4 md:px-5 py-2 rounded-2xl shadow-lg">
             {isFinished
               ? `${match.score.fullTime.home} : ${match.score.fullTime.away}`
               : "VS"}
           </span>
         </div>
-        <div className="flex items-center justify-end gap-5 w-2/5">
+        <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
           <span
             className={
               isDark
-                ? "text-slate-50 text-base md:text-lg"
-                : "text-slate-900 text-base md:text-lg"
+                ? "text-slate-50 text-sm md:text-base lg:text-lg"
+                : "text-slate-900 text-sm md:text-base lg:text-lg"
             }
+            style={{ wordBreak: "break-word" }}
           >
             {match.awayTeam.shortName || match.awayTeam.name}
           </span>
@@ -364,6 +381,10 @@ export function ChampionsLeagueMatches({
               src={awayLogo}
               alt={match.awayTeam.name}
               className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.style.display = "none";
+              }}
             />
           )}
         </div>

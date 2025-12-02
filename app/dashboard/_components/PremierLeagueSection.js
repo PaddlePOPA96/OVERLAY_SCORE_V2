@@ -1,6 +1,6 @@
 "use client";
 
-import { LOGO_DATA, buildLogoSrc } from "@/lib/logoData";
+import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from "@/lib/logoData";
 
 export function PremierLeagueMain({
   matches,
@@ -311,6 +311,10 @@ function PremierLeagueTableCard({
                               src={logoSrc}
                               alt={row.team.name}
                               className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.style.display = "none";
+                              }}
                             />
                           );
                         })()}
@@ -411,8 +415,12 @@ function resolveClubLogo(league, apiName) {
       target.includes(normalizeTeamName(club))
     );
   }
+  if (best) {
+    return buildLogoSrc(league, best);
+  }
 
-  return best ? buildLogoSrc(league, best) : "";
+  // Fallback: pakai logo di /logo/other jika ada
+  return buildOtherLogoSrc(apiName);
 }
 
 export function PremierLeagueMatchRow({ match, theme }) {
@@ -460,6 +468,10 @@ export function PremierLeagueMatchRow({ match, theme }) {
             src={homeLogoSrc}
             alt={homeFull}
             className="w-6 h-6 rounded-full bg-gray-800 object-contain"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.style.display = "none";
+            }}
           />
         )}
         <div className="flex flex-col">
@@ -497,6 +509,10 @@ export function PremierLeagueMatchRow({ match, theme }) {
             src={awayLogoSrc}
             alt={awayFull}
             className="w-6 h-6 rounded-full bg-gray-800 object-contain"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.style.display = "none";
+            }}
           />
         )}
       </div>
