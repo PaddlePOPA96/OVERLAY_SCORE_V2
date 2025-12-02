@@ -2,6 +2,97 @@
 
 import { LOGO_DATA, buildLogoSrc } from "@/lib/logoData";
 
+const TEAM_STOP_WORDS = new Set([
+  "fc",
+  "afc",
+  "cf",
+  "sc",
+  "club",
+  "football",
+  "the",
+]);
+
+const normalizeTeamName = (name) => {
+  if (!name) return "";
+  return name
+    .replace(/[()]/g, " ")
+    .replace(/[^A-Za-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase()))
+    .join(" ")
+    .toLowerCase()
+    .trim();
+};
+
+const CLUB_ALIAS = {
+  "bayern m nchen": "bayern munich",
+  bayern: "bayern munich",
+  "fc kopenhavn": "fc copenhagen",
+  kobenhavn: "fc copenhagen",
+  "k benhavn": "fc copenhagen",
+  kbenhavn: "fc copenhagen",
+  "sport lisboa e benfica": "sl benfica",
+  "olympique de marseille": "olympique marseille",
+  "galatasaray sk": "galatasaray",
+  "pae olympiakos sfp": "olympiacos piraeus",
+  "sk slavia praha": "sk slavia prague",
+  "qaraba a dam": "qarabagh",
+  "sporting clube de portugal": "sporting cp",
+  "sporting lisbon": "sporting cp",
+  sporting: "sporting cp",
+  olympiakos: "olympiacos piraeus",
+  olympiacos: "olympiacos piraeus",
+  inter: "inter milan",
+  internazionale: "inter milan",
+  "internazionale milano": "inter milan",
+};
+
+const resolveAnyClubLogo = (apiName) => {
+  if (!apiName) return "";
+  const rawTarget = normalizeTeamName(apiName);
+  if (!rawTarget) return "";
+
+  const target = CLUB_ALIAS[rawTarget] || rawTarget;
+
+  let bestLeague = null;
+  let bestClub = null;
+
+  for (const [league, clubs] of Object.entries(LOGO_DATA)) {
+    if (!Array.isArray(clubs)) continue;
+
+    let match = clubs.find(
+      (club) => normalizeTeamName(club) === target
+    );
+    if (match) {
+      bestLeague = league;
+      bestClub = match;
+      break;
+    }
+
+    match = clubs.find((club) =>
+      normalizeTeamName(club).includes(target)
+    );
+    if (match && !bestClub) {
+      bestLeague = league;
+      bestClub = match;
+    }
+
+    if (!bestClub) {
+      match = clubs.find((club) =>
+        target.includes(normalizeTeamName(club))
+      );
+      if (match) {
+        bestLeague = league;
+        bestClub = match;
+      }
+    }
+  }
+
+  return bestLeague && bestClub
+    ? buildLogoSrc(bestLeague, bestClub)
+    : "";
+};
+
 export function ChampionsLeagueTable({
   standings,
   loadingStandings,
@@ -44,97 +135,6 @@ export function ChampionsLeagueTable({
     const match = group.match(/GROUP_([A-H])/);
     if (match) return `Group ${match[1]}`;
     return group.replace(/_/g, " ");
-  };
-
-  const TEAM_STOP_WORDS = new Set([
-    "fc",
-    "afc",
-    "cf",
-    "sc",
-    "club",
-    "football",
-    "the",
-  ]);
-
-  const normalizeTeamName = (name) => {
-    if (!name) return "";
-    return name
-      .replace(/[()]/g, " ")
-      .replace(/[^A-Za-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase()))
-      .join(" ")
-      .toLowerCase()
-      .trim();
-  };
-
-  const CLUB_ALIAS = {
-    "bayern m nchen": "bayern munich",
-    bayern: "bayern munich",
-    "fc kopenhavn": "fc copenhagen",
-    "kobenhavn": "fc copenhagen",
-    "k benhavn": "fc copenhagen",
-    kbenhavn: "fc copenhagen",
-    "sport lisboa e benfica": "sl benfica",
-    "olympique de marseille": "olympique marseille",
-    "galatasaray sk": "galatasaray",
-     "pae olympiakos sfp": "olympiacos piraeus",
-     "sk slavia praha": "sk slavia prague",
-     "qaraba a dam": "qarabagh",
-    "sporting clube de portugal": "sporting cp",
-    "sporting lisbon": "sporting cp",
-    sporting: "sporting cp",
-    olympiakos: "olympiacos piraeus",
-    olympiacos: "olympiacos piraeus",
-    inter: "inter milan",
-    internazionale: "inter milan",
-    "internazionale milano": "inter milan",
-  };
-
-  const resolveAnyClubLogo = (apiName) => {
-    if (!apiName) return "";
-    const rawTarget = normalizeTeamName(apiName);
-    if (!rawTarget) return "";
-
-    const target = CLUB_ALIAS[rawTarget] || rawTarget;
-
-    let bestLeague = null;
-    let bestClub = null;
-
-    for (const [league, clubs] of Object.entries(LOGO_DATA)) {
-      if (!Array.isArray(clubs)) continue;
-
-      let match = clubs.find(
-        (club) => normalizeTeamName(club) === target
-      );
-      if (match) {
-        bestLeague = league;
-        bestClub = match;
-        break;
-      }
-
-      match = clubs.find((club) =>
-        normalizeTeamName(club).includes(target)
-      );
-      if (match && !bestClub) {
-        bestLeague = league;
-        bestClub = match;
-      }
-
-      if (!bestClub) {
-        match = clubs.find((club) =>
-          target.includes(normalizeTeamName(club))
-        );
-        if (match) {
-          bestLeague = league;
-          bestClub = match;
-        }
-      }
-    }
-
-    return bestLeague && bestClub
-      ? buildLogoSrc(bestLeague, bestClub)
-      : "";
   };
 
   return (
@@ -258,97 +258,6 @@ export function ChampionsLeagueMatches({
 
   const badgeBase =
     "text-sm font-mono border px-4 py-[4px] rounded-full";
-
-  const TEAM_STOP_WORDS = new Set([
-    "fc",
-    "afc",
-    "cf",
-    "sc",
-    "club",
-    "football",
-    "the",
-  ]);
-
-  const normalizeTeamName = (name) => {
-    if (!name) return "";
-    return name
-      .replace(/[()]/g, " ")
-      .replace(/[^A-Za-z0-9\s]/g, " ")
-      .split(/\s+/)
-      .filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase()))
-      .join(" ")
-      .toLowerCase()
-      .trim();
-  };
-
-  const CLUB_ALIAS = {
-    "bayern m nchen": "bayern munich",
-    bayern: "bayern munich",
-    "fc kopenhavn": "fc copenhagen",
-    "kobenhavn": "fc copenhagen",
-    "k benhavn": "fc copenhagen",
-    kbenhavn: "fc copenhagen",
-    "sport lisboa e benfica": "sl benfica",
-    "olympique de marseille": "olympique marseille",
-    "galatasaray sk": "galatasaray",
-     "pae olympiakos sfp": "olympiacos piraeus",
-     "sk slavia praha": "sk slavia prague",
-     "qaraba a dam": "qarabagh",
-    "sporting clube de portugal": "sporting cp",
-    "sporting lisbon": "sporting cp",
-    sporting: "sporting cp",
-    olympiakos: "olympiacos piraeus",
-    olympiacos: "olympiacos piraeus",
-    inter: "inter milan",
-    internazionale: "inter milan",
-    "internazionale milano": "inter milan",
-  };
-
-  const resolveAnyClubLogo = (apiName) => {
-    if (!apiName) return "";
-    const rawTarget = normalizeTeamName(apiName);
-    if (!rawTarget) return "";
-
-    const target = CLUB_ALIAS[rawTarget] || rawTarget;
-
-    let bestLeague = null;
-    let bestClub = null;
-
-    for (const [league, clubs] of Object.entries(LOGO_DATA)) {
-      if (!Array.isArray(clubs)) continue;
-
-      let match = clubs.find(
-        (club) => normalizeTeamName(club) === target
-      );
-      if (match) {
-        bestLeague = league;
-        bestClub = match;
-        break;
-      }
-
-      match = clubs.find((club) =>
-        normalizeTeamName(club).includes(target)
-      );
-      if (match && !bestClub) {
-        bestLeague = league;
-        bestClub = match;
-      }
-
-      if (!bestClub) {
-        match = clubs.find((club) =>
-          target.includes(normalizeTeamName(club))
-        );
-        if (match) {
-          bestLeague = league;
-          bestClub = match;
-        }
-      }
-    }
-
-    return bestLeague && bestClub
-      ? buildLogoSrc(bestLeague, bestClub)
-      : "";
-  };
 
   const logoBgClass = isDark
     ? "bg-slate-900"
