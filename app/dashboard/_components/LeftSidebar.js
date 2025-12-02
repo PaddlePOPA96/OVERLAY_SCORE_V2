@@ -13,8 +13,8 @@ export function LeftSidebar({ active, setActive, theme }) {
     <aside className={asideClass}>
       <div>
        
-        <nav className="space-y-2">
-          <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+        <nav className="space-y-2" aria-label="Dashboard sections">
+          <div className="text-xs text-gray-300 uppercase tracking-wider mb-2">
             Main Menu
           </div>
 
@@ -26,7 +26,7 @@ export function LeftSidebar({ active, setActive, theme }) {
             onClick={() => setActive("operator")}
           />
 
-          <div className="text-xs text-gray-500 uppercase tracking-wider mt-4 mb-1">
+          <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
             Premier League
           </div>
           <NavItem
@@ -44,7 +44,7 @@ export function LeftSidebar({ active, setActive, theme }) {
             onClick={() => setActive("ucl-table")}
           />
 
-          <div className="text-xs text-gray-500 uppercase tracking-wider mt-4 mb-1">
+          <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
             Dream Eleven
           </div>
           <NavItem

@@ -438,15 +438,15 @@ body {
 
 .op-tiny { 
   font-size: 11px; 
-  opacity: 0.6; 
   margin-left: 5px; 
+  color: #e5e7eb; 
 }
 
 .op-btn { 
   padding: 4px 12px; 
   border-radius: 999px; 
   border: none; 
-  background: #ffffff25; 
+  background: #1f2937; 
   color: #fff; 
   cursor: pointer; 
   font-size: 12px; 
@@ -455,15 +455,15 @@ body {
 }
 
 .op-btn:hover { 
-  background: #ffffff40; 
+  background: #374151; 
 }
 
 .op-btn-main { 
-  background: #00a884; 
+  background: #047857; 
 }
 
 .op-btn-main:hover { 
-  background: #00c29b; 
+  background: #059669; 
 }
 
 .op-btn-danger { 
@@ -471,11 +471,11 @@ body {
 }
 
 .op-b-btn-main { 
-  background: #ff4b4b; 
+  background: #b91c1c; 
 }
 
 .op-b-btn-main:hover { 
-  background: #ff6b6b; 
+  background: #ef4444; 
 }
 
 .op-input { 

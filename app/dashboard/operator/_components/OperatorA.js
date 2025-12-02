@@ -82,8 +82,11 @@ export default function OperatorA({
         </div>
 
         <div className="op-section">
-          <label className="op-label">Team Left</label>
+          <label className="op-label" htmlFor="team-left">
+            Team Left
+          </label>
           <input
+            id="team-left"
             className="op-input"
             value={data.homeName}
             onChange={(e) =>
@@ -93,8 +96,11 @@ export default function OperatorA({
           />
         </div>
         <div className="op-section">
-          <label className="op-label">Team Right</label>
+          <label className="op-label" htmlFor="team-right">
+            Team Right
+          </label>
           <input
+            id="team-right"
             className="op-input"
             value={data.awayName}
             onChange={(e) =>
@@ -105,7 +111,9 @@ export default function OperatorA({
         </div>
 
         <div className="op-section">
-          <label className="op-label">Score Left</label>
+          <label className="op-label" htmlFor="score-left">
+            Score Left
+          </label>
           <Button
             className="op-btn"
             variant="ghost"
@@ -118,6 +126,7 @@ export default function OperatorA({
             -
           </Button>
           <input
+            id="score-left"
             className="op-input"
             type="number"
             value={data.homeScore}
@@ -147,7 +156,9 @@ export default function OperatorA({
         </div>
 
         <div className="op-section">
-          <label className="op-label">Score Right</label>
+          <label className="op-label" htmlFor="score-right">
+            Score Right
+          </label>
           <Button
             className="op-btn"
             variant="ghost"
@@ -160,6 +171,7 @@ export default function OperatorA({
             -
           </Button>
           <input
+            id="score-right"
             className="op-input"
             type="number"
             value={data.awayScore}
@@ -189,9 +201,12 @@ export default function OperatorA({
         </div>
 
         <div className="op-section">
-          <label className="op-label">Accent Gradient</label>
+          <label className="op-label" htmlFor="accent-left">
+            Accent Gradient
+          </label>
           <span className="op-tiny">Left:</span>
           <input
+            id="accent-left"
             type="color"
             className="op-input"
             value={data.homeColor}
@@ -204,6 +219,7 @@ export default function OperatorA({
           />
           <span className="op-tiny">Right:</span>
           <input
+            id="accent-right"
             type="color"
             className="op-input"
             value={data.awayColor}
@@ -217,8 +233,11 @@ export default function OperatorA({
         </div>
 
         <div className="op-section">
-          <label className="op-label">Time</label>
+          <label className="op-label" htmlFor="time-minute">
+            Time
+          </label>
           <input
+            id="time-minute"
             className="op-input"
             type="number"
             style={{ width: "50px" }}
@@ -229,6 +248,7 @@ export default function OperatorA({
           />{" "}
           :{" "}
           <input
+            id="time-second"
             className="op-input"
             type="number"
             style={{ width: "50px" }}
