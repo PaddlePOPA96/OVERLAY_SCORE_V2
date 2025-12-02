@@ -364,7 +364,7 @@ export default function DreamElevenBuilder() {
 
   return (
     <>
-      <div className="bg-slate-950/90 text-slate-100 font-sans p-3 md:p-5 rounded-2xl border border-slate-800 shadow-2xl select-none">
+      <div className="bg-slate-950/90 text-slate-100 font-sans p-3 md:p-5 rounded-2xl border border-slate-800 shadow-2xl select-none max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1 flex flex-col">
             <BuilderHeader

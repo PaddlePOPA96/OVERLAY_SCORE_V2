@@ -14,7 +14,7 @@ export function BuilderField({
       ref={fieldRef}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      className="relative w-full max-w-3xl aspect-[90/68] bg-emerald-700 rounded-xl border-[6px] border-emerald-900 shadow-2xl overflow-hidden ring-1 ring-white/10 cursor-crosshair mx-auto"
+      className="relative w-full max-w-none aspect-[90/68] bg-emerald-700 rounded-xl border-[6px] border-emerald-900 shadow-2xl overflow-hidden ring-1 ring-white/10 cursor-crosshair"
     >
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
@@ -60,4 +60,3 @@ export function BuilderField({
     </div>
   );
 }
-

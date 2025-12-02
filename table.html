@@ -45,6 +45,57 @@
         .ticket-appear {
             animation: slideUp 0.5s ease-out forwards;
         }
+
+        /* --- PRINT STYLES --- */
+        /* CSS ini hanya aktif saat CTRL+P atau window.print() dijalankan */
+        @media print {
+            /* Sembunyikan semua elemen body */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Sembunyikan navigasi dan background */
+            nav, main, body {
+                background: white !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Tampilkan HANYA Modal Tiket dan isinya */
+            #ticket-modal, #ticket-modal * {
+                visibility: visible;
+            }
+
+            /* Posisikan Tiket di pojok kiri atas kertas */
+            #ticket-modal {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                display: block !important;
+                padding: 0 !important;
+                z-index: 9999;
+            }
+
+            /* Styling Kartu Tiket saat diprint (hitam putih & border sederhana) */
+            #ticket-card-content {
+                box-shadow: none !important;
+                border: 2px solid #000 !important;
+                width: 300px !important; /* Lebar standar kertas struk thermal 80mm */
+                margin: 20px auto !important; /* Center */
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 20px;
+            }
+
+            /* Sembunyikan tombol Tutup saat diprint */
+            #btn-print-action {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -184,8 +235,9 @@
                     </div>
 
                     <!-- Ticket Display (Hidden by default) -->
+                    <!-- Added ID "ticket-card-content" for print targeting -->
                     <div id="ticket-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-0 overflow-hidden ticket-appear">
+                        <div id="ticket-card-content" class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-0 overflow-hidden ticket-appear">
                             <div class="bg-yellow-400 p-4 text-center">
                                 <h3 class="font-bold text-slate-900">NOMOR ANTRIAN ANDA</h3>
                             </div>
@@ -197,8 +249,11 @@
                                     RS UI Simulation • <span id="ticket-time">10:00</span>
                                 </div>
                             </div>
-                            <div class="p-4 bg-slate-50 text-center">
-                                <button onclick="closeTicket()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 transition">Tutup & Cetak</button>
+                            <!-- Button Container with ID to hide on print -->
+                            <div id="btn-print-action" class="p-4 bg-slate-50 text-center">
+                                <button onclick="printAndCloseTicket()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-print"></i> Cetak Tiket
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -326,9 +381,16 @@
             els.ticketModal.classList.remove('hidden');
         }
 
-        function closeTicket() {
-            els.ticketModal.classList.add('hidden');
-            // Opsional: switchPage('monitor');
+        // FUNGSI BARU: Print dulu, baru tutup
+        function printAndCloseTicket() {
+            // 1. Trigger Print Browser
+            window.print();
+            
+            // 2. Tutup Modal setelah print dialog selesai (atau setelah user klik print)
+            // Kita beri sedikit delay agar print dialog sempat menangkap render modal
+            setTimeout(() => {
+                els.ticketModal.classList.add('hidden');
+            }, 500); 
         }
 
         // --- LOGIC: KIOSK (PETUGAS) ---
