@@ -2,234 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 import * as htmlToImage from "html-to-image";
-
-// Data awal pemain
-const INITIAL_PLAYERS = [
-  {
-    id: "p1",
-    name: "L. Messi",
-    position: "RW",
-    rating: 99,
-    imgUrl: "https://media.api-sports.io/football/players/154.png",
-  },
-  {
-    id: "p2",
-    name: "C. Ronaldo",
-    position: "ST",
-    rating: 98,
-    imgUrl: "https://media.api-sports.io/football/players/874.png",
-  },
-  {
-    id: "p3",
-    name: "P. Maldini",
-    position: "CB",
-    rating: 97,
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/PaoloMaldini.jpg/200px-PaoloMaldini.jpg",
-  },
-  {
-    id: "p4",
-    name: "Z. Zidane",
-    position: "CAM",
-    rating: 96,
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/f/f3/Zinedine_Zidane_by_Tasnim_03.jpg",
-  },
-  {
-    id: "p5",
-    name: "R. Nazario",
-    position: "ST",
-    rating: 98,
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
-  },
-  {
-    id: "p6",
-    name: "T. Henry",
-    position: "ST",
-    rating: 94,
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Thierry_Henry_2012.jpg/440px-Thierry_Henry_2012.jpg",
-  },
-  {
-    id: "p7",
-    name: "A. Iniesta",
-    position: "CM",
-    rating: 95,
-    imgUrl: "https://media.api-sports.io/football/players/8.png",
-  },
-  {
-    id: "p8",
-    name: "R. Carlos",
-    position: "LB",
-    rating: 93,
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/6/66/Roberto_Carlos_2019.jpg",
-  },
-  {
-    id: "p9",
-    name: "V. Van Dijk",
-    position: "CB",
-    rating: 91,
-    imgUrl: "https://media.api-sports.io/football/players/293.png",
-  },
-  {
-    id: "p10",
-    name: "K. De Bruyne",
-    position: "CM",
-    rating: 92,
-    imgUrl: "https://media.api-sports.io/football/players/629.png",
-  },
-  {
-    id: "p11",
-    name: "E. Haaland",
-    position: "ST",
-    rating: 93,
-    imgUrl: "https://media.api-sports.io/football/players/1100.png",
-  },
-];
-
-// Override khusus untuk beberapa legenda yang susah dicari akurat via API
-const SPECIAL_PLAYERS = {
-  // Ronaldo Luís Nazário de Lima
-  "ronaldo nazario": {
-    id: "special-ronaldo-nazario",
-    name: "Ronaldo Nazário",
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
-    mappedPos: "FWD",
-  },
-  "ronaldo luis nazario": {
-    id: "special-ronaldo-nazario",
-    name: "Ronaldo Nazário",
-    imgUrl:
-      "https://upload.wikimedia.org/wikipedia/commons/3/33/Ronaldo_Cannes_2018.jpg",
-    mappedPos: "FWD",
-  },
-};
-
-// Database formasi (koordinat persentase)
-const FORMATIONS = {
-  "4-3-3": [
-    { x: 50, y: 88 }, // GK
-    { x: 15, y: 68 },
-    { x: 38, y: 75 },
-    { x: 62, y: 75 },
-    { x: 85, y: 68 }, // DEF
-    { x: 28, y: 45 },
-    { x: 50, y: 55 },
-    { x: 72, y: 45 }, // MID
-    { x: 18, y: 18 },
-    { x: 50, y: 12 },
-    { x: 82, y: 18 }, // FWD
-  ],
-  "4-4-2": [
-    { x: 50, y: 88 },
-    { x: 15, y: 68 },
-    { x: 38, y: 75 },
-    { x: 62, y: 75 },
-    { x: 85, y: 68 },
-    { x: 15, y: 40 },
-    { x: 38, y: 45 },
-    { x: 62, y: 45 },
-    { x: 85, y: 40 },
-    { x: 35, y: 15 },
-    { x: 65, y: 15 },
-  ],
-  "4-2-3-1": [
-    { x: 50, y: 88 },
-    { x: 15, y: 68 },
-    { x: 38, y: 75 },
-    { x: 62, y: 75 },
-    { x: 85, y: 68 },
-    { x: 35, y: 55 },
-    { x: 65, y: 55 },
-    { x: 20, y: 35 },
-    { x: 50, y: 35 },
-    { x: 80, y: 35 },
-    { x: 50, y: 12 },
-  ],
-  "3-5-2": [
-    { x: 50, y: 88 },
-    { x: 30, y: 75 },
-    { x: 50, y: 78 },
-    { x: 70, y: 75 },
-    { x: 10, y: 50 },
-    { x: 35, y: 45 },
-    { x: 50, y: 58 },
-    { x: 65, y: 45 },
-    { x: 90, y: 50 },
-    { x: 35, y: 15 },
-    { x: 65, y: 15 },
-  ],
-};
-
-function PlayerCard({ player, onDragStart, small = false, onRemove }) {
-  const [imgError, setImgError] = useState(false);
-
-  return (
-    <div
-      draggable
-      onDragStart={(event) => onDragStart(event, player)}
-      className={`relative group cursor-grab active:cursor-grabbing bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-md flex flex-col items-center shadow-lg transition-transform hover:scale-110 select-none overflow-hidden z-20 ${
-        small ? "p-1 w-20" : "p-2 w-24"
-      }`}
-    >
-      <div
-        className={`${
-          small ? "w-12 h-12" : "w-16 h-16"
-        } rounded-full bg-slate-700 mb-1 border-2 border-slate-500 overflow-hidden relative shadow-inner flex items-center justify-center`}
-      >
-        {!imgError && player.imgUrl ? (
-          <img
-            src={player.imgUrl}
-            alt={player.name}
-            className="w-full h-full object-cover"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="w-full h-full bg-slate-600 flex flex-col items-center justify-center text-slate-400 text-xs">
-            <span>NO</span>
-            <span>PHOTO</span>
-          </div>
-        )}
-      </div>
-
-      <div className="text-center w-full relative z-10 bg-slate-900/80 rounded px-1">
-        <div
-          className={`font-bold text-white truncate w-full ${
-            small ? "text-[10px]" : "text-xs"
-          }`}
-        >
-          {player.name}
-        </div>
-        <div className="flex justify-center gap-1 mt-0.5">
-          <span className="text-[9px] text-yellow-400 font-mono">
-            {player.rating}
-          </span>
-          <span className="text-[9px] text-blue-300">
-            {player.position}
-          </span>
-        </div>
-      </div>
-
-      {onRemove && (
-        <button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            onRemove();
-          }}
-          className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-600 text-[10px] text-white flex items-center justify-center shadow hover:bg-red-500"
-          title="Hapus dari cadangan"
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-}
+import {
+  INITIAL_PLAYERS,
+  SPECIAL_PLAYERS,
+  FORMATIONS,
+} from "./_comp_builderplayer/builderConstants";
+import { BenchPanel } from "./_comp_builderplayer/BenchPanel";
+import { CandidateModal } from "./_comp_builderplayer/CandidateModal";
+import { BuilderHeader } from "./_comp_builderplayer/BuilderHeader";
+import { BuilderField } from "./_comp_builderplayer/BuilderField";
+import { SearchPlayerForm } from "./_comp_builderplayer/SearchPlayerForm";
 
 export default function DreamElevenBuilder() {
   const fieldRef = useRef(null);
@@ -579,296 +361,56 @@ export default function DreamElevenBuilder() {
 
   return (
     <>
-    <div className="bg-slate-950/90 text-slate-100 font-sans p-3 md:p-5 rounded-2xl border border-slate-800 shadow-2xl select-none">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="flex-1 flex flex-col">
-          <header className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 flex items-center gap-2">
-                FREE-FORM BUILDER
-                <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700 font-normal normal-case flex items-center gap-1">
-                  <span
-                    className={
-                      saveStatus === "Saving."
-                        ? "animate-pulse text-yellow-400"
-                        : "text-emerald-400"
-                    }
-                  >
-                    ●
-                  </span>
-                  {saveStatus}
-                </span>
-              </h2>
-              <p className="text-slate-400 text-sm">
-                Drag &amp; drop bebas tanpa batas slot!
-              </p>
-            </div>
-
-            <div className="flex gap-2 items-center">
-              <div className="relative group">
-                <div className="absolute -top-3 left-0 text-[9px] text-slate-400 bg-slate-950 px-1">
-                  Snap to:
-                </div>
-                <select
-                  value={currentFormation}
-                  onChange={applyFormationTemplate}
-                  className="appearance-none bg-slate-800 border border-slate-600 text-white py-2 pl-4 pr-10 rounded font-bold cursor-pointer hover:bg-slate-700 focus:outline-none focus:border-cyan-500 transition-colors"
-                >
-                  {Object.keys(FORMATIONS).map((fmt) => (
-                    <option key={fmt} value={fmt}>
-                      {fmt}
-                    </option>
-                  ))}
-                </select>
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs">
-                  ▼
-                </span>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleScreenshot}
-                disabled={isCapturing}
-                className="hidden sm:inline-flex items-center gap-2 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-2 rounded border border-slate-700 text-xs font-bold transition-colors"
-                title="Screenshot dan simpan sebagai gambar"
-              >
-                <span>📷</span>
-                <span>Screenshot</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={resetBoard}
-                className="bg-slate-800 hover:bg-yellow-600/80 text-yellow-100 p-2.5 rounded border border-slate-700 transition-colors"
-                title="Clear Field"
-              >
-                ⟳
-              </button>
-
-              <button
-                type="button"
-                onClick={factoryReset}
-                className="bg-slate-800 hover:bg-red-600/80 text-red-100 p-2.5 rounded border border-slate-700 transition-colors"
-                title="Hard Reset"
-              >
-                🗑
-              </button>
-            </div>
-          </header>
-
-          <div
-            ref={fieldRef}
-            onDragOver={handleDragOver}
-            onDrop={handleDropOnField}
-            className="relative w-full max-w-3xl aspect-[90/68] bg-emerald-700 rounded-xl border-[6px] border-emerald-900 shadow-2xl overflow-hidden ring-1 ring-white/10 cursor-crosshair mx-auto"
-          >
-            <div
-              className="absolute inset-0 opacity-10 pointer-events-none"
-              style={{
-                backgroundImage:
-                  "linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.5) 50%)",
-                backgroundSize: "100% 10%",
-              }}
+      <div className="bg-slate-950/90 text-slate-100 font-sans p-3 md:p-5 rounded-2xl border border-slate-800 shadow-2xl select-none">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex-1 flex flex-col">
+            <BuilderHeader
+              currentFormation={currentFormation}
+              onChangeFormation={applyFormationTemplate}
+              onScreenshot={handleScreenshot}
+              onResetField={resetBoard}
+              onFactoryReset={factoryReset}
+              saveStatus={saveStatus}
+              isCapturing={isCapturing}
             />
-            <div className="absolute inset-5 border-[3px] border-white/60 pointer-events-none rounded-sm" />
-            {/* garis tengah vertikal */}
-            <div className="absolute top-5 bottom-5 left-1/2 w-[3px] bg-white/60 -translate-x-1/2 pointer-events-none" />
-            {/* lingkaran tengah */}
-            <div className="absolute top-1/2 left-1/2 w-32 h-32 border-[3px] border-white/60 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none flex items-center justify-center">
-              <div className="w-2 h-2 bg-white/60 rounded-full" />
-            </div>
-            {/* kotak penalti kiri */}
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 w-[15%] h-[40%] border-[3px] border-l-0 border-white/60 pointer-events-none bg-white/5" />
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 w-[5%] h-[18%] border-[3px] border-l-0 border-white/60 pointer-events-none" />
-            {/* kotak penalti kanan */}
-            <div className="absolute right-5 top-1/2 -translate-y-1/2 w-[15%] h-[40%] border-[3px] border-r-0 border-white/60 pointer-events-none bg-white/5" />
-            <div className="absolute right-5 top-1/2 -translate-y-1/2 w-[5%] h-[18%] border-[3px] border-r-0 border-white/60 pointer-events-none" />
 
-            {lineup.map((player) => (
-              <div
-                key={player.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 z-10 transition-all duration-300 ease-out"
-                style={{ top: `${player.y}%`, left: `${player.x}%` }}
-              >
-                <PlayerCard
-                  player={player}
-                  small
-                  onDragStart={(event) =>
-                    handleDragStart(event, player, "field")
-                  }
-                />
-              </div>
-            ))}
-
-            {lineup.length === 0 && (
-              <div className="absolute inset-0 flex items-center justify-center text-white/30 font-bold text-xl pointer-events-none">
-                Drop Players Anywhere
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="md:w-80 flex flex-col gap-4">
-          <div className="bg-slate-900 p-4 rounded-lg border border-slate-800 shadow-xl">
-            <h3 className="font-bold text-slate-300 mb-3 flex items-center gap-2 text-sm">
-              <span className="text-cyan-400">🔍</span>
-              Cari Pemain
-            </h3>
-            <form onSubmit={addNewPlayer} className="flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="Nama (cth: Neymar)"
-                className="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-cyan-500 transition-colors"
-                value={newPlayerName}
-                onChange={(event) => setNewPlayerName(event.target.value)}
-                disabled={isSearching}
-              />
-              <div className="flex gap-2">
-                <select
-                  value={newPlayerPos}
-                  onChange={(event) => setNewPlayerPos(event.target.value)}
-                  className="bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white text-sm flex-1 cursor-pointer"
-                  disabled={isSearching}
-                >
-                  <option value="GK">GK</option>
-                  <option value="DEF">DEF</option>
-                  <option value="MID">MID</option>
-                  <option value="FWD">FWD</option>
-                </select>
-                <button
-                  type="submit"
-                  disabled={isSearching || !newPlayerName.trim()}
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded text-sm font-bold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  <span className={isSearching ? "animate-spin" : ""}>
-                    {isSearching ? "⟳" : "+"}
-                  </span>
-                </button>
-              </div>
-            </form>
+            <BuilderField
+              fieldRef={fieldRef}
+              lineup={lineup}
+              onDragOver={handleDragOver}
+              onDrop={handleDropOnField}
+              onDragStart={handleDragStart}
+            />
           </div>
 
-          <div className="flex-1 bg-slate-900/90 p-4 rounded-xl border border-slate-700 flex flex-col shadow-xl">
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <h2 className="text-lg font-bold text-slate-300 flex items-center gap-2">
-                <div className="w-2 h-5 bg-yellow-500 rounded-sm" />
-                Cadangan ({bench.length})
-              </h2>
-              {bench.length > 0 && (
-                <button
-                  type="button"
-                  onClick={clearBench}
-                  className="text-[10px] px-2 py-1 rounded-full border border-slate-600 text-slate-300 hover:bg-red-600/80 hover:text-white hover:border-red-500 transition-colors"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-            <div
-              className="flex-1 overflow-y-auto max-h-[500px] min-h-[200px] bg-black/30 p-2 rounded-lg grid grid-cols-3 gap-2 content-start custom-scrollbar"
+          <div className="md:w-80 flex flex-col gap-4">
+            <SearchPlayerForm
+              newPlayerName={newPlayerName}
+              setNewPlayerName={setNewPlayerName}
+              newPlayerPos={newPlayerPos}
+              setNewPlayerPos={setNewPlayerPos}
+              isSearching={isSearching}
+              onSubmit={addNewPlayer}
+            />
+
+            <BenchPanel
+              bench={bench}
+              onClearBench={clearBench}
               onDragOver={handleDragOver}
               onDrop={handleDropOnBench}
-            >
-              {bench.length === 0 && (
-                <div className="col-span-3 text-center text-slate-500 py-10 text-xs italic">
-                  Cadangan kosong.
-                  <br />
-                  Tarik pemain dari lapangan ke sini.
-                </div>
-              )}
-              {bench.map((item) => (
-                <div key={item.id} className="flex justify-center">
-                  <PlayerCard
-                    player={item}
-                    small
-                    onDragStart={(event) =>
-                      handleDragStart(event, item, "bench")
-                    }
-                    onRemove={() => handleRemoveFromBench(item.id)}
-                  />
-                </div>
-              ))}
-            </div>
-            <p className="text-center text-[10px] text-slate-500 mt-2">
-              Tip: Drag pemain di lapangan untuk menggeser posisi.
-            </p>
+              onDragStart={handleDragStart}
+              onRemoveFromBench={handleRemoveFromBench}
+            />
           </div>
         </div>
       </div>
-    </div>
-      {showCandidateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="bg-slate-950 border border-slate-700 rounded-2xl p-4 w-full max-w-lg max-h-[80vh] flex flex-col gap-3 shadow-2xl">
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-100">
-                  Pilih pemain
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  Untuk kata kunci:{" "}
-                  <span className="font-mono text-slate-200">
-                    {candidateBase?.nameInput}
-                  </span>
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleCancelCandidate}
-                className="w-6 h-6 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs flex items-center justify-center"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="mt-2 space-y-2 overflow-y-auto pr-1">
-              {candidateOptions.map((candidate) => (
-                <button
-                  type="button"
-                  key={candidate.id}
-                  onClick={() => handleChooseCandidate(candidate)}
-                  className="w-full flex items-center gap-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-left text-xs transition-colors"
-                >
-                  <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-600 overflow-hidden flex items-center justify-center flex-shrink-0">
-                    {candidate.imgUrl ? (
-                      <img
-                        src={candidate.imgUrl}
-                        alt={candidate.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-[10px] text-slate-400">
-                        NO PHOTO
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-slate-100">
-                        {candidate.name}
-                      </span>
-                      <span className="text-[10px] text-cyan-400 font-mono">
-                        {candidate.mappedPos || candidate.rawPosition || "?"}
-                      </span>
-                    </div>
-                    <div className="mt-0.5 text-[10px] text-slate-400 flex flex-wrap gap-2">
-                      {candidate.team && (
-                        <span className="truncate max-w-[120px]">
-                          {candidate.team}
-                        </span>
-                      )}
-                      {candidate.nationality && (
-                        <span className="px-2 py-[1px] rounded-full border border-slate-600 text-[9px]">
-                          {candidate.nationality}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <CandidateModal
+        open={showCandidateModal}
+        options={candidateOptions}
+        base={candidateBase}
+        onCancel={handleCancelCandidate}
+        onChoose={handleChooseCandidate}
+      />
     </>
   );
 }
