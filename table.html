@@ -3,176 +3,459 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Antrian RS UI</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Sportia Wireframe - Operator Menu</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1a1a; }
-        ::-webkit-scrollbar-thumb { background: #333; }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        /* Animasi Berkedip saat dipanggil */
+        @keyframes blink {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .calling-animation {
+            animation: blink 1s infinite;
+            border: 4px solid #fbbf24; 
+        }
+
+        /* Helper Video 16:9 */
+        .aspect-video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        .aspect-video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* Tiket Print Animation */
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .ticket-appear {
+            animation: slideUp 0.5s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-300 font-sans h-screen overflow-hidden flex">
+<body class="min-h-screen flex flex-col">
 
-    <aside class="w-1/5 bg-black p-6 flex flex-col justify-between border-r border-gray-800">
-        <div>
-            <div class="flex items-center gap-2 mb-10 text-white font-bold text-xl">
-                <div class="w-6 h-6 bg-purple-600 rounded-full"></div> Sportia
+    <!-- NAVIGATION -->
+    <nav class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-slate-900 font-bold">UI</div>
+                <h1 class="text-xl font-bold tracking-tight">Sistem Antrian RS</h1>
             </div>
-
-            <nav class="space-y-2">
-                <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Main Menu</div>
-                
-                <div class="bg-purple-900/50 text-white p-3 rounded-lg flex gap-3 cursor-pointer items-center border-l-4 border-purple-500">
-                    <span>🏠</span> 
-                    <span class="font-semibold">Dashboard</span>
-                </div>
-
-                <div class="p-3 hover:bg-gray-800 hover:text-white rounded-lg flex gap-3 cursor-pointer items-center transition">
-                    <span>📋</span>
-                    <span>Premier League Table</span>
-                </div>
-
-                <div class="p-3 hover:bg-gray-800 hover:text-white rounded-lg flex gap-3 cursor-pointer items-center transition">
-                    <span>🔧</span>
-                    <span>Operator</span>
-                </div>
-            </nav>
-        </div>
-
-        <div class="space-y-2 mt-auto">
-             <div class="text-xs text-gray-500 uppercase tracking-wider">Other</div>
-             <div class="p-2 hover:text-white cursor-pointer flex gap-3 items-center">
-                 <span>♥</span> Favourites
-             </div>
-             <div class="p-2 hover:text-white cursor-pointer flex gap-3 items-center">
-                 <span>🎧</span> Support
-             </div>
-             
-             <div class="text-red-400 cursor-pointer pt-4 mt-4 border-t border-gray-800 flex items-center gap-2">
-                <span>←</span> Log Out
-            </div>
-        </div>
-    </aside>
-
-    <main class="w-1/2 p-8 overflow-y-auto">
-        <header class="mb-8">
-            <h1 class="text-3xl text-white font-bold">Welcome, Stacia!</h1>
-            <p class="text-gray-500">Today is sports day</p>
-        </header>
-
-        <div class="bg-gradient-to-r from-purple-800 to-indigo-900 rounded-2xl p-8 mb-8 relative overflow-hidden h-64 flex items-center shadow-lg shadow-purple-900/20">
-            <div class="w-2/3 z-10">
-                <div class="flex items-center gap-2 mb-2">
-                   <span class="bg-white/20 px-2 py-0.5 rounded text-xs text-white">Match of the Day</span>
-                </div>
-                <h2 class="text-3xl text-white font-bold mb-4">Manchester City Vs Arsenal</h2>
-                <div class="space-y-1 text-sm text-gray-200 mb-6">
-                    <p class="flex items-center gap-2">📅 10 January, 2022</p>
-                    <p class="flex items-center gap-2">🏟 Old Trafford Stadium</p>
-                </div>
-                <button class="bg-white text-purple-900 font-bold px-6 py-2 rounded-full hover:bg-gray-100 transition">Get a Ticket →</button>
-            </div>
-            <div class="absolute right-0 bottom-0 w-1/3 h-full bg-black/20 flex items-end justify-center">
-                <div class="h-5/6 w-full flex justify-center items-end pb-4 text-white text-xs opacity-50">
-                    [Player Image]
-                </div>
-            </div>
-        </div>
-
-        <div class="space-y-6">
-            <h3 class="text-lg font-semibold text-white">Today Match</h3>
             
-            <div class="bg-gray-800/40 border border-gray-700/50 rounded-xl p-4">
-                <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-700">
-                    <span class="flex items-center gap-2 font-semibold text-white">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500"></div> La Liga
-                    </span>
-                    <span class="text-xs text-gray-400">3 Matches ^</span>
+            <!-- Menu Navigasi -->
+            <div class="flex gap-2 bg-slate-800 p-1 rounded-lg">
+                <button onclick="switchPage('monitor')" id="btn-monitor" class="nav-btn px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2 bg-blue-600 text-white">
+                    <i class="fas fa-tv"></i> <span>Monitor TV</span>
+                </button>
+                <button onclick="switchPage('registration')" id="btn-registration" class="nav-btn px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2 hover:bg-slate-700 text-slate-300">
+                    <i class="fas fa-ticket-alt"></i> <span>Ambil Antrian (Pasien)</span>
+                </button>
+                <button onclick="switchPage('kiosk')" id="btn-kiosk" class="nav-btn px-4 py-2 rounded-md text-sm font-medium transition flex items-center gap-2 hover:bg-slate-700 text-slate-300">
+                    <i class="fas fa-user-md"></i> <span>Panggil (Petugas)</span>
+                </button>
+            </div>
+
+            <button onclick="resetQueue()" class="text-xs text-red-400 hover:text-red-300 underline">
+                Reset Data
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow p-4 md:p-6 max-w-7xl mx-auto w-full">
+
+        <!-- 1. HALAMAN MONITOR (TV Display) -->
+        <div id="page-monitor" class="page-section block space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[500px]">
+                <!-- Nomor Besar -->
+                <div class="md:col-span-7 bg-[#485683] rounded-3xl overflow-hidden shadow-2xl flex flex-col text-white relative">
+                    <div class="bg-[#3b476b] py-4 text-center border-b border-slate-500/30">
+                        <h2 class="text-2xl font-medium tracking-widest text-slate-200">NOMOR ANTRIAN</h2>
+                    </div>
+                    <div class="flex-grow flex items-center justify-center bg-[#485683]">
+                        <h1 id="main-display-number" class="text-[150px] md:text-[220px] font-bold leading-none tracking-tighter drop-shadow-lg">---</h1>
+                    </div>
+                    <div class="bg-[#3b476b] py-6 text-center border-t border-slate-500/30">
+                        <h2 id="main-display-poli" class="text-2xl md:text-3xl font-light tracking-wide text-white uppercase px-4">MENUNGGU ANTRIAN</h2>
+                    </div>
                 </div>
-                
-                <div class="flex items-center justify-between py-3 hover:bg-gray-700/50 rounded px-3 transition cursor-pointer group">
-                    <div class="flex items-center gap-4 w-1/3">
-                        <span class="text-green-400 text-xs font-mono border border-green-400/30 px-1 rounded">48'</span>
-                        <span class="text-gray-200 group-hover:text-white">Barcelona</span>
-                    </div>
-                    <div class="font-bold text-white bg-gray-900 px-3 py-1 rounded-lg">2 : 4</div>
-                    <div class="flex items-center gap-4 w-1/3 justify-end">
-                        <span class="text-gray-200 group-hover:text-white">Real Madrid</span>
-                        <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-black text-[10px] font-bold">RM</div>
+
+                <!-- Video / Info -->
+                <div class="md:col-span-5 bg-black rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+                    <div class="aspect-video-container bg-black h-full">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/S_15gC188jI?autoplay=1&mute=1&loop=1&playlist=S_15gC188jI&controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/70 to-transparent p-6 text-white">
+                            <h3 class="text-xl font-bold text-yellow-400 mb-1">INFORMASI LAYANAN</h3>
+                            <p class="text-sm text-gray-200">Silakan ambil nomor antrian di mesin tiket sebelum menuju ruang tunggu.</p>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="flex items-center justify-between py-3 hover:bg-gray-700/50 rounded px-3 transition cursor-pointer group">
-                    <div class="flex items-center gap-4 w-1/3">
-                        <span class="text-yellow-400 text-xs font-mono border border-yellow-400/30 px-1 rounded">83'</span>
-                        <span class="text-gray-200 group-hover:text-white">Atl. Madrid</span>
+            </div>
+
+            <!-- Kartu Antrian Kecil -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- A -->
+                <div id="card-A" class="bg-[#7e22ce] rounded-2xl overflow-hidden shadow-lg transform transition duration-300">
+                    <div class="bg-[#6b21a8] py-3 px-4 text-center flex justify-between items-center">
+                        <span class="text-white font-bold bg-white/20 px-2 rounded text-sm">GIGI</span>
+                        <h3 class="text-white font-medium text-xs tracking-wider">POLI GIGI</h3>
                     </div>
-                    <div class="font-bold text-white bg-gray-900 px-3 py-1 rounded-lg">3 : 1</div>
-                    <div class="flex items-center gap-4 w-1/3 justify-end">
-                        <span class="text-gray-200 group-hover:text-white">Villarreal</span>
-                        <div class="w-6 h-6 bg-yellow-500 rounded-full"></div>
+                    <div class="py-6 flex flex-col justify-center items-center bg-[#7e22ce]">
+                        <span class="text-white/70 text-sm mb-1">DIPANGGIL</span>
+                        <span id="queue-A" class="text-white text-6xl md:text-8xl font-medium">A0</span>
+                    </div>
+                </div>
+                <!-- B -->
+                <div id="card-B" class="bg-[#10b981] rounded-2xl overflow-hidden shadow-lg transform transition duration-300">
+                    <div class="bg-[#059669] py-3 px-4 text-center flex justify-between items-center">
+                        <span class="text-white font-bold bg-white/20 px-2 rounded text-sm">ANAK</span>
+                        <h3 class="text-white font-medium text-xs tracking-wider">POLI IBU & ANAK</h3>
+                    </div>
+                    <div class="py-6 flex flex-col justify-center items-center bg-[#10b981]">
+                        <span class="text-white/70 text-sm mb-1">DIPANGGIL</span>
+                        <span id="queue-B" class="text-white text-6xl md:text-8xl font-medium">B0</span>
+                    </div>
+                </div>
+                <!-- C -->
+                <div id="card-C" class="bg-[#ef4444] rounded-2xl overflow-hidden shadow-lg transform transition duration-300">
+                    <div class="bg-[#dc2626] py-3 px-4 text-center flex justify-between items-center">
+                        <span class="text-white font-bold bg-white/20 px-2 rounded text-sm">UMUM</span>
+                        <h3 class="text-white font-medium text-xs tracking-wider">POLI UMUM</h3>
+                    </div>
+                    <div class="py-6 flex flex-col justify-center items-center bg-[#ef4444]">
+                        <span class="text-white/70 text-sm mb-1">DIPANGGIL</span>
+                        <span id="queue-C" class="text-white text-6xl md:text-8xl font-medium">C0</span>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 2. HALAMAN REGISTRASI (Pasien) -->
+        <div id="page-registration" class="page-section hidden max-w-4xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+                <div class="bg-slate-800 p-8 text-center text-white">
+                    <h2 class="text-3xl font-bold mb-2">Selamat Datang di RS UI</h2>
+                    <p class="text-slate-300">Silakan pilih layanan poli yang Anda tuju untuk mengambil nomor antrian.</p>
+                </div>
+                
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Button A -->
+                        <button onclick="takeQueue('A')" class="group hover:-translate-y-1 transition duration-300 bg-purple-50 border-2 border-purple-100 hover:border-purple-500 rounded-2xl p-6 text-center">
+                            <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition">
+                                <i class="fas fa-tooth"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Poli Gigi</h3>
+                            <p class="text-sm text-slate-500 mt-2">Daftar pemeriksaan gigi & mulut</p>
+                        </button>
+                        
+                        <!-- Button B -->
+                        <button onclick="takeQueue('B')" class="group hover:-translate-y-1 transition duration-300 bg-emerald-50 border-2 border-emerald-100 hover:border-emerald-500 rounded-2xl p-6 text-center">
+                            <div class="w-16 h-16 mx-auto bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition">
+                                <i class="fas fa-baby"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Poli Ibu & Anak</h3>
+                            <p class="text-sm text-slate-500 mt-2">Pemeriksaan kandungan & anak</p>
+                        </button>
+                        
+                        <!-- Button C -->
+                        <button onclick="takeQueue('C')" class="group hover:-translate-y-1 transition duration-300 bg-red-50 border-2 border-red-100 hover:border-red-500 rounded-2xl p-6 text-center">
+                            <div class="w-16 h-16 mx-auto bg-red-100 text-red-600 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:bg-red-600 group-hover:text-white transition">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800">Poli Umum</h3>
+                            <p class="text-sm text-slate-500 mt-2">Konsultasi dokter umum</p>
+                        </button>
+                    </div>
+
+                    <!-- Ticket Display (Hidden by default) -->
+                    <div id="ticket-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-0 overflow-hidden ticket-appear">
+                            <div class="bg-yellow-400 p-4 text-center">
+                                <h3 class="font-bold text-slate-900">NOMOR ANTRIAN ANDA</h3>
+                            </div>
+                            <div class="p-8 text-center">
+                                <div id="ticket-poli-name" class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">POLI UMUM</div>
+                                <div id="ticket-number" class="text-7xl font-bold text-slate-900 mb-2">C12</div>
+                                <p class="text-xs text-slate-400">Silakan menunggu panggilan di ruang tunggu.</p>
+                                <div class="mt-4 pt-4 border-t border-dashed border-slate-300 text-xs text-slate-400">
+                                    RS UI Simulation • <span id="ticket-time">10:00</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-center">
+                                <button onclick="closeTicket()" class="w-full bg-slate-900 text-white py-3 rounded-xl font-medium hover:bg-slate-800 transition">Tutup & Cetak</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. HALAMAN KIOSK (Petugas) -->
+        <div id="page-kiosk" class="page-section hidden max-w-5xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-slate-800">Kontrol Panggilan</h2>
+                    <p class="text-slate-500">Panel Petugas Poliklinik</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Controller Items generated by JS to handle state logic better -->
+                    <div id="ctrl-container-A"></div>
+                    <div id="ctrl-container-B"></div>
+                    <div id="ctrl-container-C"></div>
+                </div>
+                
+                <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800 flex items-start gap-3">
+                    <i class="fas fa-lightbulb mt-1"></i>
+                    <div>
+                        <strong>Info Petugas:</strong>
+                        <ul class="list-disc ml-4 mt-1 space-y-1">
+                            <li>Tombol panggil hanya aktif jika ada pasien yang mengambil nomor (Total Pasien > Dipanggil).</li>
+                            <li>Tekan tombol untuk memanggil nomor berikutnya.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    <aside class="w-[30%] bg-gray-900 p-8 border-l border-gray-800 flex flex-col gap-8">
-        <div class="flex justify-end items-center gap-4">
-            <div class="relative cursor-pointer hover:bg-gray-800 p-2 rounded-full">
-                🔔 <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
-            </div>
-            <div class="cursor-pointer hover:bg-gray-800 p-2 rounded-full">⚙️</div>
-            <div class="flex items-center gap-3 text-right border-l border-gray-700 pl-4">
-                <div>
-                    <div class="text-white text-sm font-bold">Terry Stacia</div>
-                    <div class="text-xs text-purple-400">Premium User</div>
-                </div>
-                <div class="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full border-2 border-gray-800"></div>
-            </div>
-        </div>
+    <!-- LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const defaultData = {
+            queues: {
+                'A': { code: 'A', lastIssued: 0, currentCalled: 0, name: 'POLI GIGI DAN MULUT' },
+                'B': { code: 'B', lastIssued: 0, currentCalled: 0, name: 'POLI IBU DAN ANAK' },
+                'C': { code: 'C', lastIssued: 0, currentCalled: 0, name: 'POLI UMUM' }
+            },
+            currentCall: { code: '-', number: 0, name: 'MENUNGGU ANTRIAN' }
+        };
 
-        <div>
-            <div class="text-gray-400 mb-4 text-sm font-semibold tracking-wide">LIVE MATCHES</div>
-            <div class="bg-gradient-to-b from-gray-800 to-gray-900 border border-gray-700 rounded-2xl p-5 text-center shadow-lg">
-                <div class="flex justify-between items-center mb-6 px-2">
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="w-12 h-12 bg-gray-700 rounded-full border-2 border-gray-600 flex items-center justify-center">B</div>
-                        <span class="text-xs font-bold text-gray-300">BAR</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-3xl font-black text-white tracking-widest">4 : 2</span>
-                        <span class="text-[10px] text-red-500 font-bold uppercase tracking-widest animate-pulse">● Live</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
-                        <div class="w-12 h-12 bg-gray-700 rounded-full border-2 border-gray-600 flex items-center justify-center">M</div>
-                        <span class="text-xs font-bold text-gray-300">MUN</span>
-                    </div>
-                </div>
-                <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl text-sm transition shadow-lg shadow-purple-900/50">Match Detail</button>
-            </div>
-        </div>
+        function loadData() {
+            const saved = localStorage.getItem('rs_queue_data_v2');
+            return saved ? JSON.parse(saved) : defaultData;
+        }
 
-        <div class="flex-1 overflow-hidden flex flex-col">
-             <div class="text-gray-400 mb-4 text-sm font-semibold tracking-wide">LATEST NEWS</div>
-             <div class="space-y-4 overflow-y-auto pr-2">
-                 <div class="flex gap-4 group cursor-pointer">
-                     <div class="w-20 h-16 bg-gray-700 rounded-lg flex-shrink-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition"></div>
-                     <div class="flex flex-col justify-center">
-                         <h4 class="text-sm text-gray-200 group-hover:text-purple-300 font-medium leading-snug mb-1 transition">Ben talking points from weekend's top flight action</h4>
-                         <span class="text-[10px] text-gray-500">July 7, 2020 • News</span>
-                     </div>
-                 </div>
-                 <div class="flex gap-4 group cursor-pointer">
-                     <div class="w-20 h-16 bg-gray-700 rounded-lg flex-shrink-0 opacity-80 group-hover:opacity-100 transition"></div>
-                     <div class="flex flex-col justify-center">
-                         <h4 class="text-sm text-gray-200 group-hover:text-purple-300 font-medium leading-snug mb-1 transition">Spurs' lack of fervour thrown into stark relief by Arsenal</h4>
-                         <span class="text-[10px] text-gray-500">June 24, 2020 • Analysis</span>
-                     </div>
-                 </div>
-             </div>
-        </div>
-    </aside>
+        function saveData(data) {
+            localStorage.setItem('rs_queue_data_v2', JSON.stringify(data));
+        }
 
+        let appData = loadData();
+
+        // --- DOM Elements ---
+        const els = {
+            pages: {
+                monitor: document.getElementById('page-monitor'),
+                registration: document.getElementById('page-registration'),
+                kiosk: document.getElementById('page-kiosk')
+            },
+            navBtns: {
+                monitor: document.getElementById('btn-monitor'),
+                registration: document.getElementById('btn-registration'),
+                kiosk: document.getElementById('btn-kiosk')
+            },
+            monitor: {
+                mainNum: document.getElementById('main-display-number'),
+                mainPoli: document.getElementById('main-display-poli'),
+                qA: document.getElementById('queue-A'),
+                qB: document.getElementById('queue-B'),
+                qC: document.getElementById('queue-C'),
+                cards: {
+                    A: document.getElementById('card-A'),
+                    B: document.getElementById('card-B'),
+                    C: document.getElementById('card-C')
+                }
+            },
+            ticketModal: document.getElementById('ticket-modal')
+        };
+
+        // --- NAVIGATION ---
+        function switchPage(pageName) {
+            // Hide all pages
+            Object.values(els.pages).forEach(el => el.classList.add('hidden'));
+            // Show selected
+            els.pages[pageName].classList.remove('hidden');
+
+            // Update Nav Styles
+            Object.keys(els.navBtns).forEach(key => {
+                const btn = els.navBtns[key];
+                if (key === pageName) {
+                    btn.classList.remove('text-slate-300', 'hover:bg-slate-700');
+                    btn.classList.add('bg-blue-600', 'text-white');
+                } else {
+                    btn.classList.add('text-slate-300', 'hover:bg-slate-700');
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                }
+            });
+            
+            // Re-render Kiosk buttons if entering Kiosk page
+            if(pageName === 'kiosk') renderKioskControls();
+        }
+
+        // --- LOGIC: REGISTRATION (PASIEN) ---
+        function takeQueue(type) {
+            // 1. Increment lastIssued
+            appData.queues[type].lastIssued += 1;
+            saveData(appData);
+
+            // 2. Show Ticket Modal
+            const q = appData.queues[type];
+            document.getElementById('ticket-poli-name').innerText = q.name;
+            document.getElementById('ticket-number').innerText = `${q.code}${q.lastIssued}`;
+            
+            const now = new Date();
+            document.getElementById('ticket-time').innerText = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            els.ticketModal.classList.remove('hidden');
+        }
+
+        function closeTicket() {
+            els.ticketModal.classList.add('hidden');
+            // Opsional: switchPage('monitor');
+        }
+
+        // --- LOGIC: KIOSK (PETUGAS) ---
+        function renderKioskControls() {
+            ['A', 'B', 'C'].forEach(type => {
+                const q = appData.queues[type];
+                const waitingCount = q.lastIssued - q.currentCalled;
+                const container = document.getElementById(`ctrl-container-${type}`);
+                
+                // Color mapping
+                const colors = { 
+                    'A': { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', btn: 'bg-purple-600' },
+                    'B': { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', btn: 'bg-emerald-500' },
+                    'C': { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', btn: 'bg-red-600' }
+                }[type];
+
+                const isDisabled = waitingCount <= 0;
+
+                container.innerHTML = `
+                    <div class="${colors.bg} border-2 ${colors.border} rounded-2xl p-6 flex flex-col h-full relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="font-bold text-2xl text-slate-700">${type}</span>
+                            <span class="text-xs font-bold uppercase tracking-wide text-slate-500 bg-white px-2 py-1 rounded">
+                                ${q.name.replace('POLI ', '')}
+                            </span>
+                        </div>
+                        
+                        <div class="flex-grow space-y-3">
+                            <div class="flex justify-between text-sm border-b border-slate-200/50 pb-2">
+                                <span class="text-slate-500">Sedang Dipanggil:</span>
+                                <span class="font-mono font-bold text-slate-800 text-lg">${type}${q.currentCalled}</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-slate-200/50 pb-2">
+                                <span class="text-slate-500">Total Pasien:</span>
+                                <span class="font-mono font-bold text-slate-800 text-lg">${q.lastIssued}</span>
+                            </div>
+                            <div class="flex justify-between text-sm bg-white/50 p-2 rounded">
+                                <span class="text-slate-500 font-medium">Menunggu:</span>
+                                <span class="font-bold ${waitingCount > 0 ? 'text-red-600' : 'text-green-600'}">${waitingCount} Orang</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <button onclick="callQueue('${type}')" ${isDisabled ? 'disabled' : ''} 
+                                class="w-full py-3 rounded-xl font-bold shadow-sm transition-all flex justify-center items-center gap-2
+                                ${isDisabled 
+                                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
+                                    : `${colors.btn} text-white hover:opacity-90 active:scale-95 shadow-lg`}">
+                                <i class="fas fa-bullhorn"></i>
+                                ${isDisabled ? 'Belum Ada Pasien' : `Panggil ${type}${q.currentCalled + 1}`}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function callQueue(type) {
+            const q = appData.queues[type];
+            if (q.currentCalled >= q.lastIssued) return; // Guard
+
+            // Update Data
+            q.currentCalled += 1;
+            appData.currentCall = {
+                code: type,
+                number: q.currentCalled,
+                name: q.name
+            };
+            saveData(appData);
+
+            // Update UI
+            updateMonitor();
+            renderKioskControls();
+            
+            // Audio & Animation
+            playAudio(`Nomor Antrian, ${type}, ${q.currentCalled}, Silakan ke, ${q.name}`);
+            highlightCard(type);
+        }
+
+        // --- LOGIC: MONITOR (TV) ---
+        function updateMonitor() {
+            // Cards
+            els.monitor.qA.innerText = `A${appData.queues.A.currentCalled}`;
+            els.monitor.qB.innerText = `B${appData.queues.B.currentCalled}`;
+            els.monitor.qC.innerText = `C${appData.queues.C.currentCalled}`;
+
+            // Main Display
+            const curr = appData.currentCall;
+            if (curr.code !== '-') {
+                els.monitor.mainNum.innerText = `${curr.code}${curr.number}`;
+                els.monitor.mainPoli.innerText = curr.name;
+            } else {
+                els.monitor.mainNum.innerText = "---";
+                els.monitor.mainPoli.innerText = "MENUNGGU ANTRIAN";
+            }
+        }
+
+        function highlightCard(code) {
+            Object.values(els.monitor.cards).forEach(el => el.classList.remove('calling-animation', 'scale-105'));
+            if (els.monitor.cards[code]) els.monitor.cards[code].classList.add('calling-animation', 'scale-105');
+        }
+
+        function playAudio(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.85; 
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function resetQueue() {
+            if(confirm('Reset semua data antrian ke 0?')) {
+                appData = JSON.parse(JSON.stringify(defaultData)); // deep copy
+                saveData(appData);
+                updateMonitor();
+                renderKioskControls();
+                switchPage('monitor');
+            }
+        }
+
+        // Init
+        updateMonitor();
+        // Default page is monitor
+        switchPage('monitor');
+
+    </script>
 </body>
 </html>

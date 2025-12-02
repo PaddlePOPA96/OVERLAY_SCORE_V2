@@ -339,9 +339,12 @@ export default function DreamElevenBuilder() {
 
     try {
       setIsCapturing(true);
+      const rect = fieldRef.current.getBoundingClientRect();
       const dataUrl = await htmlToImage.toPng(fieldRef.current, {
         cacheBust: true,
-        pixelRatio: 2,
+        pixelRatio: 1,
+        width: rect.width,
+        height: rect.height,
         backgroundColor: "#065f46",
       });
 

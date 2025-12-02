@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 export function PlayerCard({ player, onDragStart, small = false, onRemove }) {
   const [imgError, setImgError] = useState(false);
-  const size = small ? 48 : 64;
 
   return (
     <div
@@ -21,11 +19,10 @@ export function PlayerCard({ player, onDragStart, small = false, onRemove }) {
         } rounded-full bg-slate-700 mb-1 border-2 border-slate-500 overflow-hidden relative shadow-inner flex items-center justify-center`}
       >
         {!imgError && player.imgUrl ? (
-          <Image
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={player.imgUrl}
             alt={player.name}
-            width={size}
-            height={size}
             className="w-full h-full object-cover"
             onError={() => setImgError(true)}
           />
