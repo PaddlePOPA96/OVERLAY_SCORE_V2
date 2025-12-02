@@ -216,6 +216,14 @@ export function TopBar({ user, theme, onToggleTheme, onLogout }) {
                   akun tersebut. Logout dan login kembali sebagai admin jika
                   ingin membuat user lain.
                 </p>
+
+                <Button
+                  type="submit"
+                  disabled={adminLoading}
+                  className="w-full mt-2 text-xs"
+                >
+                  {adminLoading ? "Membuat user..." : "Simpan User Baru"}
+                </Button>
               </form>
             )}
 
