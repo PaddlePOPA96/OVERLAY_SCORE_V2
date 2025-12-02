@@ -13,6 +13,14 @@ export async function GET() {
       cache: "no-store",
     });
 
+    if (res.status === 429) {
+      // Rate limited by upstream API: kembalikan payload kosong dengan status 200
+      return NextResponse.json(
+        { standings: [], rateLimited: true },
+        { status: 200 },
+      );
+    }
+
     if (!res.ok) {
       return NextResponse.json(
         { error: "Failed to fetch standings" },

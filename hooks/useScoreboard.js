@@ -15,8 +15,10 @@ export function useScoreboard(roomId = "default") {
     awayName: "WHU",
     homeScore: 0,
     awayScore: 0,
-    homeLogo: "https://upload.wikimedia.org/wikipedia/id/thumb/0/0c/Liverpool_FC.svg/370px-Liverpool_FC.svg.png",
-    awayLogo: "https://upload.wikimedia.org/wikipedia/id/thumb/e/eb/Manchester_City_FC_badge.svg/400px-Manchester_City_FC_badge.svg.png",
+    homeLogo:
+      "/logo/England%20-%20Premier%20League/Liverpool%20FC.png",
+    awayLogo:
+      "/logo/England%20-%20Premier%20League/Manchester%20City.png",
     
     // Warna & Style
     homeColor: "#a40606", // Layout A gradient
