@@ -58,8 +58,11 @@ export default function OperatorB({
             marginBottom: "5px",
           }}
         >
-          <label className="op-label">Layout</label>
+          <label className="op-label" htmlFor="operator-b-layout">
+            Layout
+          </label>
           <select
+            id="operator-b-layout"
             className="op-input"
             value={data.layout}
             onChange={(e) =>

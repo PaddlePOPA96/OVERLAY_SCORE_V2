@@ -1,10 +1,22 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { PremierLeagueMain } from "./PremierLeagueSection";
-import DreamElevenBuilder from "./DreamElevenBuilder";
 import { ChampionsLeagueTable, ChampionsLeagueMatches } from "./UCLSection";
+
+const DreamElevenBuilder = dynamic(
+  () => import("./DreamElevenBuilder"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-sm text-slate-400">
+        Memuat Dream Eleven...
+      </div>
+    ),
+  }
+);
 
 export function MainColumn({
   active,

@@ -64,8 +64,11 @@ export default function OperatorA({
             marginBottom: "5px",
           }}
         >
-          <label className="op-label">Layout</label>
+          <label className="op-label" htmlFor="operator-a-layout">
+            Layout
+          </label>
           <select
+            id="operator-a-layout"
             className="op-input"
             value={data.layout}
             onChange={(e) => actions.updateMatch({ layout: e.target.value })}
