@@ -114,14 +114,14 @@
 }
 
 .layout-a-team-left {
-  background: linear-gradient(90deg, var(--score-left-color), #ff9f9f);
+  background: linear-gradient(90deg, var(--score-left-color), #ffffff);
   border-radius: 6px 0 0 6px;
   justify-content: flex-start;
   padding-left: 40px;
 }
 
 .layout-a-team-right {
-  background: linear-gradient(270deg, var(--score-right-color), #9fb2ff);
+  background: linear-gradient(270deg, var(--score-right-color), #ffffff);
   border-radius: 0 6px 6px 0;
   justify-content: flex-end;
   padding-right: 40px;
@@ -191,22 +191,39 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 420px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 230px;
   z-index: 4;
 }
 
 .layout-a-score-num {
-  font-size: 200px;
+  font-size: 180px;
   font-weight: 900;
   color: #ffffff;
   text-shadow: 0 5px 18px rgba(0, 0, 0, 0.6);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
 .layout-a-score-num-double {
-  font-size: 120px;
+  font-size: 180px;
+  letter-spacing: -0.04em;
+}
+
+.layout-a-score-left {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translateY(-50%);
+  margin-right: 70px; /* jarak dari tengah/logo */
+  text-align: right;
+}
+
+.layout-a-score-right {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  margin-left: 70px; /* jarak dari tengah/logo */
+  text-align: left;
 }
 
 .layout-a-score-num.score-hidden {
