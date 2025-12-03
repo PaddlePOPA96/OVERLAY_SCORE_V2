@@ -1,0 +1,633 @@
+Requirement Flutter untuk Overlay di Android
+===========================================
+
+Tujuan: dari app Flutter/Dart bisa mengontrol overlay (jendela mengambang) di Android, misalnya untuk menampilkan scoreboard/overlay operator di atas aplikasi lain.
+
+--------------------------------------------------
+1. Requirement umum project Flutter
+--------------------------------------------------
+- Flutter SDK versi stable (mis: 3.x).
+- Project Flutter Android sudah menggunakan:
+  - AndroidX (default project baru).
+  - `compileSdkVersion` dan `targetSdkVersion` minimal 33 (Android 13) atau terbaru.
+- Minimal `minSdkVersion` 21 (Android 5.0) atau sesuai kebutuhan.
+- Bahasa native Android: Kotlin/Java (default Flutter: Kotlin).
+
+--------------------------------------------------
+2. Permission & konfigurasi Android (overlay)
+--------------------------------------------------
+Di `android/app/src/main/AndroidManifest.xml`:
+- Tambah permission untuk overlay:
+
+  ```xml
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+  ```
+
+- Pastikan `application` menggunakan `android:allowBackup` dan `android:usesCleartextTraffic` sesuai kebutuhan (tidak wajib untuk overlay).
+- Untuk Android 8+ overlay memakai tipe `TYPE_APPLICATION_OVERLAY` (ini biasanya di-handle oleh plugin, lihat bagian plugin).
+
+Selain manifest, di runtime user tetap harus menyetujui "Display over other apps" (Draw over other apps). Ini diminta lewat kode (lihat bagian 4).
+
+--------------------------------------------------
+3. Plugin Flutter yang direkomendasikan
+--------------------------------------------------
+Cara paling praktis adalah memakai plugin siap pakai, misalnya:
+
+- `flutter_overlay_window`
+
+Tambahkan di `pubspec.yaml` project Flutter:
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_overlay_window: ^0.4.4
+```
+
+Lalu jalankan `flutter pub get`.
+
+--------------------------------------------------
+4. Kode Dart untuk minta izin & kontrol overlay
+--------------------------------------------------
+Contoh file Dart (misalnya `lib/overlay_controller.dart`) untuk:
+- Cek izin overlay.
+- Minta izin overlay.
+- Tampilkan dan tutup overlay.
+
+```dart
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+
+class OverlayController {
+  static Future<void> ensureOverlayPermission() async {
+    final granted = await FlutterOverlayWindow.isPermissionGranted();
+    if (!granted) {
+      await FlutterOverlayWindow.requestPermission();
+    }
+  }
+
+  static Future<void> showOverlay() async {
+    await ensureOverlayPermission();
+
+    await FlutterOverlayWindow.showOverlay(
+      enableDrag: true,
+      alignment: OverlayAlignment.centerRight,
+      flag: OverlayFlag.defaultFlag,
+      visibility: NotificationVisibility.visibilityPublic,
+    );
+  }
+
+  static Future<void> closeOverlay() async {
+    await FlutterOverlayWindow.closeOverlay();
+  }
+}
+```
+
+Di layar utama Flutter (misalnya `main.dart`), Anda bisa panggil:
+
+```dart
+ElevatedButton(
+  onPressed: () => OverlayController.showOverlay(),
+  child: const Text('Start Overlay'),
+),
+
+ElevatedButton(
+  onPressed: () => OverlayController.closeOverlay(),
+  child: const Text('Stop Overlay'),
+),
+```
+
+--------------------------------------------------
+5. Entry point tampilan overlay
+--------------------------------------------------
+Plugin `flutter_overlay_window` membutuhkan entry point khusus untuk UI overlay-nya.
+Contoh sederhana (di file `main.dart` yang sama):
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterOverlayWindow.overlayMain = overlayMain; // daftarkan entry point overlay
+  runApp(const MyApp());
+}
+
+@pragma('vm:entry-point')
+void overlayMain() {
+  runApp(const OverlayApp());
+}
+
+class OverlayApp extends StatelessWidget {
+  const OverlayApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
+            color: Colors.black54,
+            child: const Text(
+              'Overlay Operator / Scoreboard',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+UI di `OverlayApp` bisa Anda ganti dengan tampilan scoreboard/operator yang terhubung ke Firebase/Next.js.
+
+--------------------------------------------------
+6. Ringkasan requirement utama
+--------------------------------------------------
+- Flutter project Android sudah jalan (AndroidX, minSdk 21+).
+- Tambah permission `SYSTEM_ALERT_WINDOW` di `AndroidManifest.xml`.
+- Pasang plugin overlay (contoh: `flutter_overlay_window` di `pubspec.yaml`).
+- Implementasi:
+  - Entry point overlay (`overlayMain`) + widget overlay.
+  - Kode Dart untuk:
+    - cek dan minta izin overlay,
+    - `showOverlay()` / `closeOverlay()`.
+- User harus mengaktifkan izin "Display over other apps" ketika diminta.
+
+Dengan requirement dan contoh di atas, Anda bisa pakai Flutter/Dart untuk mengontrol overlay operator di Android dari project Flutter terpisah yang berfungsi sebagai controller untuk overlay scoreboard.
+
+--------------------------------------------------
+7. Integrasi Operator Flutter ke Firebase scoreboard-next
+--------------------------------------------------
+Target: Operator Flutter mengupdate data yang sama dengan Next.js (`match_live/{roomId}` di Firebase Realtime Database), sehingga:
+- Overlay web (`/overlay/[room]`) ikut berubah.
+- Overlay mini di Android (Flutter overlay) juga baca data yang sama.
+
+--------------------------------------------------
+7.1. Tambah dependency Firebase di Flutter
+--------------------------------------------------
+Di `pubspec.yaml` project Flutter:
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Overlay Android
+  flutter_overlay_window: ^0.4.4
+
+  # Firebase
+  firebase_core: ^3.7.0
+  firebase_database: ^11.1.0
+```
+
+Lalu:
+
+```bash
+flutter pub get
+```
+
+Setup Firebase di Flutter (pakai project yang sama dengan Next.js / scoreboard-next):
+
+- Jalankan:
+
+  ```bash
+  flutterfire configure
+  ```
+
+  Pilih project Firebase yang sama, sehingga terbentuk file:
+
+  - `lib/firebase_options.dart`
+
+--------------------------------------------------
+7.2. Service Dart untuk update `match_live/{roomId}`
+--------------------------------------------------
+Buat file `lib/scoreboard_service.dart`:
+
+```dart
+import 'package:firebase_database/firebase_database.dart';
+
+class ScoreboardService {
+  ScoreboardService(this.roomId)
+      : _ref = FirebaseDatabase.instance.ref('match_live/$roomId');
+
+  final String roomId;
+  final DatabaseReference _ref;
+
+  Future<void> updateMatch(Map<String, dynamic> updates) async {
+    await _ref.update(updates);
+  }
+
+  Future<void> setTeams({
+    required String homeName,
+    required String awayName,
+  }) async {
+    await updateMatch({
+      'homeName': homeName,
+      'awayName': awayName,
+    });
+  }
+
+  Future<void> setScores({
+    required int homeScore,
+    required int awayScore,
+  }) async {
+    await updateMatch({
+      'homeScore': homeScore,
+      'awayScore': awayScore,
+    });
+  }
+
+  Future<void> triggerGoal({
+    required String team, // 'home' atau 'away'
+    required String homeName,
+    required String awayName,
+    required int homeScore,
+    required int awayScore,
+  }) async {
+    final now = DateTime.now().millisecondsSinceEpoch;
+
+    await updateMatch({
+      team == 'home' ? 'homeScore' : 'awayScore':
+          team == 'home' ? homeScore : awayScore,
+      'goalTrigger': now,
+      'goalTeam': team == 'home' ? homeName : awayName,
+    });
+  }
+}
+```
+
+Service ini menulis ke path yang sama dengan Next.js:
+
+- `match_live/{roomId}`
+  - `homeName`, `awayName`
+  - `homeScore`, `awayScore`
+  - `goalTrigger`, `goalTeam`
+
+--------------------------------------------------
+7.3. `main.dart`: OperatorPage + Overlay mini + Firebase
+--------------------------------------------------
+Contoh `lib/main.dart` langsung terhubung ke Firebase scoreboard-next:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_overlay_window/flutter_overlay_window.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+import 'firebase_options.dart';
+import 'scoreboard_service.dart';
+
+const String kRoomId = 'default'; // samakan dengan roomId di Next.js
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Init Firebase pakai project yang sama dengan Next.js
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Daftarkan entry point untuk overlay mini
+  FlutterOverlayWindow.overlayMain = overlayMain;
+
+  runApp(const OperatorApp());
+}
+
+@pragma('vm:entry-point')
+void overlayMain() {
+  runApp(const OperatorOverlayMiniApp());
+}
+
+class OperatorApp extends StatelessWidget {
+  const OperatorApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Operator Controller',
+      theme: ThemeData.dark(),
+      home: const OperatorPage(),
+    );
+  }
+}
+
+class OperatorPage extends StatefulWidget {
+  const OperatorPage({super.key});
+
+  @override
+  State<OperatorPage> createState() => _OperatorPageState();
+}
+
+class _OperatorPageState extends State<OperatorPage> {
+  late final ScoreboardService _service;
+
+  String homeName = 'TEAM A';
+  String awayName = 'TEAM B';
+  int homeScore = 0;
+  int awayScore = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _service = ScoreboardService(kRoomId);
+  }
+
+  Future<void> _startOverlay() async {
+    final granted = await FlutterOverlayWindow.isPermissionGranted();
+    if (!granted) {
+      await FlutterOverlayWindow.requestPermission();
+    }
+
+    await FlutterOverlayWindow.showOverlay(
+      enableDrag: true,
+      alignment: OverlayAlignment.topRight,
+      flag: OverlayFlag.defaultFlag,
+      visibility: NotificationVisibility.visibilityPublic,
+    );
+  }
+
+  Future<void> _stopOverlay() async {
+    await FlutterOverlayWindow.closeOverlay();
+  }
+
+  Future<void> _syncTeams() async {
+    await _service.setTeams(homeName: homeName, awayName: awayName);
+  }
+
+  Future<void> _addHome() async {
+    setState(() => homeScore++);
+    await _service.setScores(homeScore: homeScore, awayScore: awayScore);
+    await _service.triggerGoal(
+      team: 'home',
+      homeName: homeName,
+      awayName: awayName,
+      homeScore: homeScore,
+      awayScore: awayScore,
+    );
+  }
+
+  Future<void> _addAway() async {
+    setState(() => awayScore++);
+    await _service.setScores(homeScore: homeScore, awayScore: awayScore);
+    await _service.triggerGoal(
+      team: 'away',
+      homeName: homeName,
+      awayName: awayName,
+      homeScore: homeScore,
+      awayScore: awayScore,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Page Operator (Flutter)'),
+        actions: [
+          IconButton(
+            onPressed: _startOverlay,
+            icon: const Icon(Icons.picture_in_picture_alt),
+            tooltip: 'Start Overlay Mini',
+          ),
+          IconButton(
+            onPressed: _stopOverlay,
+            icon: const Icon(Icons.close),
+            tooltip: 'Stop Overlay Mini',
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Room ID (Firebase / Next.js)',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            const Text(kRoomId),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _teamCard(
+                    title: 'Team A',
+                    name: homeName,
+                    score: homeScore,
+                    onNameChanged: (v) => setState(() => homeName = v),
+                    onAdd: _addHome,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _teamCard(
+                    title: 'Team B',
+                    name: awayName,
+                    score: awayScore,
+                    onNameChanged: (v) => setState(() => awayName = v),
+                    onAdd: _addAway,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _syncTeams,
+                  child: const Text('Sync Team Names'),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: _startOverlay,
+                  child: const Text('Start Overlay Mini'),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: _stopOverlay,
+                  child: const Text('Stop Overlay Mini'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _teamCard({
+    required String title,
+    required String name,
+    required int score,
+    required ValueChanged<String> onNameChanged,
+    required VoidCallback onAdd,
+  }) {
+    return Card(
+      color: Colors.grey[900],
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              decoration: const InputDecoration(
+                labelText: 'Team Name',
+                border: OutlineInputBorder(),
+              ),
+              controller: TextEditingController(text: name),
+              onChanged: onNameChanged,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Text(
+                  '$score',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: onAdd,
+                  child: const Text('+1'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OperatorOverlayMiniApp extends StatelessWidget {
+  const OperatorOverlayMiniApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const OperatorOverlayMini(),
+    );
+  }
+}
+
+class OperatorOverlayMini extends StatelessWidget {
+  const OperatorOverlayMini({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ref = FirebaseDatabase.instance.ref('match_live/$kRoomId');
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Align(
+        alignment: Alignment.topRight,
+        child: StreamBuilder<DatabaseEvent>(
+          stream: ref.onValue,
+          builder: (context, snapshot) {
+            final data =
+                snapshot.data?.snapshot.value as Map<dynamic, dynamic>? ?? {};
+
+            final homeName = (data['homeName'] as String?) ?? 'HOME';
+            final awayName = (data['awayName'] as String?) ?? 'AWAY';
+            final homeScore = (data['homeScore'] as num?)?.toInt() ?? 0;
+            final awayScore = (data['awayScore'] as num?)?.toInt() ?? 0;
+
+            return Container(
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
+              width: 200,
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Operator Overlay',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          homeName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        '$homeScore',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          awayName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        '$awayScore',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
+Dengan setup di atas:
+- Flutter OperatorPage menulis ke `match_live/{kRoomId}` yang sama dengan Next.js.
+- Overlay mini di Android membaca realtime dari path yang sama.
+- Overlay web `/overlay/[room]` di Next.js juga memakai data yang sama → semua sinkron. 
