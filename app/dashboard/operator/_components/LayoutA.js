@@ -109,7 +109,9 @@ export default function LayoutA({ data, displayTime, formatTime }) {
                 width={64}
                 height={64}
                 className="w-full h-full object-contain"
-                priority={false}
+                priority
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             <div className="layout-a-score-overlay">
