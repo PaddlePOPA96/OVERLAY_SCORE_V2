@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-
-export function LeftSidebar({ active, setActive, theme }) {
+export function LeftSidebar({ active, setActive, theme, user }) {
   const isDark = theme === "dark";
   const asideClass = [
     "w-1/5 p-6 flex flex-col justify-between border-r",
@@ -12,19 +10,20 @@ export function LeftSidebar({ active, setActive, theme }) {
   return (
     <aside className={asideClass}>
       <div>
-       
         <nav className="space-y-2" aria-label="Dashboard sections">
           <div className="text-xs text-gray-300 uppercase tracking-wider mb-2">
             Main Menu
           </div>
 
-          <NavItem
-            icon="🏠"
-            label="Scoreboard Operator"
-            active={active === "operator"}
-            isDark={isDark}
-            onClick={() => setActive("operator")}
-          />
+          {user && (
+            <NavItem
+              icon="🏠"
+              label="Scoreboard Operator"
+              active={active === "operator"}
+              isDark={isDark}
+              onClick={() => setActive("operator")}
+            />
+          )}
 
           <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
             Premier League

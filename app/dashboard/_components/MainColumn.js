@@ -66,7 +66,26 @@ export function MainColumn({
             </p>
           </header>
           <div className="pr-2">
-            <OperatorRoot initialRoomId={roomId} requireAuth={false} />
+            {user ? (
+              <OperatorRoot initialRoomId={roomId} requireAuth={false} />
+            ) : (
+              <div
+                className={`rounded-xl border-2 border-dashed p-6 text-sm ${
+                  isDark
+                    ? "border-slate-700 bg-black/40 text-slate-200"
+                    : "border-slate-200 bg-white text-slate-700"
+                }`}
+              >
+                <p className="font-semibold mb-1">
+                  Scoreboard terkunci untuk pengguna belum login.
+                </p>
+                <p className="text-xs">
+                  Silakan login terlebih dahulu melalui tombol{" "}
+                  <span className="font-semibold">Login</span> di kanan atas
+                  untuk mengontrol scoreboard.
+                </p>
+              </div>
+            )}
           </div>
         </>
       ) : active === "dream-eleven" ? (

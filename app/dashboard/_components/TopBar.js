@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { registerWithEmailPassword } from "@/lib/auth/service";
 
-export function TopBar({ user, theme, onToggleTheme, onLogout }) {
+export function TopBar({
+  user,
+  theme,
+  onToggleTheme,
+  onLogout,
+  onLoginClick,
+}) {
   const isDark = theme === "dark";
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState("");
@@ -31,6 +37,13 @@ export function TopBar({ user, theme, onToggleTheme, onLogout }) {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [showAdminModal]);
+
+  useEffect(() => {
+    if (!user) {
+      setShowAdminModal(false);
+      setShowCreateForm(false);
+    }
+  }, [user]);
 
   const handleAdminCreateUser = async (event) => {
     event.preventDefault();
@@ -102,35 +115,46 @@ export function TopBar({ user, theme, onToggleTheme, onLogout }) {
             {isDark ? "🌞" : "🌙"}
           </button>
 
-          <div className="relative">
-            <button
+          {user ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowAdminModal(true)}
+                className={`flex items-center gap-3 rounded-full px-3 py-1 border ${
+                  isDark
+                    ? "border-gray-700 hover:bg-gray-800/60"
+                    : "border-gray-300 hover:bg-gray-100"
+                }`}
+              >
+                <div className="text-right">
+                  <div
+                    className={`text-sm font-semibold ${
+                      isDark ? "text-white" : "text-slate-900"
+                    }`}
+                  >
+                    {username}
+                  </div>
+                  <div className="text-[11px] text-purple-400">
+                    {isAdmin ? "Admin" : "Premium User"}
+                  </div>
+                </div>
+                <div className="w-9 h-9 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full border-2 border-gray-800" />
+              </button>
+            </div>
+          ) : (
+            <Button
               type="button"
-              onClick={() => setShowAdminModal(true)}
-              className={`flex items-center gap-3 rounded-full px-3 py-1 border ${
-                isDark
-                  ? "border-gray-700 hover:bg-gray-800/60"
-                  : "border-gray-300 hover:bg-gray-100"
-              }`}
+              size="sm"
+              className="text-xs font-semibold px-4"
+              onClick={onLoginClick}
             >
-              <div className="text-right">
-                <div
-                  className={`text-sm font-semibold ${
-                    isDark ? "text-white" : "text-slate-900"
-                  }`}
-                >
-                  {username}
-                </div>
-                <div className="text-[11px] text-purple-400">
-                  {isAdmin ? "Admin" : "Premium User"}
-                </div>
-              </div>
-              <div className="w-9 h-9 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full border-2 border-gray-800" />
-            </button>
-          </div>
+              Login
+            </Button>
+          )}
         </div>
       </header>
 
-      {showAdminModal && (
+      {user && showAdminModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
           <div className="bg-slate-950 border border-slate-700 rounded-2xl p-4 w-full max-w-sm shadow-2xl text-slate-100">
             <div className="flex items-center justify-between mb-1">
