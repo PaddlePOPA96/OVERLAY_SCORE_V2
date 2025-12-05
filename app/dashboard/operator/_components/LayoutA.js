@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import "@/app/dashboard/operator/overlay/layoutA.css";
 
 export default function LayoutA({ data, displayTime, formatTime }) {
@@ -102,7 +103,14 @@ export default function LayoutA({ data, displayTime, formatTime }) {
 
           <div className="layout-a-center">
             <div className="layout-a-center-logo">
-              <img src="/logo/logo-epl.svg" alt="PL" />
+              <Image
+                src="/logo/logo-epl.svg"
+                alt="PL"
+                width={64}
+                height={64}
+                className="w-full h-full object-contain"
+                priority={false}
+              />
             </div>
             <div className="layout-a-score-overlay">
               <span

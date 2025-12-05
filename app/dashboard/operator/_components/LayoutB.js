@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import "@/app/dashboard/operator/overlay/layoutB.css";
 
 // Pilih warna teks (hitam/putih) agar kontras dengan warna background
@@ -71,8 +72,22 @@ export default function LayoutB({ data, displayTime, formatTime }) {
           </div>
 
           <div className="layout-b-teams-panel">
-            <img className="layout-b-team-logo" src={data.homeLogo} alt="Home" />
-            <img className="layout-b-team-logo" src={data.awayLogo} alt="Away" />
+            <Image
+              className="layout-b-team-logo"
+              src={data.homeLogo}
+              alt={data.homeName || "Home"}
+              width={110}
+              height={110}
+              priority={false}
+            />
+            <Image
+              className="layout-b-team-logo"
+              src={data.awayLogo}
+              alt={data.awayName || "Away"}
+              width={110}
+              height={110}
+              priority={false}
+            />
           </div>
 
           <div className="layout-b-score-panel">

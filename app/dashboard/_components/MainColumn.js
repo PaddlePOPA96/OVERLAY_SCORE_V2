@@ -2,9 +2,20 @@
 
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { PremierLeagueMain } from "./PremierLeagueSection";
 import { ChampionsLeagueTable, ChampionsLeagueMatches } from "./UCLSection";
+
+const OperatorRoot = dynamic(
+  () => import("@/app/dashboard/operator/_components/OperatorRoot"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-sm text-slate-400">
+        Memuat panel operator...
+      </div>
+    ),
+  }
+);
 
 const DreamElevenBuilder = dynamic(
   () => import("./DreamElevenBuilder"),
