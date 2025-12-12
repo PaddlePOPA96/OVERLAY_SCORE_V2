@@ -162,9 +162,8 @@ export default function DreamElevenBuilder() {
     if (!draggedItem) return;
 
     if (sourceType === "field") {
-      const { x, y, ...cleanPlayer } = draggedItem;
+      // Just remove from lineup - player already exists in bench
       setLineup((prev) => prev.filter((p) => p.id !== draggedItem.id));
-      setBench((prev) => [...prev, cleanPlayer]);
     }
     setDraggedItem(null);
     setSourceType(null);
@@ -328,7 +327,10 @@ export default function DreamElevenBuilder() {
     const candidates = await fetchPlayerData(newPlayerName);
     setIsSearching(false);
 
+    console.log('[DreamElevenBuilder] Search results:', candidates);
+
     if (!candidates || !candidates.length) {
+      console.log('[DreamElevenBuilder] No candidates found, adding manual player');
       // fallback: tidak ada hasil, pakai nama manual
       const newPlayer = {
         id: Date.now().toString(),
@@ -347,30 +349,8 @@ export default function DreamElevenBuilder() {
       return;
     }
 
-    if (candidates.length === 1) {
-      const chosen = candidates[0];
-      const finalPosition = chosen.mappedPos || newPlayerPos;
-      const newPlayer = {
-        id: Date.now().toString(),
-        name: chosen.displayName || chosen.name || newPlayerName,
-        position: finalPosition,
-        rating: chosen.rating || 75, // Use API rating or default
-        imgUrl: chosen.imgUrl || null,
-      };
-
-      // Add to bench and field together
-      const slot = getNextSlotForPosition(finalPosition);
-      setBench((prev) => [...prev, newPlayer]);
-      setLineup((prev) => [...prev, { id: newPlayer.id, x: slot.x, y: slot.y }]);
-
-      setNewPlayerName("");
-      if (chosen.mappedPos) {
-        setNewPlayerPos(chosen.mappedPos);
-      }
-      return;
-    }
-
-    // Lebih dari satu kandidat -> buka modal pemilihan
+    // Ada kandidat dari API -> tampilkan modal untuk memilih
+    console.log('[DreamElevenBuilder] Showing modal with', candidates.length, 'candidates');
     setCandidateOptions(candidates);
     setCandidateBase({
       nameInput: newPlayerName,
@@ -455,6 +435,17 @@ export default function DreamElevenBuilder() {
       rating: candidate.rating || 75, // Use API rating or default
       imgUrl: candidate.imgUrl || null,
     };
+
+    // Check if player already exists in bench (by name to avoid duplicates)
+    const exists = bench.find(p => p.name === newPlayer.name);
+    if (exists) {
+      console.log('[DreamElevenBuilder] Player already exists, skipping duplicate');
+      setShowCandidateModal(false);
+      setCandidateOptions([]);
+      setCandidateBase(null);
+      setNewPlayerName("");
+      return;
+    }
 
     // Add to bench first
     setBench((prev) => [...prev, newPlayer]);
@@ -547,7 +538,7 @@ export default function DreamElevenBuilder() {
             />
 
             <BenchPanel
-              bench={bench}
+              bench={bench.filter(p => !lineup.find(slot => slot.id === p.id))}
               onClearBench={clearBench}
               onDragOver={handleDragOver}
               onDrop={handleDropOnBench}
