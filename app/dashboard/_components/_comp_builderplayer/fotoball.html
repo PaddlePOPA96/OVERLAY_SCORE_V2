@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Strategy Board Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #1a202c;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            /* Mencegah scroll saat bermain */
+        }
+
+        canvas {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            cursor: crosshair;
+        }
+
+        .control-panel {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Efek kilau pada bola/pemain */
+        .glass-effect {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col items-center justify-center">
+
+    <!-- Header / Scoreboard -->
+    <div class="absolute top-4 w-full flex justify-between px-8 z-10 pointer-events-none">
+        <div class="text-2xl font-bold text-red-400 drop-shadow-md">TIM MERAH</div>
+
+        <!-- Score & Timer Container -->
+        <div class="flex flex-col items-center">
+            <div class="bg-black/60 px-8 py-2 rounded-t-lg text-2xl font-mono border-x border-t border-white/20">
+                <span id="scoreRed">0</span> - <span id="scoreBlue">0</span>
+            </div>
+            <div
+                class="bg-gray-900/80 px-4 py-1 rounded-b-lg text-lg font-mono text-yellow-400 border border-white/20 min-w-[100px] text-center">
+                <span id="matchTimer">00:00</span>
+            </div>
+        </div>
+
+        <div class="text-2xl font-bold text-blue-400 drop-shadow-md">TIM BIRU</div>
+    </div>
+
+    <!-- Area Canvas (Lapangan) -->
+    <div class="relative shadow-2xl border-4 border-gray-800 rounded-lg overflow-hidden">
+        <canvas id="pitchCanvas"></canvas>
+        <!-- Overlay Loading/Info -->
+        <div id="startOverlay"
+            class="absolute inset-0 flex items-center justify-center bg-black/60 z-20 pointer-events-none transition-opacity duration-500 opacity-0">
+            <h2 id="overlayText"
+                class="text-4xl font-bold text-white tracking-widest drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">GOAL!</h2>
+        </div>
+    </div>
+
+    <!-- Panel Kontrol -->
+    <div
+        class="control-panel absolute bottom-0 w-full p-4 flex flex-col md:flex-row gap-4 items-center justify-center z-30">
+
+        <!-- Kontrol Tim Merah -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-red-400 font-bold uppercase">Strategi Merah</label>
+            <select id="strategyRed"
+                class="bg-gray-700 text-white text-sm rounded p-2 border border-gray-600 focus:border-red-500 outline-none">
+                <option value="4-4-2">4-4-2 (Seimbang)</option>
+                <option value="4-3-3">4-3-3 (Menyerang)</option>
+                <option value="5-4-1">5-4-1 (Parkir Bus)</option>
+                <option value="2-3-5">2-3-5 (All Out Attack)</option>
+            </select>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="flex gap-2 mx-4">
+            <button id="btnReset"
+                class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded shadow transition transform hover:scale-105">
+                Reset
+            </button>
+            <button id="btnPlay"
+                class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-6 rounded shadow transition transform hover:scale-105 flex items-center gap-2">
+                <span id="playIcon">▶</span> <span id="playText">Mainkan</span>
+            </button>
+        </div>
+
+        <!-- Kontrol Tim Biru -->
+        <div class="flex flex-col gap-1">
+            <label class="text-xs text-blue-400 font-bold uppercase">Strategi Biru</label>
+            <select id="strategyBlue"
+                class="bg-gray-700 text-white text-sm rounded p-2 border border-gray-600 focus:border-blue-500 outline-none">
+                <option value="4-3-3">4-3-3 (Menyerang)</option>
+                <option value="4-4-2">4-4-2 (Seimbang)</option>
+                <option value="3-5-2">3-5-2 (Penguasaan)</option>
+                <option value="5-3-2">5-3-2 (Bertahan)</option>
+            </select>
+        </div>
+
+        <div class="hidden md:block absolute right-6 text-xs text-gray-400 max-w-[150px] text-right">
+            Klik "Mainkan" untuk memulai simulasi 90 menit (4 menit realtime).
+        </div>
+    </div>
+
+    <script>
+        /**
+         * ENGINE SIMULASI SEPAK BOLA
+         * Menggunakan Canvas 2D untuk performa tinggi dan visual taktis.
+         */
+
+        // --- Konfigurasi ---
+        const CANVAS_WIDTH = 1000;
+        const CANVAS_HEIGHT = 600;
+        const PLAYER_RADIUS = 12;
+        const BALL_RADIUS = 5;
+        const FIELD_COLOR = '#2d6a4f'; // Hijau lapangan
+        const LINE_COLOR = 'rgba(255, 255, 255, 0.6)';
+
+        // --- Konfigurasi Waktu ---
+        const REAL_MATCH_DURATION_SEC = 240; // 4 menit real time
+        const GAME_MATCH_DURATION_MIN = 90;  // 90 menit game time
+        // Faktor konversi: Berapa menit game berlalu per detik dunia nyata
+        const TIME_SCALE_FACTOR = GAME_MATCH_DURATION_MIN / REAL_MATCH_DURATION_SEC;
+
+        // Variabel Global
+        const canvas = document.getElementById('pitchCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreRedEl = document.getElementById('scoreRed');
+        const scoreBlueEl = document.getElementById('scoreBlue');
+        const timerEl = document.getElementById('matchTimer');
+        const overlay = document.getElementById('startOverlay');
+        const overlayText = document.getElementById('overlayText');
+
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = CANVAS_HEIGHT;
+
+        // State Permainan
+        let isPlaying = false;
+        let isGameOver = false;
+        let animationId;
+        let players = [];
+        let ball;
+        let score = { red: 0, blue: 0 };
+        let possessionTeam = null; // 'red' atau 'blue' atau null
+
+        // State Waktu
+        let currentGameTime = 0; // Dalam menit game (0 - 90)
+        let lastFrameTime = 0;
+
+        // --- Definisi Formasi (Posisi relatif 0.0 - 1.0) ---
+        const FORMATIONS = {
+            '4-4-2': {
+                defenders: [[0.2, 0.2], [0.2, 0.4], [0.2, 0.6], [0.2, 0.8]],
+                midfielders: [[0.45, 0.2], [0.45, 0.4], [0.45, 0.6], [0.45, 0.8]],
+                attackers: [[0.7, 0.4], [0.7, 0.6]]
+            },
+            '4-3-3': {
+                defenders: [[0.2, 0.2], [0.2, 0.4], [0.2, 0.6], [0.2, 0.8]],
+                midfielders: [[0.45, 0.3], [0.45, 0.5], [0.45, 0.7]],
+                attackers: [[0.75, 0.2], [0.75, 0.5], [0.75, 0.8]]
+            },
+            '5-4-1': {
+                defenders: [[0.15, 0.15], [0.15, 0.3], [0.15, 0.5], [0.15, 0.7], [0.15, 0.85]],
+                midfielders: [[0.35, 0.2], [0.35, 0.4], [0.35, 0.6], [0.35, 0.8]],
+                attackers: [[0.6, 0.5]]
+            },
+            '2-3-5': { // Total Attack
+                defenders: [[0.3, 0.35], [0.3, 0.65]],
+                midfielders: [[0.5, 0.2], [0.5, 0.5], [0.5, 0.8]],
+                attackers: [[0.8, 0.1], [0.8, 0.3], [0.8, 0.5], [0.8, 0.7], [0.8, 0.9]]
+            },
+            '3-5-2': {
+                defenders: [[0.2, 0.3], [0.2, 0.5], [0.2, 0.7]],
+                midfielders: [[0.45, 0.15], [0.45, 0.35], [0.45, 0.5], [0.45, 0.65], [0.45, 0.85]],
+                attackers: [[0.7, 0.4], [0.7, 0.6]]
+            },
+            '5-3-2': {
+                defenders: [[0.2, 0.1], [0.2, 0.3], [0.2, 0.5], [0.2, 0.7], [0.2, 0.9]],
+                midfielders: [[0.4, 0.3], [0.4, 0.5], [0.4, 0.7]],
+                attackers: [[0.65, 0.4], [0.65, 0.6]]
+            }
+        };
+
+        // --- Kelas Helper ---
+        class Vector {
+            constructor(x, y) { this.x = x; this.y = y; }
+            add(v) { return new Vector(this.x + v.x, this.y + v.y); }
+            sub(v) { return new Vector(this.x - v.x, this.y - v.y); }
+            mult(n) { return new Vector(this.x * n, this.y * n); }
+            mag() { return Math.sqrt(this.x * this.x + this.y * this.y); }
+            normalize() {
+                const m = this.mag();
+                return m === 0 ? new Vector(0, 0) : new Vector(this.x / m, this.y / m);
+            }
+            limit(max) {
+                if (this.mag() > max) return this.normalize().mult(max);
+                return this;
+            }
+            static dist(v1, v2) { return v1.sub(v2).mag(); }
+        }
+
+        // --- Kelas Bola ---
+        class Ball {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.pos = new Vector(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+                this.vel = new Vector(0, 0);
+                this.friction = 0.97;
+                this.owner = null; // Pemain yang sedang membawa bola
+            }
+            update() {
+                if (!this.owner) {
+                    this.pos = this.pos.add(this.vel);
+                    this.vel = this.vel.mult(this.friction);
+
+                    // Pantulan dinding
+                    if (this.pos.y < 0 || this.pos.y > CANVAS_HEIGHT) this.vel.y *= -1;
+                    if (this.pos.x < 0 || this.pos.x > CANVAS_WIDTH) this.vel.x *= -1;
+
+                    // Cek Gol
+                    if (this.pos.x < 10 && Math.abs(this.pos.y - CANVAS_HEIGHT / 2) < 60) handleGoal('blue');
+                    if (this.pos.x > CANVAS_WIDTH - 10 && Math.abs(this.pos.y - CANVAS_HEIGHT / 2) < 60) handleGoal('red');
+                } else {
+                    // Bola menempel pada kaki pemain
+                    // Offset sedikit agar terlihat digiring
+                    const angle = Math.atan2(this.owner.vel.y, this.owner.vel.x);
+                    this.pos.x = this.owner.pos.x + Math.cos(angle) * (PLAYER_RADIUS + 5);
+                    this.pos.y = this.owner.pos.y + Math.sin(angle) * (PLAYER_RADIUS + 5);
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, BALL_RADIUS, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                // Bayangan bola
+                ctx.beginPath();
+                ctx.arc(this.pos.x + 2, this.pos.y + 2, BALL_RADIUS, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                ctx.fill();
+            }
+        }
+
+        // --- Kelas Pemain ---
+        class Player {
+            constructor(team, role, baseX, baseY, number) {
+                this.team = team; // 'red' atau 'blue'
+                this.role = role; // 'gk', 'def', 'mid', 'att'
+                // Posisi Formasi Basis (0-1)
+                this.baseX = baseX;
+                this.baseY = baseY;
+
+                this.number = number;
+
+                // Posisi Nyata
+                this.pos = this.getHomePos();
+                this.vel = new Vector(0, 0);
+                this.maxSpeed = team === 'red' ? 2.0 : 2.0;
+
+                // AI State
+                this.state = 'idle'; // idle, chase, support, recover
+                this.cooldown = 0;
+            }
+
+            getHomePos() {
+                let x = this.baseX * CANVAS_WIDTH;
+                let y = this.baseY * CANVAS_HEIGHT;
+
+                // Jika tim biru, balik posisinya (mirror)
+                if (this.team === 'blue') {
+                    x = CANVAS_WIDTH - x;
+                    y = CANVAS_HEIGHT - y;
+                }
+                return new Vector(x, y);
+            }
+
+            update() {
+                if (!isPlaying || isGameOver) return;
+
+                let target = this.getHomePos();
+                let desiredVel = new Vector(0, 0);
+                let distToBall = Vector.dist(this.pos, ball.pos);
+
+                // --- Logika AI Sederhana ---
+
+                // 1. Logika Pembawa Bola
+                if (ball.owner === this) {
+                    // KHUSUS KIPER: Jangan dribble, langsung oper/buang
+                    if (this.role === 'gk') {
+                        this.pass(true); // Force pass/clearance
+                    }
+                    else {
+                        // Lari ke gawang lawan
+                        let goalPos = this.team === 'red'
+                            ? new Vector(CANVAS_WIDTH, CANVAS_HEIGHT / 2)
+                            : new Vector(0, CANVAS_HEIGHT / 2);
+
+                        target = goalPos; // Default: Dribble lurus
+
+                        // Logika Menembak & Mengoper
+                        let distToGoal = Vector.dist(this.pos, goalPos);
+
+                        // Jika dekat gawang (< 200px), prioritas tembak
+                        if (distToGoal < 200) {
+                            this.shoot();
+                        }
+                        // Cek peluang operan setiap frame (chance 5%)
+                        else if (Math.random() < 0.05) {
+                            this.pass(false); // Coba oper jika ada teman bagus
+                        }
+                    }
+                }
+                // 2. Logika Bertahan (Jika musuh bawa bola)
+                else if (ball.owner && ball.owner.team !== this.team) {
+                    // Kiper
+                    if (this.role === 'gk') {
+                        // Stay di garis gawang, ikuti Y bola tapi batasi
+                        let goalX = this.team === 'red' ? 30 : CANVAS_WIDTH - 30;
+                        // Batasi pergerakan Y kiper agar tidak terlalu jauh dari gawang
+                        let limitedY = Math.max(CANVAS_HEIGHT / 2 - 80, Math.min(CANVAS_HEIGHT / 2 + 80, ball.pos.y));
+                        target = new Vector(goalX, limitedY);
+                    }
+                    // Pemain Lapangan: Pressing jika dekat, Formation shift jika jauh
+                    else {
+                        if (distToBall < 150) {
+                            target = ball.pos; // Kejar bola (Pressing)
+                        } else {
+                            // Geser formasi mengikuti bola (Defensive Shape)
+                            let shiftY = (ball.pos.y - CANVAS_HEIGHT / 2) * 0.3;
+                            let home = this.getHomePos();
+                            target = new Vector(home.x, home.y + shiftY);
+                        }
+                    }
+                }
+                // 3. Logika Menyerang Tanpa Bola (Support)
+                else if (ball.owner && ball.owner.team === this.team) {
+                    if (this.role === 'gk') {
+                        // Kiper diam
+                        target = this.getHomePos();
+                    } else {
+                        // Maju sedikit untuk support, cari ruang
+                        let attackDir = this.team === 'red' ? 60 : -60;
+                        let home = this.getHomePos();
+                        // Sedikit random Y agar tidak segaris lurus
+                        target = new Vector(home.x + attackDir, home.y + (Math.sin(Date.now() / 500 + this.number) * 20));
+                    }
+                }
+                // 4. Bola Liar (Loose Ball)
+                else if (!ball.owner) {
+                    // PERBAIKAN LOGIKA KIPER:
+                    // Hanya kejar bola jika bola dekat dengan area pertahanan sendiri
+                    if (this.role === 'gk') {
+                        let distToMyGoal = this.team === 'red' ? ball.pos.x : (CANVAS_WIDTH - ball.pos.x);
+                        // Jika bola di < 180px dari gawang (area kotak pinalti), dan jarak kiper ke bola dekat
+                        if (distToMyGoal < 180 && distToBall < 250) {
+                            target = ball.pos;
+                        } else {
+                            target = this.getHomePos(); // Jika jauh, balik ke sarang
+                        }
+                    }
+                    // Pemain biasa kejar bola jika cukup dekat
+                    else if (distToBall < 250) {
+                        target = ball.pos;
+                    }
+                }
+
+                // --- Eksekusi Gerakan ---
+                let steer = target.sub(this.pos);
+
+                // Smooth movement
+                let d = steer.mag();
+                if (d > 0) {
+                    steer = steer.normalize();
+                    if (d < 10) steer = steer.mult(this.maxSpeed * (d / 10));
+                    else steer = steer.mult(this.maxSpeed);
+                }
+
+                // Simple separation (agar tidak menumpuk)
+                players.forEach(other => {
+                    if (other !== this) {
+                        let dist = Vector.dist(this.pos, other.pos);
+                        if (dist < PLAYER_RADIUS * 2) {
+                            let push = this.pos.sub(other.pos).normalize().mult(0.5);
+                            steer = steer.add(push);
+                        }
+                    }
+                });
+
+                this.vel = steer;
+                this.pos = this.pos.add(this.vel);
+
+                // --- Deteksi Bola ---
+                if (!ball.owner && distToBall < PLAYER_RADIUS + BALL_RADIUS) {
+                    // Dapatkan bola
+                    ball.owner = this;
+                    possessionTeam = this.team;
+                }
+                else if (ball.owner && ball.owner.team !== this.team && distToBall < PLAYER_RADIUS * 1.5) {
+                    // Tekel (chance steal dinaikkan sedikit untuk dinamika)
+                    if (Math.random() < 0.08) {
+                        ball.owner = this; // Curi bola
+                        possessionTeam = this.team;
+                    }
+                }
+            }
+
+            pass(force = false) {
+                // Cari teman terdekat di depan yang posisinya lebih baik
+                let bestMate = null;
+                let maxScore = -Infinity;
+
+                players.forEach(p => {
+                    if (p.team === this.team && p !== this) {
+                        let dist = Vector.dist(this.pos, p.pos);
+
+                        // Skor berdasarkan seberapa jauh di depan (progress)
+                        let forwardProgress = this.team === 'red' ? (p.pos.x - this.pos.x) : (this.pos.x - p.pos.x);
+
+                        // Kita ingin oper ke teman yang: 
+                        // 1. Ada di depan (forwardProgress tinggi)
+                        // 2. Tidak terlalu jauh (dist rendah)
+                        // 3. Tidak terlalu dekat (agar operan efektif)
+                        if (forwardProgress > 0 && dist < 400 && dist > 50) {
+                            let score = forwardProgress * 1.5 - dist * 0.5;
+
+                            // Sedikit random factor agar tidak selalu ke orang yang sama
+                            score += Math.random() * 50;
+
+                            if (score > maxScore) {
+                                maxScore = score;
+                                bestMate = p;
+                            }
+                        }
+                    }
+                });
+
+                if (bestMate) {
+                    this.kick(bestMate.pos, 9); // Operan lebih cepat
+                    return true;
+                } else if (force) {
+                    // Jika dipaksa (misal GK), buang ke tengah
+                    let clearTarget = this.team === 'red'
+                        ? new Vector(this.pos.x + 200, this.pos.y)
+                        : new Vector(this.pos.x - 200, this.pos.y);
+                    this.kick(clearTarget, 10);
+                    return true;
+                }
+                return false;
+            }
+
+            shoot() {
+                let goalPos = this.team === 'red'
+                    ? new Vector(CANVAS_WIDTH, CANVAS_HEIGHT / 2)
+                    : new Vector(0, CANVAS_HEIGHT / 2);
+
+                // Akurasi tembakan
+                goalPos.y += (Math.random() - 0.5) * 80;
+                this.kick(goalPos, 12); // Tembakan kencang
+            }
+
+            kick(target, power) {
+                ball.owner = null;
+                let dir = target.sub(this.pos).normalize();
+
+                // Variasi sedikit agar tidak seperti robot
+                dir.x += (Math.random() - 0.5) * 0.1;
+                dir.y += (Math.random() - 0.5) * 0.1;
+
+                ball.vel = dir.mult(power);
+
+                // Cooldown agar tidak langsung ambil bola lagi (bola lepas dari kaki)
+                // Dorong bola sedikit ke depan agar tidak langsung nempel lagi
+                ball.pos = ball.pos.add(dir.mult(PLAYER_RADIUS + 5));
+            }
+
+            draw() {
+                // Lingkaran Pemain
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, PLAYER_RADIUS, 0, Math.PI * 2);
+
+                // Warna Tim (Gradient)
+                let grad = ctx.createRadialGradient(this.pos.x - 3, this.pos.y - 3, 2, this.pos.x, this.pos.y, PLAYER_RADIUS);
+                if (this.team === 'red') {
+                    grad.addColorStop(0, '#ff6b6b');
+                    grad.addColorStop(1, '#c0392b');
+                } else {
+                    grad.addColorStop(0, '#54a0ff');
+                    grad.addColorStop(1, '#2980b9');
+                }
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                // Border
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = ball.owner === this ? '#f1c40f' : 'rgba(0,0,0,0.3)'; // Highlight jika bawa bola
+                ctx.stroke();
+
+                // Nomor Punggung
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.number, this.pos.x, this.pos.y);
+
+                // Indikator Posisi GK
+                if (this.role === 'gk') {
+                    ctx.strokeStyle = '#f39c12';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, PLAYER_RADIUS + 3, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // --- Fungsi Drawing Lapangan ---
+        function drawPitch() {
+            // Rumput
+            let grad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+            grad.addColorStop(0, '#2d6a4f');
+            grad.addColorStop(1, '#1b4332');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            // Pola Rumput Bergaris
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            for (let i = 0; i < CANVAS_WIDTH; i += 100) {
+                ctx.fillRect(i, 0, 50, CANVAS_HEIGHT);
+            }
+
+            ctx.strokeStyle = LINE_COLOR;
+            ctx.lineWidth = 2;
+
+            // Garis Pinggir
+            ctx.strokeRect(20, 20, CANVAS_WIDTH - 40, CANVAS_HEIGHT - 40);
+
+            // Garis Tengah
+            ctx.beginPath();
+            ctx.moveTo(CANVAS_WIDTH / 2, 20);
+            ctx.lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT - 20);
+            ctx.stroke();
+
+            // Lingkaran Tengah
+            ctx.beginPath();
+            ctx.arc(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 60, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Titik Tengah
+            ctx.beginPath();
+            ctx.arc(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 4, 0, Math.PI * 2);
+            ctx.fillStyle = LINE_COLOR;
+            ctx.fill();
+
+            // Gawang & Kotak Penalti (Kiri)
+            ctx.strokeRect(20, CANVAS_HEIGHT / 2 - 100, 120, 200); // Kotak Besar
+            ctx.strokeRect(20, CANVAS_HEIGHT / 2 - 50, 40, 100);   // Kotak Kecil
+
+            // Gawang & Kotak Penalti (Kanan)
+            ctx.strokeRect(CANVAS_WIDTH - 140, CANVAS_HEIGHT / 2 - 100, 120, 200);
+            ctx.strokeRect(CANVAS_WIDTH - 60, CANVAS_HEIGHT / 2 - 50, 40, 100);
+
+            // Titik Penalti
+            ctx.beginPath();
+            ctx.arc(100, CANVAS_HEIGHT / 2, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(CANVAS_WIDTH - 100, CANVAS_HEIGHT / 2, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sudut Corner
+            ctx.beginPath(); ctx.arc(20, 20, 10, 0, Math.PI / 2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(20, CANVAS_HEIGHT - 20, 10, Math.PI * 1.5, 0); ctx.stroke();
+            ctx.beginPath(); ctx.arc(CANVAS_WIDTH - 20, 20, 10, Math.PI / 2, Math.PI); ctx.stroke();
+            ctx.beginPath(); ctx.arc(CANVAS_WIDTH - 20, CANVAS_HEIGHT - 20, 10, Math.PI, Math.PI * 1.5); ctx.stroke();
+        }
+
+        // --- Fungsi Game ---
+
+        function initTeam(teamColor, strategyName) {
+            const formation = FORMATIONS[strategyName];
+            const teamPlayers = [];
+
+            // GK selalu ada
+            let gkX = 0.05;
+            let gkY = 0.5;
+            teamPlayers.push(new Player(teamColor, 'gk', gkX, gkY, 1));
+
+            let num = 2;
+            // Defenders
+            formation.defenders.forEach(pos => {
+                teamPlayers.push(new Player(teamColor, 'def', pos[0], pos[1], num++));
+            });
+            // Midfielders
+            formation.midfielders.forEach(pos => {
+                teamPlayers.push(new Player(teamColor, 'mid', pos[0], pos[1], num++));
+            });
+            // Attackers
+            formation.attackers.forEach(pos => {
+                teamPlayers.push(new Player(teamColor, 'att', pos[0], pos[1], num++));
+            });
+
+            return teamPlayers;
+        }
+
+        function resetGame() {
+            isPlaying = false;
+            isGameOver = false;
+            ball = new Ball();
+            currentGameTime = 0;
+            updateTimerDisplay();
+
+            const stratRed = document.getElementById('strategyRed').value;
+            const stratBlue = document.getElementById('strategyBlue').value;
+
+            players = [
+                ...initTeam('red', stratRed),
+                ...initTeam('blue', stratBlue)
+            ];
+
+            document.getElementById('playText').innerText = "Mainkan";
+            document.getElementById('playIcon').innerText = "▶";
+            overlay.style.opacity = '0';
+
+            // Render satu frame awal
+            // Gunakan dummy timestamp agar logic drawPitch jalan
+            lastFrameTime = performance.now();
+            update(lastFrameTime);
+        }
+
+        function handleGoal(scoringTeam) {
+            // Jangan hentikan game sepenuhnya, cukup pause sebentar untuk selebrasi
+            // Kecuali waktu sudah habis
+            if (isGameOver) return;
+
+            isPlaying = false;
+            if (scoringTeam === 'red') score.red++;
+            else score.blue++;
+
+            scoreRedEl.innerText = score.red;
+            scoreBlueEl.innerText = score.blue;
+
+            // Animasi Goal
+            overlayText.innerText = `GOAL TIM ${scoringTeam.toUpperCase()}!`;
+            overlay.style.opacity = '1';
+
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                resetPositionsAfterGoal();
+                if (!isGameOver) isPlaying = true;
+            }, 2000);
+        }
+
+        function finishGame() {
+            isPlaying = false;
+            isGameOver = true;
+            overlayText.innerText = "FULL TIME";
+            overlay.style.opacity = '1';
+            document.getElementById('playText').innerText = "Selesai";
+            document.getElementById('playIcon').innerText = "◼";
+        }
+
+        function resetPositionsAfterGoal() {
+            ball.reset();
+            // Kembalikan pemain ke posisi formasi awal
+            players.forEach(p => {
+                p.pos = p.getHomePos();
+                p.vel = new Vector(0, 0);
+            });
+        }
+
+        function updateTimerDisplay() {
+            // Format Menit:Detik
+            let m = Math.floor(currentGameTime);
+            let s = Math.floor((currentGameTime - m) * 60);
+
+            // Tambah 0 di depan jika < 10
+            let mStr = m < 10 ? "0" + m : m;
+            let sStr = s < 10 ? "0" + s : s;
+
+            timerEl.innerText = `${mStr}:${sStr}`;
+        }
+
+        // Loop Utama
+        function update(timestamp) {
+            // Hitung Delta Time (dalam detik)
+            if (!lastFrameTime) lastFrameTime = timestamp;
+            const deltaTime = (timestamp - lastFrameTime) / 1000;
+            lastFrameTime = timestamp;
+
+            // Clear & Draw Field
+            ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            drawPitch();
+
+            // Update Logic
+            if (isPlaying && !isGameOver) {
+
+                // Update Waktu
+                // Kita ingin 4 menit real = 90 menit game.
+                // Berarti setiap 1 detik real, waktu game bertambah X menit.
+                // X = 90 / 240 = 0.375 menit game per detik real.
+
+                currentGameTime += deltaTime * TIME_SCALE_FACTOR;
+
+                if (currentGameTime >= GAME_MATCH_DURATION_MIN) {
+                    currentGameTime = GAME_MATCH_DURATION_MIN;
+                    finishGame();
+                }
+                updateTimerDisplay();
+
+                // AI Logic per player
+                players.forEach(p => p.update());
+                ball.update();
+            }
+
+            // Draw Entities (Urutan: Pemain, lalu Bola)
+            players.forEach(p => p.draw());
+            ball.draw();
+
+            animationId = requestAnimationFrame(update);
+        }
+
+        // --- Event Listeners ---
+
+        document.getElementById('btnPlay').addEventListener('click', () => {
+            if (isGameOver) return; // Tidak bisa play jika sudah game over
+
+            isPlaying = !isPlaying;
+            const btnText = document.getElementById('playText');
+            const btnIcon = document.getElementById('playIcon');
+
+            if (isPlaying) {
+                btnText.innerText = "Pause";
+                btnIcon.innerText = "⏸";
+            } else {
+                btnText.innerText = "Lanjut";
+                btnIcon.innerText = "▶";
+            }
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            score = { red: 0, blue: 0 };
+            scoreRedEl.innerText = '0';
+            scoreBlueEl.innerText = '0';
+            resetGame();
+        });
+
+        document.getElementById('strategyRed').addEventListener('change', resetGame);
+        document.getElementById('strategyBlue').addEventListener('change', resetGame);
+
+        // --- Inisialisasi ---
+        ball = new Ball();
+        resetGame();
+
+    </script>
+</body>
+
+</html>

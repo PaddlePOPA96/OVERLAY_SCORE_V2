@@ -1,6 +1,7 @@
 "use client";
 
 import { FORMATIONS } from "./builderConstants";
+import { useRouter } from "next/navigation";
 
 export function BuilderHeader({
   currentFormation,
@@ -13,6 +14,7 @@ export function BuilderHeader({
   saveStatus,
   isCapturing,
 }) {
+  const router = useRouter();
   return (
     <header className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
@@ -77,6 +79,17 @@ export function BuilderHeader({
         >
           <span>☁️</span>
           <span>Save Cloud</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => router.push('/dashboard/match')}
+          disabled={!userId}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 disabled:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 text-white px-3 py-2 rounded border border-slate-700 text-xs font-bold transition-all"
+          title={userId ? "Play against other users" : "Login to play matches"}
+        >
+          <span>⚔️</span>
+          <span>Play VS</span>
         </button>
 
         <button
