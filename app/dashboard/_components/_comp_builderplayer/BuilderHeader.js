@@ -8,6 +8,8 @@ export function BuilderHeader({
   onScreenshot,
   onResetField,
   onFactoryReset,
+  onSaveToFirebase,
+  userId,
   saveStatus,
   isCapturing,
 }) {
@@ -15,7 +17,7 @@ export function BuilderHeader({
     <header className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
         <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 flex items-center gap-2">
-         STARTING ELEVEN BUILDER  
+          STARTING ELEVEN BUILDER
           <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700 font-normal normal-case flex items-center gap-1">
             <span
               className={
@@ -64,6 +66,17 @@ export function BuilderHeader({
         >
           <span>📷</span>
           <span>Screenshot</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onSaveToFirebase}
+          disabled={!userId}
+          className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 text-white px-3 py-2 rounded border border-slate-700 text-xs font-bold transition-colors"
+          title={userId ? "Save to Firebase Cloud" : "Login to save to cloud"}
+        >
+          <span>☁️</span>
+          <span>Save Cloud</span>
         </button>
 
         <button
