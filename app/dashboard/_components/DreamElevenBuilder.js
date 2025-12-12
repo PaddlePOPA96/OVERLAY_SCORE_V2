@@ -22,25 +22,8 @@ import { onAuthStateChanged } from "firebase/auth";
 export default function DreamElevenBuilder() {
   const fieldRef = useRef(null);
 
-  const [lineup, setLineup] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const saved = window.localStorage.getItem("football_lineup_v2");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [bench, setBench] = useState(() => {
-    if (typeof window === "undefined") return INITIAL_PLAYERS;
-    try {
-      const saved = window.localStorage.getItem("football_bench_v2");
-      return saved ? JSON.parse(saved) : INITIAL_PLAYERS;
-    } catch {
-      return INITIAL_PLAYERS;
-    }
-  });
+  const [lineup, setLineup] = useState([]);
+  const [bench, setBench] = useState(INITIAL_PLAYERS);
 
   const [currentFormation, setCurrentFormation] = useState("4-3-3");
   const [draggedItem, setDraggedItem] = useState(null);
@@ -55,23 +38,6 @@ export default function DreamElevenBuilder() {
   const [candidateBase, setCandidateBase] = useState(null);
   const [showCandidateModal, setShowCandidateModal] = useState(false);
   const [userId, setUserId] = useState(null);
-
-
-  // Auto save ke localStorage
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setSaveStatus("Saving...");
-    try {
-      window.localStorage.setItem("football_lineup_v2", JSON.stringify(lineup));
-      window.localStorage.setItem("football_bench_v2", JSON.stringify(bench));
-    } catch {
-      // ignore
-    }
-    const timeout = setTimeout(() => {
-      setSaveStatus("Saved");
-    }, 500);
-    return () => clearTimeout(timeout);
-  }, [lineup, bench]);
 
   // Listen to auth state changes
   useEffect(() => {
