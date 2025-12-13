@@ -82,8 +82,8 @@ export function MainColumn({
             ) : (
               <div
                 className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark
-                    ? "border-slate-700 bg-black/40 text-slate-200"
-                    : "border-slate-200 bg-white text-slate-700"
+                  ? "border-slate-700 bg-black/40 text-slate-200"
+                  : "border-slate-200 bg-white text-slate-700"
                   }`}
               >
                 <p className="font-semibold mb-1">
@@ -106,7 +106,25 @@ export function MainColumn({
               Susun tim impian Premier League kamu di sini.
             </p>
           </header>
-          <DreamElevenBuilder />
+          {user ? (
+            <DreamElevenBuilder />
+          ) : (
+            <div
+              className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark
+                  ? "border-slate-700 bg-black/40 text-slate-200"
+                  : "border-slate-200 bg-white text-slate-700"
+                }`}
+            >
+              <p className="font-semibold mb-1">
+                Fitur ini terkunci untuk pengguna belum login.
+              </p>
+              <p className="text-xs">
+                Silakan login terlebih dahulu melalui tombol{" "}
+                <span className="font-semibold">Login</span> di kanan atas untuk
+                mengakses Dream Eleven.
+              </p>
+            </div>
+          )}
         </>
       ) : active === "ucl-table" ? (
         <>
@@ -120,8 +138,8 @@ export function MainColumn({
                 type="button"
                 onClick={() => setUclMode("table")}
                 className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "table"
-                    ? "bg-purple-600 text-white shadow"
-                    : "text-slate-400 hover:text-slate-100"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
                   }`}
               >
                 Table
@@ -130,8 +148,8 @@ export function MainColumn({
                 type="button"
                 onClick={() => setUclMode("matches")}
                 className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "matches"
-                    ? "bg-purple-600 text-white shadow"
-                    : "text-slate-400 hover:text-slate-100"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
                   }`}
               >
                 Jadwal &amp; Hasil
@@ -166,8 +184,8 @@ export function MainColumn({
                 type="button"
                 onClick={() => setPlMode("matches")}
                 className={`px-3 py-1 rounded-full font-semibold transition-colors ${plMode === "matches"
-                    ? "bg-purple-600 text-white shadow"
-                    : "text-slate-400 hover:text-slate-100"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
                   }`}
               >
                 Jadwal &amp; Hasil
@@ -176,8 +194,8 @@ export function MainColumn({
                 type="button"
                 onClick={() => setPlMode("table")}
                 className={`px-3 py-1 rounded-full font-semibold transition-colors ${plMode === "table"
-                    ? "bg-purple-600 text-white shadow"
-                    : "text-slate-400 hover:text-slate-100"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
                   }`}
               >
                 Premier League Table

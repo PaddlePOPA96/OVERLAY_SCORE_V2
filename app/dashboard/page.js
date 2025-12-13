@@ -17,9 +17,11 @@ import {
   useChampionsLeagueStandings,
 } from "@/hooks/pl-data";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
+import { useUserRole } from "@/hooks/useUserRole";
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
+  const { role, isAdmin } = useUserRole(user);
   const [ready, setReady] = useState(false);
   // active: "operator" | "pl-matches" | "pl-table"
   const [active, setActive] = useState("operator");
@@ -34,7 +36,10 @@ export default function DashboardPage() {
       setUser(current);
       setRoomId(current?.uid || "default");
       setReady(true);
-      if (!current) {
+      if (current) {
+        // Sync user ke Firestore jika belum ada
+        syncUserToFirestore(current);
+      } else {
         setActive((prev) => (prev === "operator" ? "pl-matches" : prev));
       }
     });
@@ -78,7 +83,7 @@ export default function DashboardPage() {
   }, [theme]);
 
   const isDark = theme === "dark";
-  const isAdmin = user?.email === "admin@admin.com";
+  // isAdmin determined by hook above
 
   if (!ready) {
     return (

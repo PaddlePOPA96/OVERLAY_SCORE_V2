@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { registerWithEmailPassword } from "@/lib/auth/service";
+import { registerWithEmailPassword, createUserWithRole } from "@/lib/auth/service";
+import { useUserRole } from "@/hooks/useUserRole";
+import { UserManagementModal } from "./UserManagementModal";
 
 export function TopBar({
   user,
@@ -14,14 +16,17 @@ export function TopBar({
 }) {
   const isDark = theme === "dark";
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [showUserMgmt, setShowUserMgmt] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserConfirm, setNewUserConfirm] = useState("");
+  const [newUserRole, setNewUserRole] = useState("user");
   const [adminStatus, setAdminStatus] = useState({ type: "", message: "" });
   const [adminLoading, setAdminLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const isAdmin = user?.email === "admin@admin.com";
+  const { role, isAdmin } = useUserRole(user);
+
   const username = useMemo(
     () => user?.email?.split("@")[0] || "Operator",
     [user],
@@ -33,6 +38,7 @@ export function TopBar({
       if (event.key === "Escape") {
         setShowAdminModal(false);
         setShowCreateForm(false);
+        setShowUserMgmt(false);
       }
     };
     window.addEventListener("keydown", handler);
@@ -43,13 +49,14 @@ export function TopBar({
     if (!user) {
       setShowAdminModal(false);
       setShowCreateForm(false);
+      setShowUserMgmt(false);
     }
   }, [user]);
 
   const handleAdminCreateUser = async (event) => {
     event.preventDefault();
     setAdminStatus({ type: "", message: "" });
-
+    // ... existing logic ...
     if (!newUserEmail || !newUserPassword) {
       setAdminStatus({
         type: "error",
@@ -68,15 +75,18 @@ export function TopBar({
 
     setAdminLoading(true);
     try {
-      await registerWithEmailPassword(newUserEmail, newUserPassword);
+      await createUserWithRole(newUserEmail, newUserPassword, newUserRole);
       setAdminStatus({
         type: "success",
         message:
-          "User berhasil dibuat. Saat ini sesi login berpindah ke user baru; logout lalu login lagi sebagai admin jika ingin membuat user lain.",
+          "User berhasil dibuat dengan role " +
+          newUserRole +
+          ". Sesi login berpindah ke user baru.",
       });
       setNewUserEmail("");
       setNewUserPassword("");
       setNewUserConfirm("");
+      setNewUserRole("user");
     } catch (error) {
       setAdminStatus({
         type: "error",
@@ -142,7 +152,7 @@ export function TopBar({
                     {username}
                   </div>
                   <div className="text-[11px] text-purple-400">
-                    {isAdmin ? "Admin" : "Premium User"}
+                    {isAdmin ? "Admin" : role ? capitalize(role) : "User"}
                   </div>
                 </div>
                 <div className="w-9 h-9 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full border-2 border-gray-800" />
@@ -161,7 +171,16 @@ export function TopBar({
         </div>
       </header>
 
-      {user && showAdminModal && (
+      {/* User Management Modal */}
+      {showUserMgmt && (
+        <UserManagementModal
+          open={showUserMgmt}
+          onClose={() => setShowUserMgmt(false)}
+          currentUserUid={user?.uid}
+        />
+      )}
+
+      {user && showAdminModal && !showUserMgmt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
           <div className="bg-slate-950 border border-slate-700 rounded-2xl p-4 w-full max-w-sm shadow-2xl text-slate-100">
             <div className="flex items-center justify-between mb-1">
@@ -178,7 +197,8 @@ export function TopBar({
               </button>
             </div>
             <p className="text-[11px] text-slate-400 mb-3">
-              {user?.email}
+              {user?.email}{" "}
+              <span className="text-emerald-400">({role || "user"})</span>
             </p>
 
             {isAdmin && showCreateForm && (
@@ -229,6 +249,19 @@ export function TopBar({
                     required
                   />
                 </div>
+                <div className="space-y-1">
+                  <label className="text-[11px] text-slate-300">
+                    Role Access
+                  </label>
+                  <select
+                    className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    value={newUserRole}
+                    onChange={(e) => setNewUserRole(e.target.value)}
+                  >
+                    <option value="user">User Biasa</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
 
                 {adminStatus.message && (
                   <p
@@ -243,8 +276,7 @@ export function TopBar({
 
                 <p className="mt-1 text-[10px] text-slate-500">
                   Catatan: Setelah user dibuat, sesi login akan berpindah ke
-                  akun tersebut. Logout dan login kembali sebagai admin jika
-                  ingin membuat user lain.
+                  akun tersebut.
                 </p>
 
                 <Button
@@ -257,20 +289,31 @@ export function TopBar({
               </form>
             )}
 
-            <div className="flex justify-end gap-2 pt-1">
+            <div className="flex justify-end gap-2 pt-1 flex-wrap">
               {isAdmin && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-xs"
-                  onClick={() => setShowCreateForm((prev) => !prev)}
-                >
-                  {showCreateForm ? "Tutup Add User" : "Add User"}
-                </Button>
+                <>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-xs"
+                    onClick={() => setShowUserMgmt(true)}
+                  >
+                    Kelola User
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-xs"
+                    onClick={() => setShowCreateForm((prev) => !prev)}
+                  >
+                    {showCreateForm ? "Tutup Add User" : "Add User"}
+                  </Button>
+                </>
               )}
               <Button
                 type="button"
-                className="text-xs"
+                className="text-xs bg-red-900 hover:bg-red-800 text-red-100"
                 onClick={onLogout}
               >
                 Logout
@@ -281,4 +324,9 @@ export function TopBar({
       )}
     </>
   );
+}
+
+function capitalize(s) {
+  if (!s) return "";
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
