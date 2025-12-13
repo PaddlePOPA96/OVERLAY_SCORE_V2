@@ -15,6 +15,9 @@ export function useAllUsers() {
             }));
             setUsers(userList);
             setLoading(false);
+        }, (error) => {
+            console.error("Error fetching users:", error);
+            setLoading(false);
         });
 
         return () => unsub();

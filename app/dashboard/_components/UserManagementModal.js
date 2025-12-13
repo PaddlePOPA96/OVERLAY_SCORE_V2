@@ -1,26 +1,28 @@
-"use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAllUsers } from "@/hooks/useAllUsers";
-import { updateUserRole } from "@/lib/auth/service";
+import { updateUserRole, syncUserToFirestore } from "@/lib/auth/service";
+import { auth } from "@/lib/firebaseAuth";
 
 export function UserManagementModal({ open, onClose, currentUserUid }) {
     if (!open) return null;
 
     const { users, loading } = useAllUsers();
 
-    // Local state for edits? 
-    // For simplicity, we can just edit directly or show a loading state per row.
-    // Let's implement immediate update with a confirmation/loading state.
+    // Coba sync user sendiri saat modal dibuka, in case belum masuk
+    useEffect(() => {
+        if (auth.currentUser) {
+            syncUserToFirestore(auth.currentUser).catch(console.error);
+        }
+    }, []);
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 overflow-y-auto py-10">
             <div className="bg-slate-950 border border-slate-700 rounded-2xl p-6 w-full max-w-2xl shadow-2xl text-slate-100 mx-4 relative">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h2 className="text-xl font-bold">Manajemen User</h2>
-                        <p className="text-sm text-slate-400">Kelola role dan akses pengguna.</p>
+                        <h2 className="text-xl font-bold">Manajemen User (Firestore)</h2>
+                        <p className="text-sm text-slate-400">Total User: {users.length}</p>
                     </div>
                     <button
                         onClick={onClose}
@@ -33,7 +35,19 @@ export function UserManagementModal({ open, onClose, currentUserUid }) {
                 {loading ? (
                     <div className="text-center py-10 text-slate-400">Memuat data user...</div>
                 ) : users.length === 0 ? (
-                    <div className="text-center py-10 text-slate-400">Belum ada user lain.</div>
+                    <div className="text-center py-10 text-slate-400 flex flex-col items-center gap-2">
+                        <p>Belum ada data user di Firestore.</p>
+                        <p className="text-xs">Pastikan Firestore sudah diaktifkan di Firebase Console.</p>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                if (auth.currentUser) syncUserToFirestore(auth.currentUser);
+                            }}
+                        >
+                            Sync Saya ke DB
+                        </Button>
+                    </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
