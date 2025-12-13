@@ -27,6 +27,8 @@ export default function DashboardPage() {
   const [theme, setTheme] = useState("dark");
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (current) => {
       setUser(current);
@@ -117,13 +119,16 @@ export default function DashboardPage() {
             }
             onLogout={handleLogout}
             onLoginClick={() => setLoginModalOpen(true)}
+            onToggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
           />
-          <div className="flex flex-1">
+          <div className="flex flex-col lg:flex-row flex-1 relative">
             <LeftSidebar
               active={active}
               setActive={setActive}
               theme={theme}
               user={user}
+              isOpen={mobileMenuOpen}
+              onClose={() => setMobileMenuOpen(false)}
             />
             <MainColumn
               active={active}

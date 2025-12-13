@@ -12,7 +12,7 @@ export function RightColumn({
 }) {
   const isDark = theme === "dark";
   const asideClass = [
-    "w-[30%] p-8 border-l flex flex-col gap-8",
+    "w-full lg:w-[30%] p-8 lg:border-l flex flex-col gap-8",
     isDark ? "bg-gray-900 border-gray-800" : "bg-slate-50 border-gray-200",
   ].join(" ");
 

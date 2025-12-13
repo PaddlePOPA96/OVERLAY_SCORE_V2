@@ -67,7 +67,7 @@ export function MainColumn({
   const [uclMode, setUclMode] = useState("table"); // "table" | "matches"
 
   return (
-    <main className={`${fullWidth ? "flex-1" : "w-1/2"} p-8`}>
+    <main className={`${fullWidth ? "flex-1" : "w-full lg:w-1/2"} p-4 md:p-8`}>
       {active === "operator" ? (
         <>
           <header className="mb-4">
@@ -81,11 +81,10 @@ export function MainColumn({
               <OperatorRoot initialRoomId={roomId} requireAuth={false} />
             ) : (
               <div
-                className={`rounded-xl border-2 border-dashed p-6 text-sm ${
-                  isDark
+                className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark
                     ? "border-slate-700 bg-black/40 text-slate-200"
                     : "border-slate-200 bg-white text-slate-700"
-                }`}
+                  }`}
               >
                 <p className="font-semibold mb-1">
                   Scoreboard terkunci untuk pengguna belum login.
@@ -120,22 +119,20 @@ export function MainColumn({
               <button
                 type="button"
                 onClick={() => setUclMode("table")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                  uclMode === "table"
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "table"
                     ? "bg-purple-600 text-white shadow"
                     : "text-slate-400 hover:text-slate-100"
-                }`}
+                  }`}
               >
                 Table
               </button>
               <button
                 type="button"
                 onClick={() => setUclMode("matches")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                  uclMode === "matches"
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "matches"
                     ? "bg-purple-600 text-white shadow"
                     : "text-slate-400 hover:text-slate-100"
-                }`}
+                  }`}
               >
                 Jadwal &amp; Hasil
               </button>
@@ -168,22 +165,20 @@ export function MainColumn({
               <button
                 type="button"
                 onClick={() => setPlMode("matches")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                  plMode === "matches"
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${plMode === "matches"
                     ? "bg-purple-600 text-white shadow"
                     : "text-slate-400 hover:text-slate-100"
-                }`}
+                  }`}
               >
                 Jadwal &amp; Hasil
               </button>
               <button
                 type="button"
                 onClick={() => setPlMode("table")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                  plMode === "table"
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${plMode === "table"
                     ? "bg-purple-600 text-white shadow"
                     : "text-slate-400 hover:text-slate-100"
-                }`}
+                  }`}
               >
                 Premier League Table
               </button>

@@ -1,63 +1,96 @@
 "use client";
 
-export function LeftSidebar({ active, setActive, theme, user }) {
+export function LeftSidebar({ active, setActive, theme, user, isOpen, onClose }) {
   const isDark = theme === "dark";
+
+  // Base classes always apply
+  // Mobile: fixed inset, transform based on isOpen
+  // Desktop (lg): relative, always visible (translate-0), width 1/5
   const asideClass = [
-    "w-1/5 p-6 flex flex-col justify-between border-r",
-    isDark ? "bg-black border-gray-800 text-gray-100" : "bg-white border-gray-200 text-gray-900",
+    "fixed inset-y-0 left-0 z-50 w-64 lg:w-1/5 p-6 flex flex-col justify-between border-r transition-transform duration-300 lg:relative lg:translate-x-0",
+    isOpen ? "translate-x-0" : "-translate-x-full",
+    isDark
+      ? "bg-black border-gray-800 text-gray-100"
+      : "bg-white border-gray-200 text-gray-900",
   ].join(" ");
 
   return (
-    <aside className={asideClass}>
-      <div>
-        <nav className="space-y-2" aria-label="Dashboard sections">
-          <div className="text-xs text-gray-300 uppercase tracking-wider mb-2">
-            Main Menu
-          </div>
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm"
+          onClick={onClose}
+        />
+      )}
 
-          {user && (
+      <aside className={asideClass}>
+        <div>
+          <div className="flex items-center justify-between mb-6 lg:hidden">
+            <span className="font-bold text-lg">Menu</span>
+            <button onClick={onClose} className="text-xl px-2">×</button>
+          </div>
+          <nav className="space-y-2" aria-label="Dashboard sections">
+            <div className="text-xs text-gray-300 uppercase tracking-wider mb-2">
+              Main Menu
+            </div>
+
+            {user && (
+              <NavItem
+                icon="🏠"
+                label="Scoreboard Operator"
+                active={active === "operator"}
+                isDark={isDark}
+                onClick={() => {
+                  setActive("operator");
+                  if (onClose) onClose();
+                }}
+              />
+            )}
+
+            <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
+              Premier League
+            </div>
             <NavItem
-              icon="🏠"
-              label="Scoreboard Operator"
-              active={active === "operator"}
+              icon="🏆"
+              label="Premier League"
+              active={active === "pl-matches" || active === "pl-table"}
               isDark={isDark}
-              onClick={() => setActive("operator")}
+              onClick={() => {
+                setActive("pl-matches");
+                if (onClose) onClose();
+              }}
             />
-          )}
+            <NavItem
+              icon="🏆"
+              label="UCL Table"
+              active={active === "ucl-table"}
+              isDark={isDark}
+              onClick={() => {
+                setActive("ucl-table");
+                if (onClose) onClose();
+              }}
+            />
 
-          <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
-            Premier League
-          </div>
-          <NavItem
-            icon="🏆"
-            label="Premier League"
-            active={active === "pl-matches" || active === "pl-table"}
-            isDark={isDark}
-            onClick={() => setActive("pl-matches")}
-          />
-          <NavItem
-            icon="🏆"
-            label="UCL Table"
-            active={active === "ucl-table"}
-            isDark={isDark}
-            onClick={() => setActive("ucl-table")}
-          />
+            <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
+              Dream Eleven
+            </div>
+            <NavItem
+              icon="⭐"
+              label="Dream Eleven"
+              active={active === "dream-eleven"}
+              isDark={isDark}
+              onClick={() => {
+                setActive("dream-eleven");
+                if (onClose) onClose();
+              }}
+            />
+          </nav>
+        </div>
 
-          <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
-            Dream Eleven
-          </div>
-          <NavItem
-            icon="⭐"
-            label="Dream Eleven"
-            active={active === "dream-eleven"}
-            isDark={isDark}
-            onClick={() => setActive("dream-eleven")}
-          />
-        </nav>
-      </div>
-
-      <div className="space-y-2 mt-auto" />
-    </aside>
+        <div className="space-y-2 mt-auto" />
+      </aside>
+    </>
   );
 }
 

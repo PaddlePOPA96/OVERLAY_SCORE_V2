@@ -316,8 +316,8 @@ export function ChampionsLeagueMatches({
     const badgeClass = isFinished
       ? `${badgeBase} text-yellow-400 border-yellow-400/40`
       : isLive
-      ? `${badgeBase} text-green-400 border-green-400/40`
-      : `${badgeBase} text-gray-300 border-gray-500/40`;
+        ? `${badgeBase} text-green-400 border-green-400/40`
+        : `${badgeBase} text-gray-300 border-gray-500/40`;
 
     const homeLogo = resolveAnyClubLogo(match.homeTeam.name);
     const awayLogo = resolveAnyClubLogo(match.awayTeam.name);
@@ -344,12 +344,10 @@ export function ChampionsLeagueMatches({
               />
             )}
             <span
-              className={
-                isDark
-                  ? "text-slate-50 text-sm md:text-base lg:text-lg"
-                  : "text-slate-900 text-sm md:text-base lg:text-lg"
-              }
-              style={{ wordBreak: "break-word" }}
+              className={`truncate ${isDark
+                ? "text-slate-50 text-sm md:text-base lg:text-lg"
+                : "text-slate-900 text-sm md:text-base lg:text-lg"
+                }`}
             >
               {match.homeTeam.shortName || match.homeTeam.name}
             </span>
@@ -367,12 +365,10 @@ export function ChampionsLeagueMatches({
         </div>
         <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
           <span
-            className={
-              isDark
+            className={`truncate ${isDark
                 ? "text-slate-50 text-sm md:text-base lg:text-lg"
                 : "text-slate-900 text-sm md:text-base lg:text-lg"
-            }
-            style={{ wordBreak: "break-word" }}
+              }`}
           >
             {match.awayTeam.shortName || match.awayTeam.name}
           </span>

@@ -10,6 +10,7 @@ export function TopBar({
   onToggleTheme,
   onLogout,
   onLoginClick,
+  onToggleMobileMenu,
 }) {
   const isDark = theme === "dark";
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -96,7 +97,15 @@ export function TopBar({
   return (
     <>
       <header className={barClass}>
-        <div className="flex items-center gap-2 font-bold text-sm tracking-wide">
+        <div className="flex items-center gap-3 font-bold text-sm tracking-wide">
+          <button
+            type="button"
+            className="lg:hidden text-2xl leading-none"
+            onClick={onToggleMobileMenu}
+            aria-label="Open menu"
+          >
+            ☰
+          </button>
           <div className="w-7 h-7 bg-purple-600 rounded-full flex items-center justify-center text-xs text-white">
             ⚽
           </div>
@@ -120,17 +129,15 @@ export function TopBar({
               <button
                 type="button"
                 onClick={() => setShowAdminModal(true)}
-                className={`flex items-center gap-3 rounded-full px-3 py-1 border ${
-                  isDark
+                className={`flex items-center gap-3 rounded-full px-3 py-1 border ${isDark
                     ? "border-gray-700 hover:bg-gray-800/60"
                     : "border-gray-300 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 <div className="text-right">
                   <div
-                    className={`text-sm font-semibold ${
-                      isDark ? "text-white" : "text-slate-900"
-                    }`}
+                    className={`text-sm font-semibold ${isDark ? "text-white" : "text-slate-900"
+                      }`}
                   >
                     {username}
                   </div>
@@ -225,11 +232,10 @@ export function TopBar({
 
                 {adminStatus.message && (
                   <p
-                    className={`text-[11px] ${
-                      adminStatus.type === "error"
+                    className={`text-[11px] ${adminStatus.type === "error"
                         ? "text-red-400"
                         : "text-emerald-400"
-                    }`}
+                      }`}
                   >
                     {adminStatus.message}
                   </p>

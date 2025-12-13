@@ -22,9 +22,8 @@ export function PremierLeagueMain({
 
   const formatMatchTitle = (m) => {
     if (!m) return "Premier League Match";
-    return `${m.homeTeam.shortName || m.homeTeam.name} vs ${
-      m.awayTeam.shortName || m.awayTeam.name
-    }`;
+    return `${m.homeTeam.shortName || m.homeTeam.name} vs ${m.awayTeam.shortName || m.awayTeam.name
+      }`;
   };
 
   const formatMatchVenue = (m) => {
@@ -134,62 +133,62 @@ export function PremierLeagueMain({
 
         {isMatchesMode ? (
           <div className={`${cardClass} rounded-xl p-4 space-y-4`}>
-          {loading ? (
-            <p className="text-center text-gray-400 text-sm">
-              Memuat jadwal dan hasil...
-            </p>
-          ) : !matches || matches.length === 0 ? (
-            <p className="text-center text-gray-400 text-sm">
-              Tidak ada pertandingan yang tercatat.
-            </p>
-          ) : (
-            <>
-              <SectionLabel title="Today Match" />
-              <div className="space-y-2">
-                {(todayMatches.length ? todayMatches : matches.slice(0, 3)).map(
-                  (m) => (
+            {loading ? (
+              <p className="text-center text-gray-400 text-sm">
+                Memuat jadwal dan hasil...
+              </p>
+            ) : !matches || matches.length === 0 ? (
+              <p className="text-center text-gray-400 text-sm">
+                Tidak ada pertandingan yang tercatat.
+              </p>
+            ) : (
+              <>
+                <SectionLabel title="Today Match" />
+                <div className="space-y-2">
+                  {(todayMatches.length ? todayMatches : matches.slice(0, 3)).map(
+                    (m) => (
+                      <PremierLeagueMatchRow
+                        key={`today-${m.id}`}
+                        match={m}
+                        theme={theme}
+                      />
+                    )
+                  )}
+                </div>
+
+                <SectionLabel title="Next Match" />
+                <div className="space-y-2">
+                  {nextMatches.length ? (
+                    nextMatches.map((m) => (
+                      <PremierLeagueMatchRow
+                        key={`next-${m.id}`}
+                        match={m}
+                        theme={theme}
+                      />
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-400">
+                      Tidak ada jadwal mendatang dalam 7 hari ke depan.
+                    </p>
+                  )}
+                </div>
+
+                <SectionLabel title="Last Match" />
+                <div className="space-y-2">
+                  {lastMatch ? (
                     <PremierLeagueMatchRow
-                      key={`today-${m.id}`}
-                      match={m}
+                      key={`last-${lastMatch.id}`}
+                      match={lastMatch}
                       theme={theme}
                     />
-                  )
-                )}
-              </div>
-
-              <SectionLabel title="Next Match" />
-              <div className="space-y-2">
-                {nextMatches.length ? (
-                  nextMatches.map((m) => (
-                    <PremierLeagueMatchRow
-                      key={`next-${m.id}`}
-                      match={m}
-                      theme={theme}
-                    />
-                  ))
-                ) : (
-                  <p className="text-xs text-gray-400">
-                    Tidak ada jadwal mendatang dalam 7 hari ke depan.
-                  </p>
-                )}
-              </div>
-
-              <SectionLabel title="Last Match" />
-              <div className="space-y-2">
-                {lastMatch ? (
-                  <PremierLeagueMatchRow
-                    key={`last-${lastMatch.id}`}
-                    match={lastMatch}
-                    theme={theme}
-                  />
-                ) : (
-                  <p className="text-xs text-gray-400">
-                    Belum ada hasil pertandingan dalam jendela waktu ini.
-                  </p>
-                )}
-              </div>
-            </>
-          )}
+                  ) : (
+                    <p className="text-xs text-gray-400">
+                      Belum ada hasil pertandingan dalam jendela waktu ini.
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <PremierLeagueTableCard
@@ -429,16 +428,16 @@ export function PremierLeagueMatchRow({ match, theme }) {
     match.status === "IN_PLAY" || match.status === "PAUSED"
       ? "LIVE"
       : isFinished
-      ? "FT"
-      : "UPCOMING";
+        ? "FT"
+        : "UPCOMING";
 
   const isDark = theme === "dark";
 
   const badgeClass = isFinished
     ? "text-yellow-400 border-yellow-400/30"
     : minute === "LIVE"
-    ? "text-green-400 border-green-400/30"
-    : "text-gray-300 border-gray-500/40";
+      ? "text-green-400 border-green-400/30"
+      : "text-gray-300 border-gray-500/40";
 
   const league = "England - Premier League";
   const homeFull = match.homeTeam.name;
@@ -449,72 +448,81 @@ export function PremierLeagueMatchRow({ match, theme }) {
 
   const dateLabel = match.utcDate
     ? new Date(match.utcDate).toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
     : "";
 
   return (
-    <div className="flex items-center justify-between py-3 hover:bg-gray-700/50 rounded px-3 transition cursor-pointer group">
-      <div className="flex items-center gap-4 w-1/3">
+    <div className="flex flex-col sm:flex-row items-center justify-between py-3 hover:bg-gray-700/50 rounded px-3 transition cursor-pointer group gap-3 sm:gap-4">
+      {/* Home Team */}
+      <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 w-full sm:flex-1 sm:min-w-0">
         <span
-          className={`text-xs font-mono border px-1 rounded ${badgeClass}`}
+          className={`text-[10px] sm:text-xs font-mono border px-1 rounded ${badgeClass}`}
         >
           {minute}
         </span>
-        {homeLogoSrc && (
-          <img
-            src={homeLogoSrc}
-            alt={homeFull}
-            className="w-6 h-6 rounded-full bg-gray-800 object-contain"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        )}
-        <div className="flex flex-col">
-          <span
-            className={
-              isDark
-                ? "text-gray-200 group-hover:text-white"
-                : "text-slate-800 group-hover:text-slate-900"
-            }
-          >
-            {match.homeTeam.shortName || match.homeTeam.name}
-          </span>
-          {dateLabel && (
-            <span className="text-[10px] text-gray-400">{dateLabel}</span>
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 justify-center sm:justify-start">
+          {homeLogoSrc && (
+            <img
+              src={homeLogoSrc}
+              alt={homeFull}
+              className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-gray-800 object-contain flex-shrink-0"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.style.display = "none";
+              }}
+            />
           )}
+          <div className="flex flex-col min-w-0 text-center sm:text-left">
+            <span
+              className={`truncate text-sm sm:text-base ${isDark
+                  ? "text-gray-200 group-hover:text-white"
+                  : "text-slate-800 group-hover:text-slate-900"
+                }`}
+            >
+              {match.homeTeam.shortName || match.homeTeam.name}
+            </span>
+            {dateLabel && (
+              <span className="text-[10px] text-gray-400 truncate">
+                {dateLabel}
+              </span>
+            )}
+          </div>
         </div>
       </div>
-      <div className="font-bold text-white bg-gray-900 px-3 py-1 rounded-lg">
+
+      {/* VS / Score */}
+      <div className="font-bold text-white bg-gray-900 px-4 py-1 rounded-lg text-sm sm:text-base flex-shrink-0">
         {isFinished
           ? `${match.score.fullTime.home} : ${match.score.fullTime.away}`
           : "VS"}
       </div>
-      <div className="flex items-center gap-4 w-1/3 justify-end">
-        <span
-          className={
-            isDark
-              ? "text-gray-200 group-hover:text-white"
-              : "text-slate-800 group-hover:text-slate-900"
-          }
-        >
-          {match.awayTeam.shortName || match.awayTeam.name}
-        </span>
-        {awayLogoSrc && (
-          <img
-            src={awayLogoSrc}
-            alt={awayFull}
-            className="w-6 h-6 rounded-full bg-gray-800 object-contain"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.style.display = "none";
-            }}
-          />
-        )}
+
+      {/* Away Team */}
+      <div className="flex items-center justify-center sm:justify-end gap-3 sm:gap-4 w-full sm:flex-1 sm:min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 justify-center sm:justify-end">
+          <span
+            className={`truncate text-sm sm:text-base order-2 sm:order-1 ${isDark
+                ? "text-gray-200 group-hover:text-white"
+                : "text-slate-800 group-hover:text-slate-900"
+              }`}
+          >
+            {match.awayTeam.shortName || match.awayTeam.name}
+          </span>
+          {awayLogoSrc && (
+            <img
+              src={awayLogoSrc}
+              alt={awayFull}
+              className="w-8 h-8 sm:w-6 sm:h-6 rounded-full bg-gray-800 object-contain flex-shrink-0 order-1 sm:order-2"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
