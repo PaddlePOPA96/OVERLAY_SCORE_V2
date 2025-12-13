@@ -16,6 +16,7 @@ import {
   useChampionsLeagueMatches,
   useChampionsLeagueStandings,
 } from "@/hooks/pl-data";
+import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -39,10 +40,10 @@ export default function DashboardPage() {
   }, []);
 
   const handleLogout = async () => {
-    await signOut(auth).catch(() => {});
+    await signOut(auth).catch(() => { });
   };
 
-  const { matches, loadingMatches } = usePremierLeagueMatches();
+  const { matches, loadingMatches, reloadMatches } = usePremierLeagueMatches();
   const { news, loadingNews } = usePremierLeagueNews();
   const { standings, loadingStandings, reloadStandings } =
     usePremierLeagueStandings();
@@ -52,6 +53,13 @@ export default function DashboardPage() {
     reloadUclStandings,
   } = useChampionsLeagueStandings();
   const { uclMatches, loadingUclMatches } = useChampionsLeagueMatches();
+
+  const handleAutoRefresh = () => {
+    reloadMatches();
+    reloadStandings();
+  };
+
+  useAutoRefresh(handleAutoRefresh);
 
   // theme persistence
   useEffect(() => {

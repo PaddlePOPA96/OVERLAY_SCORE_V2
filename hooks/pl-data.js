@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export function usePremierLeagueMatches() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshToken, setRefreshToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -30,9 +31,13 @@ export function usePremierLeagueMatches() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [refreshToken]);
 
-  return { matches, loadingMatches: loading };
+  const reloadMatches = () => {
+    setRefreshToken((prev) => prev + 1);
+  };
+
+  return { matches, loadingMatches: loading, reloadMatches };
 }
 
 export function usePremierLeagueNews() {
