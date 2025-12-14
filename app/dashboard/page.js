@@ -81,6 +81,54 @@ export default function DashboardPage() {
   const isDark = theme === "dark";
   // isAdmin determined by hook above
 
+  // --- Global Auto Refresh Logic (Admin Only) ---
+  const [autoRefresh, setAutoRefresh] = useState(false);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const stored = localStorage.getItem("dashboard_auto_refresh");
+    if (stored === "true") setAutoRefresh(true);
+  }, [isAdmin]);
+
+  useEffect(() => {
+    localStorage.setItem("dashboard_auto_refresh", autoRefresh);
+  }, [autoRefresh]);
+
+  useEffect(() => {
+    let interval;
+    if (autoRefresh && isAdmin) {
+      interval = setInterval(() => {
+        // Refresh EVERYTHING when global auto-refresh is ON
+        reloadMatches();
+        reloadStandings();
+        reloadUclMatches();
+        reloadUclStandings();
+      }, 60000); // 60 seconds
+    }
+    return () => clearInterval(interval);
+  }, [autoRefresh, isAdmin, reloadMatches, reloadStandings, reloadUclMatches, reloadUclStandings]);
+  // --- End Global Auto Refresh Logic ---
+
+  const [manualLoading, setManualLoading] = useState(false);
+
+  const handleManualRefresh = async () => {
+    if (manualLoading) return;
+    setManualLoading(true);
+    try {
+      await Promise.all([
+        reloadMatches(),
+        reloadStandings(),
+        reloadUclMatches(),
+        reloadUclStandings(),
+      ]);
+    } catch (e) {
+      console.error("Manual refresh failed", e);
+    } finally {
+      // Small delay to show feedback if too fast
+      setTimeout(() => setManualLoading(false), 500);
+    }
+  };
+
   if (!ready) {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-900 text-gray-100">
@@ -121,6 +169,10 @@ export default function DashboardPage() {
             onLogout={handleLogout}
             onLoginClick={() => setLoginModalOpen(true)}
             onToggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+            autoRefresh={autoRefresh}
+            setAutoRefresh={setAutoRefresh}
+            onManualRefresh={handleManualRefresh}
+            manualLoading={manualLoading}
           />
           <div className="flex flex-col lg:flex-row flex-1 relative">
             <LeftSidebar

@@ -387,7 +387,7 @@ function PremierLeagueTableCard({
 
           <div className="pt-3 border-t border-slate-700/50 mt-3">
             <p className={headingClass}>UCL Spots (Top 4)</p>
-            <ul className="mt-2 space-y-1 text-xs">
+            <ul className="mt-2 space-y-1">
               {uclSpots.map((row) => (
                 <li
                   key={`ucl-${row.team.id}`}

@@ -13,6 +13,10 @@ export function TopBar({
   onLogout,
   onLoginClick,
   onToggleMobileMenu,
+  autoRefresh,
+  setAutoRefresh,
+  onManualRefresh,
+  manualLoading,
 }) {
   const isDark = theme === "dark";
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -122,6 +126,47 @@ export function TopBar({
           <span className={isDark ? "text-white" : "text-slate-900"}>
             SCOREBOARD PANEL
           </span>
+
+          {/* Global Auto Refresh Toggle */}
+          {isAdmin && (
+            <div className="ml-4 h-6 border-l border-gray-500/30 pl-4 flex items-center gap-2">
+              <button
+                onClick={() => setAutoRefresh(!autoRefresh)}
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${autoRefresh
+                  ? "bg-purple-600/20 border-purple-500 text-purple-400"
+                  : isDark
+                    ? "bg-white/5 border-white/10 text-gray-500 hover:text-gray-300"
+                    : "bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-700"
+                  }`}
+                title="Auto Refresh Data (60s)"
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${autoRefresh ? "bg-purple-400 animate-pulse" : "bg-gray-500"}`} />
+                AUTO {autoRefresh ? "ON" : "OFF"}
+              </button>
+
+              <button
+                onClick={onManualRefresh}
+                disabled={manualLoading}
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${isDark
+                    ? "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10"
+                    : "bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200"
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                title="Refresh All Data Now"
+              >
+                {manualLoading ? (
+                  <span className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                    <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                    <path d="M16 16h5v5" />
+                  </svg>
+                )}
+                REFRESH
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
@@ -140,8 +185,8 @@ export function TopBar({
                 type="button"
                 onClick={() => setShowAdminModal(true)}
                 className={`flex items-center gap-3 rounded-full px-3 py-1 border ${isDark
-                    ? "border-gray-700 hover:bg-gray-800/60"
-                    : "border-gray-300 hover:bg-gray-100"
+                  ? "border-gray-700 hover:bg-gray-800/60"
+                  : "border-gray-300 hover:bg-gray-100"
                   }`}
               >
                 <div className="text-right">
@@ -266,8 +311,8 @@ export function TopBar({
                 {adminStatus.message && (
                   <p
                     className={`text-[11px] ${adminStatus.type === "error"
-                        ? "text-red-400"
-                        : "text-emerald-400"
+                      ? "text-red-400"
+                      : "text-emerald-400"
                       }`}
                   >
                     {adminStatus.message}
