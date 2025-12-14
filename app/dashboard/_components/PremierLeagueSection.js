@@ -82,7 +82,8 @@ export function PremierLeagueMain({
   // Today: Ascending (biar urut jam main)
   todayMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
 
-  const lastMatch = pastFinished[0] || null;
+  // Tampilkan max 5 match terakhir
+  const recentMatches = pastFinished.slice(0, 5);
   const nextMatches = futureMatches.slice(0, 5);
 
   const sectionTitleClass = isDark
@@ -193,14 +194,16 @@ export function PremierLeagueMain({
                   )}
                 </div>
 
-                <SectionLabel title="Last Match" />
+                <SectionLabel title="Recent Matches" />
                 <div className="space-y-2">
-                  {lastMatch ? (
-                    <PremierLeagueMatchRow
-                      key={`last-${lastMatch.id}`}
-                      match={lastMatch}
-                      theme={theme}
-                    />
+                  {recentMatches.length > 0 ? (
+                    recentMatches.map((m) => (
+                      <PremierLeagueMatchRow
+                        key={`last-${m.id}`}
+                        match={m}
+                        theme={theme}
+                      />
+                    ))
                   ) : (
                     <p className="text-xs text-gray-400">
                       Belum ada hasil pertandingan dalam jendela waktu ini.
