@@ -53,6 +53,7 @@ export default function MatchSimulationPage() {
                 }
             } catch (error) {
                 console.error('[Match] Error loading teams:', error);
+                setMatchStatus("error");
             }
         };
 
@@ -156,6 +157,26 @@ export default function MatchSimulationPage() {
             <div className="min-h-screen bg-slate-950 flex items-center justify-center">
                 <div className="text-white text-center">
                     <h2 className="text-2xl font-bold mb-4">Please Login</h2>
+                </div>
+            </div>
+        );
+    }
+
+    if (matchStatus === "error") {
+        return (
+            <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+                <div className="text-center text-white bg-red-900/20 border border-red-800 p-8 rounded-xl max-w-md">
+                    <div className="text-5xl mb-4">⚠️</div>
+                    <h2 className="text-xl font-bold mb-2">Failed to Load Match</h2>
+                    <p className="text-slate-300 mb-6">
+                        We couldn't load the team data. This usually happens if an ad-blocker or network firewall is blocking the connection.
+                    </p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="bg-red-700 hover:bg-red-600 px-6 py-2 rounded-lg font-bold transition"
+                    >
+                        Try Again
+                    </button>
                 </div>
             </div>
         );
