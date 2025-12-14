@@ -36,8 +36,17 @@ export function PremierLeagueMain({
     })}`;
   };
 
+  // Gunakan waktu lokal user untuk penentuan hari
   const now = new Date();
-  const todayKey = now.toISOString().slice(0, 10);
+
+  // Helper untuk mendapatkan string tanggal lokal (YYYY-MM-DD)
+  // Kita gunakan locale "id-ID" atau "sv-SE" (ISO-like) untuk konsistensi, 
+  // tapi yang penting adalah konsistensi format antara 'now' dan 'match date'.
+  const getLocalDateString = (dateObj) => {
+    return dateObj.toLocaleDateString("en-CA"); // YYYY-MM-DD format local
+  };
+
+  const todayStr = getLocalDateString(now);
 
   const todayMatches = [];
   const pastFinished = [];
@@ -45,22 +54,33 @@ export function PremierLeagueMain({
 
   (matches || []).forEach((m) => {
     if (!m.utcDate) return;
-    const d = new Date(m.utcDate);
-    const key = d.toISOString().slice(0, 10);
+    const matchDate = new Date(m.utcDate);
+    const matchDateStr = getLocalDateString(matchDate);
 
-    if (key === todayKey) {
+    // Grouping Logic:
+    // 1. Today: Match date string === Today date string
+    // 2. Future: Match date string > Today date string (TOMORROW etc)
+    // 3. Past: Match date string < Today date string (YESTERDAY etc) OR (Match is today but FINISHED? User wanted "nanti malam masuk today", so keep Today strictly by date)
+
+    if (matchDateStr === todayStr) {
       todayMatches.push(m);
-    }
-
-    if (d < now && m.status === "FINISHED") {
-      pastFinished.push(m);
-    } else if (d >= now && m.status !== "FINISHED") {
+    } else if (matchDateStr > todayStr) {
       futureMatches.push(m);
+    } else {
+      // Past date
+      if (m.status === "FINISHED") {
+        pastFinished.push(m);
+      }
     }
   });
 
+  // Sort logic
+  // Past: Descending (terbaru di atas)
   pastFinished.sort((a, b) => new Date(b.utcDate) - new Date(a.utcDate));
+  // Future: Ascending (terdekat di atas)
   futureMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+  // Today: Ascending (biar urut jam main)
+  todayMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
 
   const lastMatch = pastFinished[0] || null;
   const nextMatches = futureMatches.slice(0, 5);
@@ -478,8 +498,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
           <div className="flex flex-col min-w-0 text-center sm:text-left">
             <span
               className={`truncate text-sm sm:text-base ${isDark
-                  ? "text-gray-200 group-hover:text-white"
-                  : "text-slate-800 group-hover:text-slate-900"
+                ? "text-gray-200 group-hover:text-white"
+                : "text-slate-800 group-hover:text-slate-900"
                 }`}
             >
               {match.homeTeam.shortName || match.homeTeam.name}
@@ -505,8 +525,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 justify-center sm:justify-end">
           <span
             className={`truncate text-sm sm:text-base order-2 sm:order-1 ${isDark
-                ? "text-gray-200 group-hover:text-white"
-                : "text-slate-800 group-hover:text-slate-900"
+              ? "text-gray-200 group-hover:text-white"
+              : "text-slate-800 group-hover:text-slate-900"
               }`}
           >
             {match.awayTeam.shortName || match.awayTeam.name}

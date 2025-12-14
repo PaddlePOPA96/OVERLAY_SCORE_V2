@@ -16,7 +16,7 @@ import {
   useChampionsLeagueMatches,
   useChampionsLeagueStandings,
 } from "@/hooks/pl-data";
-import { useAutoRefresh } from "@/hooks/useAutoRefresh";
+
 import { useUserRole } from "@/hooks/useUserRole";
 
 export default function DashboardPage() {
@@ -61,12 +61,8 @@ export default function DashboardPage() {
   } = useChampionsLeagueStandings();
   const { uclMatches, loadingUclMatches } = useChampionsLeagueMatches();
 
-  const handleAutoRefresh = () => {
-    reloadMatches();
-    reloadStandings();
-  };
+  // useAutoRefresh removed: Client listens to Firebase realtime updates now.
 
-  useAutoRefresh(handleAutoRefresh);
 
   // theme persistence
   useEffect(() => {
