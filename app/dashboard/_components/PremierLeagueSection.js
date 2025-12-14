@@ -148,67 +148,84 @@ export function PremierLeagueMain({
       )}
 
       <div className="space-y-6">
-        {isMatchesMode && (
-          <h3 className={sectionTitleClass}>Today Match</h3>
-        )}
+
 
         {isMatchesMode ? (
-          <div className={`${cardClass} rounded-xl p-4 space-y-4`}>
+          <div className="space-y-8">
             {loading ? (
-              <p className="text-center text-gray-400 text-sm">
-                Memuat jadwal dan hasil...
-              </p>
+              <div className={`${cardClass} rounded-xl p-8`}>
+                <p className="text-center text-gray-400 text-sm">
+                  Memuat jadwal dan hasil...
+                </p>
+              </div>
             ) : !matches || matches.length === 0 ? (
-              <p className="text-center text-gray-400 text-sm">
-                Tidak ada pertandingan yang tercatat.
-              </p>
+              <div className={`${cardClass} rounded-xl p-8`}>
+                <p className="text-center text-gray-400 text-sm">
+                  Tidak ada pertandingan yang tercatat.
+                </p>
+              </div>
             ) : (
               <>
-                <SectionLabel title="Today Match" />
-                <div className="space-y-2">
-                  {(todayMatches.length ? todayMatches : matches.slice(0, 3)).map(
-                    (m) => (
-                      <PremierLeagueMatchRow
-                        key={`today-${m.id}`}
-                        match={m}
-                        theme={theme}
-                      />
-                    )
-                  )}
+                {/* Today Match Container */}
+                <div className={`${cardClass} rounded-xl p-5`}>
+                  <div className="mb-4">
+                    <SectionLabel title="Today Match" />
+                  </div>
+                  <div className="space-y-2">
+                    {(todayMatches.length ? todayMatches : matches.slice(0, 3)).map(
+                      (m) => (
+                        <PremierLeagueMatchRow
+                          key={`today-${m.id}`}
+                          match={m}
+                          theme={theme}
+                        />
+                      )
+                    )}
+                  </div>
                 </div>
 
-                <SectionLabel title="Next Match" />
-                <div className="space-y-2">
-                  {nextMatches.length ? (
-                    nextMatches.map((m) => (
-                      <PremierLeagueMatchRow
-                        key={`next-${m.id}`}
-                        match={m}
-                        theme={theme}
-                      />
-                    ))
-                  ) : (
-                    <p className="text-xs text-gray-400">
-                      Tidak ada jadwal mendatang dalam 7 hari ke depan.
-                    </p>
-                  )}
+                {/* Recent Matches Container */}
+                <div className={`${cardClass} rounded-xl p-5`}>
+                  <div className="mb-4">
+                    <SectionLabel title="Recent Matches" />
+                  </div>
+                  <div className="space-y-2">
+                    {recentMatches.length > 0 ? (
+                      recentMatches.map((m) => (
+                        <PremierLeagueMatchRow
+                          key={`last-${m.id}`}
+                          match={m}
+                          theme={theme}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-xs text-gray-400 italic">
+                        Belum ada hasil pertandingan dalam jendela waktu ini.
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <SectionLabel title="Recent Matches" />
-                <div className="space-y-2">
-                  {recentMatches.length > 0 ? (
-                    recentMatches.map((m) => (
-                      <PremierLeagueMatchRow
-                        key={`last-${m.id}`}
-                        match={m}
-                        theme={theme}
-                      />
-                    ))
-                  ) : (
-                    <p className="text-xs text-gray-400">
-                      Belum ada hasil pertandingan dalam jendela waktu ini.
-                    </p>
-                  )}
+                {/* Next Match Container */}
+                <div className={`${cardClass} rounded-xl p-5`}>
+                  <div className="mb-4">
+                    <SectionLabel title="Next Match" />
+                  </div>
+                  <div className="space-y-2">
+                    {nextMatches.length ? (
+                      nextMatches.map((m) => (
+                        <PremierLeagueMatchRow
+                          key={`next-${m.id}`}
+                          match={m}
+                          theme={theme}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-xs text-gray-400 italic">
+                        Tidak ada jadwal mendatang dalam 7 hari ke depan.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </>
             )}
