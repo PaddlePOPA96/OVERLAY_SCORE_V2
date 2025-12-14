@@ -30,7 +30,16 @@ export function usePremierLeagueMatches() {
     return () => unsubscribe();
   }, []);
 
-  return { matches, loadingMatches: loading, reloadMatches: () => { } };
+  const reloadMatches = async () => {
+    setLoading(true);
+    try {
+      await fetch("/api/pertandingan");
+    } catch (e) {
+      console.error("Failed to reload matches", e);
+    }
+  };
+
+  return { matches, loadingMatches: loading, reloadMatches };
 }
 
 export function usePremierLeagueNews() {
@@ -107,7 +116,16 @@ export function usePremierLeagueStandings() {
     return () => unsubscribe();
   }, []);
 
-  return { standings, loadingStandings: loading, reloadStandings: () => { } };
+  const reloadStandings = async () => {
+    setLoading(true);
+    try {
+      await fetch("/api/klasemen");
+    } catch (e) {
+      console.error("Failed to reload standings", e);
+    }
+  };
+
+  return { standings, loadingStandings: loading, reloadStandings };
 }
 
 export function useChampionsLeagueMatches() {
@@ -134,7 +152,16 @@ export function useChampionsLeagueMatches() {
     return () => unsubscribe();
   }, []);
 
-  return { uclMatches: matches, loadingUclMatches: loading };
+  return {
+    uclMatches: matches, loadingUclMatches: loading, reloadUclMatches: async () => {
+      setLoading(true);
+      try {
+        await fetch("/api/ucl-matches");
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  };
 }
 
 export function useChampionsLeagueStandings() {
@@ -152,5 +179,14 @@ export function useChampionsLeagueStandings() {
     return () => unsubscribe();
   }, []);
 
-  return { uclStandings, loadingUclStandings: loading, reloadUclStandings: () => { } };
+  const reloadUclStandings = async () => {
+    setLoading(true);
+    try {
+      await fetch("/api/ucl-standings");
+    } catch (e) {
+      console.error("Failed to reload UCL standings", e);
+    }
+  };
+
+  return { uclStandings, loadingUclStandings: loading, reloadUclStandings };
 }

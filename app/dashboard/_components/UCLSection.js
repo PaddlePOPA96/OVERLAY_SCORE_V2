@@ -256,6 +256,8 @@ export function ChampionsLeagueMatches({
   matches,
   loadingMatches,
   theme,
+  isAdmin,
+  onRefreshMatches,
 }) {
   const isDark = theme === "dark";
 
@@ -358,16 +360,16 @@ export function ChampionsLeagueMatches({
             {formatDateTime(match)}
           </span>
           <span className="mt-1 text-lg md:text-xl lg:text-2xl font-semibold text-slate-50 bg-slate-950 px-4 md:px-5 py-2 rounded-2xl shadow-lg">
-            {isFinished
-              ? `${match.score.fullTime.home} : ${match.score.fullTime.away}`
+            {isFinished || isLive
+              ? `${match.score.fullTime.home ?? 0} : ${match.score.fullTime.away ?? 0}`
               : "VS"}
           </span>
         </div>
         <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
           <span
             className={`truncate ${isDark
-                ? "text-slate-50 text-sm md:text-base lg:text-lg"
-                : "text-slate-900 text-sm md:text-base lg:text-lg"
+              ? "text-slate-50 text-sm md:text-base lg:text-lg"
+              : "text-slate-900 text-sm md:text-base lg:text-lg"
               }`}
           >
             {match.awayTeam.shortName || match.awayTeam.name}
@@ -392,7 +394,19 @@ export function ChampionsLeagueMatches({
     <div
       className={`${cardClass} rounded-xl p-4 space-y-4 w-full max-w-[1040px] mx-auto`}
     >
-      <p className={headingClass}>Jadwal &amp; Hasil UCL (−7 sampai +7 hari)</p>
+      <div className="flex items-center justify-between">
+        <p className={headingClass}>Jadwal &amp; Hasil UCL (−7 sampai +7 hari)</p>
+        {isAdmin && (
+          <button
+            type="button"
+            onClick={onRefreshMatches}
+            className="text-[10px] px-2 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60"
+            disabled={loadingMatches}
+          >
+            {loadingMatches ? "Refreshing..." : "Refresh"}
+          </button>
+        )}
+      </div>
 
       {loadingMatches ? (
         <p className="text-center text-gray-400 text-sm">

@@ -8,7 +8,7 @@ import { MainColumn } from "@/app/dashboard/_components/MainColumn";
 import { RightColumn } from "@/app/dashboard/_components/RightColumn";
 import { TopBar } from "@/app/dashboard/_components/TopBar";
 import { Button } from "@/components/ui/button";
-import { loginWithEmailPassword } from "@/lib/auth/service";
+import { loginWithEmailPassword, syncUserToFirestore } from "@/lib/auth/service";
 import {
   usePremierLeagueMatches,
   usePremierLeagueNews,
@@ -59,7 +59,7 @@ export default function DashboardPage() {
     loadingUclStandings,
     reloadUclStandings,
   } = useChampionsLeagueStandings();
-  const { uclMatches, loadingUclMatches } = useChampionsLeagueMatches();
+  const { uclMatches, loadingUclMatches, reloadUclMatches } = useChampionsLeagueMatches();
 
   // useAutoRefresh removed: Client listens to Firebase realtime updates now.
 
@@ -152,6 +152,8 @@ export default function DashboardPage() {
               isAdmin={isAdmin}
               onRefreshStandings={reloadStandings}
               onRefreshUclStandings={reloadUclStandings}
+              onRefreshMatches={reloadMatches}
+              onRefreshUclMatches={reloadUclMatches}
             />
             {showRightColumn && (
               <RightColumn

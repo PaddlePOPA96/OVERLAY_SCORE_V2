@@ -11,6 +11,7 @@ export function PremierLeagueMain({
   mode, // "matches" | "table"
   isAdmin,
   onRefreshStandings,
+  onRefreshMatches,
 }) {
   const isDark = theme === "dark";
   const liveMatches =
@@ -105,6 +106,16 @@ export function PremierLeagueMain({
               <span className="bg-white/20 px-2 py-0.5 rounded text-xs text-white">
                 Match of the Day
               </span>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={onRefreshMatches}
+                  className="bg-white/20 hover:bg-white/30 px-2 py-0.5 rounded text-xs text-white transition disabled:opacity-50"
+                  disabled={loading}
+                >
+                  {loading ? "Refreshing..." : "Refresh Data"}
+                </button>
+              )}
             </div>
             <h2 className="text-3xl text-white font-bold mb-4">
               {featured
@@ -535,8 +546,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
 
       {/* VS / Score */}
       <div className="font-bold text-white bg-gray-900 px-4 py-1 rounded-lg text-sm sm:text-base flex-shrink-0">
-        {isFinished
-          ? `${match.score.fullTime.home} : ${match.score.fullTime.away}`
+        {isFinished || minute === "LIVE"
+          ? `${match.score.fullTime.home ?? 0} : ${match.score.fullTime.away ?? 0}`
           : "VS"}
       </div>
 
