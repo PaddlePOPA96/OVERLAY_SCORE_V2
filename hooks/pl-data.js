@@ -31,7 +31,7 @@ export function usePremierLeagueMatches() {
   }, []);
 
   const reloadMatches = async () => {
-    setLoading(true);
+    // Jangan set loading(true) agar UI tidak blank saat refresh background
     try {
       await fetch("/api/pertandingan");
     } catch (e) {
@@ -117,7 +117,6 @@ export function usePremierLeagueStandings() {
   }, []);
 
   const reloadStandings = async () => {
-    setLoading(true);
     try {
       await fetch("/api/klasemen");
     } catch (e) {
@@ -154,7 +153,6 @@ export function useChampionsLeagueMatches() {
 
   return {
     uclMatches: matches, loadingUclMatches: loading, reloadUclMatches: async () => {
-      setLoading(true);
       try {
         await fetch("/api/ucl-matches");
       } catch (e) {
@@ -180,7 +178,6 @@ export function useChampionsLeagueStandings() {
   }, []);
 
   const reloadUclStandings = async () => {
-    setLoading(true);
     try {
       await fetch("/api/ucl-standings");
     } catch (e) {
