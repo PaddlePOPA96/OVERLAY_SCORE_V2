@@ -10,8 +10,30 @@ function formatDate(date) {
   return date.toISOString().split("T")[0];
 }
 
-export async function GET() {
+import { verifyIdToken } from "@/lib/firebaseAdmin";
+
+export async function GET(request) {
   try {
+    // 1. Authorization Header Check
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Unauthorized: Missing or invalid token" },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.split("Bearer ")[1];
+    const decodedToken = await verifyIdToken(token);
+
+    if (!decodedToken) {
+      return NextResponse.json(
+        { error: "Unauthorized: Invalid token" },
+        { status: 401 }
+      );
+    }
+
+    // 2. Main Logic (Fetch Data)
     const today = new Date();
     const pastDate = new Date();
     pastDate.setDate(today.getDate() - 7);

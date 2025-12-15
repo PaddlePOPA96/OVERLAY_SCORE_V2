@@ -1,32 +1,35 @@
 import { NextResponse } from "next/server";
+import { verifyIdToken } from "@/lib/firebaseAdmin";
+import { ref, get } from "firebase/database";
+import { db } from "@/lib/firebaseDb";
 
-const NEWS_URL =
-  "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news";
-
-export async function GET() {
+export async function GET(request) {
   try {
-    const res = await fetch(NEWS_URL, { cache: "no-store" });
-    if (!res.ok) {
+    const authHeader = request.headers.get("Authorization");
+    // Strict Mode: Block if no token.
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
-        { error: "Failed to fetch news" },
-        { status: res.status }
+        { error: "Unauthorized" },
+        { status: 401 }
       );
     }
+    const token = authHeader.split("Bearer ")[1];
+    const decodedToken = await verifyIdToken(token);
+    if (!decodedToken) {
+      return NextResponse.json({ error: "Invalid Token" }, { status: 401 });
+    }
 
-    const data = await res.json();
-    const articles = (data.articles || []).slice(0, 8).map((a) => ({
-      id: a.id ?? a.headline,
-      title: a.headline,
-      description: a.description,
-      published: a.published,
-      image: a.images?.[0]?.url ?? null,
-      url:
-        a.links?.web?.href ??
-        data.link?.href ??
-        "https://www.espn.com/football/league/_/name/eng.1",
-    }));
+    // Read cached news from Firebase
+    const snapshot = await get(ref(db, "pl_data/news/articles"));
+    if (!snapshot.exists()) {
+      // Fallback logic if empty? or return empty array.
+      // User asked to schedule twice a day, so it might be empty initially.
+      return NextResponse.json({ articles: [] });
+    }
 
-    return NextResponse.json({ articles });
+    const articles = snapshot.val();
+    return NextResponse.json({ articles: Array.isArray(articles) ? articles : [] });
+
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },

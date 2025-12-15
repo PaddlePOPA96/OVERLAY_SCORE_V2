@@ -1,13 +1,28 @@
 import { NextResponse } from "next/server";
 import { ref, set } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
+import { verifyIdToken } from "@/lib/firebaseAdmin";
 
 const API_KEY =
   process.env.FOOTBALL_DATA_API_KEY || "0ea6f9faf31246dcb907c52fa33062b6";
 const BASE_URL = "https://api.football-data.org/v4";
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    const token = authHeader.split("Bearer ")[1];
+    const decodedToken = await verifyIdToken(token);
+    if (!decodedToken) {
+      return NextResponse.json({ error: "Invalid Token" }, { status: 401 });
+    }
+
+
     const res = await fetch(`${BASE_URL}/competitions/PL/standings`, {
       headers: { "X-Auth-Token": API_KEY },
       cache: "no-store",

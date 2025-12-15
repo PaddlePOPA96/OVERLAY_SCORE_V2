@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ref, onValue } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
+import { auth } from "@/lib/firebaseAuth";
 
 export function usePremierLeagueMatches() {
     const [matches, setMatches] = useState([]);
@@ -27,7 +28,10 @@ export function usePremierLeagueMatches() {
 
     const reloadMatches = async () => {
         try {
-            await fetch("/api/premier-league/matches");
+            const token = await auth.currentUser?.getIdToken();
+            await fetch("/api/premier-league/matches", {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+            });
         } catch (e) {
             console.error("Failed to reload matches", e);
         }
@@ -45,7 +49,15 @@ export function usePremierLeagueNews() {
         const load = async () => {
             setLoading(true);
             try {
-                const res = await fetch("/api/premier-league/news");
+                // News is public-ish but better to be consistent if user wants strict security.
+                // However, news is usually loaded on mount automatically. 
+                // If we require token, it might fail on initial load if auth isn't ready.
+                // But let's check if the API requires it. User said "don't let others access".
+                // We'll add the token if available.
+                const token = await auth.currentUser?.getIdToken();
+                const res = await fetch("/api/premier-league/news", {
+                    headers: token ? { Authorization: `Bearer ${token}` } : {},
+                });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 if (!cancelled) {
@@ -94,7 +106,10 @@ export function usePremierLeagueStandings() {
 
     const reloadStandings = async () => {
         try {
-            await fetch("/api/premier-league/standings");
+            const token = await auth.currentUser?.getIdToken();
+            await fetch("/api/premier-league/standings", {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+            });
         } catch (e) {
             console.error("Failed to reload standings", e);
         }
