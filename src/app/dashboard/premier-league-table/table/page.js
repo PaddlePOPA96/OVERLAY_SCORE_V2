@@ -1,0 +1,30 @@
+"use client";
+
+import {
+  usePremierLeagueMatches,
+  usePremierLeagueStandings,
+} from "@/features/premier-league/hooks/usePremierLeagueData";
+import { PremierLeagueMain } from "@/features/premier-league/components/PremierLeagueSection";
+
+// Halaman khusus tabel Premier League di dalam dashboard
+export default function PremierLeagueTablePage() {
+  const { matches, loadingMatches } = usePremierLeagueMatches();
+  const { standings, loadingStandings, reloadStandings } =
+    usePremierLeagueStandings();
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-gray-100 p-8">
+      <h1 className="text-2xl font-bold mb-6">Premier League Table</h1>
+      <PremierLeagueMain
+        matches={matches}
+        loading={loadingMatches}
+        theme="dark"
+        standings={standings}
+        loadingStandings={loadingStandings}
+        mode="table"
+        isAdmin={false}
+        onRefreshStandings={reloadStandings}
+      />
+    </div>
+  );
+}
