@@ -28,7 +28,7 @@
   overflow: hidden;
   border-radius: 8px;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .layout-b-scoreboard * {
@@ -39,6 +39,9 @@
   display: grid;
   grid-template-rows: 1fr 1fr;
   transform-origin: right center;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  /* Force GPU acceleration */
 }
 
 .layout-b-time-top {
@@ -70,6 +73,9 @@
   gap: 20px;
   position: relative;
   transform-origin: center center;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  /* Force GPU acceleration */
 }
 
 
@@ -78,14 +84,18 @@
   width: 110px;
   height: 110px;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(0,0,0,0.4));
   display: block;
+  /* Optimized: using will-change for GPU acceleration */
+  will-change: transform;
 }
 
 .layout-b-score-panel {
   display: grid;
   grid-template-rows: 1fr 1fr;
   transform-origin: left center;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  /* Force GPU acceleration */
 }
 
 .layout-b-score-row {
@@ -126,21 +136,54 @@
 }
 
 @keyframes midReveal {
-  0% { transform: scale(0.7); opacity: 0; filter: blur(8px); }
-  60% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; filter: blur(0px); }
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes rightReveal {
-  0% { transform: scaleX(0.2) translateX(-20px); opacity: 0; filter: blur(4px); }
-  70% { transform: scaleX(1.05) translateX(0); opacity: 1; }
-  100% { transform: scaleX(1) translateX(0); opacity: 1; filter: blur(0); }
+  0% {
+    transform: scaleX(0.2) translateX(-20px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scaleX(1.05) translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleX(1) translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes leftReveal {
-  0% { transform: scaleX(0.2) translateX(20px); opacity: 0; filter: blur(4px); }
-  70% { transform: scaleX(1.05) translateX(0); opacity: 1; }
-  100% { transform: scaleX(1) translateX(0); opacity: 1; filter: blur(0); }
+  0% {
+    transform: scaleX(0.2) translateX(20px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scaleX(1.05) translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleX(1) translateX(0);
+    opacity: 1;
+  }
 }
 
 .layout-b-goal-overlay {
@@ -160,7 +203,7 @@
   font-weight: 900;
   color: #fff;
   letter-spacing: 6px;
-  text-shadow: 0 0 20px rgba(0,0,0,0.9);
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 .layout-b-goal-overlay.active {
@@ -172,15 +215,41 @@
 }
 
 @keyframes goalBgB {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes goalTextB {
-  0% { opacity: 0; transform: scale(0.4); }
-  20% { opacity: 1; transform: scale(1.2); }
-  60% { opacity: 1; transform: scale(1.0); }
-  100% { opacity: 0; transform: scale(1.1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  20% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
 }
