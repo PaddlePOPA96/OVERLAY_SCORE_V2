@@ -17,10 +17,11 @@ export async function GET(request) {
       );
     }
     const token = authHeader.split("Bearer ")[1];
-    const decodedToken = await verifyIdToken(token);
-    if (!decodedToken) {
-      return NextResponse.json({ error: "Invalid Token" }, { status: 401 });
+    const verification = await verifyIdToken(token);
+    if (!verification.success) {
+      return NextResponse.json({ error: `Invalid Token: ${verification.error || 'unknown'}` }, { status: 401 });
     }
+    // const decodedToken = verification;
 
 
     const res = await fetch(`${BASE_URL}/competitions/PL/standings`, {

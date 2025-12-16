@@ -24,14 +24,15 @@ export async function GET(request) {
     }
 
     const token = authHeader.split("Bearer ")[1];
-    const decodedToken = await verifyIdToken(token);
+    const verification = await verifyIdToken(token);
 
-    if (!decodedToken) {
+    if (!verification.success) {
       return NextResponse.json(
-        { error: "Unauthorized: Invalid token" },
+        { error: `Unauthorized: ${verification.error || 'Invalid token'}` },
         { status: 401 }
       );
     }
+    const decodedToken = verification;
 
     // 2. Main Logic (Fetch Data)
     const today = new Date();

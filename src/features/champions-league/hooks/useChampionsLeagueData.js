@@ -18,15 +18,18 @@ export function useChampionsLeagueMatches() {
 
     const reloadUclMatches = async () => {
         try {
-            // Note: UCL endpoints might not require auth, but we'll add it for consistency
-            // If they do require auth, this prevents 401 errors
             const token = await import("@/lib/firebaseAuth").then(m => m.auth.currentUser?.getIdToken());
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
             const response = await fetch("/api/champions-league/matches", { headers });
 
             if (!response.ok) {
-                console.warn(`UCL matches API returned ${response.status}`);
+                let errorMsg = response.statusText;
+                try {
+                    const errorBody = await response.json();
+                    if (errorBody.error) errorMsg = errorBody.error;
+                } catch { }
+                console.warn(`UCL matches API returned ${response.status}: ${errorMsg}`);
             } else {
                 console.log("✅ Champions League matches refreshed successfully");
             }
@@ -59,14 +62,18 @@ export function useChampionsLeagueStandings() {
 
     const reloadUclStandings = async () => {
         try {
-            // Note: UCL endpoints might not require auth, but we'll add it for consistency
             const token = await import("@/lib/firebaseAuth").then(m => m.auth.currentUser?.getIdToken());
             const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
             const response = await fetch("/api/champions-league/standings", { headers });
 
             if (!response.ok) {
-                console.warn(`UCL standings API returned ${response.status}`);
+                let errorMsg = response.statusText;
+                try {
+                    const errorBody = await response.json();
+                    if (errorBody.error) errorMsg = errorBody.error;
+                } catch { }
+                console.warn(`UCL standings API returned ${response.status}: ${errorMsg}`);
             } else {
                 console.log("✅ Champions League standings refreshed successfully");
             }

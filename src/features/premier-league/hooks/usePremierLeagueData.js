@@ -28,11 +28,9 @@ export function usePremierLeagueMatches() {
 
     const reloadMatches = async () => {
         try {
-            // Validate user is authenticated
             if (!auth.currentUser) {
                 throw new Error("User must be logged in to refresh data");
             }
-
             const token = await auth.currentUser.getIdToken();
             if (!token) {
                 throw new Error("Failed to get authentication token");
@@ -43,13 +41,18 @@ export function usePremierLeagueMatches() {
             });
 
             if (!response.ok) {
-                throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                let errorMsg = response.statusText;
+                try {
+                    const errorBody = await response.json();
+                    if (errorBody.error) errorMsg = errorBody.error;
+                } catch { } // Ignore JSON parse error
+                throw new Error(`API returned ${response.status}: ${errorMsg}`);
             }
 
             console.log("✅ Premier League matches refreshed successfully");
         } catch (e) {
             console.error("❌ Failed to reload matches:", e.message);
-            throw e; // Re-throw to allow parent handler to show user feedback
+            throw e;
         }
     };
 
@@ -122,11 +125,9 @@ export function usePremierLeagueStandings() {
 
     const reloadStandings = async () => {
         try {
-            // Validate user is authenticated
             if (!auth.currentUser) {
                 throw new Error("User must be logged in to refresh data");
             }
-
             const token = await auth.currentUser.getIdToken();
             if (!token) {
                 throw new Error("Failed to get authentication token");
@@ -137,13 +138,18 @@ export function usePremierLeagueStandings() {
             });
 
             if (!response.ok) {
-                throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                let errorMsg = response.statusText;
+                try {
+                    const errorBody = await response.json();
+                    if (errorBody.error) errorMsg = errorBody.error;
+                } catch { }
+                throw new Error(`API returned ${response.status}: ${errorMsg}`);
             }
 
             console.log("✅ Premier League standings refreshed successfully");
         } catch (e) {
             console.error("❌ Failed to reload standings:", e.message);
-            throw e; // Re-throw to allow parent handler to show user feedback
+            throw e;
         }
     };
 
