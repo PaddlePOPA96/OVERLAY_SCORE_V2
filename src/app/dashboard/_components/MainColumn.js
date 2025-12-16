@@ -66,7 +66,7 @@ export function MainColumn({
   const [plMode, setPlMode] = useState(
     active === "pl-table" ? "table" : "matches"
   ); // "matches" | "table"
-  const [uclMode, setUclMode] = useState("table"); // "table" | "matches"
+  const [uclMode, setUclMode] = useState("matches"); // "table" | "matches"
 
   return (
     <main className={`${fullWidth ? "flex-1" : "w-full lg:w-1/2"} p-4 md:p-8`}>
@@ -138,16 +138,6 @@ export function MainColumn({
             <div className="mt-4 inline-flex rounded-full bg-slate-900/60 border border-slate-700 p-1 text-xs">
               <button
                 type="button"
-                onClick={() => setUclMode("table")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "table"
-                  ? "bg-purple-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-100"
-                  }`}
-              >
-                Table
-              </button>
-              <button
-                type="button"
                 onClick={() => setUclMode("matches")}
                 className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "matches"
                   ? "bg-purple-600 text-white shadow"
@@ -156,23 +146,33 @@ export function MainColumn({
               >
                 Jadwal &amp; Hasil
               </button>
+              <button
+                type="button"
+                onClick={() => setUclMode("table")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "table"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
+                  }`}
+              >
+                UCL Table
+              </button>
             </div>
           </header>
-          {uclMode === "table" ? (
-            <ChampionsLeagueTable
-              standings={uclStandings}
-              loadingStandings={loadingUclStandings}
-              theme={theme}
-              isAdmin={isAdmin}
-              onRefreshStandings={onRefreshUclStandings}
-            />
-          ) : (
+          {uclMode === "matches" ? (
             <ChampionsLeagueMatches
               matches={uclMatches}
               loadingMatches={loadingUclMatches}
               theme={theme}
               onRefreshMatches={onRefreshUclMatches}
               isAdmin={isAdmin}
+            />
+          ) : (
+            <ChampionsLeagueTable
+              standings={uclStandings}
+              loadingStandings={loadingUclStandings}
+              theme={theme}
+              isAdmin={isAdmin}
+              onRefreshStandings={onRefreshUclStandings}
             />
           )}
         </>

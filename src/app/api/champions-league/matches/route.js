@@ -16,7 +16,7 @@ export async function GET() {
     const pastDate = new Date();
     pastDate.setDate(today.getDate() - 7);
     const futureDate = new Date();
-    futureDate.setDate(today.getDate() + 7);
+    futureDate.setDate(today.getDate() + 60);
 
     const url = `${BASE_URL}/competitions/CL/matches?dateFrom=${formatDate(
       pastDate

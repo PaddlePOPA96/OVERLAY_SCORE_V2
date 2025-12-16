@@ -391,11 +391,10 @@ export function ChampionsLeagueMatches({
   };
 
   return (
-    <div
-      className={`${cardClass} rounded-xl p-4 space-y-4 w-full max-w-[1040px] mx-auto`}
-    >
-      <div className="flex items-center justify-between">
-        <p className={headingClass}>Jadwal &amp; Hasil UCL (−7 sampai +7 hari)</p>
+
+    <div className="space-y-6 max-w-[1040px] mx-auto w-full">
+      <div className="flex items-center justify-between px-1">
+        <p className={headingClass}>Jadwal &amp; Hasil UCL</p>
         {isAdmin && (
           <button
             type="button"
@@ -409,62 +408,65 @@ export function ChampionsLeagueMatches({
       </div>
 
       {loadingMatches ? (
-        <p className="text-center text-gray-400 text-sm">
-          Memuat jadwal dan hasil UCL...
-        </p>
+        <div className={`${cardClass} rounded-xl p-8`}>
+          <p className="text-center text-gray-400 text-sm">
+            Memuat jadwal dan hasil UCL...
+          </p>
+        </div>
       ) : !matches || matches.length === 0 ? (
-        <p className="text-center text-gray-400 text-sm">
-          Tidak ada data pertandingan UCL untuk jendela waktu ini.
-        </p>
+        <div className={`${cardClass} rounded-xl p-8`}>
+          <p className="text-center text-gray-400 text-sm">
+            Tidak ada data pertandingan UCL untuk jendela waktu ini.
+          </p>
+        </div>
       ) : (
-        <div className="space-y-4">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-400 mb-1">
-              Live Match
-            </p>
-            {liveMatches.length ? (
-              <div className="space-y-1">
+        <div className="space-y-8">
+          {/* Live Matches Container */}
+          {liveMatches.length > 0 && (
+            <div className={`${cardClass} rounded-xl p-5`}>
+              <div className="mb-4">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Live Matches</p>
+              </div>
+              <div className="space-y-2">
                 {sortByDate(liveMatches).map(renderRow)}
               </div>
-            ) : (
-              <p className="text-[11px] text-slate-400">
-                Tidak ada pertandingan yang sedang berlangsung.
-              </p>
-            )}
+            </div>
+          )}
+
+          {/* Recent Matches Container */}
+          <div className={`${cardClass} rounded-xl p-5`}>
+            <div className="mb-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Hasil Terbaru</p>
+            </div>
+            <div className="space-y-2">
+              {finishedMatches.length ? (
+                sortByDate(finishedMatches, false)
+                  .slice(0, 8)
+                  .map(renderRow)
+              ) : (
+                <p className="text-xs text-gray-400 italic">
+                  Belum ada hasil pertandingan dalam jendela waktu ini.
+                </p>
+              )}
+            </div>
           </div>
 
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.16em] text-sky-400 mb-1">
-              Jadwal Mendatang
-            </p>
-            {upcomingMatches.length ? (
-              <div className="space-y-1">
-                {sortByDate(upcomingMatches)
+          {/* Upcoming Matches Container */}
+          <div className={`${cardClass} rounded-xl p-5`}>
+            <div className="mb-4">
+              <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Jadwal Mendatang</p>
+            </div>
+            <div className="space-y-2">
+              {upcomingMatches.length ? (
+                sortByDate(upcomingMatches)
                   .slice(0, 8)
-                  .map(renderRow)}
-              </div>
-            ) : (
-              <p className="text-[11px] text-slate-400">
-                Tidak ada jadwal mendatang dalam 7 hari ke depan.
-              </p>
-            )}
-          </div>
-
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.16em] text-yellow-400 mb-1">
-              Hasil Terbaru
-            </p>
-            {finishedMatches.length ? (
-              <div className="space-y-1">
-                {sortByDate(finishedMatches, false)
-                  .slice(0, 8)
-                  .map(renderRow)}
-              </div>
-            ) : (
-              <p className="text-[11px] text-slate-400">
-                Belum ada hasil pertandingan dalam jendela waktu ini.
-              </p>
-            )}
+                  .map(renderRow)
+              ) : (
+                <p className="text-xs text-gray-400 italic">
+                  Tidak ada jadwal mendatang dalam 7 hari ke depan.
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
