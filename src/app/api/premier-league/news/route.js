@@ -1,23 +1,11 @@
 import { NextResponse } from "next/server";
-import { verifyIdToken } from "@/lib/firebaseAdmin";
 import { ref, get } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
 
 export async function GET(request) {
   try {
-    const authHeader = request.headers.get("Authorization");
-    // Strict Mode: Block if no token.
-    if (!authHeader?.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const token = authHeader.split("Bearer ")[1];
-    const decodedToken = await verifyIdToken(token);
-    if (!decodedToken) {
-      return NextResponse.json({ error: "Invalid Token" }, { status: 401 });
-    }
+    // News is public data - no authentication required
+    // This allows the dashboard to load news even before user logs in
 
     // Read cached news from Firebase
     const snapshot = await get(ref(db, "pl_data/news/articles"));

@@ -28,12 +28,28 @@ export function usePremierLeagueMatches() {
 
     const reloadMatches = async () => {
         try {
-            const token = await auth.currentUser?.getIdToken();
-            await fetch("/api/premier-league/matches", {
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
+            // Validate user is authenticated
+            if (!auth.currentUser) {
+                throw new Error("User must be logged in to refresh data");
+            }
+
+            const token = await auth.currentUser.getIdToken();
+            if (!token) {
+                throw new Error("Failed to get authentication token");
+            }
+
+            const response = await fetch("/api/premier-league/matches", {
+                headers: { Authorization: `Bearer ${token}` },
             });
+
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}: ${response.statusText}`);
+            }
+
+            console.log("✅ Premier League matches refreshed successfully");
         } catch (e) {
-            console.error("Failed to reload matches", e);
+            console.error("❌ Failed to reload matches:", e.message);
+            throw e; // Re-throw to allow parent handler to show user feedback
         }
     };
 
@@ -106,12 +122,28 @@ export function usePremierLeagueStandings() {
 
     const reloadStandings = async () => {
         try {
-            const token = await auth.currentUser?.getIdToken();
-            await fetch("/api/premier-league/standings", {
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
+            // Validate user is authenticated
+            if (!auth.currentUser) {
+                throw new Error("User must be logged in to refresh data");
+            }
+
+            const token = await auth.currentUser.getIdToken();
+            if (!token) {
+                throw new Error("Failed to get authentication token");
+            }
+
+            const response = await fetch("/api/premier-league/standings", {
+                headers: { Authorization: `Bearer ${token}` },
             });
+
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}: ${response.statusText}`);
+            }
+
+            console.log("✅ Premier League standings refreshed successfully");
         } catch (e) {
-            console.error("Failed to reload standings", e);
+            console.error("❌ Failed to reload standings:", e.message);
+            throw e; // Re-throw to allow parent handler to show user feedback
         }
     };
 

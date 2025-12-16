@@ -35,6 +35,12 @@ export async function verifyIdToken(token) {
         const decodedToken = await admin.auth().verifyIdToken(token);
         return decodedToken;
     } catch (error) {
+        // BYPASS IF NO SERVICE ACCOUNT (Local Dev only)
+        if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY && process.env.NODE_ENV === "development") {
+            // eslint-disable-next-line no-console
+            console.warn("⚠️ [Dev Mode] Skipping ID Token verification because FIREBASE_SERVICE_ACCOUNT_KEY is missing.");
+            return { uid: "dev-user", email: "dev@local", role: "admin" };
+        }
         console.error("verifyIdToken error:", error);
         return null;
     }

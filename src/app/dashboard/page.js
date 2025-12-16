@@ -115,6 +115,13 @@ export default function DashboardPage() {
 
   const handleManualRefresh = async () => {
     if (manualLoading) return;
+
+    // Check if user is logged in
+    if (!user) {
+      alert("⚠️ Anda harus login terlebih dahulu untuk refresh data.");
+      return;
+    }
+
     setManualLoading(true);
     try {
       await Promise.all([
@@ -123,8 +130,18 @@ export default function DashboardPage() {
         reloadUclMatches(),
         reloadUclStandings(),
       ]);
+      // Success feedback (optional, could add toast notification here)
+      console.log("✅ All data refreshed successfully");
     } catch (e) {
       console.error("Manual refresh failed", e);
+      // Show user-friendly error message
+      if (e.message?.includes("logged in")) {
+        alert("⚠️ Sesi login Anda telah berakhir. Silakan login kembali.");
+      } else if (e.message?.includes("token")) {
+        alert("⚠️ Gagal mendapatkan token autentikasi. Silakan coba lagi.");
+      } else {
+        alert(`⚠️ Gagal refresh data: ${e.message || "Unknown error"}`);
+      }
     } finally {
       // Small delay to show feedback if too fast
       setTimeout(() => setManualLoading(false), 500);

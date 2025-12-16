@@ -146,12 +146,14 @@ export function TopBar({
 
               <button
                 onClick={onManualRefresh}
-                disabled={manualLoading}
-                className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${isDark
-                  ? "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10"
-                  : "bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200"
+                disabled={manualLoading || !user}
+                className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all border ${!user
+                  ? "opacity-40 cursor-not-allowed bg-gray-800 border-gray-700 text-gray-600"
+                  : isDark
+                    ? "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10"
+                    : "bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200"
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
-                title="Refresh All Data Now"
+                title={!user ? "Login terlebih dahulu untuk refresh data" : "Refresh All Data Now"}
               >
                 {manualLoading ? (
                   <span className="w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
