@@ -21,7 +21,7 @@ if (!admin.apps.length) {
             });
             console.log("✅ Firebase Admin initialized with Service Account");
         } else {
-            console.warn("⚠️ initializing Firebase Admin without Service Account (limited capabilities)");
+            // console.warn("⚠️ initializing Firebase Admin without Service Account (limited capabilities)");
             admin.initializeApp({
                 projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
                 databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
