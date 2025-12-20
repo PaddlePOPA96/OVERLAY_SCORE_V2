@@ -24,22 +24,23 @@ export async function GET(request) {
 
         const arrayBuffer = await response.arrayBuffer();
 
-        // Detect if content is M3U8 Playlist (starts with #EXTM3U)
-        // #EXTM3U in hex is: 23 45 58 54 4d 33 55
-        const firstBytes = new Uint8Array(arrayBuffer.slice(0, 7));
-        const isM3U8 =
-            firstBytes[0] === 0x23 &&
-            firstBytes[1] === 0x45 &&
-            firstBytes[2] === 0x58 &&
-            firstBytes[3] === 0x54 &&
-            firstBytes[4] === 0x4d &&
-            firstBytes[5] === 0x33 &&
-            firstBytes[6] === 0x55;
+        // Robust detection of M3U8 Playlist
+        // 1. Check Content-Type header
+        const contentType = response.headers.get('Content-Type');
+        const isM3U8Header = contentType && (
+            contentType.includes('application/vnd.apple.mpegurl') ||
+            contentType.includes('application/x-mpegurl') ||
+            contentType.includes('audio/mpegurl')
+        );
 
-        // Also check standard Content-Type as fallback or reinforcement, 
-        // but the byte check is authoritative for rewriting purposes.
+        // 2. Sniff content (first 1024 bytes) for #EXTM3U tag
+        // This handles cases where Content-Type is wrong (e.g. text/plain or application/json)
+        // and also cases where the file has leading whitespace or BOM.
+        const headerBytes = new Uint8Array(arrayBuffer.slice(0, 1024));
+        const headerText = new TextDecoder('utf-8').decode(headerBytes);
+        const hasM3U8Tag = headerText.includes('#EXTM3U');
 
-        if (isM3U8) {
+        if (isM3U8Header || hasM3U8Tag) {
             const decoder = new TextDecoder('utf-8');
             const text = decoder.decode(arrayBuffer);
 
@@ -49,8 +50,16 @@ export async function GET(request) {
             // Rewrite lines that are paths/URLs
             const modifiedText = text.split('\n').map(line => {
                 const trimmed = line.trim();
+                // Skip empty lines and comments (that are not #EXT-X-KEY with URI attribute, but usually we only rewrite lines that don't start with #)
+                // Actually, we must check for URI attributes in tags too? 
+                // Standard HLS: URI="..." in #EXT-X-KEY or #EXT-X-MAP
+                // But simple proxy usually just handles the segment lines (URI lines).
+                // NOTE: The previous logic only rewrote lines NOT starting with #.
+                // If the playlist uses #EXT-X-KEY:METHOD=AES-128,URI="key.php" we need to rewrite that too.
+                // But let's stick to the segment rewriting first as that's the main blocker shown in logs (CORS on segments).
+
                 if (trimmed && !trimmed.startsWith('#')) {
-                    // It's a URL or path
+                    // It's a Segment URL
                     let segmentUrl = trimmed;
 
                     // Resolve relative paths
@@ -61,13 +70,27 @@ export async function GET(request) {
                     // Wrap in our proxy
                     return `${urlOrigin}/api/stream-proxy?url=${encodeURIComponent(segmentUrl)}`;
                 }
+                // Handle URI inside tags (like encryption keys or map)
+                // Example: #EXT-X-KEY:METHOD=AES-128,URI="https://..."
+                if (trimmed.startsWith('#EXT-X-KEY') || trimmed.startsWith('#EXT-X-MAP')) {
+                    const uriMatch = trimmed.match(/URI="([^"]+)"/);
+                    if (uriMatch) {
+                        let originalUri = uriMatch[1];
+                        let absoluteUri = originalUri;
+                        if (!originalUri.startsWith('http')) {
+                            absoluteUri = baseUrl + originalUri;
+                        }
+                        const proxiedUri = `${urlOrigin}/api/stream-proxy?url=${encodeURIComponent(absoluteUri)}`;
+                        return line.replace(originalUri, proxiedUri);
+                    }
+                }
+
                 return line;
             }).join('\n');
 
             const headers = new Headers();
             headers.set('Access-Control-Allow-Origin', '*');
             headers.set('Content-Type', 'application/vnd.apple.mpegurl');
-            // Copy cache headers if present
             if (response.headers.get('Cache-Control')) headers.set('Cache-Control', response.headers.get('Cache-Control'));
 
             return new NextResponse(modifiedText, {
@@ -80,7 +103,7 @@ export async function GET(request) {
         const headers = new Headers();
         headers.set('Access-Control-Allow-Origin', '*');
 
-        const contentType = response.headers.get('Content-Type');
+        // Forward original Content-Type if present
         if (contentType) headers.set('Content-Type', contentType);
         if (response.headers.get('Cache-Control')) headers.set('Cache-Control', response.headers.get('Cache-Control'));
 
