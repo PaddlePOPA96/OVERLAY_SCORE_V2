@@ -81,15 +81,19 @@ export default function NontonPage() {
         }
     };
 
-    // 4. Video Player Logic (HLS)
     useEffect(() => {
         const video = videoRef.current;
         if (streamUrl && video) {
             let hls = null;
 
+            // Construct Proxy URL
+            // We use our own API as a proxy to bypass CORS
+            const proxyUrl = `/api/stream-proxy?url=${encodeURIComponent(streamUrl)}`;
+
             if (Hls.isSupported()) {
                 hls = new Hls();
-                hls.loadSource(streamUrl);
+                // Load from Proxy
+                hls.loadSource(proxyUrl);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     video.play().catch(e => console.error("Auto-play failed:", e));
@@ -114,7 +118,8 @@ export default function NontonPage() {
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 // Native HLS support (Safari)
-                video.src = streamUrl;
+                // Safari usually handles CORS strictly too, so proxy helps here as well
+                video.src = proxyUrl;
                 video.addEventListener('loadedmetadata', () => {
                     video.play().catch(e => console.error("Auto-play failed:", e));
                 });
