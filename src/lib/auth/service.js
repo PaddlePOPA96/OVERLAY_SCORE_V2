@@ -7,6 +7,8 @@ import {
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { auth, googleProvider } from "@/lib/firebaseAuth";
 import { dbFirestore } from "@/lib/firebaseFirestore";
+import { db } from "@/lib/firebase"; // Realtime Database
+import { ref, set, get, child } from "firebase/database";
 
 export async function loginWithEmailPassword(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password);
@@ -41,6 +43,12 @@ export async function createUserWithRole(email, password, role) {
     createdAt: new Date().toISOString(),
   });
 
+  // 3. Simpan Role di Realtime Database juga (untuk Rules)
+  await set(ref(db, `users/${user.uid}`), {
+    role: role,
+    email: user.email
+  });
+
   return user;
 }
 
@@ -48,6 +56,9 @@ export async function updateUserRole(uid, newRole) {
   // Update role di Firestore
   const userRef = doc(dbFirestore, "users", uid);
   await updateDoc(userRef, { role: newRole });
+
+  // Update Realtime Database
+  await set(ref(db, `users/${uid}/role`), newRole);
 }
 
 
@@ -74,5 +85,25 @@ export async function syncUserToFirestore(user) {
     if (isSuperAdmin && snap.data().role !== "admin") {
       await updateDoc(userRef, { role: "admin" });
     }
+  }
+
+  // --- Sync to Realtime Database (NEW) ---
+  // --- Sync to Realtime Database (NEW) ---
+  try {
+    const rtdbRef = ref(db);
+    // Use try-read pattern
+    const rtdbSnap = await get(child(rtdbRef, `users/${user.uid}`));
+    const currentRole = isSuperAdmin ? "admin" : (snap.exists() ? snap.data().role : "user");
+
+    if (!rtdbSnap.exists() || rtdbSnap.val().role !== currentRole) {
+      await set(ref(db, `users/${user.uid}`), {
+        role: currentRole,
+        email: user.email,
+        syncedAt: new Date().toISOString()
+      });
+    }
+  } catch (err) {
+    console.error("Failed to sync user role to Realtime Database. Check Rules.", err);
+    // Do not throw, so app continues to work (just streaming broadcast will fail)
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-export function LeftSidebar({ active, setActive, theme, user, isOpen, onClose }) {
+export function LeftSidebar({ active, setActive, theme, user, streamActive, isOpen, onClose }) {
   const isDark = theme === "dark";
 
   // Base classes always apply
@@ -43,6 +43,20 @@ export function LeftSidebar({ active, setActive, theme, user, isOpen, onClose })
                 isDark={isDark}
                 onClick={() => {
                   setActive("operator");
+                  if (onClose) onClose();
+                }}
+              />
+            )}
+
+            {/* Show Stream Control if User is logged in OR Stream is active */}
+            {(user || streamActive) && (
+              <NavItem
+                icon="📺"
+                label="Stream Control"
+                active={active === "nonton-control"}
+                isDark={isDark}
+                onClick={() => {
+                  setActive("nonton-control");
                   if (onClose) onClose();
                 }}
               />

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebaseAuth";
+import { ref, onValue } from "firebase/database"; // Realtime Database
+import { auth, db } from "@/lib/firebase"; // Use 'db' from firebase export (realtime)
 import { LeftSidebar } from "@/app/dashboard/_components/LeftSidebar";
 import { MainColumn } from "@/app/dashboard/_components/MainColumn";
 import { RightColumn } from "@/app/dashboard/_components/RightColumn";
@@ -32,6 +33,16 @@ export default function DashboardPage() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [streamActive, setStreamActive] = useState(false); // New state to track if stream is live
+
+  // Listen to stream URL availability
+  useEffect(() => {
+    const streamRef = ref(db, "stream/url");
+    const unsubscribe = onValue(streamRef, (snapshot) => {
+      setStreamActive(!!snapshot.val()); // true if not null/empty
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (current) => {
@@ -199,6 +210,7 @@ export default function DashboardPage() {
               setActive={setActive}
               theme={theme}
               user={user}
+              streamActive={streamActive}
               isOpen={mobileMenuOpen}
               onClose={() => setMobileMenuOpen(false)}
             />
