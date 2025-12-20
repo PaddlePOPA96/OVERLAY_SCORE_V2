@@ -33,16 +33,7 @@ export default function DashboardPage() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [streamActive, setStreamActive] = useState(false); // New state to track if stream is live
 
-  // Listen to stream URL availability
-  useEffect(() => {
-    const streamRef = ref(db, "stream/url");
-    const unsubscribe = onValue(streamRef, (snapshot) => {
-      setStreamActive(!!snapshot.val()); // true if not null/empty
-    });
-    return () => unsubscribe();
-  }, []);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (current) => {
@@ -210,7 +201,7 @@ export default function DashboardPage() {
               setActive={setActive}
               theme={theme}
               user={user}
-              streamActive={streamActive}
+
               isOpen={mobileMenuOpen}
               onClose={() => setMobileMenuOpen(false)}
             />

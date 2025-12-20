@@ -48,19 +48,7 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
               />
             )}
 
-            {/* Show Stream Control if User is logged in OR Stream is active */}
-            {(user || streamActive) && (
-              <NavItem
-                icon="📺"
-                label="Stream Control"
-                active={active === "nonton-control"}
-                isDark={isDark}
-                onClick={() => {
-                  setActive("nonton-control");
-                  if (onClose) onClose();
-                }}
-              />
-            )}
+
 
             <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
               Premier League

@@ -28,13 +28,7 @@ const DreamElevenBuilder = dynamic(
     ),
   }
 );
-const NontonControl = dynamic(
-  () => import("@/app/dashboard/_components/NontonControl"),
-  {
-    ssr: false,
-    loading: () => <div className="text-sm text-slate-400">Loading Stream Control...</div>,
-  }
-);
+
 
 export function MainColumn({
   active,
@@ -183,13 +177,7 @@ export function MainColumn({
             />
           )}
         </>
-      ) : active === "nonton-control" ? (
-        <>
-          <header className="mb-8">
-            <h1 className={titleClass}>Stream Control</h1>
-          </header>
-          <NontonControl theme={theme} isAdmin={isAdmin} />
-        </>
+
       ) : active === "pl-matches" || active === "pl-table" ? (
         <>
           <header className="mb-8">
