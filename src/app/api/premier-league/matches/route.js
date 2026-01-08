@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ref, set } from "firebase/database";
+import { ref, set, get } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
 
 const API_KEY =
@@ -45,37 +45,51 @@ export async function GET(request) {
       pastDate
     )}&dateTo=${formatDate(futureDate)}`;
 
-    const res = await fetch(url, {
-      headers: { "X-Auth-Token": API_KEY },
-      cache: "no-store",
-    });
 
-    if (res.status === 429) {
-      // Rate limited by upstream API: kembalikan payload kosong dengan status 200
-      return NextResponse.json(
-        { matches: [], rateLimited: true },
-        { status: 200 },
-      );
-    }
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch matches" },
-        { status: res.status }
-      );
-    }
-
-    const data = await res.json();
-
-    // Simpan snapshot jadwal & hasil ke Firebase di node terpisah dari match_live
+    let data;
     try {
-      await set(ref(db, "pl_data/matches"), {
-        lastUpdated: Date.now(),
-        data,
+      const res = await fetch(url, {
+        headers: { "X-Auth-Token": API_KEY },
+        cache: "no-store",
       });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("[PL] Gagal menyimpan matches ke Firebase:", e);
+
+      if (res.status === 429) {
+        // Rate limited by upstream API: kembalikan payload kosong dengan status 200
+        return NextResponse.json(
+          { matches: [], rateLimited: true },
+          { status: 200 },
+        );
+      }
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch matches: ${res.status} ${res.statusText}`);
+      }
+
+      data = await res.json();
+
+      // Simpan snapshot jadwal & hasil ke Firebase di node terpisah dari match_live
+      try {
+        await set(ref(db, "pl_data/matches"), {
+          lastUpdated: Date.now(),
+          data,
+        });
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("[PL] Gagal menyimpan matches ke Firebase:", e);
+      }
+    } catch (fetchError) {
+      console.warn("[PL] External API failed, attempting fallback to Firebase:", fetchError);
+      try {
+        const snapshot = await get(ref(db, "pl_data/matches"));
+        if (snapshot.exists()) {
+          const cached = snapshot.val();
+          data = cached.data;
+        } else {
+          throw fetchError;
+        }
+      } catch (fbError) {
+        throw fetchError;
+      }
     }
 
     return NextResponse.json(data);
