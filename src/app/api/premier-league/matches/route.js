@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { ref, set, get } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
 
-const API_KEY =
-  process.env.FOOTBALL_DATA_API_KEY || "0ea6f9faf31246dcb907c52fa33062b6";
+const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
 const BASE_URL = "https://api.football-data.org/v4";
 
 function formatDate(date) {
@@ -44,6 +43,10 @@ export async function GET(request) {
     const url = `${BASE_URL}/competitions/PL/matches?dateFrom=${formatDate(
       pastDate
     )}&dateTo=${formatDate(futureDate)}`;
+
+    if (!API_KEY) {
+      throw new Error("Configuration Error: Missing FOOTBALL_DATA_API_KEY in server environment");
+    }
 
 
     let data;

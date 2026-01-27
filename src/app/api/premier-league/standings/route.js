@@ -3,8 +3,7 @@ import { ref, set, get } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
 import { verifyIdToken } from "@/lib/firebaseAdmin";
 
-const API_KEY =
-  process.env.FOOTBALL_DATA_API_KEY || "0ea6f9faf31246dcb907c52fa33062b6";
+const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
 const BASE_URL = "https://api.football-data.org/v4";
 
 export async function GET(request) {
@@ -27,6 +26,10 @@ export async function GET(request) {
 
     let data;
     try {
+      if (!API_KEY) {
+        throw new Error("Configuration Error: Missing FOOTBALL_DATA_API_KEY in server environment");
+      }
+
       const res = await fetch(`${BASE_URL}/competitions/PL/standings`, {
         headers: { "X-Auth-Token": API_KEY },
         cache: "no-store",

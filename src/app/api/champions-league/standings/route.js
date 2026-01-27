@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { ref, set } from "firebase/database";
 import { db } from "@/lib/firebaseDb";
 
-const API_KEY =
-  process.env.FOOTBALL_DATA_API_KEY || "0ea6f9faf31246dcb907c52fa33062b6";
+const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
 const BASE_URL = "https://api.football-data.org/v4";
 
 export async function GET() {
   try {
+    if (!API_KEY) {
+      return NextResponse.json(
+        { error: "Configuration Error: Missing FOOTBALL_DATA_API_KEY in server environment" },
+        { status: 500 }
+      );
+    }
+
     const res = await fetch(`${BASE_URL}/competitions/CL/standings`, {
       headers: { "X-Auth-Token": API_KEY },
       cache: "no-store",
@@ -22,8 +28,10 @@ export async function GET() {
     }
 
     if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}));
+      const errorMessage = errorBody.message || res.statusText;
       return NextResponse.json(
-        { error: "Failed to fetch UCL standings" },
+        { error: `Upstream API Error (${res.status}): ${errorMessage}` },
         { status: res.status }
       );
     }

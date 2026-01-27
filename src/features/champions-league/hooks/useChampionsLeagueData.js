@@ -29,7 +29,7 @@ export function useChampionsLeagueMatches() {
                     const errorBody = await response.json();
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { }
-                console.warn(`UCL matches API returned ${response.status}: ${errorMsg}`);
+                throw new Error(`UCL matches API returned ${response.status}: ${errorMsg}`);
             } else {
                 console.log("✅ Champions League matches refreshed successfully");
             }
@@ -73,7 +73,7 @@ export function useChampionsLeagueStandings() {
                     const errorBody = await response.json();
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { }
-                console.warn(`UCL standings API returned ${response.status}: ${errorMsg}`);
+                throw new Error(`UCL standings API returned ${response.status}: ${errorMsg}`);
             } else {
                 console.log("✅ Champions League standings refreshed successfully");
             }
