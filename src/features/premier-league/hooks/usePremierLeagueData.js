@@ -49,6 +49,29 @@ export function usePremierLeagueMatches() {
                 throw new Error(`API returned ${response.status}: ${errorMsg}`);
             }
 
+            const data = await response.json();
+
+            // Optimistic update: use the data directly from the API response
+            // The API response for PL matches returns an object like { filters: {...}, resultSet: {...}, matches: [...] }
+            // Or if our API wrapper returns just the raw data, we need to inspect it.
+            // Based on route.js, it returns `data` which is the raw response from football-data.org.
+            // So data.matches should be the array.
+            if (data && Array.isArray(data.matches)) {
+                // Check if the hook expects the wrapping object or just the matches array.
+                // Looking at line 17: setMatches(Array.isArray(data) ? data : []);
+                // But wait, the previous code on line 17 expects 'data' to be an array?
+                // Let's look at how Firebase data is stored.
+                // In route.js: await set(ref(db, "pl_data/matches"), { lastUpdated: ..., data });
+                // In hook: const matchesRef = ref(db, "pl_data/matches/data/matches");
+                // So 'data' in Firebase is the whole object, and 'data/matches' is the array.
+                // The hook listens to .../matches/data/matches.
+                // So the snapshot val() IS the array of matches.
+                setMatches(data.matches);
+            } else if (Array.isArray(data)) {
+                // Fallback if structure is different
+                setMatches(data);
+            }
+
             console.log("✅ Premier League matches refreshed successfully");
         } catch (e) {
             console.error("❌ Failed to reload matches:", e.message);
