@@ -214,7 +214,8 @@ export default function DashboardPage() {
               fullWidth={
                 active === "operator" ||
                 active === "dream-eleven" ||
-                active === "ucl-table"
+                active === "ucl-table" ||
+                active === "running-text"
               }
               theme={theme}
               standings={standings}

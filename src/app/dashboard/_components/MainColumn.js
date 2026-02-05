@@ -129,6 +129,58 @@ export function MainColumn({
             </div>
           )}
         </>
+      ) : active === "running-text" ? (
+        <>
+          <header className="mb-8">
+            <h1 className={titleClass}>Running Text Overlay</h1>
+            <p className={subtitleClass}>
+              Overlay ticker berjalan untuk OBS (Premier League Scores).
+            </p>
+          </header>
+
+          <div className={`${isDark ? "bg-gray-900 border-gray-800" : "bg-white border-slate-200"} border rounded-xl p-6 shadow-sm`}>
+            <h3 className={`text-lg font-semibold mb-4 ${isDark ? "text-white" : "text-gray-900"}`}>OBS Setup</h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs uppercase text-gray-500 font-bold mb-2">Overlay URL</label>
+                <div className="flex gap-2">
+                  <code className={`flex-1 p-3 rounded text-sm font-mono ${isDark ? "bg-black text-green-400" : "bg-slate-100 text-slate-700"}`}>
+                    {typeof window !== 'undefined' ? `${window.location.origin}/dashboard/running-text` : '/dashboard/running-text'}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const url = `${window.location.origin}/dashboard/running-text`;
+                      navigator.clipboard.writeText(url);
+                      alert("URL copied!");
+                    }}
+                    className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition font-semibold text-sm"
+                  >
+                    Copy
+                  </button>
+                  <a
+                    href="/dashboard/running-text"
+                    target="_blank"
+                    className={`px-4 py-2 border rounded font-semibold text-sm flex items-center ${isDark ? "border-gray-600 text-gray-300 hover:bg-gray-800" : "border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+                  >
+                    Open
+                  </a>
+                </div>
+              </div>
+
+              <div className={`p-4 rounded-lg text-sm ${isDark ? "bg-blue-900/20 text-blue-200" : "bg-blue-50 text-blue-800"}`}>
+                <strong>Cara Pasang di OBS:</strong>
+                <ol className="list-decimal list-inside mt-2 space-y-1 opacity-90">
+                  <li>Buat source baru: <strong>Browser</strong></li>
+                  <li>Paste URL di atas.</li>
+                  <li>Set Width: <strong>1920</strong> (atau sesuai canvas), Height: <strong>80</strong> (sesuaikan kebutuhan).</li>
+                  <li>Centang "Shutdown source when not visible" dsb jika perlu.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </>
       ) : active === "ucl-table" ? (
         <>
           <header className="mb-8">

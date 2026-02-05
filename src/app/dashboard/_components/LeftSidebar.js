@@ -73,6 +73,16 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
                 if (onClose) onClose();
               }}
             />
+            <NavItem
+              icon="📺"
+              label="Running Text (OBS)"
+              active={active === "running-text"}
+              isDark={isDark}
+              onClick={() => {
+                setActive("running-text");
+                if (onClose) onClose();
+              }}
+            />
 
             <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
               Dream Eleven
