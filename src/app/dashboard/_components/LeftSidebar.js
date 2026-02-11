@@ -60,6 +60,7 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
             />
 
 
+
             <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
               Premier League
             </div>

@@ -1,9 +1,6 @@
 "use client";
 
-import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
-import LayoutA from "../../_components/LayoutA";
-import LayoutB from "../../_components/LayoutB";
-import { useEffect, useState } from "react";
+import ScoreboardOverlay from "@/app/dashboard/operator/overlay/_components/ScoreboardOverlay";
 import { useParams } from "next/navigation";
 
 export default function OverlayRoomPage() {
@@ -16,30 +13,5 @@ export default function OverlayRoomPage() {
         ? rawRoom[0]
         : "default";
 
-  const { data, displayTime, formatTime } = useScoreboard(roomId);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
-  return (
-    <>
-      {data.layout === "A" ? (
-        <LayoutA
-          data={data}
-          displayTime={displayTime}
-          formatTime={formatTime}
-        />
-      ) : (
-        <LayoutB
-          data={data}
-          displayTime={displayTime}
-          formatTime={formatTime}
-        />
-      )}
-    </>
-  );
+  return <ScoreboardOverlay roomId={roomId} />;
 }
