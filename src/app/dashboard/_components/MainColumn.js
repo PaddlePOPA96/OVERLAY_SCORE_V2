@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { PremierLeagueMain } from "@/features/premier-league/components/PremierLeagueSection";
 import { ChampionsLeagueTable, ChampionsLeagueMatches } from "@/features/champions-league/components/UCLSection";
+import { ChampionsLeagueBracket } from "@/features/champions-league/components/ChampionsLeagueBracket";
+
 
 const OperatorRoot = dynamic(
   () => import("@/app/dashboard/operator/_components/OperatorRoot"),
@@ -212,6 +214,16 @@ export function MainColumn({
               >
                 UCL Table
               </button>
+              <button
+                type="button"
+                onClick={() => setUclMode("bracket")}
+                className={`px-3 py-1 rounded-full font-semibold transition-colors ${uclMode === "bracket"
+                  ? "bg-purple-600 text-white shadow"
+                  : "text-slate-400 hover:text-slate-100"
+                  }`}
+              >
+                Bracket
+              </button>
             </div>
           </header>
           {uclMode === "matches" ? (
@@ -222,7 +234,7 @@ export function MainColumn({
               onRefreshMatches={onRefreshUclMatches}
               isAdmin={isAdmin}
             />
-          ) : (
+          ) : uclMode === "table" ? (
             <ChampionsLeagueTable
               standings={uclStandings}
               loadingStandings={loadingUclStandings}
@@ -230,7 +242,16 @@ export function MainColumn({
               isAdmin={isAdmin}
               onRefreshStandings={onRefreshUclStandings}
             />
+          ) : (
+            <ChampionsLeagueBracket
+              matches={uclMatches}
+              loadingMatches={loadingUclMatches}
+              theme={theme}
+              isAdmin={isAdmin}
+              onRefreshMatches={onRefreshUclMatches}
+            />
           )}
+
         </>
 
       ) : active === "pl-matches" || active === "pl-table" ? (

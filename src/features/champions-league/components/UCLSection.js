@@ -205,7 +205,7 @@ export function ChampionsLeagueTable({
                   <tbody>
                     {(group.table || []).map((row) => (
                       <tr
-                        key={row.team.id}
+                        key={row.team?.id || `team-${row.position}`}
                         className="border-b border-slate-800/60"
                       >
                         <td className={cellCenter}>{row.position}</td>
@@ -213,13 +213,13 @@ export function ChampionsLeagueTable({
                           <div className="flex items-center gap-2">
                             {(() => {
                               const logoSrc = resolveAnyClubLogo(
-                                row.team.name,
+                                row.team?.name,
                               );
                               if (!logoSrc) return null;
                               return (
                                 <img
                                   src={logoSrc}
-                                  alt={row.team.name}
+                                  alt={row.team?.name || "TBD"}
                                   className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
                                   onError={(e) => {
                                     e.currentTarget.onerror = null;
@@ -228,7 +228,7 @@ export function ChampionsLeagueTable({
                                 />
                               );
                             })()}
-                            <span>{row.team.name}</span>
+                            <span>{row.team?.shortName || row.team?.name || "TBD"}</span>
                           </div>
                         </td>
                         <td className={cellCenter}>{row.playedGames}</td>
@@ -321,8 +321,10 @@ export function ChampionsLeagueMatches({
         ? `${badgeBase} text-green-400 border-green-400/40`
         : `${badgeBase} text-gray-300 border-gray-500/40`;
 
-    const homeLogo = resolveAnyClubLogo(match.homeTeam.name);
-    const awayLogo = resolveAnyClubLogo(match.awayTeam.name);
+    const homeLogo = resolveAnyClubLogo(match.homeTeam?.name);
+    const awayLogo = resolveAnyClubLogo(match.awayTeam?.name);
+    const homeName = match.homeTeam?.shortName || match.homeTeam?.name || "TBD";
+    const awayName = match.awayTeam?.shortName || match.awayTeam?.name || "TBD";
 
     return (
       <div
@@ -337,7 +339,7 @@ export function ChampionsLeagueMatches({
             {homeLogo && (
               <img
                 src={homeLogo}
-                alt={match.homeTeam.name}
+                alt={match.homeTeam?.name || "TBD"}
                 className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
                 onError={(e) => {
                   e.currentTarget.onerror = null;
@@ -351,7 +353,7 @@ export function ChampionsLeagueMatches({
                 : "text-slate-900 text-sm md:text-base lg:text-lg"
                 }`}
             >
-              {match.homeTeam.shortName || match.homeTeam.name}
+              {homeName}
             </span>
           </div>
         </div>
@@ -361,23 +363,23 @@ export function ChampionsLeagueMatches({
           </span>
           <span className="mt-1 text-lg md:text-xl lg:text-2xl font-semibold text-slate-50 bg-slate-950 px-4 md:px-5 py-2 rounded-2xl shadow-lg">
             {isFinished || isLive
-              ? `${match.score.fullTime.home ?? 0} : ${match.score.fullTime.away ?? 0}`
+              ? `${match.score?.fullTime?.home ?? 0} : ${match.score?.fullTime?.away ?? 0}`
               : "VS"}
           </span>
         </div>
         <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
           <span
-            className={`truncate ${isDark
+            className={`truncate text-right ${isDark
               ? "text-slate-50 text-sm md:text-base lg:text-lg"
               : "text-slate-900 text-sm md:text-base lg:text-lg"
               }`}
           >
-            {match.awayTeam.shortName || match.awayTeam.name}
+            {awayName}
           </span>
           {awayLogo && (
             <img
               src={awayLogo}
-              alt={match.awayTeam.name}
+              alt={match.awayTeam?.name || "TBD"}
               className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
               onError={(e) => {
                 e.currentTarget.onerror = null;

@@ -23,8 +23,7 @@ export function PremierLeagueMain({
 
   const formatMatchTitle = (m) => {
     if (!m) return "Premier League Match";
-    return `${m.homeTeam.shortName || m.homeTeam.name} vs ${m.awayTeam.shortName || m.awayTeam.name
-      }`;
+    return `${m.homeTeam?.shortName || m.homeTeam?.name || "TBD"} vs ${m.awayTeam?.shortName || m.awayTeam?.name || "TBD"}`;
   };
 
   const formatMatchVenue = (m) => {
@@ -348,7 +347,7 @@ function PremierLeagueTableCard({
               <tbody>
                 {standings.map((row) => (
                   <tr
-                    key={row.team.id}
+                    key={row.team?.id || `team-${row.position}`}
                     className="border-b border-slate-100/40"
                   >
                     <td className={posClass}>{row.position}</td>
@@ -357,13 +356,13 @@ function PremierLeagueTableCard({
                         {(() => {
                           const logoSrc = resolveClubLogo(
                             league,
-                            row.team.name
+                            row.team?.name
                           );
                           if (!logoSrc) return null;
                           return (
                             <img
                               src={logoSrc}
-                              alt={row.team.name}
+                              alt={row.team?.name || "TBD"}
                               className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
                               onError={(e) => {
                                 e.currentTarget.onerror = null;
@@ -372,7 +371,7 @@ function PremierLeagueTableCard({
                             />
                           );
                         })()}
-                        <span>{row.team.name}</span>
+                        <span>{row.team?.shortName || row.team?.name || "TBD"}</span>
                       </div>
                     </td>
                     <td className={playedClass}>{row.playedGames}</td>
@@ -394,7 +393,7 @@ function PremierLeagueTableCard({
             <ul className="mt-2 space-y-1">
               {uclSpots.map((row) => (
                 <li
-                  key={`ucl-${row.team.id}`}
+                  key={`ucl-${row.team?.id || row.position}`}
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
@@ -402,7 +401,7 @@ function PremierLeagueTableCard({
                       {row.position}.
                     </span>
                     <span className="font-medium text-slate-100">
-                      {row.team.name}
+                      {row.team?.name || "TBD"}
                     </span>
                   </div>
                   <span className="text-[11px] font-mono text-emerald-400">
@@ -495,8 +494,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
       : "text-gray-300 border-gray-500/40";
 
   const league = "England - Premier League";
-  const homeFull = match.homeTeam.name;
-  const awayFull = match.awayTeam.name;
+  const homeFull = match.homeTeam?.name || "TBD";
+  const awayFull = match.awayTeam?.name || "TBD";
 
   const homeLogoSrc = resolveClubLogo(league, homeFull);
   const awayLogoSrc = resolveClubLogo(league, awayFull);
@@ -537,7 +536,7 @@ export function PremierLeagueMatchRow({ match, theme }) {
                 : "text-slate-800 group-hover:text-slate-900"
                 }`}
             >
-              {match.homeTeam.shortName || match.homeTeam.name}
+              {match.homeTeam?.shortName || match.homeTeam?.name || "TBD"}
             </span>
             {dateLabel && (
               <span className="text-[10px] text-gray-400 truncate">
@@ -551,7 +550,7 @@ export function PremierLeagueMatchRow({ match, theme }) {
       {/* VS / Score */}
       <div className="font-bold text-white bg-gray-900 px-4 py-1 rounded-lg text-sm sm:text-base flex-shrink-0">
         {isFinished || minute === "LIVE"
-          ? `${match.score.fullTime.home ?? 0} : ${match.score.fullTime.away ?? 0}`
+          ? `${match.score?.fullTime?.home ?? 0} : ${match.score?.fullTime?.away ?? 0}`
           : "VS"}
       </div>
 
@@ -559,12 +558,12 @@ export function PremierLeagueMatchRow({ match, theme }) {
       <div className="flex items-center justify-center sm:justify-end gap-3 sm:gap-4 w-full sm:flex-1 sm:min-w-0">
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 justify-center sm:justify-end">
           <span
-            className={`truncate text-sm sm:text-base order-2 sm:order-1 ${isDark
+            className={`truncate text-sm sm:text-base order-2 sm:order-1 text-right ${isDark
               ? "text-gray-200 group-hover:text-white"
               : "text-slate-800 group-hover:text-slate-900"
               }`}
           >
-            {match.awayTeam.shortName || match.awayTeam.name}
+            {match.awayTeam?.shortName || match.awayTeam?.name || "TBD"}
           </span>
           {awayLogoSrc && (
             <img
