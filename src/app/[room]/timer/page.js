@@ -15,6 +15,7 @@ export default function TimerOverlay() {
   const [timerColor, setTimerColor] = useState("#ffffff");
   const [borderColor, setBorderColor] = useState("transparent");
   const [fillColor, setFillColor] = useState("transparent");
+  const [timerTitle, setTimerTitle] = useState("");
 
   const [currentRemaining, setCurrentRemaining] = useState(0);
 
@@ -31,6 +32,7 @@ export default function TimerOverlay() {
         setTimerColor(data.color || "#ffffff");
         setBorderColor(data.borderColor || "transparent");
         setFillColor(data.fillColor || "transparent");
+        setTimerTitle(data.title || "");
       } else {
         setTargetTime(null);
         setIsRunning(false);
@@ -38,6 +40,7 @@ export default function TimerOverlay() {
         setTimerColor("#ffffff");
         setBorderColor("transparent");
         setFillColor("transparent");
+        setTimerTitle("");
       }
     });
     return () => unsubscribe();
@@ -81,7 +84,15 @@ export default function TimerOverlay() {
 
   // Return a transparent overlay for OBS
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-transparent overflow-hidden font-sans">
+    <div className="w-screen h-screen flex flex-col items-center justify-center bg-transparent overflow-hidden font-sans">
+      {timerTitle && (
+        <h1 
+          className="font-black tracking-widest uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] text-center -mb-4 relative z-10"
+          style={{ fontSize: "2.5rem", color: timerColor }}
+        >
+          {timerTitle}
+        </h1>
+      )}
       <div 
         className={`font-black tabular-nums tracking-tight flex items-center gap-4 font-mono drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] px-12 py-6 rounded-3xl ${borderColor !== "transparent" ? "border-8" : ""}`} 
         style={{ 

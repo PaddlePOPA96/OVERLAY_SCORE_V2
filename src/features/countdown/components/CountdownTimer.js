@@ -20,6 +20,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
   const [timerColor, setTimerColor] = useState("#ffffff");
   const [borderColor, setBorderColor] = useState("transparent");
   const [fillColor, setFillColor] = useState("transparent");
+  const [timerTitle, setTimerTitle] = useState("");
 
   const timerPath = `match_live/${roomId}/countdown_timer`;
 
@@ -35,6 +36,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         setTimerColor(data.color || "#ffffff");
         setBorderColor(data.borderColor || "transparent");
         setFillColor(data.fillColor || "transparent");
+        setTimerTitle(data.title || "");
       } else {
         setTargetTime(null);
         setIsRunning(false);
@@ -42,6 +44,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         setTimerColor("#ffffff");
         setBorderColor("transparent");
         setFillColor("transparent");
+        setTimerTitle("");
       }
     }, (error) => {
       console.error("Firebase read error:", error);
@@ -153,6 +156,13 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     }).catch(console.error);
   };
 
+  const handleTitleChange = (title) => {
+    setTimerTitle(title);
+    update(ref(db, timerPath), {
+      title: title
+    }).catch(console.error);
+  };
+
   const formatTime = (ms) => {
     if (ms <= 0) return { d: "00", h: "00", m: "00", s: "00" };
     const totalSeconds = Math.floor(ms / 1000);
@@ -176,6 +186,11 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
       {/* Display */}
       <div className="flex flex-col items-center justify-center mb-8">
+        {timerTitle && (
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold -mb-2 relative z-10 tracking-widest uppercase text-center" style={{ color: timerColor }}>
+            {timerTitle}
+          </h2>
+        )}
         <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 font-mono w-full">
           <div className="flex flex-col items-center">
             <span>{timeParts.d}</span>
@@ -261,6 +276,18 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         {/* Display Settings */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
           <h3 className="text-lg font-bold mb-4">Display Settings</h3>
+          
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-2">Timer Title:</label>
+            <input 
+              type="text" 
+              value={timerTitle} 
+              onChange={e => handleTitleChange(e.target.value)} 
+              className={`w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+              placeholder="e.g., MATCH STARTS IN"
+            />
+          </div>
+
           <div className="flex flex-col md:flex-row flex-wrap gap-8 mb-6">
             <div className="flex flex-col gap-2">
               <label className="block text-sm font-semibold">Text Color:</label>
