@@ -19,6 +19,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
   const [currentRemaining, setCurrentRemaining] = useState(0);
   const [timerColor, setTimerColor] = useState("#ffffff");
   const [borderColor, setBorderColor] = useState("transparent");
+  const [fillColor, setFillColor] = useState("transparent");
 
   const timerPath = `match_live/${roomId}/countdown_timer`;
 
@@ -33,12 +34,14 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         setRemainingMs(data.remainingMs || 0);
         setTimerColor(data.color || "#ffffff");
         setBorderColor(data.borderColor || "transparent");
+        setFillColor(data.fillColor || "transparent");
       } else {
         setTargetTime(null);
         setIsRunning(false);
         setRemainingMs(0);
         setTimerColor("#ffffff");
         setBorderColor("transparent");
+        setFillColor("transparent");
       }
     }, (error) => {
       console.error("Firebase read error:", error);
@@ -132,6 +135,21 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     setBorderColor(newColor);
     update(ref(db, timerPath), {
       borderColor: newColor
+    }).catch(console.error);
+  };
+
+  const handleFillColorChange = (color) => {
+    setFillColor(color);
+    update(ref(db, timerPath), {
+      fillColor: color
+    }).catch(console.error);
+  };
+
+  const toggleTransparentFill = () => {
+    const newColor = fillColor === "transparent" ? "#000000" : "transparent";
+    setFillColor(newColor);
+    update(ref(db, timerPath), {
+      fillColor: newColor
     }).catch(console.error);
   };
 
@@ -243,27 +261,28 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         {/* Display Settings */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
           <h3 className="text-lg font-bold mb-4">Display Settings</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="flex items-center gap-4">
-              <label className="block text-sm font-semibold">Text Color:</label>
-              <input
-                type="color"
-                value={timerColor}
-                onChange={e => handleColorChange(e.target.value)}
-                className="w-12 h-12 rounded cursor-pointer border-none p-0"
-              />
-              <span className="text-sm font-mono text-slate-400">{timerColor}</span>
-            </div>
-
+          <div className="flex flex-col md:flex-row flex-wrap gap-8 mb-6">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-4">
-                <label className="block text-sm font-semibold">Border Color:</label>
+              <label className="block text-sm font-semibold">Text Color:</label>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="color" 
+                  value={timerColor} 
+                  onChange={e => handleColorChange(e.target.value)} 
+                  className="w-14 h-10 cursor-pointer bg-transparent rounded"
+                />
+                <span className="text-sm font-mono text-slate-400">{timerColor}</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-2">
+              <label className="block text-sm font-semibold">Border Color:</label>
+              <div className="flex items-center gap-3">
                 <input
                   type="color"
-                  value={borderColor === "transparent" ? "#000000" : borderColor}
+                  value={borderColor === "transparent" ? "#ffffff" : borderColor}
                   onChange={e => handleBorderColorChange(e.target.value)}
-                  disabled={borderColor === "transparent"}
-                  className={`w-12 h-12 rounded cursor-pointer border-none p-0 ${borderColor === "transparent" ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className="w-14 h-10 cursor-pointer bg-transparent rounded"
                 />
                 <span className="text-sm font-mono text-slate-400">
                   {borderColor === "transparent" ? "Transparent" : borderColor}
@@ -271,12 +290,36 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
               </div>
               <button
                 onClick={toggleTransparentBorder}
-                className={`text-xs px-3 py-1.5 rounded-md font-semibold self-start border transition-colors ${borderColor === "transparent"
+                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${borderColor === "transparent"
                     ? "bg-slate-700 text-slate-200 border-slate-600"
                     : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
                   }`}
               >
                 {borderColor === "transparent" ? "Enable Border" : "Set Transparent"}
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="block text-sm font-semibold">Background / Fill:</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={fillColor === "transparent" ? "#ffffff" : fillColor}
+                  onChange={e => handleFillColorChange(e.target.value)}
+                  className="w-14 h-10 cursor-pointer bg-transparent rounded"
+                />
+                <span className="text-sm font-mono text-slate-400">
+                  {fillColor === "transparent" ? "Transparent" : fillColor}
+                </span>
+              </div>
+              <button
+                onClick={toggleTransparentFill}
+                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${fillColor === "transparent"
+                    ? "bg-slate-700 text-slate-200 border-slate-600"
+                    : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
+                  }`}
+              >
+                {fillColor === "transparent" ? "Enable Fill" : "Set Transparent"}
               </button>
             </div>
           </div>

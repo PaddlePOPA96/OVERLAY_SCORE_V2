@@ -14,6 +14,7 @@ export default function TimerOverlay() {
   const [remainingMs, setRemainingMs] = useState(0);
   const [timerColor, setTimerColor] = useState("#ffffff");
   const [borderColor, setBorderColor] = useState("transparent");
+  const [fillColor, setFillColor] = useState("transparent");
 
   const [currentRemaining, setCurrentRemaining] = useState(0);
 
@@ -29,12 +30,14 @@ export default function TimerOverlay() {
         setRemainingMs(data.remainingMs || 0);
         setTimerColor(data.color || "#ffffff");
         setBorderColor(data.borderColor || "transparent");
+        setFillColor(data.fillColor || "transparent");
       } else {
         setTargetTime(null);
         setIsRunning(false);
         setRemainingMs(0);
         setTimerColor("#ffffff");
         setBorderColor("transparent");
+        setFillColor("transparent");
       }
     });
     return () => unsubscribe();
@@ -80,11 +83,12 @@ export default function TimerOverlay() {
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-transparent overflow-hidden font-sans">
       <div 
-        className="font-black tabular-nums tracking-tight flex items-center gap-4 font-mono drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]" 
+        className={`font-black tabular-nums tracking-tight flex items-center gap-4 font-mono drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] px-12 py-6 rounded-3xl ${borderColor !== "transparent" ? "border-8" : ""}`} 
         style={{ 
           fontSize: "8rem", 
           color: timerColor,
-          WebkitTextStroke: borderColor !== "transparent" ? `4px ${borderColor}` : undefined
+          borderColor: borderColor !== "transparent" ? borderColor : "transparent",
+          backgroundColor: fillColor !== "transparent" ? fillColor : "transparent"
         }}
       >
          {timeParts.d !== "00" && (
