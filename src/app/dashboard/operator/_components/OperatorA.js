@@ -75,6 +75,7 @@ export default function OperatorA({
           >
             <option value="A">Layout A</option>
             <option value="B">Layout B</option>
+            <option value="C">Layout C</option>
           </select>
           <span className="op-tiny">
             Pilih B untuk pindah ke operator-B UI

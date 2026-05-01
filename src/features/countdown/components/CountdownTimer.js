@@ -1,0 +1,315 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { ref, onValue, update } from "firebase/database";
+import { db } from "@/lib/firebase";
+
+export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
+  const isDark = theme === "dark";
+
+  const [days, setDays] = useState("");
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
+
+  const [targetTime, setTargetTime] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const [remainingMs, setRemainingMs] = useState(0);
+
+  const [currentRemaining, setCurrentRemaining] = useState(0);
+  const [timerColor, setTimerColor] = useState("#ffffff");
+  const [borderColor, setBorderColor] = useState("transparent");
+
+  const timerPath = `match_live/${roomId}/countdown_timer`;
+
+  useEffect(() => {
+    if (!roomId) return;
+    const timerRef = ref(db, timerPath);
+    const unsubscribe = onValue(timerRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setTargetTime(data.targetTime || null);
+        setIsRunning(data.isRunning || false);
+        setRemainingMs(data.remainingMs || 0);
+        setTimerColor(data.color || "#ffffff");
+        setBorderColor(data.borderColor || "transparent");
+      } else {
+        setTargetTime(null);
+        setIsRunning(false);
+        setRemainingMs(0);
+        setTimerColor("#ffffff");
+        setBorderColor("transparent");
+      }
+    }, (error) => {
+      console.error("Firebase read error:", error);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (isRunning && targetTime) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const diff = targetTime - now;
+        if (diff <= 0) {
+          setCurrentRemaining(0);
+          update(ref(db, timerPath), { isRunning: false, remainingMs: 0 }).catch(console.error);
+        } else {
+          setCurrentRemaining(diff);
+        }
+      }, 100);
+    } else {
+      setCurrentRemaining(remainingMs);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, targetTime, remainingMs]);
+
+  const handleStartPreset = (ms) => {
+    const target = Date.now() + ms;
+    console.log("Starting preset:", ms, "Target:", target);
+    update(ref(db, timerPath), {
+      targetTime: target,
+      isRunning: true,
+      remainingMs: ms
+    }).catch(err => console.error("Firebase update error:", err));
+  };
+
+  const handleStartManual = () => {
+    const d = parseInt(days) || 0;
+    const h = parseInt(hours) || 0;
+    const m = parseInt(minutes) || 0;
+    const s = parseInt(seconds) || 0;
+
+    const ms = (d * 86400 + h * 3600 + m * 60 + s) * 1000;
+    console.log("Starting manual:", ms);
+    if (ms > 0) {
+      handleStartPreset(ms);
+    }
+  };
+
+  const handlePause = () => {
+    update(ref(db, timerPath), {
+      targetTime: null,
+      isRunning: false,
+      remainingMs: currentRemaining
+    }).catch(console.error);
+  };
+
+  const handleResume = () => {
+    update(ref(db, timerPath), {
+      targetTime: Date.now() + remainingMs,
+      isRunning: true,
+      remainingMs: remainingMs
+    }).catch(console.error);
+  };
+
+  const handleReset = () => {
+    update(ref(db, timerPath), {
+      targetTime: null,
+      isRunning: false,
+      remainingMs: 0
+    }).catch(console.error);
+    setDays(""); setHours(""); setMinutes(""); setSeconds("");
+  };
+
+  const handleColorChange = (color) => {
+    setTimerColor(color);
+    update(ref(db, timerPath), {
+      color: color
+    }).catch(console.error);
+  };
+
+  const handleBorderColorChange = (color) => {
+    setBorderColor(color);
+    update(ref(db, timerPath), {
+      borderColor: color
+    }).catch(console.error);
+  };
+
+  const toggleTransparentBorder = () => {
+    const newColor = borderColor === "transparent" ? "#000000" : "transparent";
+    setBorderColor(newColor);
+    update(ref(db, timerPath), {
+      borderColor: newColor
+    }).catch(console.error);
+  };
+
+  const formatTime = (ms) => {
+    if (ms <= 0) return { d: "00", h: "00", m: "00", s: "00" };
+    const totalSeconds = Math.floor(ms / 1000);
+    const d = Math.floor(totalSeconds / 86400);
+    const h = Math.floor((totalSeconds % 86400) / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+
+    return {
+      d: String(d).padStart(2, '0'),
+      h: String(h).padStart(2, '0'),
+      m: String(m).padStart(2, '0'),
+      s: String(s).padStart(2, '0')
+    };
+  };
+
+  const timeParts = formatTime(currentRemaining);
+
+  return (
+    <div className={`p-6 rounded-2xl border shadow-xl max-w-4xl mx-auto ${isDark ? 'bg-slate-950/90 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+
+      {/* Display */}
+      <div className="flex flex-col items-center justify-center mb-8">
+        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 font-mono w-full">
+          <div className="flex flex-col items-center">
+            <span>{timeParts.d}</span>
+            <span className={`text-xs sm:text-sm md:text-base uppercase tracking-widest font-semibold mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Days</span>
+          </div>
+          <span className={`pb-6 sm:pb-8 ${isDark ? 'text-slate-700' : 'text-slate-300'}`}>:</span>
+          <div className="flex flex-col items-center">
+            <span>{timeParts.h}</span>
+            <span className={`text-xs sm:text-sm md:text-base uppercase tracking-widest font-semibold mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Hours</span>
+          </div>
+          <span className={`pb-6 sm:pb-8 ${isDark ? 'text-slate-700' : 'text-slate-300'}`}>:</span>
+          <div className="flex flex-col items-center">
+            <span>{timeParts.m}</span>
+            <span className={`text-xs sm:text-sm md:text-base uppercase tracking-widest font-semibold mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Mins</span>
+          </div>
+          <span className={`pb-6 sm:pb-8 ${isDark ? 'text-slate-700' : 'text-slate-300'}`}>:</span>
+          <div className="flex flex-col items-center">
+            <span>{timeParts.s}</span>
+            <span className={`text-xs sm:text-sm md:text-base uppercase tracking-widest font-semibold mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Secs</span>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="flex gap-4 mt-6">
+          {!isRunning && currentRemaining > 0 ? (
+            <button onClick={handleResume} className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-green-600/30">
+              Resume
+            </button>
+          ) : isRunning ? (
+            <button onClick={handlePause} className="px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-yellow-500/30">
+              Pause
+            </button>
+          ) : null}
+          <button onClick={handleReset} className={`px-8 py-3 rounded-xl font-bold transition-all border ${isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'}`}>
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8 mt-8">
+        {/* Presets */}
+        <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+          <h3 className="text-lg font-bold mb-4">Quick Presets</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button onClick={() => handleStartPreset(30 * 60 * 1000)} className="px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all">
+              30 Mins
+            </button>
+            <button onClick={() => handleStartPreset(60 * 60 * 1000)} className="px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all">
+              60 Mins
+            </button>
+            <button onClick={() => handleStartPreset(24 * 60 * 60 * 1000)} className="px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all">
+              1 Day
+            </button>
+          </div>
+        </div>
+
+        {/* Manual Setup */}
+        <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+          <h3 className="text-lg font-bold mb-4">Manual Setup</h3>
+          <div className="flex gap-2 mb-4">
+            <div className="flex-1">
+              <label className="block text-xs text-slate-400 mb-1">Days</label>
+              <input type="number" min="0" value={days} onChange={e => setDays(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-slate-400 mb-1">Hours</label>
+              <input type="number" min="0" value={hours} onChange={e => setHours(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-slate-400 mb-1">Mins</label>
+              <input type="number" min="0" value={minutes} onChange={e => setMinutes(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-slate-400 mb-1">Secs</label>
+              <input type="number" min="0" value={seconds} onChange={e => setSeconds(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
+            </div>
+          </div>
+          <button onClick={handleStartManual} className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all shadow-lg hover:shadow-blue-600/30">
+            Start Manual Timer
+          </button>
+        </div>
+
+        {/* Display Settings */}
+        <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+          <h3 className="text-lg font-bold mb-4">Display Settings</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="flex items-center gap-4">
+              <label className="block text-sm font-semibold">Text Color:</label>
+              <input
+                type="color"
+                value={timerColor}
+                onChange={e => handleColorChange(e.target.value)}
+                className="w-12 h-12 rounded cursor-pointer border-none p-0"
+              />
+              <span className="text-sm font-mono text-slate-400">{timerColor}</span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-4">
+                <label className="block text-sm font-semibold">Border Color:</label>
+                <input
+                  type="color"
+                  value={borderColor === "transparent" ? "#000000" : borderColor}
+                  onChange={e => handleBorderColorChange(e.target.value)}
+                  disabled={borderColor === "transparent"}
+                  className={`w-12 h-12 rounded cursor-pointer border-none p-0 ${borderColor === "transparent" ? "opacity-50 cursor-not-allowed" : ""}`}
+                />
+                <span className="text-sm font-mono text-slate-400">
+                  {borderColor === "transparent" ? "Transparent" : borderColor}
+                </span>
+              </div>
+              <button
+                onClick={toggleTransparentBorder}
+                className={`text-xs px-3 py-1.5 rounded-md font-semibold self-start border transition-colors ${borderColor === "transparent"
+                    ? "bg-slate-700 text-slate-200 border-slate-600"
+                    : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
+                  }`}
+              >
+                {borderColor === "transparent" ? "Enable Border" : "Set Transparent"}
+              </button>
+            </div>
+          </div>
+
+          <h3 className="text-lg font-bold mb-4 border-t border-slate-700/50 pt-4">OBS Setup</h3>
+          <div>
+            <label className="block text-xs uppercase text-slate-500 font-bold mb-2">Overlay URL</label>
+            <div className="flex gap-2">
+              <code className={`flex-1 p-3 rounded text-sm font-mono overflow-x-auto whitespace-nowrap ${isDark ? "bg-black text-green-400" : "bg-slate-200 text-slate-800"}`}>
+                {typeof window !== 'undefined' ? `${window.location.origin}/${roomId}/timer` : `/${roomId}/timer`}
+              </code>
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/${roomId}/timer`;
+                  navigator.clipboard.writeText(url);
+                  alert("URL copied to clipboard!");
+                }}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition-colors text-sm"
+              >
+                Copy
+              </button>
+              <a
+                href={`/${roomId}/timer`}
+                target="_blank"
+                rel="noreferrer"
+                className={`px-4 py-2 border rounded-lg font-semibold text-sm flex items-center transition-colors ${isDark ? "border-slate-700 text-slate-300 hover:bg-slate-800" : "border-slate-300 text-slate-700 hover:bg-slate-100"}`}
+              >
+                Open
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

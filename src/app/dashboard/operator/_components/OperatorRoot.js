@@ -6,11 +6,12 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebaseAuth";
 import OperatorA from "./OperatorA";
 import OperatorB from "./OperatorB";
+import OperatorC from "./OperatorC";
 
 export default function OperatorRoot({
   initialRoomId,
   requireAuth = true,
-} = {}) {
+}) {
   const roomId = initialRoomId || "default";
   const [isAuthReady, setIsAuthReady] = useState(!requireAuth);
 
@@ -69,6 +70,19 @@ export default function OperatorRoot({
   if (data.layout === "A") {
     return (
       <OperatorA
+        data={data}
+        actions={actions}
+        displayTime={displayTime}
+        formatTime={formatTime}
+        roomId={roomId}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (data.layout === "C") {
+    return (
+      <OperatorC
         data={data}
         actions={actions}
         displayTime={displayTime}

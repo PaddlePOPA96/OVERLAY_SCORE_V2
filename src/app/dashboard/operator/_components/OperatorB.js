@@ -71,6 +71,7 @@ export default function OperatorB({
           >
             <option value="A">Layout A</option>
             <option value="B">Layout B</option>
+            <option value="C">Layout C</option>
           </select>
         </div>
 

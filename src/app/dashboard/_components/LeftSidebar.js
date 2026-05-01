@@ -99,6 +99,16 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
                 if (onClose) onClose();
               }}
             />
+            <NavItem
+              icon="⏱️"
+              label="Countdown Timer"
+              active={active === "countdown-timer"}
+              isDark={isDark}
+              onClick={() => {
+                setActive("countdown-timer");
+                if (onClose) onClose();
+              }}
+            />
           </nav>
         </div>
 

@@ -31,6 +31,18 @@ const DreamElevenBuilder = dynamic(
   }
 );
 
+const CountdownTimer = dynamic(
+  () => import("@/features/countdown/components/CountdownTimer"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-sm text-slate-400">
+        Memuat Countdown Timer...
+      </div>
+    ),
+  }
+);
+
 
 
 
@@ -130,6 +142,34 @@ export function MainColumn({
                 Silakan login terlebih dahulu melalui tombol{" "}
                 <span className="font-semibold">Login</span> di kanan atas untuk
                 mengakses Dream Eleven.
+              </p>
+            </div>
+          )}
+        </>
+      ) : active === "countdown-timer" ? (
+        <>
+          <header className="mb-8">
+            <h1 className={titleClass}>Countdown Timer</h1>
+            <p className={subtitleClass}>
+              Atur timer mundur untuk stream atau event.
+            </p>
+          </header>
+          {user ? (
+            <CountdownTimer theme={theme} roomId={roomId} />
+          ) : (
+            <div
+              className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark
+                ? "border-slate-700 bg-black/40 text-slate-200"
+                : "border-slate-200 bg-white text-slate-700"
+                }`}
+            >
+              <p className="font-semibold mb-1">
+                Fitur ini terkunci untuk pengguna belum login.
+              </p>
+              <p className="text-xs">
+                Silakan login terlebih dahulu melalui tombol{" "}
+                <span className="font-semibold">Login</span> di kanan atas untuk
+                mengakses Countdown Timer.
               </p>
             </div>
           )}

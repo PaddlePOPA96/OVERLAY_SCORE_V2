@@ -1,8 +1,9 @@
 "use client";
 
 import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
-import LayoutA from "../../_components/LayoutA"; // Adjust path if moved
-import LayoutB from "../../_components/LayoutB"; // Adjust path if moved
+import LayoutA from "../../_components/LayoutA";
+import LayoutB from "../../_components/LayoutB";
+import LayoutC from "../../_components/LayoutC";
 import { useEffect, useState } from "react";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
 
@@ -53,6 +54,12 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         >
             {data.layout === "A" ? (
                 <LayoutA
+                    data={data}
+                    displayTime={displayTime}
+                    formatTime={formatTime}
+                />
+            ) : data.layout === "C" ? (
+                <LayoutC
                     data={data}
                     displayTime={displayTime}
                     formatTime={formatTime}

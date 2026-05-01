@@ -1,0 +1,194 @@
+/* Modern Scoreboard Layout C - Broadcast Quality */
+
+#layout-c-root {
+  --overlay-scale: 2.2;
+  --home-gradient: linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%);
+  --away-gradient: linear-gradient(270deg, #020024 0%, #090979 35%, #00d4ff 100%);
+  --score-bg: #000a35;
+  --timer-bg: #ffffff;
+  --text-main: #ffffff;
+  --text-timer: #000000;
+  
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.layout-c-container {
+  display: flex;
+  align-items: stretch;
+  height: 80px;
+  transform: scale(var(--overlay-scale));
+  opacity: 0;
+  animation: layoutCIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* LEAGUE LOGO BOX */
+.layout-c-league-box {
+  width: 80px;
+  background: #000a35;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.layout-c-league-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* TIMER BOX */
+.layout-c-timer-box {
+  background: var(--timer-bg);
+  color: var(--text-timer);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 36px;
+  padding: 0 25px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+  min-width: 120px;
+}
+
+/* MAIN BAR */
+.layout-c-main-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 10, 53, 0.95);
+  backdrop-filter: blur(10px);
+  margin-left: 15px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* TEAM SECTION */
+.layout-c-team {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  height: 100%;
+  min-width: 140px;
+  transition: all 0.3s ease;
+  overflow: hidden; /* Prevent GOAL banner from overlapping neighbors */
+}
+
+.layout-c-team-home {
+  background: var(--home-gradient);
+  justify-content: space-between;
+}
+
+.layout-c-team-away {
+  background: var(--away-gradient);
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+
+.layout-c-team-name {
+  color: var(--text-main);
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.layout-c-team-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+/* GOAL BANNER SECTION */
+.layout-c-goal-banner {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #ffd700, #ff8c00);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 36px;
+  z-index: 20;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Home slide from left */
+.layout-c-team-home .layout-c-goal-banner {
+  transform: translateX(-100%);
+}
+
+/* Away slide from right */
+.layout-c-team-away .layout-c-goal-banner {
+  transform: translateX(100%);
+}
+
+.show-goal-banner .layout-c-goal-banner {
+  transform: translateX(0) !important;
+  animation: flashGoal 0.5s infinite alternate;
+}
+
+@keyframes flashGoal {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.3); }
+}
+
+/* SCORE SECTION */
+.layout-c-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 0 25px;
+  background: var(--score-bg);
+  height: 100%;
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.layout-c-score-divider {
+  opacity: 0.4;
+  font-weight: 300;
+}
+
+/* ANIMATIONS */
+@keyframes layoutCIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+}
+
+.layout-c-hide {
+  animation: layoutCOut 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes layoutCOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+}
