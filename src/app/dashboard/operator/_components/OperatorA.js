@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import LayoutA from "./LayoutA";
 import OverlayRoomControls from "./OverlayRoomControls";
+import GoalAudioSettings from "./GoalAudioSettings";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -299,6 +300,8 @@ export default function OperatorA({
             LIVE: {formatTime(displayTime)}
           </span>
         </div>
+
+        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} />
 
         <OverlayRoomControls
           showOverlay={data.showOverlay}

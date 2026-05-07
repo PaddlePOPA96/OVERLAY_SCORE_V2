@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ref, onValue, update } from "firebase/database";
 import { db } from "@/lib/firebase";
 
@@ -21,6 +21,9 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
   const [borderColor, setBorderColor] = useState("transparent");
   const [fillColor, setFillColor] = useState("transparent");
   const [timerTitle, setTimerTitle] = useState("");
+  const [audioVolume, setAudioVolume] = useState(1);
+  const [audioSource, setAudioSource] = useState("/sounds/brr-brr-patapim-alarm-clock.mp3");
+  const [isSoundModalOpen, setIsSoundModalOpen] = useState(false);
 
   const timerPath = `match_live/${roomId}/countdown_timer`;
 
@@ -37,6 +40,8 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         setBorderColor(data.borderColor || "transparent");
         setFillColor(data.fillColor || "transparent");
         setTimerTitle(data.title || "");
+        setAudioVolume(data.audioVolume !== undefined ? data.audioVolume : 1);
+        setAudioSource(data.audioSource || "/sounds/brr-brr-patapim-alarm-clock.mp3");
       } else {
         setTargetTime(null);
         setIsRunning(false);
@@ -45,6 +50,8 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         setBorderColor("transparent");
         setFillColor("transparent");
         setTimerTitle("");
+        setAudioVolume(1);
+        setAudioSource("/sounds/brr-brr-patapim-alarm-clock.mp3");
       }
     }, (error) => {
       console.error("Firebase read error:", error);
@@ -160,6 +167,14 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     setTimerTitle(title);
     update(ref(db, timerPath), {
       title: title
+    }).catch(console.error);
+  };
+
+  const handleVolumeChange = (vol) => {
+    const val = parseFloat(vol);
+    setAudioVolume(val);
+    update(ref(db, timerPath), {
+      audioVolume: val
     }).catch(console.error);
   };
 
@@ -288,6 +303,37 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             />
           </div>
 
+          <div className="mb-6">
+            <div className="flex justify-between mb-2">
+              <label className="block text-sm font-semibold">Alarm Volume:</label>
+              <span className="text-sm font-mono">{Math.round(audioVolume * 100)}%</span>
+            </div>
+            <input 
+              type="range" 
+              min="0" 
+              max="1" 
+              step="0.01" 
+              value={audioVolume} 
+              onChange={e => handleVolumeChange(e.target.value)} 
+              className="w-full accent-blue-500"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-semibold mb-2">Alarm Sound:</label>
+            <div className="flex gap-2 items-center">
+              <span className={`flex-1 p-3 rounded-lg border font-mono text-sm ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>
+                {audioSource.includes('lamine') ? 'Lamine Yamal' : audioSource.includes('parado') ? 'Parado no Bailao' : 'Brr Brr Patapim'}
+              </span>
+              <button 
+                onClick={() => setIsSoundModalOpen(true)}
+                className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-all shadow-md"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+
           <div className="flex flex-col md:flex-row flex-wrap gap-8 mb-6">
             <div className="flex flex-col gap-2">
               <label className="block text-sm font-semibold">Text Color:</label>
@@ -380,6 +426,41 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
           </div>
         </div>
       </div>
+
+      {/* Sound Selection Modal */}
+      {isSoundModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className={`w-full max-w-md p-6 rounded-2xl shadow-2xl ${isDark ? 'bg-slate-900 border border-slate-800' : 'bg-white border border-slate-200'}`}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Select Alarm Sound</h3>
+              <button onClick={() => setIsSoundModalOpen(false)} className="text-slate-400 hover:text-red-500 transition-colors text-xl">
+                ✕
+              </button>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              {[
+                { name: "Brr Brr Patapim", path: "/sounds/brr-brr-patapim-alarm-clock.mp3" },
+                { name: "Parado no Bailao", path: "/sounds/parado-no-bailao.mp3" },
+                { name: "Lamine Yamal", path: "/sounds/lamine-yamal.mp3" }
+              ].map(sound => (
+                <div 
+                  key={sound.path}
+                  onClick={() => {
+                    setAudioSource(sound.path);
+                    update(ref(db, timerPath), { audioSource: sound.path }).catch(console.error);
+                    setIsSoundModalOpen(false);
+                  }}
+                  className={`p-4 rounded-xl cursor-pointer border transition-all flex items-center justify-between ${audioSource === sound.path ? 'border-blue-500 bg-blue-500/10' : (isDark ? 'border-slate-700 hover:bg-slate-800' : 'border-slate-200 hover:bg-slate-50')}`}
+                >
+                  <span className="font-semibold">{sound.name}</span>
+                  {audioSource === sound.path && <span className="text-blue-500 font-bold">✓</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { makeTeamAbbr } from "@/lib/logoData";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import OverlayRoomControls from "./OverlayRoomControls";
+import GoalAudioSettings from "./GoalAudioSettings";
 
 export default function OperatorB({
   data,
@@ -311,6 +312,8 @@ export default function OperatorB({
             Sync Semua Client
           </Button>
         </div>
+
+        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} />
 
         <OverlayRoomControls
           showOverlay={data.showOverlay}

@@ -7,6 +7,7 @@ import { makeTeamAbbr } from "@/lib/logoData";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import OverlayRoomControls from "./OverlayRoomControls";
+import GoalAudioSettings from "./GoalAudioSettings";
 
 export default function OperatorC({
   data,
@@ -103,6 +104,8 @@ export default function OperatorC({
            <input className="op-input" type="number" style={{ width: "50px" }} value={manualS} onChange={(e) => setManualS(e.target.value)} />
            <Button className="op-btn" variant="outline" size="sm" onClick={handleSetTime}>Set</Button>
         </div>
+
+        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} />
 
         <OverlayRoomControls showOverlay={data.showOverlay} toggleOverlay={actions.toggleOverlay} roomId={roomId} />
       </Card>

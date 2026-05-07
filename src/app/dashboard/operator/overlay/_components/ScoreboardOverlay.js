@@ -4,16 +4,67 @@ import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
 import LayoutA from "../../_components/LayoutA";
 import LayoutB from "../../_components/LayoutB";
 import LayoutC from "../../_components/LayoutC";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
 
 export default function ScoreboardOverlay({ roomId = "default" }) {
     const { data, displayTime, formatTime } = useScoreboard(roomId);
     const [isMounted, setIsMounted] = useState(false);
+    const [playError, setPlayError] = useState(false);
+
+    const prevGoalTrigger = useRef(null);
+    const audioRef = useRef(null);
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
+
+    // Initial refs setting
+    useEffect(() => {
+        if (data && prevGoalTrigger.current === null) {
+            prevGoalTrigger.current = data.goalTrigger || 0;
+        }
+    }, [data]);
+
+    // Check for goal
+    useEffect(() => {
+        if (!data || prevGoalTrigger.current === null) return;
+
+        const currentTrigger = data.goalTrigger || 0;
+
+        if (currentTrigger !== prevGoalTrigger.current && currentTrigger !== 0) {
+            if (audioRef.current) {
+                const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
+                audioRef.current.volume = audioVolume;
+                audioRef.current.currentTime = 0;
+                const p = audioRef.current.play();
+                if (p !== undefined) {
+                    p.catch(e => {
+                        console.error("Goal audio error:", e);
+                        if (e.name === "NotAllowedError" || e.message.includes("interact")) {
+                            setPlayError(true);
+                        }
+                    });
+                }
+            }
+        }
+
+        prevGoalTrigger.current = currentTrigger;
+    }, [data?.goalTrigger]);
+
+    const handleInteraction = () => {
+        setPlayError(false);
+        if (audioRef.current) {
+            audioRef.current.volume = 0;
+            const p = audioRef.current.play();
+            if (p !== undefined) {
+                p.then(() => {
+                    audioRef.current.pause();
+                    audioRef.current.volume = 1;
+                }).catch(() => { });
+            }
+        }
+    };
 
     // --- New Settings Hook ---
     // --- New Settings Hook ---
@@ -39,6 +90,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
 
     return (
         <div
+            onClick={handleInteraction}
             style={{
                 position: "absolute",
                 top: 0,
@@ -52,6 +104,17 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
                 zIndex: 10, // Scoreboard usually on top? Or distinct.
             }}
         >
+            <audio ref={audioRef} src={data.goalAudioSource || "/sounds/goal.mp3"} preload="auto" />
+            {playError && (
+                <div
+                    onClick={handleInteraction}
+                    style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, pointerEvents: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)', cursor: 'pointer' }}
+                >
+                    <div style={{ backgroundColor: '#ef4444', color: 'white', padding: '15px 30px', borderRadius: '30px', fontWeight: 'bold', fontFamily: 'sans-serif', fontSize: '20px', boxShadow: '0 4px 10px rgba(0,0,0,0.5)', textAlign: 'center' }}>
+                        ⚠️ Autoplay Blocked!<br /><span style={{ fontSize: '14px', fontWeight: 'normal' }}>Click anywhere on this screen to enable Goal Sound.</span>
+                    </div>
+                </div>
+            )}
             {data.layout === "A" ? (
                 <LayoutA
                     data={data}
