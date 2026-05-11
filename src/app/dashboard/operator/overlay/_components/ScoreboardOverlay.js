@@ -35,6 +35,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         if (currentTrigger !== prevGoalTrigger.current && currentTrigger !== 0) {
             if (audioRef.current) {
                 const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
+                audioRef.current.src = data.goalAudioSource || "/sounds/goal.mp3";
                 audioRef.current.volume = audioVolume;
                 audioRef.current.currentTime = 0;
                 const p = audioRef.current.play();
@@ -55,16 +56,43 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
     // Listen for stop signal directly from data changes
     useEffect(() => {
         if (!data || !data.goalAudioStop) return;
-        
-        console.log("Menerima sinyal stop dari Firebase!", data.goalAudioStop);
-        
-        // Every time goalAudioStop timestamp updates in firebase, this triggers
         if (audioRef.current) {
-            console.log("Audio sedang berjalan, men-stop audio...");
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
         }
     }, [data?.goalAudioStop]);
+
+    // Listen for preview audio signal
+    const prevPreviewTrigger = useRef(null);
+    useEffect(() => {
+        if (!data) return;
+        if (prevPreviewTrigger.current === null) {
+            prevPreviewTrigger.current = data.previewAudioTrigger || 0;
+            return;
+        }
+
+        const currentTrigger = data.previewAudioTrigger || 0;
+        if (currentTrigger !== prevPreviewTrigger.current && currentTrigger !== 0) {
+            if (audioRef.current) {
+                // Set source to preview audio source
+                audioRef.current.src = data.previewAudioSource || "/sounds/goal.mp3";
+                const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
+                audioRef.current.volume = audioVolume;
+                audioRef.current.currentTime = 0;
+                
+                const p = audioRef.current.play();
+                if (p !== undefined) {
+                    p.catch(e => {
+                        console.error("Preview audio error:", e);
+                        if (e.name === "NotAllowedError" || e.message.includes("interact")) {
+                            setPlayError(true);
+                        }
+                    });
+                }
+            }
+        }
+        prevPreviewTrigger.current = currentTrigger;
+    }, [data?.previewAudioTrigger, data?.previewAudioSource]);
 
     const handleInteraction = () => {
         setPlayError(false);

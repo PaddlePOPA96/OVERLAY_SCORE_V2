@@ -1,51 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-
-export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio }) {
+export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, previewGoalAudio }) {
   const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
   const audioSource = data.goalAudioSource || "/sounds/goal.mp3";
-
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  // Stop audio when source changes
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying(false);
-    }
-  }, [audioSource]);
-
-  // Sync volume in real-time
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = audioVolume;
-    }
-  }, [audioVolume]);
-
-  const handlePlayPause = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (isPlaying) {
-      audio.pause();
-      audio.currentTime = 0;
-      setIsPlaying(false);
-    } else {
-      audio.volume = audioVolume;
-      audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-    }
-  };
-
-  const handleAudioEnded = () => setIsPlaying(false);
 
   return (
     <div style={{ padding: "10px", background: "rgba(0,0,0,0.2)", border: "1px solid #444", borderRadius: "8px", marginTop: "10px", marginBottom: "10px" }}>
       <label className="op-label" style={{ marginBottom: "10px", display: "block", color: "#4ade80" }}>Goal Audio Settings</label>
-
-      {/* Hidden audio element */}
-      <audio ref={audioRef} src={audioSource} onEnded={handleAudioEnded} preload="auto" />
 
       <div style={{ marginBottom: "10px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
@@ -84,9 +45,14 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio }) 
         </select>
       </div>
 
-      {/* Play / Pause button */}
+      {/* Preview di OBS button */}
       <button
-        onClick={handlePlayPause}
+        onClick={(e) => {
+          e.preventDefault();
+          if (typeof previewGoalAudio === "function") {
+             previewGoalAudio(audioSource);
+          }
+        }}
         style={{
           marginTop: "10px",
           width: "100%",
@@ -101,36 +67,21 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio }) 
           alignItems: "center",
           justifyContent: "center",
           gap: "6px",
-          background: isPlaying
-            ? "linear-gradient(135deg, #ef4444, #b91c1c)"
-            : "linear-gradient(135deg, #22c55e, #15803d)",
+          background: "linear-gradient(135deg, #3b82f6, #2563eb)",
           color: "white",
-          boxShadow: isPlaying
-            ? "0 0 10px rgba(239,68,68,0.4)"
-            : "0 0 10px rgba(34,197,94,0.4)",
+          boxShadow: "0 0 10px rgba(59,130,246,0.4)",
           transition: "background 0.2s, box-shadow 0.2s",
         }}
       >
-        {isPlaying ? (
-          <>
-            <span style={{ fontSize: "15px" }}>⏹</span> Stop Preview
-          </>
-        ) : (
-          <>
-            <span style={{ fontSize: "15px" }}>▶</span> Preview Sound
-          </>
-        )}
+        <span style={{ fontSize: "15px" }}>▶</span> Preview di OBS
       </button>
 
       {/* Stop OBS Audio Button */}
       <button
         onClick={(e) => {
           e.preventDefault();
-          console.log("Tombol Stop ditekan!");
           if (typeof stopGoalAudio === "function") {
             stopGoalAudio();
-          } else {
-            console.error("stopGoalAudio bukan function! typeof:", typeof stopGoalAudio);
           }
         }}
         style={{

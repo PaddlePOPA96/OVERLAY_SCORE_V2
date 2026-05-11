@@ -91,6 +91,13 @@ export function useScoreboard(roomId = "default") {
     updateMatch({ goalAudioStop: Date.now() });
   };
 
+  const previewGoalAudio = (source) => {
+    updateMatch({
+      previewAudioTrigger: Date.now(),
+      previewAudioSource: source
+    });
+  };
+
   const toggleTimer = () => {
     const now = Date.now();
     let updates = {};
@@ -121,5 +128,5 @@ export function useScoreboard(roomId = "default") {
     return `${m}:${s}`;
   };
 
-  return { data, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio };
+  return { data, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio, previewGoalAudio };
 }

@@ -50,6 +50,7 @@ export default function OperatorRoot({
     triggerGoal,
     toggleOverlay,
     stopGoalAudio,
+    previewGoalAudio,
   } = useScoreboard(roomId);
 
   const actions = {
@@ -59,6 +60,7 @@ export default function OperatorRoot({
     triggerGoal,
     toggleOverlay,
     stopGoalAudio,
+    previewGoalAudio,
   };
 
   if (!isAuthReady) {

@@ -105,7 +105,7 @@ export default function OperatorC({
            <Button className="op-btn" variant="outline" size="sm" onClick={handleSetTime}>Set</Button>
         </div>
 
-        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} />
+        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} previewGoalAudio={actions.previewGoalAudio} />
 
         <OverlayRoomControls showOverlay={data.showOverlay} toggleOverlay={actions.toggleOverlay} roomId={roomId} />
       </Card>
