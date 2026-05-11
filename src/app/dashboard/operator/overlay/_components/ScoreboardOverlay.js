@@ -52,6 +52,20 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         prevGoalTrigger.current = currentTrigger;
     }, [data?.goalTrigger]);
 
+    // Listen for stop signal directly from data changes
+    useEffect(() => {
+        if (!data || !data.goalAudioStop) return;
+        
+        console.log("Menerima sinyal stop dari Firebase!", data.goalAudioStop);
+        
+        // Every time goalAudioStop timestamp updates in firebase, this triggers
+        if (audioRef.current) {
+            console.log("Audio sedang berjalan, men-stop audio...");
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+    }, [data?.goalAudioStop]);
+
     const handleInteraction = () => {
         setPlayError(false);
         if (audioRef.current) {
@@ -66,7 +80,6 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         }
     };
 
-    // --- New Settings Hook ---
     // --- New Settings Hook ---
     const { settings } = useLayoutSettings();
 
@@ -97,11 +110,11 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
                 left: 0,
                 width: "100%",
                 height: "100%",
-                pointerEvents: "none", // Allow clicks to pass through if needed, or handle layout specific
+                pointerEvents: "none",
                 transform: `translate(${x}px, ${y}px) scale(${scale})`,
                 transformOrigin: "top left",
                 transition: "transform 0.1s linear",
-                zIndex: 10, // Scoreboard usually on top? Or distinct.
+                zIndex: 10,
             }}
         >
             <audio ref={audioRef} src={data.goalAudioSource || "/sounds/goal.mp3"} preload="auto" />

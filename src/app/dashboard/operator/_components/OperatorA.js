@@ -301,7 +301,7 @@ export default function OperatorA({
           </span>
         </div>
 
-        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} />
+        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} />
 
         <OverlayRoomControls
           showOverlay={data.showOverlay}

@@ -323,7 +323,22 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             <label className="block text-sm font-semibold mb-2">Alarm Sound:</label>
             <div className="flex gap-2 items-center">
               <span className={`flex-1 p-3 rounded-lg border font-mono text-sm ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>
-                {audioSource.includes('lamine') ? 'Lamine Yamal' : audioSource.includes('parado') ? 'Parado no Bailao' : 'Brr Brr Patapim'}
+                {(() => {
+                  const options = {
+                    "/sounds/brr-brr-patapim-alarm-clock.mp3": "Brr Brr Patapim",
+                    "/sounds/tamatlah-sudah.mp3": "upin ipin",
+                    "/sounds/ikeve.mp3": "IKEVE YAMAL",
+                    "/sounds/goal.mp3": "Goal Horn",
+                    "/sounds/ggmu.mp3": "GGMU",
+                    "/sounds/parado-no-bailao.mp3": "Parado no Bailao",
+                    "/sounds/lamine-yamal.mp3": "Lamine Yamal",
+                    "/sounds/antek.mp3": "antek-antek",
+                    "/sounds/jokowi.mp3": "jokowi",
+                    "/sounds/dj-kicau-mania.mp3": "dj-kicau-mania",
+                    "/sounds/kenapa-nya.mp3": "kenapa nyak"
+                  };
+                  return options[audioSource] || "Unknown Sound";
+                })()}
               </span>
               <button 
                 onClick={() => setIsSoundModalOpen(true)}
@@ -441,8 +456,16 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             <div className="flex flex-col gap-3">
               {[
                 { name: "Brr Brr Patapim", path: "/sounds/brr-brr-patapim-alarm-clock.mp3" },
+                { name: "upin ipin", path: "/sounds/tamatlah-sudah.mp3" },
+                { name: "IKEVE YAMAL", path: "/sounds/ikeve.mp3" },
+                { name: "Goal Horn", path: "/sounds/goal.mp3" },
+                { name: "GGMU", path: "/sounds/ggmu.mp3" },
                 { name: "Parado no Bailao", path: "/sounds/parado-no-bailao.mp3" },
-                { name: "Lamine Yamal", path: "/sounds/lamine-yamal.mp3" }
+                { name: "Lamine Yamal", path: "/sounds/lamine-yamal.mp3" },
+                { name: "antek-antek", path: "/sounds/antek.mp3" },
+                { name: "jokowi", path: "/sounds/jokowi.mp3" },
+                { name: "dj-kicau-mania", path: "/sounds/dj-kicau-mania.mp3" },
+                { name: "kenapa nyak", path: "/sounds/kenapa-nya.mp3" }
               ].map(sound => (
                 <div 
                   key={sound.path}

@@ -49,6 +49,7 @@ export default function OperatorRoot({
     resetTimer,
     triggerGoal,
     toggleOverlay,
+    stopGoalAudio,
   } = useScoreboard(roomId);
 
   const actions = {
@@ -57,6 +58,7 @@ export default function OperatorRoot({
     resetTimer,
     triggerGoal,
     toggleOverlay,
+    stopGoalAudio,
   };
 
   if (!isAuthReady) {
