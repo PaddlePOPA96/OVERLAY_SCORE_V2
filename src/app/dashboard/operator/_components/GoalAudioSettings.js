@@ -33,6 +33,7 @@ export default function GoalAudioSettings({ data, updateMatch }) {
           style={{ width: "100%", padding: "8px", background: "#111", color: "white" }}
         >
           <option value="/sounds/tamatlah-sudah.mp3">upin ipin</option>
+          <option value="/sounds/ikeve.mp3">IKEVE YAMAL</option>
           <option value="/sounds/goal.mp3">Goal Horn</option>
           <option value="/sounds/ggmu.mp3">GGMU</option>
           <option value="/sounds/parado-no-bailao.mp3">Parado no Bailao</option>
