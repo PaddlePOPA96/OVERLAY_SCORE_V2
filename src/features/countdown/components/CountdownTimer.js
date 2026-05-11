@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ref, onValue, update } from "firebase/database";
 import { db } from "@/lib/firebase";
+import { audioOptions, getAudioLabel } from "@/lib/audioConfig";
 
 export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
   const isDark = theme === "dark";
@@ -291,13 +292,13 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
         {/* Display Settings */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
           <h3 className="text-lg font-bold mb-4">Display Settings</h3>
-          
+
           <div className="mb-6">
             <label className="block text-sm font-semibold mb-2">Timer Title:</label>
-            <input 
-              type="text" 
-              value={timerTitle} 
-              onChange={e => handleTitleChange(e.target.value)} 
+            <input
+              type="text"
+              value={timerTitle}
+              onChange={e => handleTitleChange(e.target.value)}
               className={`w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-500 outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
               placeholder="e.g., MATCH STARTS IN"
             />
@@ -308,13 +309,13 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
               <label className="block text-sm font-semibold">Alarm Volume:</label>
               <span className="text-sm font-mono">{Math.round(audioVolume * 100)}%</span>
             </div>
-            <input 
-              type="range" 
-              min="0" 
-              max="1" 
-              step="0.01" 
-              value={audioVolume} 
-              onChange={e => handleVolumeChange(e.target.value)} 
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={audioVolume}
+              onChange={e => handleVolumeChange(e.target.value)}
               className="w-full accent-blue-500"
             />
           </div>
@@ -323,24 +324,9 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             <label className="block text-sm font-semibold mb-2">Alarm Sound:</label>
             <div className="flex gap-2 items-center">
               <span className={`flex-1 p-3 rounded-lg border font-mono text-sm ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>
-                {(() => {
-                  const options = {
-                    "/sounds/brr-brr-patapim-alarm-clock.mp3": "Brr Brr Patapim",
-                    "/sounds/tamatlah-sudah.mp3": "upin ipin",
-                    "/sounds/ikeve.mp3": "IKEVE YAMAL",
-                    "/sounds/goal.mp3": "Goal Horn",
-                    "/sounds/ggmu.mp3": "GGMU",
-                    "/sounds/parado-no-bailao.mp3": "Parado no Bailao",
-                    "/sounds/lamine-yamal.mp3": "Lamine Yamal",
-                    "/sounds/antek.mp3": "antek-antek",
-                    "/sounds/jokowi.mp3": "jokowi",
-                    "/sounds/dj-kicau-mania.mp3": "dj-kicau-mania",
-                    "/sounds/kenapa-nya.mp3": "kenapa nyak"
-                  };
-                  return options[audioSource] || "Unknown Sound";
-                })()}
+                {getAudioLabel(audioSource)}
               </span>
-              <button 
+              <button
                 onClick={() => setIsSoundModalOpen(true)}
                 className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-all shadow-md"
               >
@@ -353,16 +339,16 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             <div className="flex flex-col gap-2">
               <label className="block text-sm font-semibold">Text Color:</label>
               <div className="flex items-center gap-3">
-                <input 
-                  type="color" 
-                  value={timerColor} 
-                  onChange={e => handleColorChange(e.target.value)} 
+                <input
+                  type="color"
+                  value={timerColor}
+                  onChange={e => handleColorChange(e.target.value)}
                   className="w-14 h-10 cursor-pointer bg-transparent rounded"
                 />
                 <span className="text-sm font-mono text-slate-400">{timerColor}</span>
               </div>
             </div>
-            
+
             <div className="flex flex-col gap-2">
               <label className="block text-sm font-semibold">Border Color:</label>
               <div className="flex items-center gap-3">
@@ -379,8 +365,8 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
               <button
                 onClick={toggleTransparentBorder}
                 className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${borderColor === "transparent"
-                    ? "bg-slate-700 text-slate-200 border-slate-600"
-                    : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
+                  ? "bg-slate-700 text-slate-200 border-slate-600"
+                  : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
                   }`}
               >
                 {borderColor === "transparent" ? "Enable Border" : "Set Transparent"}
@@ -403,8 +389,8 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
               <button
                 onClick={toggleTransparentFill}
                 className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${fillColor === "transparent"
-                    ? "bg-slate-700 text-slate-200 border-slate-600"
-                    : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
+                  ? "bg-slate-700 text-slate-200 border-slate-600"
+                  : "bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30"
                   }`}
               >
                 {fillColor === "transparent" ? "Enable Fill" : "Set Transparent"}
@@ -452,32 +438,20 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
                 ✕
               </button>
             </div>
-            
+
             <div className="flex flex-col gap-3">
-              {[
-                { name: "Brr Brr Patapim", path: "/sounds/brr-brr-patapim-alarm-clock.mp3" },
-                { name: "upin ipin", path: "/sounds/tamatlah-sudah.mp3" },
-                { name: "IKEVE YAMAL", path: "/sounds/ikeve.mp3" },
-                { name: "Goal Horn", path: "/sounds/goal.mp3" },
-                { name: "GGMU", path: "/sounds/ggmu.mp3" },
-                { name: "Parado no Bailao", path: "/sounds/parado-no-bailao.mp3" },
-                { name: "Lamine Yamal", path: "/sounds/lamine-yamal.mp3" },
-                { name: "antek-antek", path: "/sounds/antek.mp3" },
-                { name: "jokowi", path: "/sounds/jokowi.mp3" },
-                { name: "dj-kicau-mania", path: "/sounds/dj-kicau-mania.mp3" },
-                { name: "kenapa nyak", path: "/sounds/kenapa-nya.mp3" }
-              ].map(sound => (
-                <div 
-                  key={sound.path}
+              {audioOptions.map(sound => (
+                <div
+                  key={sound.value}
                   onClick={() => {
-                    setAudioSource(sound.path);
-                    update(ref(db, timerPath), { audioSource: sound.path }).catch(console.error);
+                    setAudioSource(sound.value);
+                    update(ref(db, timerPath), { audioSource: sound.value }).catch(console.error);
                     setIsSoundModalOpen(false);
                   }}
-                  className={`p-4 rounded-xl cursor-pointer border transition-all flex items-center justify-between ${audioSource === sound.path ? 'border-blue-500 bg-blue-500/10' : (isDark ? 'border-slate-700 hover:bg-slate-800' : 'border-slate-200 hover:bg-slate-50')}`}
+                  className={`p-4 rounded-xl cursor-pointer border transition-all flex items-center justify-between ${audioSource === sound.value ? 'border-blue-500 bg-blue-500/10' : (isDark ? 'border-slate-700 hover:bg-slate-800' : 'border-slate-200 hover:bg-slate-50')}`}
                 >
-                  <span className="font-semibold">{sound.name}</span>
-                  {audioSource === sound.path && <span className="text-blue-500 font-bold">✓</span>}
+                  <span className="font-semibold">{sound.label}</span>
+                  {audioSource === sound.value && <span className="text-blue-500 font-bold">✓</span>}
                 </div>
               ))}
             </div>

@@ -6,6 +6,8 @@ import OverlayRoomControls from "./OverlayRoomControls";
 import GoalAudioSettings from "./GoalAudioSettings";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import LayoutSelector from "./shared/LayoutSelector";
+import TimerControls from "./shared/TimerControls";
 
 export default function OperatorA({
   data,
@@ -15,28 +17,6 @@ export default function OperatorA({
   roomId,
   onLogout,
 }) {
-  const [localTime, setLocalTime] = useState({ m: 0, s: 0 });
-
-  useEffect(() => {
-    if (!data.timer.isRunning) {
-      setLocalTime({
-        m: Math.floor(displayTime / 60),
-        s: displayTime % 60,
-      });
-    }
-  }, [displayTime, data.timer.isRunning]);
-
-  const handleManualTime = () => {
-    const totalSeconds =
-      (parseInt(localTime.m, 10) || 0) * 60 +
-      (parseInt(localTime.s, 10) || 0);
-    actions.updateMatch({
-      "timer/baseTime": totalSeconds,
-      "timer/startTime": null,
-      "timer/isRunning": false,
-    });
-  };
-
   return (
     <div className="operator-a-container">
       <div className="w-full max-w-[900px] flex items-center justify-between mb-3">
@@ -57,31 +37,11 @@ export default function OperatorA({
       </Card>
 
       <Card className="operator-a-controls">
-        <div
-          className="op-section"
-          style={{
-            borderBottom: "1px solid #444",
-            paddingBottom: "10px",
-            marginBottom: "5px",
-          }}
-        >
-          <label className="op-label" htmlFor="operator-a-layout">
-            Layout
-          </label>
-          <select
-            id="operator-a-layout"
-            className="op-input"
-            value={data.layout}
-            onChange={(e) => actions.updateMatch({ layout: e.target.value })}
-          >
-            <option value="A">Layout A</option>
-            <option value="B">Layout B</option>
-            <option value="C">Layout C</option>
-          </select>
-          <span className="op-tiny">
-            Pilih B untuk pindah ke operator-B UI
-          </span>
-        </div>
+        <LayoutSelector 
+          data={data} 
+          updateMatch={actions.updateMatch} 
+          description="Pilih B untuk pindah ke operator-B UI"
+        />
 
         <div className="op-section">
           <label className="op-label" htmlFor="team-left">
@@ -249,57 +209,7 @@ export default function OperatorA({
           />
         </div>
 
-        <div className="op-section">
-          <label className="op-label" htmlFor="time-minute">
-            Time
-          </label>
-          <input
-            id="time-minute"
-            className="op-input"
-            type="number"
-            style={{ width: "50px" }}
-            value={localTime.m}
-            onChange={(e) =>
-              setLocalTime({ ...localTime, m: e.target.value })
-            }
-          />{" "}
-          :{" "}
-          <input
-            id="time-second"
-            className="op-input"
-            type="number"
-            style={{ width: "50px" }}
-            value={localTime.s}
-            aria-label="Seconds"
-            onChange={(e) =>
-              setLocalTime({ ...localTime, s: e.target.value })
-            }
-          />
-          <Button className="op-btn" variant="outline" size="sm" onClick={handleManualTime}>
-            Set Time
-          </Button>
-          <div style={{ display: "flex", gap: "5px", marginLeft: "10px" }}>
-            <Button
-              className="op-btn op-btn-main"
-              variant="default"
-              size="sm"
-              onClick={actions.toggleTimer}
-            >
-              {data.timer.isRunning ? "PAUSE" : "START"}
-            </Button>
-            <Button
-              className="op-btn op-btn-danger"
-              variant="outline"
-              size="sm"
-              onClick={actions.resetTimer}
-            >
-              Reset
-            </Button>
-          </div>
-          <span className="op-tiny text-green-400 font-mono ml-2">
-            LIVE: {formatTime(displayTime)}
-          </span>
-        </div>
+        <TimerControls data={data} actions={actions} displayTime={displayTime} formatTime={formatTime} btnMainClass="op-btn-main" />
 
         <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} previewGoalAudio={actions.previewGoalAudio} />
 
