@@ -76,14 +76,14 @@ export async function syncUserToFirestore(user) {
   if (!snap.exists()) {
     await setDoc(userRef, {
       email: user.email,
-      role: isSuperAdmin ? "superadmin" : "user", // Auto-superadmin jika email sesuai env
+      role: isSuperAdmin ? "admin" : "user", // Auto-admin di DB agar lolos Security Rules
       createdAt: new Date().toISOString(),
       syncedAt: new Date().toISOString(),
     });
   } else {
-    // Jika data ada, tapi dia sebenarnya Super Admin (env), pastikan role-nya superadmin di DB juga
-    if (isSuperAdmin && snap.data().role !== "superadmin") {
-      await updateDoc(userRef, { role: "superadmin" });
+    // Jika data ada, tapi dia sebenarnya Super Admin (env), pastikan role-nya admin di DB juga
+    if (isSuperAdmin && snap.data().role !== "admin") {
+      await updateDoc(userRef, { role: "admin" });
     }
   }
 
@@ -93,7 +93,7 @@ export async function syncUserToFirestore(user) {
     const rtdbRef = ref(db);
     // Use try-read pattern
     const rtdbSnap = await get(child(rtdbRef, `users/${user.uid}`));
-    const currentRole = isSuperAdmin ? "superadmin" : (snap.exists() ? snap.data().role : "user");
+    const currentRole = isSuperAdmin ? "admin" : (snap.exists() ? snap.data().role : "user");
 
     if (!rtdbSnap.exists() || rtdbSnap.val().role !== currentRole) {
       await set(ref(db, `users/${user.uid}`), {
