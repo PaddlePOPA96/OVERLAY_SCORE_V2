@@ -58,7 +58,11 @@ export async function updateUserRole(uid, newRole) {
   await updateDoc(userRef, { role: newRole });
 
   // Update Realtime Database
-  await set(ref(db, `users/${uid}/role`), newRole);
+  try {
+    await set(ref(db, `users/${uid}/role`), newRole);
+  } catch (err) {
+    console.warn("Failed to update user role in Realtime Database. It will sync automatically when that user logs in.", err);
+  }
 }
 
 
