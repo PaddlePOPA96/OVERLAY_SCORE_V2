@@ -29,7 +29,7 @@ export function TopBar({
   const [adminLoading, setAdminLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  const { role, isAdmin } = useUserRole(user);
+  const { role, isAdmin, isSuperAdmin } = useUserRole(user);
 
   const username = useMemo(
     () => user?.email?.split("@")[0] || "Operator",
@@ -199,7 +199,7 @@ export function TopBar({
                     {username}
                   </div>
                   <div className="text-[11px] text-purple-400">
-                    {isAdmin ? "Admin" : role ? capitalize(role) : "User"}
+                    {role === "superadmin" ? "Super Admin" : (isAdmin ? "Admin" : role ? capitalize(role) : "User")}
                   </div>
                 </div>
                 <div className="w-9 h-9 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full border-2 border-gray-800" />
@@ -224,6 +224,7 @@ export function TopBar({
           open={showUserMgmt}
           onClose={() => setShowUserMgmt(false)}
           currentUserUid={user?.uid}
+          isSuperAdmin={isSuperAdmin}
         />
       )}
 
@@ -248,10 +249,10 @@ export function TopBar({
               <span className="text-emerald-400">({role || "user"})</span>
             </p>
 
-            {isAdmin && showCreateForm && (
+            {isSuperAdmin && showCreateForm && (
               <form onSubmit={handleAdminCreateUser} className="space-y-3 mb-3">
                 <h4 className="text-xs font-semibold text-slate-200">
-                  Admin: Buat User Baru
+                  Super Admin: Buat User Baru
                 </h4>
                 <div className="space-y-1">
                   <label className="text-[11px] text-slate-300">
@@ -307,6 +308,7 @@ export function TopBar({
                   >
                     <option value="user">User Biasa</option>
                     <option value="admin">Admin</option>
+                    <option value="superadmin">Super Admin</option>
                   </select>
                 </div>
 
@@ -337,7 +339,7 @@ export function TopBar({
             )}
 
             <div className="flex justify-end gap-2 pt-1 flex-wrap">
-              {isAdmin && (
+              {isSuperAdmin && (
                 <>
                   <Button
                     type="button"

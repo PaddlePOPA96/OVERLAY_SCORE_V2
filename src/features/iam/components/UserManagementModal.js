@@ -4,7 +4,7 @@ import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
 import { updateUserRole, syncUserToFirestore } from "@/lib/auth/service";
 import { auth } from "@/lib/firebaseAuth";
 
-export function UserManagementModal({ open, onClose, currentUserUid }) {
+export function UserManagementModal({ open, onClose, currentUserUid, isSuperAdmin }) {
     if (!open) return null;
 
     const { users, loading } = useAllUsers();
@@ -65,6 +65,7 @@ export function UserManagementModal({ open, onClose, currentUserUid }) {
                                         key={user.uid}
                                         user={user}
                                         isMe={user.uid === currentUserUid}
+                                        isSuperAdmin={isSuperAdmin}
                                     />
                                 ))}
                             </tbody>
@@ -80,7 +81,7 @@ export function UserManagementModal({ open, onClose, currentUserUid }) {
     );
 }
 
-function UserRow({ user, isMe }) {
+function UserRow({ user, isMe, isSuperAdmin }) {
     const [status, setStatus] = useState(""); // "saving" | "success" | "error"
     const [currentRole, setCurrentRole] = useState(user.role || "user");
 
@@ -109,7 +110,7 @@ function UserRow({ user, isMe }) {
                 {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
             </td>
             <td className="py-3 px-2">
-                {isMe ? (
+                {isMe || !isSuperAdmin ? (
                     <span className="capitalize text-slate-400 italic px-2">{currentRole}</span>
                 ) : (
                     <select
@@ -120,6 +121,7 @@ function UserRow({ user, isMe }) {
                     >
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
+                        <option value="superadmin">Super Admin</option>
                     </select>
                 )}
             </td>

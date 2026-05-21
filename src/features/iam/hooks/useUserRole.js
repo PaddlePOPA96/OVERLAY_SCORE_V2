@@ -16,7 +16,7 @@ export function useUserRole(user) {
         // 1. Cek Environment Variable (Super Admin)
         const envAdminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
         if (user.email === envAdminEmail) {
-            setRole("admin");
+            setRole("superadmin");
             setLoading(false);
             return;
         }
@@ -36,6 +36,7 @@ export function useUserRole(user) {
         return () => unsub();
     }, [user]);
 
-    const isAdmin = role === "admin";
-    return { role, isAdmin, loading };
+    const isAdmin = role === "admin" || role === "superadmin";
+    const isSuperAdmin = role === "superadmin";
+    return { role, isAdmin, isSuperAdmin, loading };
 }
