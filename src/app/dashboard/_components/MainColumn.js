@@ -98,7 +98,7 @@ export function MainColumn({
           </header>
           <div className="pr-2">
             {user ? (
-              <OperatorRoot initialRoomId={roomId} requireAuth={false} />
+              <OperatorRoot initialRoomId={roomId} requireAuth={false} theme={theme} />
             ) : (
               <div
                 className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark

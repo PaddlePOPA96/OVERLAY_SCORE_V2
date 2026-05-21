@@ -11,9 +11,11 @@ import OperatorC from "./OperatorC";
 export default function OperatorRoot({
   initialRoomId,
   requireAuth = true,
+  theme: parentTheme,
 }) {
   const roomId = initialRoomId || "default";
   const [isAuthReady, setIsAuthReady] = useState(!requireAuth);
+  const [theme, setTheme] = useState(parentTheme || "dark");
 
   useEffect(() => {
     if (!requireAuth) return undefined;
@@ -29,6 +31,31 @@ export default function OperatorRoot({
     });
     return () => unsub();
   }, [requireAuth]);
+
+  // Synchronize state when parent theme prop changes
+  useEffect(() => {
+    if (parentTheme) {
+      setTheme(parentTheme);
+    }
+  }, [parentTheme]);
+
+  // Load theme from local storage only if no parent theme prop is provided
+  useEffect(() => {
+    if (!parentTheme && typeof window !== "undefined") {
+      const stored = window.localStorage.getItem("scoreboard-theme");
+      if (stored) {
+        setTheme(stored);
+      }
+    }
+  }, [parentTheme]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("scoreboard-theme", nextTheme);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -80,6 +107,8 @@ export default function OperatorRoot({
         formatTime={formatTime}
         roomId={roomId}
         onLogout={handleLogout}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
     );
   }
@@ -93,6 +122,8 @@ export default function OperatorRoot({
         formatTime={formatTime}
         roomId={roomId}
         onLogout={handleLogout}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
     );
   }
@@ -105,6 +136,8 @@ export default function OperatorRoot({
       formatTime={formatTime}
       roomId={roomId}
       onLogout={handleLogout}
+      theme={theme}
+      toggleTheme={toggleTheme}
     />
   );
 }

@@ -586,6 +586,123 @@ body {
   transform-origin: center; 
 }
 
+/* LIGHT MODE OPERATOR OVERRIDES */
+.operator-a-container.theme-light,
+.operator-b-container.theme-light {
+  background: radial-gradient(circle at top, #e5edff 0, #f9fafb 40%, #e5e7eb 100%) !important;
+  color: #0f172a !important;
+}
+
+.theme-light h2,
+.theme-light h3,
+.theme-light label,
+.theme-light .op-label {
+  color: #1e293b !important;
+}
+
+.theme-light .op-tiny {
+  color: #475569 !important;
+}
+
+.theme-light .operator-a-controls,
+.theme-light .operator-b-controls {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Home/Away inner cards inside UnifiedOperatorControls */
+.theme-light .operator-b-controls > div > div {
+  background: rgba(15, 23, 42, 0.02) !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Inner score panels inside team cards */
+.theme-light .operator-b-controls > div > div > div {
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+
+.theme-light .op-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.theme-light .op-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.theme-light .op-btn {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.theme-light .op-btn:hover {
+  background: #e2e8f0 !important;
+}
+
+.theme-light .op-btn-main {
+  background: #047857 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.theme-light .op-btn-main:hover {
+  background: #059669 !important;
+}
+
+.theme-light .op-b-btn-main {
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+/* Active period buttons overrides */
+.op-btn-active {
+  background: #047857 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.op-btn-active:hover {
+  background: #059669 !important;
+}
+
+/* Danger / Away Goal buttons overrides */
+.op-btn-danger {
+  background: #b91c1c !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.op-btn-danger:hover {
+  background: #dc2626 !important;
+}
+
+.theme-light .op-b-btn-main:hover {
+  background: #ef4444 !important;
+}
+
+.theme-light .operator-a-preview-box,
+.theme-light .operator-b-preview-box {
+  background: #1e293b !important; /* Keep preview background dark so layout text color is visible */
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important;
+}
+
+.theme-light .op-room-display {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.theme-light .op-room-display-label {
+  color: #475569 !important;
+}
+
+
 /* DASHBOARD LAYOUT */
 .dashboard-shell {
   min-height: 100vh;
