@@ -1,4 +1,5 @@
-/* Modern Scoreboard Layout D - Valorant Esports Style */
+/* VCT Scoreboard Layout D - Valorant Champions Tour Ultra-Compact Style */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Rajdhani:wght@500;600;700&display=swap');
 
 #layout-d-root {
   --overlay-scale: 2.2;
@@ -9,173 +10,301 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Rajdhani', sans-serif;
 }
 
 .layout-d-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
   transform: scale(var(--overlay-scale));
   opacity: 0;
   animation: layoutDIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* TEAM PILLS */
-.layout-d-team-pill {
+/* HUD WRAPPER WITH PULSE ANIMATION */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 1; filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.15)); }
+}
+
+.live-hud {
+  display: flex;
+  align-items: stretch;
+  height: 56px;
+  user-select: none;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.55));
+  animation: pulse-glow 5s ease-in-out infinite;
+}
+
+/* 1. LEFT PANEL: FNATIC (FNC) */
+.hud-fnc-panel {
+  position: relative;
   display: flex;
   align-items: center;
-  background: rgba(11, 14, 18, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  height: 52px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(13, 21, 28, 0.95);
+  clip-path: polygon(12px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  width: 115px;
+  padding-left: 16px;
+  padding-right: 8px;
+  border-bottom: 2px solid var(--home-accent-color);
+  z-index: 0;
 }
 
-/* HOME PILL SPECIFICS */
-.layout-d-pill-home {
-  padding-left: 12px;
+.hud-fnc-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--home-accent-color) 0%, rgba(138, 28, 46, 0.75) 100%);
 }
 
-.layout-d-pill-home .layout-d-logo-container {
-  margin-right: 10px;
+/* 5. RIGHT PANEL: NRG */
+.hud-nrg-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: rgba(13, 21, 28, 0.95);
+  clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 100%, 10px 100%);
+  width: 115px;
+  padding-right: 16px;
+  padding-left: 8px;
+  border-bottom: 2px solid var(--away-accent-color);
+  z-index: 0;
 }
 
-.layout-d-pill-home .layout-d-team-name {
-  margin-right: 16px;
+.hud-nrg-panel::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--away-accent-color) 0%, rgba(10, 140, 110, 0.75) 100%);
 }
 
-/* AWAY PILL SPECIFICS */
-.layout-d-pill-away {
-  padding-right: 12px;
-  flex-direction: row-reverse;
+/* SCORES CONTROLLERS WITH NEGATIVE GAP INTERLOCKS */
+.hud-score-container-home {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: -12px;
+  z-index: 10;
 }
 
-.layout-d-pill-away .layout-d-logo-container {
-  margin-left: 10px;
+.hud-score-container-away {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: -12px;
+  z-index: 10;
 }
 
-.layout-d-pill-away .layout-d-team-name {
-  margin-left: 16px;
-}
-
-/* LOGO STYLING */
-.layout-d-logo-container {
-  width: 32px;
-  height: 32px;
+.hud-fnc-score {
+  background: #121c24;
+  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 10px 100%);
+  width: 46px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-}
-
-.layout-d-team-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  /* Premium glow separation */
-  filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.8)) drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
-}
-
-/* NAME STYLING */
-.layout-d-team-name {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* SCORE BOX STYLING */
-.layout-d-score-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 100%;
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 900;
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.15);
+  border-bottom: 2px solid var(--home-accent-color);
   transition: all 0.3s ease;
 }
 
-.layout-d-pill-home .layout-d-score-box {
-  border-left: 2px solid var(--home-accent-color);
-  background: var(--home-accent-color);
+.hud-nrg-score {
+  background: #121c24;
+  clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 10px 100%);
+  width: 46px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid var(--away-accent-color);
+  transition: all 0.3s ease;
 }
 
-.layout-d-pill-away .layout-d-score-box {
-  border-right: 2px solid var(--away-accent-color);
-  background: var(--away-accent-color);
+.hud-score-text {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.05em;
+  margin-bottom: 2px;
 }
 
-/* CENTER TIMER PILL */
-.layout-d-center-pill {
+/* 3. CENTER PANEL: TIMER & ROUND */
+.hud-timer-panel {
+  position: relative;
+  background: rgba(9, 13, 18, 0.95);
+  clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 100%, 0% 100%);
+  width: 84px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(11, 14, 18, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  height: 52px;
-  min-width: 120px;
-  padding: 0 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 0 8px;
+  margin-left: -12px;
+  margin-right: -12px;
+  z-index: 20;
+  visibility: hidden; /* Hide center timer panel while preserving layout spacing */
 }
 
-.layout-d-period {
-  color: #ffffff;
-  font-size: 18px;
+/* Slanted interior divider lines */
+.hud-timer-panel::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(12deg);
+}
+
+.hud-timer-panel::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(-12deg);
+}
+
+.hud-timer-period {
+  font-size: 7.5px;
   font-weight: 800;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0;
   line-height: 1;
 }
 
-/* NEON FLASH GOAL ANIMATION */
-.layout-d-pill-home.goal-active {
-  animation: goalFlashHome 0.5s infinite alternate;
+.hud-timer-time {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin-top: 3px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-.layout-d-pill-away.goal-active {
-  animation: goalFlashAway 0.5s infinite alternate;
+/* TIMEOUT TAB / DIAMOND SERIES TRAY */
+.hud-timeout-tab {
+  position: absolute;
+  bottom: -11px;
+  width: 36px;
+  height: 12px;
+  background: #121c24;
+  clip-path: polygon(5px 0%, calc(100% - 5px) 0%, 100% 100%, 0% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5px;
+  padding: 0 4px;
 }
 
-@keyframes goalFlashHome {
-  from {
-    filter: brightness(1);
-    box-shadow: 0 0 15px var(--home-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
-    border-color: var(--home-accent-color);
-  }
-  to {
-    filter: brightness(1.2);
-    box-shadow: 0 0 25px var(--home-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
-    border-color: #ffffff;
-  }
+.hud-diamond {
+  width: 5.5px;
+  height: 5.5px;
+  transform: rotate(45deg);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #090d12;
+  transition: all 0.25s ease;
 }
 
-@keyframes goalFlashAway {
-  from {
-    filter: brightness(1);
-    box-shadow: 0 0 15px var(--away-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
-    border-color: var(--away-accent-color);
-  }
-  to {
-    filter: brightness(1.2);
-    box-shadow: 0 0 25px var(--away-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
-    border-color: #ffffff;
-  }
+.hud-diamond.active {
+  background: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 5px #ffffff;
 }
 
-/* ANIMATIONS FOR ENTIRE WIDGET */
+/* LOGO & TYPOGRAPHY INNER DETAILS */
+.hud-logo-container {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.hud-logo-container-right {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.hud-logo-monogram {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.05em;
+  color: #ffffff;
+}
+
+.hud-team-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+}
+
+.hud-team-name-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.hud-team-name-box-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.hud-team-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.hud-team-subtitle {
+  font-size: 7.5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
+
+/* GOAL FLASHING */
+.hud-fnc-score.goal-active {
+  animation: hudFlash 0.5s infinite alternate;
+}
+
+.hud-nrg-score.goal-active {
+  animation: hudFlash 0.5s infinite alternate;
+}
+
+@keyframes hudFlash {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.45); box-shadow: inset 0 0 10px rgba(255,255,255,0.4); }
+}
+
+/* ANIMATIONS */
 @keyframes layoutDIn {
   from {
     opacity: 0;
@@ -200,59 +329,4 @@
     opacity: 0;
     transform: translateY(-15px) scale(0.8);
   }
-}
-
-/* SERIES DIAMOND INDICATORS */
-.layout-d-name-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-}
-
-.layout-d-pill-home .layout-d-name-container {
-  align-items: flex-start;
-  margin-right: 16px;
-}
-
-.layout-d-pill-away .layout-d-name-container {
-  align-items: flex-end;
-  margin-left: 16px;
-}
-
-/* Adjust margins on the team names inside the new container */
-.layout-d-pill-home .layout-d-name-container .layout-d-team-name {
-  margin-right: 0;
-}
-
-.layout-d-pill-away .layout-d-name-container .layout-d-team-name {
-  margin-left: 0;
-}
-
-.layout-d-diamonds-row {
-  display: flex;
-  gap: 5px;
-  margin-top: 3px;
-}
-
-.layout-d-diamond {
-  width: 6px;
-  height: 6px;
-  transform: rotate(45deg);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
-}
-
-.layout-d-pill-home .layout-d-diamond.active {
-  background: var(--home-accent-color);
-  border-color: var(--home-accent-color);
-  box-shadow: 0 0 8px var(--home-accent-color);
-}
-
-.layout-d-pill-away .layout-d-diamond.active {
-  background: var(--away-accent-color);
-  border-color: var(--away-accent-color);
-  box-shadow: 0 0 8px var(--away-accent-color);
 }
