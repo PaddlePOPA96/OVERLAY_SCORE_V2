@@ -20,6 +20,7 @@ export default function LayoutSelector({ data, updateMatch, description }) {
         <option value="A">Layout A</option>
         <option value="B">Layout B</option>
         <option value="C">Layout C</option>
+        <option value="D">Layout D (Valorant Esports)</option>
       </select>
       {description && (
         <span className="op-tiny">{description}</span>

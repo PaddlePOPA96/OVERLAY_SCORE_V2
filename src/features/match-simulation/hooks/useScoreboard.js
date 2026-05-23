@@ -33,6 +33,11 @@ export function useScoreboard(roomId = "default") {
     // Goal
     goalTrigger: 0,
     goalTeam: "",
+
+    // Series (BO3 / BO5) Settings
+    seriesType: "none",
+    homeSeriesScore: 0,
+    awaySeriesScore: 0,
   });
 
   const [displayTime, setDisplayTime] = useState(0);

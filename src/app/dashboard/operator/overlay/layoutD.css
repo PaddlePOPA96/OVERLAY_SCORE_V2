@@ -1,0 +1,258 @@
+/* Modern Scoreboard Layout D - Valorant Esports Style */
+
+#layout-d-root {
+  --overlay-scale: 2.2;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.layout-d-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transform: scale(var(--overlay-scale));
+  opacity: 0;
+  animation: layoutDIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* TEAM PILLS */
+.layout-d-team-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(11, 14, 18, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  height: 52px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* HOME PILL SPECIFICS */
+.layout-d-pill-home {
+  padding-left: 12px;
+}
+
+.layout-d-pill-home .layout-d-logo-container {
+  margin-right: 10px;
+}
+
+.layout-d-pill-home .layout-d-team-name {
+  margin-right: 16px;
+}
+
+/* AWAY PILL SPECIFICS */
+.layout-d-pill-away {
+  padding-right: 12px;
+  flex-direction: row-reverse;
+}
+
+.layout-d-pill-away .layout-d-logo-container {
+  margin-left: 10px;
+}
+
+.layout-d-pill-away .layout-d-team-name {
+  margin-left: 16px;
+}
+
+/* LOGO STYLING */
+.layout-d-logo-container {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.layout-d-team-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Premium glow separation */
+  filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.8)) drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* NAME STYLING */
+.layout-d-team-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* SCORE BOX STYLING */
+.layout-d-score-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 100%;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 900;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.layout-d-pill-home .layout-d-score-box {
+  border-left: 2px solid var(--home-accent-color);
+  background: var(--home-accent-color);
+}
+
+.layout-d-pill-away .layout-d-score-box {
+  border-right: 2px solid var(--away-accent-color);
+  background: var(--away-accent-color);
+}
+
+/* CENTER TIMER PILL */
+.layout-d-center-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 14, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  height: 52px;
+  min-width: 120px;
+  padding: 0 20px;
+}
+
+.layout-d-period {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1;
+}
+
+/* NEON FLASH GOAL ANIMATION */
+.layout-d-pill-home.goal-active {
+  animation: goalFlashHome 0.5s infinite alternate;
+}
+
+.layout-d-pill-away.goal-active {
+  animation: goalFlashAway 0.5s infinite alternate;
+}
+
+@keyframes goalFlashHome {
+  from {
+    filter: brightness(1);
+    box-shadow: 0 0 15px var(--home-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: var(--home-accent-color);
+  }
+  to {
+    filter: brightness(1.2);
+    box-shadow: 0 0 25px var(--home-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: #ffffff;
+  }
+}
+
+@keyframes goalFlashAway {
+  from {
+    filter: brightness(1);
+    box-shadow: 0 0 15px var(--away-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: var(--away-accent-color);
+  }
+  to {
+    filter: brightness(1.2);
+    box-shadow: 0 0 25px var(--away-accent-color), 0 8px 24px rgba(0, 0, 0, 0.6);
+    border-color: #ffffff;
+  }
+}
+
+/* ANIMATIONS FOR ENTIRE WIDGET */
+@keyframes layoutDIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+}
+
+.layout-d-hide {
+  animation: layoutDOut 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes layoutDOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.8);
+  }
+}
+
+/* SERIES DIAMOND INDICATORS */
+.layout-d-name-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.layout-d-pill-home .layout-d-name-container {
+  align-items: flex-start;
+  margin-right: 16px;
+}
+
+.layout-d-pill-away .layout-d-name-container {
+  align-items: flex-end;
+  margin-left: 16px;
+}
+
+/* Adjust margins on the team names inside the new container */
+.layout-d-pill-home .layout-d-name-container .layout-d-team-name {
+  margin-right: 0;
+}
+
+.layout-d-pill-away .layout-d-name-container .layout-d-team-name {
+  margin-left: 0;
+}
+
+.layout-d-diamonds-row {
+  display: flex;
+  gap: 5px;
+  margin-top: 3px;
+}
+
+.layout-d-diamond {
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.layout-d-pill-home .layout-d-diamond.active {
+  background: var(--home-accent-color);
+  border-color: var(--home-accent-color);
+  box-shadow: 0 0 8px var(--home-accent-color);
+}
+
+.layout-d-pill-away .layout-d-diamond.active {
+  background: var(--away-accent-color);
+  border-color: var(--away-accent-color);
+  box-shadow: 0 0 8px var(--away-accent-color);
+}

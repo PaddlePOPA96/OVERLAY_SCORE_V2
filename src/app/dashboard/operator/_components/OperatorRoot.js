@@ -7,6 +7,7 @@ import { auth } from "@/lib/firebaseAuth";
 import OperatorA from "./OperatorA";
 import OperatorB from "./OperatorB";
 import OperatorC from "./OperatorC";
+import OperatorD from "./OperatorD";
 
 export default function OperatorRoot({
   initialRoomId,
@@ -116,6 +117,21 @@ export default function OperatorRoot({
   if (data.layout === "C") {
     return (
       <OperatorC
+        data={data}
+        actions={actions}
+        displayTime={displayTime}
+        formatTime={formatTime}
+        roomId={roomId}
+        onLogout={handleLogout}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  if (data.layout === "D") {
+    return (
+      <OperatorD
         data={data}
         actions={actions}
         displayTime={displayTime}

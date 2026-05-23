@@ -71,7 +71,7 @@ export default function UnifiedOperatorControls({
       <div 
         style={{ 
           display: "grid", 
-          gridTemplateColumns: "1fr 1fr", 
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
           gap: "16px",
           borderBottom: `1px solid ${borderCol}`,
           paddingBottom: "12px",
@@ -109,6 +109,19 @@ export default function UnifiedOperatorControls({
               Extra
             </Button>
           </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <label className="op-label" style={{ marginBottom: "2px", color: labelColor }}>Format Match (Series)</label>
+          <select
+            className="op-input"
+            value={data.seriesType || "none"}
+            onChange={(e) => actions.updateMatch({ seriesType: e.target.value, homeSeriesScore: 0, awaySeriesScore: 0 })}
+            style={{ width: "100%", height: "36px", padding: "0 8px", background: "#090d16", border: `1px solid ${borderCol}`, borderRadius: "6px", color: "#fff", fontSize: "12px" }}
+          >
+            <option value="none">Single Match (Normal)</option>
+            <option value="bo3">Best of 3 (BO3)</option>
+            <option value="bo5">Best of 5 (BO5)</option>
+          </select>
         </div>
       </div>
 
@@ -214,6 +227,34 @@ export default function UnifiedOperatorControls({
               />
             </div>
           </div>
+
+          {/* Series Score (BO3/BO5) Row */}
+          {(data.seriesType === "bo3" || data.seriesType === "bo5") && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", background: "rgba(255,255,255,0.02)", borderRadius: "6px", border: `1px dashed ${borderCol}`, marginTop: "6px" }}>
+              <span style={{ fontSize: "11px", fontWeight: "600", color: labelColor }}>Game Wins (Series Score)</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Button
+                  className="op-btn"
+                  variant="ghost"
+                  type="button"
+                  onClick={() => actions.updateMatch({ homeSeriesScore: Math.max(0, (data.homeSeriesScore || 0) - 1) })}
+                  style={{ width: "24px", height: "24px", padding: 0 }}
+                >
+                  -
+                </Button>
+                <span style={{ fontSize: "13px", fontWeight: "700", width: "20px", textAlign: "center" }}>{data.homeSeriesScore || 0}</span>
+                <Button
+                  className="op-btn"
+                  variant="ghost"
+                  type="button"
+                  onClick={() => actions.updateMatch({ homeSeriesScore: Math.min(data.seriesType === "bo3" ? 2 : 3, (data.homeSeriesScore || 0) + 1) })}
+                  style={{ width: "24px", height: "24px", padding: 0 }}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Home Score Controls */}
           <div 
@@ -373,6 +414,34 @@ export default function UnifiedOperatorControls({
               />
             </div>
           </div>
+
+          {/* Series Score (BO3/BO5) Row */}
+          {(data.seriesType === "bo3" || data.seriesType === "bo5") && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 10px", background: "rgba(255,255,255,0.02)", borderRadius: "6px", border: `1px dashed ${borderCol}`, marginTop: "6px" }}>
+              <span style={{ fontSize: "11px", fontWeight: "600", color: labelColor }}>Game Wins (Series Score)</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Button
+                  className="op-btn"
+                  variant="ghost"
+                  type="button"
+                  onClick={() => actions.updateMatch({ awaySeriesScore: Math.max(0, (data.awaySeriesScore || 0) - 1) })}
+                  style={{ width: "24px", height: "24px", padding: 0 }}
+                >
+                  -
+                </Button>
+                <span style={{ fontSize: "13px", fontWeight: "700", width: "20px", textAlign: "center" }}>{data.awaySeriesScore || 0}</span>
+                <Button
+                  className="op-btn"
+                  variant="ghost"
+                  type="button"
+                  onClick={() => actions.updateMatch({ awaySeriesScore: Math.min(data.seriesType === "bo3" ? 2 : 3, (data.awaySeriesScore || 0) + 1) })}
+                  style={{ width: "24px", height: "24px", padding: 0 }}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Away Score Controls */}
           <div 
