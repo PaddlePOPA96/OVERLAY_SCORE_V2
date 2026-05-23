@@ -123,6 +123,25 @@ export default function UnifiedOperatorControls({
             <option value="bo5">Best of 5 (BO5)</option>
           </select>
         </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <label className="op-label" style={{ marginBottom: "2px", color: labelColor }}>Tukar Posisi (Halftime)</label>
+          <Button
+            className={`op-btn ${data.switchSides ? "op-btn-active" : ""}`}
+            variant={data.switchSides ? "default" : "outline"}
+            onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
+            style={{ 
+              width: "100%", 
+              height: "36px", 
+              fontWeight: "600",
+              fontSize: "12px",
+              background: data.switchSides ? "#2563eb" : "transparent",
+              color: "#fff",
+              border: `1px solid ${borderCol}`
+            }}
+          >
+            {data.switchSides ? "🔄 Kiri-Kanan Ditukar" : "🔄 Tukar Posisi Tim"}
+          </Button>
+        </div>
       </div>
 
       {/* SECTION 2 & 3: Side-by-Side Team setup and Score panels */}

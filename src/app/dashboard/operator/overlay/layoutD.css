@@ -42,7 +42,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(13, 21, 28, 0.95);
+  background: linear-gradient(to right, color-mix(in srgb, var(--home-accent-color) 25%, transparent), rgba(13, 21, 28, 0.65));
+  backdrop-filter: blur(8px);
   clip-path: polygon(12px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
   width: 115px;
   padding-left: 16px;
@@ -67,7 +68,8 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  background: rgba(13, 21, 28, 0.95);
+  background: linear-gradient(to left, color-mix(in srgb, var(--away-accent-color) 25%, transparent), rgba(13, 21, 28, 0.65));
+  backdrop-filter: blur(8px);
   clip-path: polygon(0% 0%, calc(100% - 12px) 0%, 100% 100%, 10px 100%);
   width: 115px;
   padding-right: 16px;
@@ -106,7 +108,8 @@
 }
 
 .hud-fnc-score {
-  background: #121c24;
+  background: color-mix(in srgb, var(--home-accent-color) 20%, rgba(18, 28, 36, 0.65));
+  backdrop-filter: blur(8px);
   clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 10px 100%);
   width: 46px;
   height: 100%;
@@ -118,7 +121,8 @@
 }
 
 .hud-nrg-score {
-  background: #121c24;
+  background: color-mix(in srgb, var(--away-accent-color) 20%, rgba(18, 28, 36, 0.65));
+  backdrop-filter: blur(8px);
   clip-path: polygon(0% 0%, 100% 0%, calc(100% - 10px) 100%, 10px 100%);
   width: 46px;
   height: 100%;
@@ -210,6 +214,16 @@
   justify-content: center;
   gap: 3.5px;
   padding: 0 4px;
+}
+
+.hud-score-container-home .hud-timeout-tab {
+  background: color-mix(in srgb, var(--home-accent-color) 20%, rgba(18, 28, 36, 0.75));
+  backdrop-filter: blur(8px);
+}
+
+.hud-score-container-away .hud-timeout-tab {
+  background: color-mix(in srgb, var(--away-accent-color) 20%, rgba(18, 28, 36, 0.75));
+  backdrop-filter: blur(8px);
 }
 
 .hud-diamond {

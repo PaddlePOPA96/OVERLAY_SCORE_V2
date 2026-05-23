@@ -40,16 +40,29 @@ export default function LayoutD({ data, displayTime, formatTime }) {
 
   if (!isVisible) return null;
 
-  // Fallbacks for layout values
-  const homeName = data.homeName || "FNC";
-  const awayName = data.awayName || "NRG";
-  const homeColor = data.homeColor || data.homeBg || "#ff5500";
-  const awayColor = data.awayColor || data.awayBg || "#0df2b9";
+  // Swapped check
+  const isSwapped = !!data.switchSides;
+
+  // Visual Left side (Team 1)
+  const teamLeftName = isSwapped ? (data.awayName || "NRG") : (data.homeName || "FNC");
+  const teamLeftFullName = isSwapped ? (data.awayFullName || "AMER#2") : (data.homeFullName || "EMEA#3");
+  const teamLeftLogo = isSwapped ? (data.awayLogo || "/logo/placeholder.png") : (data.homeLogo || "/logo/placeholder.png");
+  const teamLeftColor = isSwapped ? (data.awayColor || data.awayBg || "#0df2b9") : (data.homeColor || data.homeBg || "#ff5500");
+  const teamLeftScore = isSwapped ? (data.awayScore ?? 5) : (data.homeScore ?? 5);
+  const teamLeftSeriesScore = isSwapped ? (data.awaySeriesScore || 0) : (data.homeSeriesScore || 0);
+
+  // Visual Right side (Team 2)
+  const teamRightName = isSwapped ? (data.homeName || "FNC") : (data.awayName || "NRG");
+  const teamRightFullName = isSwapped ? (data.homeFullName || "EMEA#3") : (data.awayFullName || "AMER#2");
+  const teamRightLogo = isSwapped ? (data.homeLogo || "/logo/placeholder.png") : (data.awayLogo || "/logo/placeholder.png");
+  const teamRightColor = isSwapped ? (data.homeColor || data.homeBg || "#ff5500") : (data.awayColor || data.awayBg || "#0df2b9");
+  const teamRightScore = isSwapped ? (data.homeScore ?? 11) : (data.awayScore ?? 11);
+  const teamRightSeriesScore = isSwapped ? (data.homeSeriesScore || 0) : (data.awaySeriesScore || 0);
 
   // Dynamic CSS variables for the accents (Tailwind equivalent)
   const boardStyles = {
-    "--home-accent-color": homeColor,
-    "--away-accent-color": awayColor,
+    "--home-accent-color": teamLeftColor,
+    "--away-accent-color": teamRightColor,
   };
 
   // Determine period text (round name)
@@ -65,23 +78,23 @@ export default function LayoutD({ data, displayTime, formatTime }) {
           <div className="hud-fnc-panel">
             <div className="hud-logo-container">
               <img
-                src={data.homeLogo || "/logo/placeholder.png"}
-                alt={homeName}
+                src={teamLeftLogo}
+                alt={teamLeftName}
                 className="hud-team-logo"
               />
             </div>
             <div className="hud-team-name-box">
-              <span className="hud-team-name">{homeName}</span>
+              <span className="hud-team-name">{teamLeftName}</span>
               <span className="hud-team-subtitle">
-                {data.homeFullName ? data.homeFullName.substring(0, 10).toUpperCase() : "EMEA#3"}
+                {teamLeftFullName ? teamLeftFullName.substring(0, 10).toUpperCase() : "EMEA#3"}
               </span>
             </div>
           </div>
 
           {/* 2. HOME SCORE (WITH DIAMOND GAME WIN TRAY) */}
           <div className="hud-score-container-home">
-            <div className={`hud-fnc-score ${showGoal && goalTeam === data.homeName ? "goal-active" : ""}`}>
-              <span className="hud-score-text">{data.homeScore ?? 5}</span>
+            <div className={`hud-fnc-score ${showGoal && goalTeam === (isSwapped ? data.awayName : data.homeName) ? "goal-active" : ""}`}>
+              <span className="hud-score-text">{teamLeftScore}</span>
             </div>
             
             {/* TIMEOUT TAB / DIAMOND SERIES TRAY */}
@@ -90,7 +103,7 @@ export default function LayoutD({ data, displayTime, formatTime }) {
                 {Array.from({ length: data.seriesType === "bo3" ? 2 : 3 }).map((_, i) => (
                   <div
                     key={i}
-                    className={`hud-diamond ${i < (data.homeSeriesScore || 0) ? "active" : ""}`}
+                    className={`hud-diamond ${i < teamLeftSeriesScore ? "active" : ""}`}
                   />
                 ))}
               </div>
@@ -105,8 +118,8 @@ export default function LayoutD({ data, displayTime, formatTime }) {
 
           {/* 4. AWAY SCORE (WITH DIAMOND GAME WIN TRAY) */}
           <div className="hud-score-container-away">
-            <div className={`hud-nrg-score ${showGoal && goalTeam === data.awayName ? "goal-active" : ""}`}>
-              <span className="hud-score-text">{data.awayScore ?? 11}</span>
+            <div className={`hud-nrg-score ${showGoal && goalTeam === (isSwapped ? data.homeName : data.awayName) ? "goal-active" : ""}`}>
+              <span className="hud-score-text">{teamRightScore}</span>
             </div>
             
             {/* TIMEOUT TAB / DIAMOND SERIES TRAY */}
@@ -115,7 +128,7 @@ export default function LayoutD({ data, displayTime, formatTime }) {
                 {Array.from({ length: data.seriesType === "bo3" ? 2 : 3 }).map((_, i) => (
                   <div
                     key={i}
-                    className={`hud-diamond ${i < (data.awaySeriesScore || 0) ? "active" : ""}`}
+                    className={`hud-diamond ${i < teamRightSeriesScore ? "active" : ""}`}
                   />
                 ))}
               </div>
@@ -125,15 +138,15 @@ export default function LayoutD({ data, displayTime, formatTime }) {
           {/* 5. RIGHT PANEL: NRG */}
           <div className="hud-nrg-panel">
             <div className="hud-team-name-box-right">
-              <span className="hud-team-name">{awayName}</span>
+              <span className="hud-team-name">{teamRightName}</span>
               <span className="hud-team-subtitle">
-                {data.awayFullName ? data.awayFullName.substring(0, 10).toUpperCase() : "AMER#2"}
+                {teamRightFullName ? teamRightFullName.substring(0, 10).toUpperCase() : "AMER#2"}
               </span>
             </div>
             <div className="hud-logo-container-right">
               <img
-                src={data.awayLogo || "/logo/placeholder.png"}
-                alt={awayName}
+                src={teamRightLogo}
+                alt={teamRightName}
                 className="hud-team-logo"
               />
             </div>
