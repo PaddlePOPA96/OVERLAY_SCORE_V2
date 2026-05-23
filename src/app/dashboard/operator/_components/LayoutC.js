@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Image from "next/image";
 import "@/app/dashboard/operator/overlay/layoutC.css";
 
 export default function LayoutC({ data, displayTime, formatTime }) {
@@ -69,7 +68,7 @@ export default function LayoutC({ data, displayTime, formatTime }) {
           {/* Home Team Section */}
           <div className={`layout-c-team layout-c-team-home ${showGoal && data.goalTeam === data.homeName ? "show-goal-banner" : ""}`}>
             <span className="layout-c-team-name">{homeDisplayName}</span>
-            <Image
+            <img
               src={data.homeLogo || "/logo/placeholder.png"}
               alt={homeDisplayName}
               width={60}
@@ -89,7 +88,7 @@ export default function LayoutC({ data, displayTime, formatTime }) {
           {/* Away Team Section */}
           <div className={`layout-c-team layout-c-team-away ${showGoal && data.goalTeam === data.awayName ? "show-goal-banner" : ""}`}>
             <span className="layout-c-team-name">{awayDisplayName}</span>
-            <Image
+            <img
               src={data.awayLogo || "/logo/placeholder.png"}
               alt={awayDisplayName}
               width={60}

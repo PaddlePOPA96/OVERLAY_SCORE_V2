@@ -489,6 +489,7 @@ export default function UnifiedOperatorControls({
       <LogoPickerModal
         isOpen={logoModalOpen}
         onClose={() => setLogoModalOpen(false)}
+        defaultClubName={logoTarget === "home" ? data.homeFullName : data.awayFullName}
         onSelect={({ src, club }) => {
           if (!src || !club) return;
           const abbr = makeTeamAbbr(club);
