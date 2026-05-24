@@ -20,16 +20,14 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         setIsMounted(true);
     }, []);
 
-    // Initial refs setting
-    useEffect(() => {
-        if (isLoaded && data && prevGoalTrigger.current === null) {
-            prevGoalTrigger.current = data.goalTrigger || 0;
-        }
-    }, [data, isLoaded]);
-
     // Check for goal
     useEffect(() => {
-        if (!isLoaded || !data || prevGoalTrigger.current === null) return;
+        if (!isLoaded || !data) return;
+
+        if (prevGoalTrigger.current === null) {
+            prevGoalTrigger.current = data.goalTrigger || 0;
+            return;
+        }
 
         const currentTrigger = data.goalTrigger || 0;
 
