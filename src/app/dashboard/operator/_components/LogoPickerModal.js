@@ -49,7 +49,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
-        const max_size = 160; // Max width or height
+        const max_size = 400; // Max width or height (increased from 160 for high quality on scaled overlays)
         let width = img.width;
         let height = img.height;
 

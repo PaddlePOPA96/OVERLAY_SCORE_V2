@@ -41,6 +41,7 @@ export function useScoreboard(roomId = "default") {
   });
 
   const [displayTime, setDisplayTime] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Sync Firebase untuk room tertentu
   useEffect(() => {
@@ -50,7 +51,10 @@ export function useScoreboard(roomId = "default") {
       if (snapshot.exists()) {
         const val = snapshot.val();
         setData((prev) => ({ ...prev, ...val }));
+        setIsLoaded(true);
         calculateTime(val);
+      } else {
+        setIsLoaded(true);
       }
     });
     return () => unsubscribe();
@@ -133,5 +137,5 @@ export function useScoreboard(roomId = "default") {
     return `${m}:${s}`;
   };
 
-  return { data, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio, previewGoalAudio };
+  return { data, isLoaded, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio, previewGoalAudio };
 }

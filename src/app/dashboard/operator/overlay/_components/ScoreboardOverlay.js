@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
 
 export default function ScoreboardOverlay({ roomId = "default" }) {
-    const { data, displayTime, formatTime } = useScoreboard(roomId);
+    const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId);
     const [isMounted, setIsMounted] = useState(false);
     const [playError, setPlayError] = useState(false);
 
@@ -22,14 +22,14 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
 
     // Initial refs setting
     useEffect(() => {
-        if (data && prevGoalTrigger.current === null) {
+        if (isLoaded && data && prevGoalTrigger.current === null) {
             prevGoalTrigger.current = data.goalTrigger || 0;
         }
-    }, [data]);
+    }, [data, isLoaded]);
 
     // Check for goal
     useEffect(() => {
-        if (!data || prevGoalTrigger.current === null) return;
+        if (!isLoaded || !data || prevGoalTrigger.current === null) return;
 
         const currentTrigger = data.goalTrigger || 0;
 
@@ -52,7 +52,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         }
 
         prevGoalTrigger.current = currentTrigger;
-    }, [data?.goalTrigger]);
+    }, [data?.goalTrigger, isLoaded]);
 
     // Listen for stop signal directly from data changes
     useEffect(() => {
@@ -66,7 +66,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
     // Listen for preview audio signal
     const prevPreviewTrigger = useRef(null);
     useEffect(() => {
-        if (!data) return;
+        if (!isLoaded || !data) return;
         if (prevPreviewTrigger.current === null) {
             prevPreviewTrigger.current = data.previewAudioTrigger || 0;
             return;
@@ -93,7 +93,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
             }
         }
         prevPreviewTrigger.current = currentTrigger;
-    }, [data?.previewAudioTrigger, data?.previewAudioSource]);
+    }, [data?.previewAudioTrigger, data?.previewAudioSource, isLoaded]);
 
     const handleInteraction = () => {
         setPlayError(false);
