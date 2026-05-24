@@ -139,7 +139,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
                 height: "100%",
                 pointerEvents: "none",
                 transform: `translate(${x}px, ${y}px) scale(${scale})`,
-                transformOrigin: "top left",
+                transformOrigin: "center center",
                 transition: "transform 0.1s linear",
                 zIndex: 10,
             }}
