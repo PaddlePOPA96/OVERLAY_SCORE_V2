@@ -1,5 +1,6 @@
 /* Layout B styles */
 #layout-b-root {
+  --overlay-scale: 1.5;
   width: 100vw;
   background-color: transparent;
   height: 100vh;
@@ -12,11 +13,13 @@
   position: relative;
   display: inline-block;
   transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: scale(var(--overlay-scale));
+  transform-origin: center center;
 }
 
 .layout-b-wrapper.hidden {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(20px) scale(var(--overlay-scale));
 }
 
 .layout-b-scoreboard {
