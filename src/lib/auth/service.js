@@ -73,31 +73,25 @@ export async function syncUserToFirestore(user) {
   const userRef = doc(dbFirestore, "users", user.uid);
   const snap = await getDoc(userRef);
 
-  const envAdminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-  const isSuperAdmin = user.email === envAdminEmail || user.uid === "JvsaI3GrseURaVqrwcQGJZnOLPp1";
-
-  // Jika data belum ada, buat baru
+  // Jika data belum ada di Firestore, buat baru dengan default role 'user'
   if (!snap.exists()) {
     await setDoc(userRef, {
       email: user.email,
-      role: isSuperAdmin ? "superadmin" : "user", // Auto-admin/superadmin di DB agar lolos Security Rules
+      role: "user",
       createdAt: new Date().toISOString(),
       syncedAt: new Date().toISOString(),
     });
-  } else {
-    // Jika data ada, tapi dia sebenarnya Super Admin (env/UUID), pastikan role-nya superadmin di DB juga
-    if (isSuperAdmin && snap.data().role !== "superadmin") {
-      await updateDoc(userRef, { role: "superadmin" });
-    }
   }
 
-  // --- Sync to Realtime Database (NEW) ---
   // --- Sync to Realtime Database (NEW) ---
   try {
     const rtdbRef = ref(db);
     // Use try-read pattern
     const rtdbSnap = await get(child(rtdbRef, `users/${user.uid}`));
-    const currentRole = isSuperAdmin ? "superadmin" : (snap.exists() ? snap.data().role : "user");
+    
+    // Ambil data terbaru dari Firestore untuk memastikan role yang sinkron
+    const dbSnap = await getDoc(userRef);
+    const currentRole = dbSnap.exists() ? dbSnap.data().role : "user";
 
     if (!rtdbSnap.exists() || rtdbSnap.val().role !== currentRole) {
       await set(ref(db, `users/${user.uid}`), {
@@ -107,8 +101,7 @@ export async function syncUserToFirestore(user) {
       });
     }
   } catch (err) {
-    console.error("Failed to sync user role to Realtime Database. Check Rules.", err);
-    // Do not throw, so app continues to work (just streaming broadcast will fail)
+    console.error("Failed to sync user role to Realtime Database.", err);
   }
 }
 

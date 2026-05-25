@@ -13,15 +13,7 @@ export function useUserRole(user) {
             return;
         }
 
-        // 1. Cek Environment Variable (Super Admin) atau Fallback UUID Superadmin
-        const envAdminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        if (user.email === envAdminEmail || user.uid === "JvsaI3GrseURaVqrwcQGJZnOLPp1") {
-            setRole("superadmin");
-            setLoading(false);
-            return;
-        }
-
-        // 2. Cek Firestore users/{uid}
+        // Cek Firestore users/{uid} untuk mengambil role secara dinamis dari database
         const userRef = doc(dbFirestore, "users", user.uid);
         const unsub = onSnapshot(userRef, (docSnap) => {
             if (docSnap.exists()) {
@@ -30,6 +22,10 @@ export function useUserRole(user) {
             } else {
                 setRole("user"); // Default jika doc belum ada
             }
+            setLoading(false);
+        }, (error) => {
+            console.error("Error reading user role from Firestore:", error);
+            setRole("user");
             setLoading(false);
         });
 
