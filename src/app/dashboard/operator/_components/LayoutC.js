@@ -41,8 +41,13 @@ export default function LayoutC({ data, displayTime, formatTime }) {
   const homeDisplayName = data.homeName || "HOME";
   const awayDisplayName = data.awayName || "AWAY";
 
+  const overlayScale = data.isPreview ? "1.0" : "0.88";
+  const boardStyle = {
+    "--overlay-scale": overlayScale,
+  };
+
   return (
-    <div id="layout-c-root">
+    <div id="layout-c-root" style={boardStyle}>
       <div className={`layout-c-container ${isHiding ? "layout-c-hide" : ""} ${showGoal ? "layout-c-goal-pulse" : ""}`}>
 
         {/* League Logo Box

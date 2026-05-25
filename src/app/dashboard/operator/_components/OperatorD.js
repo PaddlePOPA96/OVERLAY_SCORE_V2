@@ -22,14 +22,12 @@ export default function OperatorD({
         </h2>
       </div>
 
-      <Card className="operator-b-preview-box" style={{ overflow: "hidden" }}>
-        <div style={{ transform: "scale(0.42)", transformOrigin: "center", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <LayoutD
-            data={{ ...data, showOverlay: true }}
-            displayTime={displayTime}
-            formatTime={formatTime}
-          />
-        </div>
+      <Card className="operator-b-preview-box">
+        <LayoutD
+          data={{ ...data, showOverlay: true, isPreview: true }}
+          displayTime={displayTime}
+          formatTime={formatTime}
+        />
       </Card>
 
       <UnifiedOperatorControls

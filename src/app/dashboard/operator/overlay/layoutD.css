@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Rajdhani:wght@500;600;700&display=swap');
 
 #layout-d-root {
-  --overlay-scale: 4.5;
+  --overlay-scale: 1.95;
   position: relative;
   width: 100vw;
   height: 100vh;

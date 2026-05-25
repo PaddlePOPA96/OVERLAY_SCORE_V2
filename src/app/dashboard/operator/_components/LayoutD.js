@@ -62,9 +62,11 @@ export default function LayoutD({ data, displayTime, formatTime }) {
   const teamRightSeriesScore = isSwapped ? (data.homeSeriesScore || 0) : (data.awaySeriesScore || 0);
 
   // Dynamic CSS variables for the accents (Tailwind equivalent)
+  const overlayScale = data.isPreview ? "1.0" : "1.95";
   const boardStyles = {
     "--home-accent-color": teamLeftColor,
     "--away-accent-color": teamRightColor,
+    "--overlay-scale": overlayScale,
   };
 
   // Determine period text (round name)

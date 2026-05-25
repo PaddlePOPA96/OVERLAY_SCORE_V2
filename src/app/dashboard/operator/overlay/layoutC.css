@@ -1,7 +1,7 @@
 /* Modern Scoreboard Layout C - Broadcast Quality */
 
 #layout-c-root {
-  --overlay-scale: 3.2;
+  --overlay-scale: 0.88;
   --home-gradient: linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%);
   --away-gradient: linear-gradient(270deg, #020024 0%, #090979 35%, #00d4ff 100%);
   --score-bg: #000a35;

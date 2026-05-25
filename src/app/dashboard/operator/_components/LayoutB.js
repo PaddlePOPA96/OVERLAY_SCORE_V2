@@ -50,9 +50,11 @@ export default function LayoutB({ data, displayTime, formatTime }) {
   const homeBg = data.homeBg || "#ff4b4b";
   const awayBg = data.awayBg || "#e5e5e5";
 
+  const overlayScale = data.isPreview ? "1.0" : "0.72";
   const boardStyle = {
     "--layout-b-home-bg": homeBg,
     "--layout-b-away-bg": awayBg,
+    "--overlay-scale": overlayScale,
   };
 
   const homeTextColor = getContrastColor(homeBg);

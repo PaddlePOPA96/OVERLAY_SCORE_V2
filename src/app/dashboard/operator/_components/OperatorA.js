@@ -25,7 +25,7 @@ export default function OperatorA({
 
       <Card className="operator-a-preview-box">
         <LayoutA
-          data={{ ...data, showOverlay: true }}
+          data={{ ...data, showOverlay: true, isPreview: true }}
           displayTime={displayTime}
           formatTime={formatTime}
         />

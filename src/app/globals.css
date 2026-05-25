@@ -574,7 +574,10 @@ body {
   margin-top: 20px;
 }
 
-.operator-b-preview-box #layout-b-root { 
+.operator-b-preview-box #layout-b-root,
+.operator-b-preview-box #layout-c-root,
+.operator-b-preview-box #layout-d-root,
+.operator-b-preview-box #layout-e-root { 
   width: auto; 
   height: auto; 
   position: static; 
@@ -583,6 +586,21 @@ body {
 
 .operator-b-preview-box .layout-b-wrapper { 
   transform: scale(0.95); 
+  transform-origin: center; 
+}
+
+.operator-b-preview-box .layout-c-container { 
+  transform: scale(1.0); 
+  transform-origin: center; 
+}
+
+.operator-b-preview-box .layout-d-container { 
+  transform: scale(1.3); 
+  transform-origin: center; 
+}
+
+.operator-b-preview-box .layout-e-container { 
+  transform: scale(1.15); 
   transform-origin: center; 
 }
 

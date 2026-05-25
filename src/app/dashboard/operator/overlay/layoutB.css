@@ -1,6 +1,6 @@
 /* Layout B styles */
 #layout-b-root {
-  --overlay-scale: 1.5;
+  --overlay-scale: 0.72;
   width: 100vw;
   background-color: transparent;
   height: 100vh;

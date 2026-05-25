@@ -1,5 +1,5 @@
 #layout-a-root {
-  --overlay-scale: 1.7;
+  --overlay-scale: 0.78;
   --score-left-color: #ff4b4b;
   --score-right-color: #2946ff;
   --pill-color: #350038;
@@ -298,8 +298,8 @@
 }
 
 @keyframes slideDown {
-  0%   { opacity: 0; transform: translateY(-22px) scale(calc(var(--overlay-scale) * 0.9)); }
-  55%  { opacity: 1; transform: translateY(4px) scale(calc(var(--overlay-scale) * 1.02)); }
+  0%   { opacity: 0; transform: translateY(-22px) scale(var(--overlay-scale)); }
+  55%  { opacity: 1; transform: translateY(4px) scale(var(--overlay-scale)); }
   100% { opacity: 1; transform: translateY(0) scale(var(--overlay-scale)); }
 }
 
