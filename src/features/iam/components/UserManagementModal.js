@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
-import { updateUserRole, syncUserToFirestore } from "@/lib/auth/service";
+import { updateUserRole, syncUserToFirestore, deleteUserFromDb } from "@/lib/auth/service";
 import { auth } from "@/lib/firebaseAuth";
 
 export function UserManagementModal({ open, onClose, currentUserUid, isSuperAdmin }) {
@@ -100,6 +100,22 @@ function UserRow({ user, isMe, isSuperAdmin }) {
         }
     };
 
+    const handleDelete = async () => {
+        if (isMe) return;
+        const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus akun ${user.email}?`);
+        if (!confirmDelete) return;
+
+        setStatus("deleting");
+        try {
+            await deleteUserFromDb(user.uid);
+            setStatus("deleted");
+        } catch (err) {
+            console.error(err);
+            setStatus("error");
+            alert("Gagal menghapus user: " + err.message);
+        }
+    };
+
     return (
         <tr className="hover:bg-slate-900/50 transition-colors">
             <td className="py-3 px-2">
@@ -125,10 +141,21 @@ function UserRow({ user, isMe, isSuperAdmin }) {
                     </select>
                 )}
             </td>
-            <td className="py-3 px-2">
+            <td className="py-3 px-2 flex items-center gap-3">
                 {status === "saving" && <span className="text-yellow-500 text-xs">Menyimpan...</span>}
                 {status === "success" && <span className="text-emerald-500 text-xs">Tersimpan!</span>}
+                {status === "deleting" && <span className="text-red-500 text-xs">Menghapus...</span>}
+                {status === "deleted" && <span className="text-slate-500 text-xs">Terhapus</span>}
                 {status === "error" && <span className="text-red-500 text-xs">Gagal</span>}
+                
+                {isSuperAdmin && !isMe && !status && (
+                    <button
+                        onClick={handleDelete}
+                        className="text-xs text-red-400 hover:text-red-300 bg-red-950/40 hover:bg-red-950/70 border border-red-800/60 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                    >
+                        Hapus
+                    </button>
+                )}
             </td>
         </tr>
     );

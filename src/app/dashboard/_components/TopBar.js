@@ -24,6 +24,8 @@ export function TopBar({
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserConfirm, setNewUserConfirm] = useState("");
+  const [showNewUserPassword, setShowNewUserPassword] = useState(false);
+  const [showNewUserConfirm, setShowNewUserConfirm] = useState(false);
   const [newUserRole, setNewUserRole] = useState("user");
   const [adminStatus, setAdminStatus] = useState({ type: "", message: "" });
   const [adminLoading, setAdminLoading] = useState(false);
@@ -230,79 +232,97 @@ export function TopBar({
 
       {user && showAdminModal && !showUserMgmt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="bg-slate-950 border border-slate-700 rounded-2xl p-4 w-full max-w-sm shadow-2xl text-slate-100">
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-sm font-semibold">Profil</h3>
+          <div className="bg-slate-950 border border-slate-700 rounded-2xl p-8 w-full max-w-xl shadow-2xl text-slate-100 mx-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-2xl font-bold tracking-tight">Profil</h3>
               <button
                 type="button"
                 onClick={() => {
                   setShowAdminModal(false);
                   setShowCreateForm(false);
                 }}
-                className="w-6 h-6 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 text-sm flex items-center justify-center transition-colors"
               >
                 ×
               </button>
             </div>
-            <p className="text-[11px] text-slate-400 mb-3">
+            <p className="text-sm text-slate-400 mb-6">
               {user?.email}{" "}
-              <span className="text-emerald-400">({role || "user"})</span>
+              <span className="text-emerald-400 font-medium">({role || "user"})</span>
             </p>
 
             {isSuperAdmin && showCreateForm && (
-              <form onSubmit={handleAdminCreateUser} className="space-y-3 mb-3">
-                <h4 className="text-xs font-semibold text-slate-200">
+              <form onSubmit={handleAdminCreateUser} className="space-y-4 mb-6 border-t border-slate-800/80 pt-5">
+                <h4 className="text-base font-bold text-slate-200 mb-3">
                   Super Admin: Buat User Baru
                 </h4>
-                <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-300">
                     Email user
                   </label>
                   <input
                     type="email"
-                    className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all placeholder-slate-500"
                     placeholder="user@example.com"
                     value={newUserEmail}
                     onChange={(event) => setNewUserEmail(event.target.value)}
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300">
+                 <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-300">
                     Password awal
                   </label>
-                  <input
-                    type="password"
-                    className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                    placeholder="Minimal 6 karakter"
-                    value={newUserPassword}
-                    onChange={(event) =>
-                      setNewUserPassword(event.target.value)
-                    }
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewUserPassword ? "text" : "password"}
+                      className="w-full rounded-lg border border-slate-700 bg-slate-900 pl-3.5 pr-14 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all placeholder-slate-500"
+                      placeholder="Minimal 6 karakter"
+                      value={newUserPassword}
+                      onChange={(event) =>
+                        setNewUserPassword(event.target.value)
+                      }
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewUserPassword(!showNewUserPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-200 font-medium transition-colors"
+                    >
+                      {showNewUserPassword ? "Hide" : "Show"}
+                    </button>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-300">
                     Konfirmasi password
                   </label>
-                  <input
-                    type="password"
-                    className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-                    placeholder="Ulangi password"
-                    value={newUserConfirm}
-                    onChange={(event) =>
-                      setNewUserConfirm(event.target.value)
-                    }
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewUserConfirm ? "text" : "password"}
+                      className="w-full rounded-lg border border-slate-700 bg-slate-900 pl-3.5 pr-14 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all placeholder-slate-500"
+                      placeholder="Ulangi password"
+                      value={newUserConfirm}
+                      onChange={(event) =>
+                        setNewUserConfirm(event.target.value)
+                      }
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewUserConfirm(!showNewUserConfirm)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-200 font-medium transition-colors"
+                    >
+                      {showNewUserConfirm ? "Hide" : "Show"}
+                    </button>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] text-slate-300">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-300">
                     Role Access
                   </label>
                   <select
-                    className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
                     value={newUserRole}
                     onChange={(e) => setNewUserRole(e.target.value)}
                   >
@@ -314,16 +334,16 @@ export function TopBar({
 
                 {adminStatus.message && (
                   <p
-                    className={`text-[11px] ${adminStatus.type === "error"
-                      ? "text-red-400"
-                      : "text-emerald-400"
+                    className={`text-xs ${adminStatus.type === "error"
+                      ? "text-red-400 font-medium"
+                      : "text-emerald-400 font-medium"
                       }`}
                   >
                     {adminStatus.message}
                   </p>
                 )}
 
-                <p className="mt-1 text-[10px] text-slate-500">
+                <p className="mt-1 text-xs text-slate-500">
                   Catatan: Setelah user dibuat, sesi login akan berpindah ke
                   akun tersebut.
                 </p>
@@ -331,20 +351,20 @@ export function TopBar({
                 <Button
                   type="submit"
                   disabled={adminLoading}
-                  className="w-full mt-2 text-xs"
+                  className="w-full mt-3 py-2.5 text-sm font-semibold rounded-lg shadow-md"
                 >
                   {adminLoading ? "Membuat user..." : "Simpan User Baru"}
                 </Button>
               </form>
             )}
 
-            <div className="flex justify-end gap-2 pt-1 flex-wrap">
+            <div className="flex justify-end gap-2 pt-2 flex-wrap">
               {isSuperAdmin && (
                 <>
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-xs"
+                    className="text-sm py-2 px-4 rounded-lg"
                     onClick={() => setShowUserMgmt(true)}
                   >
                     Kelola User
@@ -353,7 +373,7 @@ export function TopBar({
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-xs"
+                    className="text-sm py-2 px-4 rounded-lg"
                     onClick={() => setShowCreateForm((prev) => !prev)}
                   >
                     {showCreateForm ? "Tutup Add User" : "Add User"}
@@ -362,7 +382,7 @@ export function TopBar({
               )}
               <Button
                 type="button"
-                className="text-xs bg-red-900 hover:bg-red-800 text-red-100"
+                className="text-sm py-2 px-4 rounded-lg bg-red-900 hover:bg-red-800 text-red-100 font-medium transition-colors"
                 onClick={onLogout}
               >
                 Logout

@@ -254,6 +254,7 @@ export default function DashboardPage() {
 function LoginModal({ open, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
@@ -322,14 +323,23 @@ function LoginModal({ open, onClose }) {
           </div>
           <div className="space-y-1">
             <label className="text-[11px] text-slate-300">Password</label>
-            <input
-              type="password"
-              className="w-full rounded border border-slate-700 bg-slate-900 px-2 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              placeholder="Masukkan password"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full rounded border border-slate-700 bg-slate-900 pl-2 pr-10 py-1 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                placeholder="Masukkan password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 hover:text-slate-200"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           {status.message && (

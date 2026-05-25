@@ -18,6 +18,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
@@ -142,14 +143,23 @@ export default function RegisterPage() {
 
           <div className="auth-field">
             <label className="auth-label">Confirm password</label>
-            <input
-              type="password"
-              className="auth-input"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              placeholder="Repeat your password"
-            />
+            <div className="auth-password-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className="auth-input auth-input-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder="Repeat your password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((v) => !v)}
+                className="auth-toggle-visibility"
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           {status.message && (

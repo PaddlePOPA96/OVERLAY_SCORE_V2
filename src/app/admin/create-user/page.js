@@ -17,6 +17,8 @@ export default function AdminCreateUserPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
@@ -125,26 +127,44 @@ export default function AdminCreateUserPage() {
 
           <div className="auth-field">
             <label className="auth-label">Password awal</label>
-            <input
-              type="password"
-              className="auth-input"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              placeholder="Minimal 6 karakter"
-            />
+            <div className="auth-password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="auth-input auth-input-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                placeholder="Minimal 6 karakter"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="auth-toggle-visibility"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           <div className="auth-field">
             <label className="auth-label">Konfirmasi password</label>
-            <input
-              type="password"
-              className="auth-input"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              required
-              placeholder="Ulangi password"
-            />
+            <div className="auth-password-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className="auth-input auth-input-password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                required
+                placeholder="Ulangi password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((v) => !v)}
+                className="auth-toggle-visibility"
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           {status.message && (

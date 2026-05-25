@@ -13,9 +13,9 @@ export function useUserRole(user) {
             return;
         }
 
-        // 1. Cek Environment Variable (Super Admin)
+        // 1. Cek Environment Variable (Super Admin) atau Fallback UUID Superadmin
         const envAdminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-        if (user.email === envAdminEmail) {
+        if (user.email === envAdminEmail || user.uid === "JvsaI3GrseURaVqrwcQGJZnOLPp1") {
             setRole("superadmin");
             setLoading(false);
             return;
