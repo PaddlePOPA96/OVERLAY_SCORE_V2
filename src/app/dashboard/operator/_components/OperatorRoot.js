@@ -8,6 +8,7 @@ import OperatorA from "./OperatorA";
 import OperatorB from "./OperatorB";
 import OperatorC from "./OperatorC";
 import OperatorD from "./OperatorD";
+import OperatorE from "./OperatorE";
 
 export default function OperatorRoot({
   initialRoomId,
@@ -132,6 +133,21 @@ export default function OperatorRoot({
   if (data.layout === "D") {
     return (
       <OperatorD
+        data={data}
+        actions={actions}
+        displayTime={displayTime}
+        formatTime={formatTime}
+        roomId={roomId}
+        onLogout={handleLogout}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
+  }
+
+  if (data.layout === "E") {
+    return (
+      <OperatorE
         data={data}
         actions={actions}
         displayTime={displayTime}

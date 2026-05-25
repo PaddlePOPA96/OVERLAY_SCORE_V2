@@ -1,0 +1,67 @@
+/* VCT Scoreboard Layout E - Valorant Precision Overlay HUD */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Rajdhani:wght@500;600;700&display=swap');
+
+#layout-e-root {
+  --overlay-scale: 2.7;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-family: 'Rajdhani', 'Montserrat', sans-serif;
+}
+
+.layout-e-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(-25px) scale(calc(var(--overlay-scale) * 0.95));
+  animation: layoutEIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Slide Out Transition */
+.layout-e-hide {
+  animation: layoutEOut 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes layoutEIn {
+  from {
+    opacity: 0;
+    transform: translateY(-25px) scale(calc(var(--overlay-scale) * 0.95));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+}
+
+@keyframes layoutEOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(var(--overlay-scale));
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-25px) scale(calc(var(--overlay-scale) * 0.95));
+  }
+}
+
+/* VCT Dynamic Goal Score Box Pulsing */
+@keyframes vctGoalFlash {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 4px var(--team-color));
+    background-color: var(--score-bg);
+  }
+  50% {
+    filter: brightness(1.6) drop-shadow(0 0 15px var(--team-color));
+    background-color: var(--team-color);
+  }
+}
+
+.goal-flash-glow {
+  animation: vctGoalFlash 0.5s infinite alternate;
+}

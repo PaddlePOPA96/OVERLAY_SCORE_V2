@@ -21,6 +21,7 @@ export default function LayoutSelector({ data, updateMatch, description }) {
         <option value="B">Layout B</option>
         <option value="C">Layout C</option>
         <option value="D">Layout D (Valorant Esports)</option>
+        <option value="E">Layout E (Valorant Overlay HUD)</option>
       </select>
       {description && (
         <span className="op-tiny">{description}</span>

@@ -5,6 +5,7 @@ import LayoutA from "../../_components/LayoutA";
 import LayoutB from "../../_components/LayoutB";
 import LayoutC from "../../_components/LayoutC";
 import LayoutD from "../../_components/LayoutD";
+import LayoutE from "../../_components/LayoutE";
 import { useEffect, useState, useRef } from "react";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
 
@@ -169,6 +170,12 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
                 />
             ) : data.layout === "D" ? (
                 <LayoutD
+                    data={data}
+                    displayTime={displayTime}
+                    formatTime={formatTime}
+                />
+            ) : data.layout === "E" ? (
+                <LayoutE
                     data={data}
                     displayTime={displayTime}
                     formatTime={formatTime}

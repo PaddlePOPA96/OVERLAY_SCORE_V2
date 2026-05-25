@@ -44,7 +44,8 @@ export default function LayoutD({ data, displayTime, formatTime }) {
   const isSwapped = !!data.switchSides;
 
   // Visual Left side (Team 1)
-  const teamLeftName = isSwapped ? (data.awayName || "NRG") : (data.homeName || "FNC");
+  const teamLeftNameRaw = isSwapped ? (data.awayName || "NRG") : (data.homeName || "FNC");
+  const teamLeftName = teamLeftNameRaw.substring(0, 4).toUpperCase();
   const teamLeftFullName = isSwapped ? (data.awayFullName || "AMER#2") : (data.homeFullName || "EMEA#3");
   const teamLeftLogo = isSwapped ? (data.awayLogo || "/logo/placeholder.png") : (data.homeLogo || "/logo/placeholder.png");
   const teamLeftColor = isSwapped ? (data.awayColor || data.awayBg || "#0df2b9") : (data.homeColor || data.homeBg || "#ff5500");
@@ -52,7 +53,8 @@ export default function LayoutD({ data, displayTime, formatTime }) {
   const teamLeftSeriesScore = isSwapped ? (data.awaySeriesScore || 0) : (data.homeSeriesScore || 0);
 
   // Visual Right side (Team 2)
-  const teamRightName = isSwapped ? (data.homeName || "FNC") : (data.awayName || "NRG");
+  const teamRightNameRaw = isSwapped ? (data.homeName || "FNC") : (data.awayName || "NRG");
+  const teamRightName = teamRightNameRaw.substring(0, 4).toUpperCase();
   const teamRightFullName = isSwapped ? (data.homeFullName || "EMEA#3") : (data.awayFullName || "AMER#2");
   const teamRightLogo = isSwapped ? (data.homeLogo || "/logo/placeholder.png") : (data.awayLogo || "/logo/placeholder.png");
   const teamRightColor = isSwapped ? (data.homeColor || data.homeBg || "#ff5500") : (data.awayColor || data.awayBg || "#0df2b9");
