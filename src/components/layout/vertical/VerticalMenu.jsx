@@ -1,20 +1,22 @@
+'use client'
+
 // React & Firebase Imports
 import { useEffect, useState } from 'react'
 
 import { onAuthStateChanged } from 'firebase/auth'
-
+import { doc, onSnapshot } from 'firebase/firestore'
 
 // MUI Imports
-import Chip from '@mui/material/Chip'
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import { auth } from '@/lib/firebaseAuth'
+import { dbFirestore } from '@/lib/firebaseFirestore'
 
 // Component Imports
-import { Menu, SubMenu, MenuItem, MenuSection } from '@menu/vertical-menu'
+import { Menu, MenuItem, MenuSection } from '@menu/vertical-menu'
 
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
@@ -32,42 +34,52 @@ const RenderExpandIcon = ({ open, transitionDuration }) => (
   </StyledVerticalNavExpandIcon>
 )
 
-const ADMIN_EMAIL = "admin@admin.com";
-
 const VerticalMenu = ({ scrollMenu }) => {
-  // Hooks
   const theme = useTheme()
   const { isBreakpointReached, transitionDuration } = useVerticalNav()
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
-  // State for dynamic user tracking
-  const [user, setUser] = useState(null)
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+    let roleUnsub = () => { }
 
-    
-return () => unsubscribe();
-  }, []);
+    const authUnsub = onAuthStateChanged(auth, (currentUser) => {
+      roleUnsub()
+
+      if (!currentUser) {
+        setIsSuperAdmin(false)
+
+        return
+      }
+
+      const userRef = doc(dbFirestore, 'users', currentUser.uid)
+
+      roleUnsub = onSnapshot(userRef, (snap) => {
+        const role = snap.exists() ? snap.data().role : 'user'
+
+        setIsSuperAdmin(role === 'superadmin')
+      })
+    })
+
+    return () => {
+      authUnsub()
+      roleUnsub()
+    }
+  }, [])
 
   return (
-    // eslint-disable-next-line lines-around-comment
-    /* Custom scrollbar instead of browser scroll, remove if you want browser scroll only */
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-            className: 'bs-full overflow-y-auto overflow-x-hidden',
-            onScroll: container => scrollMenu(container, false)
-          }
+          className: 'bs-full overflow-y-auto overflow-x-hidden',
+          onScroll: container => scrollMenu(container, false)
+        }
         : {
-            options: { wheelPropagation: false, suppressScrollX: true },
-            onScrollY: container => scrollMenu(container, true)
-          })}
+          options: { wheelPropagation: false, suppressScrollX: true },
+          onScrollY: container => scrollMenu(container, true)
+        })}
     >
-      {/* Incase you also want to scroll NavHeader to scroll with Vertical Menu, remove NavHeader from above and paste it below this comment */}
-      {/* Vertical Menu */}
       <Menu
         menuItemStyles={menuItemStyles(theme)}
         renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
@@ -75,29 +87,29 @@ return () => unsubscribe();
         menuSectionStyles={menuSectionStyles(theme)}
       >
         <MenuSection label='Scoreboard Control'>
-          <MenuItem href='/operator' icon={<i className='ri-gamepad-line' />}>
+          <MenuItem href='/?s=operator' icon={<i className='ri-gamepad-line' />}>
             Scoreboard Operator
           </MenuItem>
-          <MenuItem href='/countdown-timer' icon={<i className='ri-time-line' />}>
+          <MenuItem href='/?s=countdown-timer' icon={<i className='ri-time-line' />}>
             Countdown Timer
           </MenuItem>
-          <MenuItem href='/running-text-setup' icon={<i className='ri-file-text-line' />}>
+          <MenuItem href='/?s=running-text' icon={<i className='ri-file-text-line' />}>
             Running Text (OBS)
           </MenuItem>
         </MenuSection>
 
         <MenuSection label='Sports Data'>
-          <MenuItem href='/premier-league' icon={<i className='ri-football-line' />}>
+          <MenuItem href='/?s=premier-league' icon={<i className='ri-football-line' />}>
             Premier League
           </MenuItem>
-          <MenuItem href='/ucl-table' icon={<i className='ri-trophy-line' />}>
+          <MenuItem href='/?s=ucl-table' icon={<i className='ri-trophy-line' />}>
             UCL Standings
           </MenuItem>
         </MenuSection>
 
-        {user?.email === ADMIN_EMAIL && (
-          <MenuSection label='Admin Superuser'>
-            <MenuItem href='/admin/create-user' icon={<i className='ri-settings-4-line' />}>
+        {isSuperAdmin && (
+          <MenuSection label='Admin'>
+            <MenuItem href='/?s=manage-users' icon={<i className='ri-shield-user-line' />}>
               Manage Users
             </MenuItem>
           </MenuSection>

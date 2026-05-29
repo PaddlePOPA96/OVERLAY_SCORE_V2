@@ -1,6 +1,5 @@
 import {
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
@@ -38,26 +37,49 @@ export async function sendResetPassword(email) {
 }
 
 // Fungsi baru untuk membuat user dengan role tertentu (admin/user)
+// Menggunakan secondary Firebase App agar sesi admin tidak terganggu
 
 export async function createUserWithRole(email, password, role) {
-  // 1. Create Auth
-  const cred = await createUserWithEmailAndPassword(auth, email, password);
-  const user = cred.user;
+  // Ambil config dari app utama
+  const { initializeApp, deleteApp, getApps } = await import("firebase/app");
+  const { getAuth, createUserWithEmailAndPassword: createUser, signOut } = await import("firebase/auth");
 
-  // 2. Simpan Role di Firestore (Collection: users, ID: uid)
-  await setDoc(doc(dbFirestore, "users", user.uid), {
-    email: user.email,
-    role: role, // 'admin' or 'user'
-    createdAt: new Date().toISOString(),
-  });
+  // Buat secondary app instance yang terisolasi
+  const secondaryAppName = `secondary-${Date.now()}`;
+  const primaryApp = (await import("firebase/app")).getApps()[0];
+  const secondaryApp = initializeApp(primaryApp.options, secondaryAppName);
+  const secondaryAuth = getAuth(secondaryApp);
 
-  // 3. Simpan Role di Realtime Database juga (untuk Rules)
-  await set(ref(db, `users/${user.uid}`), {
-    role: role,
-    email: user.email
-  });
+  try {
+    // 1. Buat user di secondary auth (tidak mengganti sesi admin)
+    const cred = await createUser(secondaryAuth, email, password);
+    const user = cred.user;
 
-  return user;
+    // 2. Simpan Role di Firestore
+    await setDoc(doc(dbFirestore, "users", user.uid), {
+      email: user.email,
+      role: role,
+      createdAt: new Date().toISOString(),
+    });
+
+    // 3. Simpan Role di Realtime Database
+    await set(ref(db, `users/${user.uid}`), {
+      role: role,
+      email: user.email,
+    });
+
+    // 4. Sign out dari secondary instance
+    await signOut(secondaryAuth);
+
+    return user;
+  } finally {
+    // Selalu hapus secondary app untuk menghindari memory leak
+    try {
+      await deleteApp(secondaryApp);
+    } catch (_) {
+      // Ignore cleanup errors
+    }
+  }
 }
 
 export async function updateUserRole(uid, newRole) {

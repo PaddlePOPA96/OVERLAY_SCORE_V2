@@ -8,6 +8,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 
 
 // MUI Imports
+import InputAdornment from "@mui/material/InputAdornment";
+
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -34,17 +36,19 @@ import {
   syncUserToFirestore,
 } from "@/lib/auth/service";
 import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
+import { useUserRole } from "@/features/iam/hooks/useUserRole";
 import { auth } from "@/lib/firebaseAuth";
-
-const ADMIN_EMAIL = "admin@admin.com";
 
 export default function AdminUserManagementPage() {
   const router = useRouter();
-  
+
   // Synchronously initialize state with active user session to bypass verification delay
   const [ready, setReady] = useState(!!auth.currentUser);
-  const [isAdmin, setIsAdmin] = useState(auth.currentUser?.email === ADMIN_EMAIL);
+  const [currentUser, setCurrentUser] = useState(auth.currentUser || null);
   const [currentUserId, setCurrentUserId] = useState(auth.currentUser?.uid || null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { isSuperAdmin } = useUserRole(currentUser);
 
   // Form States for creating new accounts
   const [email, setEmail] = useState("");
@@ -56,32 +60,25 @@ export default function AdminUserManagementPage() {
   const { users, loading: loadingUsers } = useAllUsers();
 
   useEffect(() => {
-    // Optimize: Proactively sync admin user to Firestore on mount if session is active
-    if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) {
+    // Optimize: Proactively sync user to Firestore on mount if session is active
+    if (auth.currentUser) {
       syncUserToFirestore(auth.currentUser).catch(console.error);
     }
 
     const unsub = onAuthStateChanged(auth, (user) => {
       if (!user) {
         router.replace("/login");
-        
-return;
+
+        return;
       }
 
-      const isAdminUser = user.email === ADMIN_EMAIL;
-
-      setIsAdmin(isAdminUser);
+      setCurrentUser(user);
       setCurrentUserId(user.uid);
       setReady(true);
-
-      // Sync the admin's own profile to Firestore if not already present
-      if (isAdminUser) {
-        syncUserToFirestore(user).catch(console.error);
-      }
+      syncUserToFirestore(user).catch(console.error);
     });
 
-    
-return () => unsub();
+    return () => unsub();
   }, [router]);
 
   const handleCreateUser = async (event) => {
@@ -93,8 +90,8 @@ return () => unsub();
         type: "error",
         message: "Passwords do not match.",
       });
-      
-return;
+
+      return;
     }
 
     setLoading(true);
@@ -119,14 +116,14 @@ return;
   };
 
   if (!ready) {
-    return <div className="p-6 text-slate-500 text-sm">Verifying admin session...</div>;
+    return <div className="p-6 text-slate-500 text-sm">Verifying session...</div>;
   }
 
-  if (!isAdmin) {
+  if (!isSuperAdmin) {
     return (
       <div className="p-6">
         <Alert severity="error" className="mb-4">
-          Access Denied. This section is strictly reserved for the Superuser admin.
+          Access Denied. This section is reserved for Superadmin only.
         </Alert>
         <Button variant="contained" onClick={() => router.push("/")}>
           Return to Dashboard
@@ -145,7 +142,7 @@ return;
       <Grid container spacing={6}>
         {/* Create User Form Card */}
         <Grid item xs={12} md={5}>
-          <Card className="border border-slate-700/20 bg-slate-50 shadow-sm rounded-xl">
+          <Card variant="outlined" sx={{ borderRadius: 3 }}>
             <CardHeader title="Create New Account" subheader="Add a new operator to the system" />
             <CardContent className="space-y-4">
               {createStatus.message && (
@@ -153,7 +150,7 @@ return;
                   {createStatus.message}
                 </Alert>
               )}
-              <form onSubmit={handleCreateUser} className="space-y-4">
+              <form onSubmit={handleCreateUser} className="flex flex-col gap-4">
                 <TextField
                   fullWidth
                   label="Email Address"
@@ -167,22 +164,48 @@ return;
                 <TextField
                   fullWidth
                   label="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Minimum 6 characters"
                   size="small"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
                 <TextField
                   fullWidth
                   label="Confirm Password"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   placeholder="Confirm password"
                   size="small"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          edge="end"
+                        >
+                          {showConfirmPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
                 <Button
                   fullWidth
@@ -200,7 +223,7 @@ return;
 
         {/* Users List Card */}
         <Grid item xs={12} md={7}>
-          <Card className="border border-slate-700/20 bg-slate-50 shadow-sm rounded-xl">
+          <Card variant="outlined" sx={{ borderRadius: 3 }}>
             <CardHeader
               title={`Registered Accounts (${users.length})`}
               subheader="List of synchronized Firestore user profiles"
@@ -211,13 +234,13 @@ return;
               ) : users.length === 0 ? (
                 <div className="text-center py-6 text-slate-400 text-sm">No users found.</div>
               ) : (
-                <TableContainer component={Paper} className="border border-slate-200/50 shadow-none rounded-lg">
+                <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
                   <Table size="small">
-                    <TableHead className="bg-slate-100">
+                    <TableHead>
                       <TableRow>
-                        <TableCell className="font-semibold text-xs py-3">Email</TableCell>
-                        <TableCell className="font-semibold text-xs py-3">Role</TableCell>
-                        <TableCell className="font-semibold text-xs py-3 align-middle text-right">Actions</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Email</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Role</TableCell>
+                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary', textAlign: 'right' }}>Actions</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -283,7 +306,7 @@ function UserRowItem({ row, isMe }) {
   return (
     <TableRow hover>
       <TableCell className="py-2.5">
-        <Typography variant="body2" className="font-medium text-slate-800">
+        <Typography variant="body2" sx={{ fontWeight: 500 }}>
           {row.email}
         </Typography>
         {isMe && (
@@ -301,7 +324,6 @@ function UserRowItem({ row, isMe }) {
             onChange={(e) => handleRoleToggle(e.target.value)}
             disabled={saving}
             size="small"
-            className="text-xs bg-white"
             sx={{ height: 30, fontSize: 12 }}
           >
             <MenuItem value="user">User</MenuItem>

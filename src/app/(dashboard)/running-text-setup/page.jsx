@@ -7,7 +7,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-export default function RunningTextSetupPage() {
+export function RunningTextSetupContent() {
   const [copied, setCopied] = useState(false);
   const [origin, setOrigin] = useState("");
 
@@ -27,10 +27,10 @@ export default function RunningTextSetupPage() {
 
   return (
     <div className="p-4">
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h1 className="text-2xl font-bold text-textPrimary">Running Text Overlay (OBS)</h1>
         <p className="text-textSecondary text-sm">Configure, view, and embed the ticker running text overlay on OBS.</p>
-      </div>
+      </div> */}
 
       <Card className="max-w-3xl border border-slate-700/20 bg-slate-50 shadow-sm rounded-xl">
         <CardContent className="p-6 space-y-6">
@@ -80,3 +80,6 @@ export default function RunningTextSetupPage() {
     </div>
   );
 }
+
+// Default export for the /running-text-setup route
+export default RunningTextSetupContent

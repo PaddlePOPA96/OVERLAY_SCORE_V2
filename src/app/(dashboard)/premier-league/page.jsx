@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useColorScheme } from "@mui/material/styles";
+
 import Button from "@mui/material/Button";
 
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -19,6 +21,9 @@ import { PremierLeagueRight } from "@/features/premier-league/components/Premier
 // MUI Imports
 
 export default function PremierLeaguePage() {
+  const { mode } = useColorScheme();
+  const isDark = mode === "dark";
+
   const { matches, loadingMatches, reloadMatches } = usePremierLeagueMatches();
   const { standings, loadingStandings, reloadStandings } = usePremierLeagueStandings();
   const { news, loadingNews, reloadNews } = usePremierLeagueNews();
@@ -70,15 +75,15 @@ export default function PremierLeaguePage() {
       <Grid container spacing={6}>
         {/* Left Column: Matches or Table */}
         <Grid item xs={12} lg={8}>
-          <div className="bg-slate-50 border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full">
+          <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full">
             <PremierLeagueMain
               matches={matches}
               loading={loadingMatches}
-              theme="light"
+              theme={isDark ? "dark" : "light"}
               standings={standings}
               loadingStandings={loadingStandings}
               mode={plMode}
-              isAdmin={false} // operator admin handles updates via operator page, this is view-only for users
+              isAdmin={false}
               onRefreshStandings={reloadStandings}
               onRefreshMatches={reloadMatches}
             />
@@ -87,13 +92,13 @@ export default function PremierLeaguePage() {
 
         {/* Right Column: Latest News & Live Match */}
         <Grid item xs={12} lg={4}>
-          <div className="bg-slate-50 border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
+          <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
             <PremierLeagueRight
               matches={matches}
               loading={loadingMatches}
               news={news}
               loadingNews={loadingNews}
-              theme="light"
+              theme={isDark ? "dark" : "light"}
             />
           </div>
         </Grid>

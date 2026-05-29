@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useColorScheme } from "@mui/material/styles";
+
 import Button from "@mui/material/Button";
 
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -28,6 +30,9 @@ import { PremierLeagueRight } from "@/features/premier-league/components/Premier
 // MUI Imports
 
 export default function UCLTablePage() {
+  const { mode } = useColorScheme();
+  const isDark = mode === "dark";
+
   const { uclMatches, loadingUclMatches, reloadUclMatches } = useChampionsLeagueMatches();
   const { uclStandings, loadingUclStandings, reloadUclStandings } = useChampionsLeagueStandings();
 
@@ -48,8 +53,8 @@ export default function UCLTablePage() {
     <div className="p-4 w-full">
       <header className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">UEFA Champions League</h1>
-          <p className="text-slate-500 text-sm">View Champions League tables, schedules, results, and bracket stages.</p>
+          <h1 className="text-2xl font-bold text-textPrimary">UEFA Champions League</h1>
+          <p className="text-textSecondary text-sm">View Champions League tables, schedules, results, and bracket stages.</p>
         </div>
         <div className="flex gap-2 items-center">
           <ButtonGroup variant="outlined" size="small" aria-label="UCL Display Mode">
@@ -90,12 +95,12 @@ export default function UCLTablePage() {
       <Grid container spacing={6}>
         {/* Left Column: UCL content */}
         <Grid item xs={12} lg={8}>
-          <div className="bg-slate-50 border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full">
+          <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full">
             {uclMode === "matches" ? (
               <ChampionsLeagueMatches
                 matches={uclMatches}
                 loadingMatches={loadingUclMatches}
-                theme="light"
+                theme={isDark ? "dark" : "light"}
                 onRefreshMatches={reloadUclMatches}
                 isAdmin={false}
               />
@@ -103,7 +108,7 @@ export default function UCLTablePage() {
               <ChampionsLeagueTable
                 standings={uclStandings}
                 loadingStandings={loadingUclStandings}
-                theme="light"
+                theme={isDark ? "dark" : "light"}
                 isAdmin={false}
                 onRefreshStandings={reloadUclStandings}
               />
@@ -111,7 +116,7 @@ export default function UCLTablePage() {
               <ChampionsLeagueBracket
                 matches={uclMatches}
                 loadingMatches={loadingUclMatches}
-                theme="light"
+                theme={isDark ? "dark" : "light"}
                 isAdmin={false}
                 onRefreshMatches={reloadUclMatches}
               />
@@ -121,13 +126,13 @@ export default function UCLTablePage() {
 
         {/* Right Column: Shared News & Live Matches */}
         <Grid item xs={12} lg={4}>
-          <div className="bg-slate-50 border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
+          <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
             <PremierLeagueRight
               matches={plMatches}
               loading={loadingPlMatches}
               news={news}
               loadingNews={loadingNews}
-              theme="light"
+              theme={isDark ? "dark" : "light"}
             />
           </div>
         </Grid>
