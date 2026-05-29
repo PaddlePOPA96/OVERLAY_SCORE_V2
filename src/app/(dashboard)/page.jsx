@@ -42,6 +42,7 @@ function DashboardPageInner() {
         <Button variant="contained" href="/login" color="warning" className="normal-case shadow-none font-bold">Go to Login Page</Button>
       </div>
     );
+
     return children;
   }
 
