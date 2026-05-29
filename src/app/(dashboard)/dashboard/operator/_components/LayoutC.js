@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/app/dashboard/operator/overlay/layoutC.css";
+import "@/app/(dashboard)/dashboard/operator/overlay/layoutC.css";
 
 export default function LayoutC({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay);

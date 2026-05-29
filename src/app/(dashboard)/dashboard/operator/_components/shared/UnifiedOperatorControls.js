@@ -70,10 +70,10 @@ export default function UnifiedOperatorControls({
   return (
     <div className="operator-b-controls" style={{ width: "100%", maxWidth: "900px" }}>
       {/* SECTION 1: Layout & Babak Selection */}
-      <div 
-        style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))", 
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
           gap: "12px",
           borderBottom: `1px solid ${borderCol}`,
           paddingBottom: "12px",
@@ -81,9 +81,9 @@ export default function UnifiedOperatorControls({
         }}
       >
         <div>
-          <LayoutSelector 
-            data={data} 
-            updateMatch={actions.updateMatch} 
+          <LayoutSelector
+            data={data}
+            updateMatch={actions.updateMatch}
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -131,9 +131,9 @@ export default function UnifiedOperatorControls({
             className={`op-btn ${data.switchSides ? "op-btn-active" : ""}`}
             variant={data.switchSides ? "default" : "outline"}
             onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
-            style={{ 
-              width: "100%", 
-              height: "36px", 
+            style={{
+              width: "100%",
+              height: "36px",
               fontWeight: "600",
               fontSize: "12px",
               background: data.switchSides ? "#2563eb" : "transparent",
@@ -147,20 +147,20 @@ export default function UnifiedOperatorControls({
       </div>
 
       {/* SECTION 2 & 3: Side-by-Side Team setup and Score panels */}
-      <div 
-        style={{ 
-          display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", 
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
           gap: "18px",
           marginBottom: "8px"
         }}
       >
         {/* HOME (LEFT) TEAM CARD */}
-        <div 
-          style={{ 
-            background: cardBg, 
-            border: cardBorder, 
-            borderRadius: "10px", 
+        <div
+          style={{
+            background: cardBg,
+            border: cardBorder,
+            borderRadius: "10px",
             padding: "16px",
             display: "flex",
             flexDirection: "column",
@@ -170,20 +170,20 @@ export default function UnifiedOperatorControls({
           <h3 style={{ fontSize: "14px", fontWeight: "700", color: "#60a5fa", borderBottom: `1px solid ${borderCol}`, paddingBottom: "6px", margin: "0" }}>
             🏠 Home Team (Left Side)
           </h3>
-          
+
           {/* Logo Picker & Color Thumbnail Row */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div 
+            <div
               onClick={() => openLogoPicker("home")}
-              style={{ 
-                width: "56px", 
-                height: "56px", 
-                background: isLight ? "#f8fafc" : "#0d0d0d", 
-                border: `1px solid ${borderCol}`, 
-                borderRadius: "8px", 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center", 
+              style={{
+                width: "56px",
+                height: "56px",
+                background: isLight ? "#f8fafc" : "#0d0d0d",
+                border: `1px solid ${borderCol}`,
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 cursor: "pointer",
                 overflow: "hidden"
               }}
@@ -195,11 +195,11 @@ export default function UnifiedOperatorControls({
                 <span style={{ fontSize: "10px", color: "#666" }}>No Logo</span>
               )}
             </div>
-            
+
             <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-              <Button 
-                className="op-btn" 
-                variant="outline" 
+              <Button
+                className="op-btn"
+                variant="outline"
                 size="sm"
                 onClick={() => openLogoPicker("home")}
                 style={{ alignSelf: "flex-start", padding: "2px 10px", fontSize: "11px" }}
@@ -212,13 +212,13 @@ export default function UnifiedOperatorControls({
                   type="color"
                   value={data.homeColor || data.homeBg || "#ff4b4b"}
                   onChange={(e) => handleHomeColorChange(e.target.value)}
-                  style={{ 
-                    border: "none", 
-                    width: "28px", 
-                    height: "20px", 
-                    padding: "0", 
-                    background: "transparent", 
-                    cursor: "pointer" 
+                  style={{
+                    border: "none",
+                    width: "28px",
+                    height: "20px",
+                    padding: "0",
+                    background: "transparent",
+                    cursor: "pointer"
                   }}
                 />
               </div>
@@ -278,14 +278,14 @@ export default function UnifiedOperatorControls({
           )}
 
           {/* Home Score Controls */}
-          <div 
-            style={{ 
+          <div
+            style={{
               marginTop: "8px",
-              padding: "10px", 
-              background: scoreBg, 
-              borderRadius: "8px", 
-              display: "flex", 
-              flexDirection: "column", 
+              padding: "10px",
+              background: scoreBg,
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: "column",
               gap: "8px",
               border: isLight ? `1px solid ${borderCol}` : "none"
             }}
@@ -320,13 +320,13 @@ export default function UnifiedOperatorControls({
                 </Button>
               </div>
             </div>
-            
+
             <Button
               className="op-btn op-btn-main"
               onClick={() => actions.triggerGoal("home")}
-              style={{ 
-                width: "100%", 
-                padding: "8px", 
+              style={{
+                width: "100%",
+                padding: "8px",
                 backgroundColor: "#047857",
                 color: "#fff",
                 fontWeight: "bold",
@@ -343,11 +343,11 @@ export default function UnifiedOperatorControls({
         </div>
 
         {/* AWAY (RIGHT) TEAM CARD */}
-        <div 
-          style={{ 
-            background: cardBg, 
-            border: cardBorder, 
-            borderRadius: "10px", 
+        <div
+          style={{
+            background: cardBg,
+            border: cardBorder,
+            borderRadius: "10px",
             padding: "16px",
             display: "flex",
             flexDirection: "column",
@@ -357,20 +357,20 @@ export default function UnifiedOperatorControls({
           <h3 style={{ fontSize: "14px", fontWeight: "700", color: "#f87171", borderBottom: `1px solid ${borderCol}`, paddingBottom: "6px", margin: "0" }}>
             ✈️ Away Team (Right Side)
           </h3>
-          
+
           {/* Logo Picker & Color Thumbnail Row */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div 
+            <div
               onClick={() => openLogoPicker("away")}
-              style={{ 
-                width: "56px", 
-                height: "56px", 
-                background: isLight ? "#f8fafc" : "#0d0d0d", 
-                border: `1px solid ${borderCol}`, 
-                borderRadius: "8px", 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center", 
+              style={{
+                width: "56px",
+                height: "56px",
+                background: isLight ? "#f8fafc" : "#0d0d0d",
+                border: `1px solid ${borderCol}`,
+                borderRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 cursor: "pointer",
                 overflow: "hidden"
               }}
@@ -382,11 +382,11 @@ export default function UnifiedOperatorControls({
                 <span style={{ fontSize: "10px", color: "#666" }}>No Logo</span>
               )}
             </div>
-            
+
             <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-              <Button 
-                className="op-btn" 
-                variant="outline" 
+              <Button
+                className="op-btn"
+                variant="outline"
                 size="sm"
                 onClick={() => openLogoPicker("away")}
                 style={{ alignSelf: "flex-start", padding: "2px 10px", fontSize: "11px" }}
@@ -399,13 +399,13 @@ export default function UnifiedOperatorControls({
                   type="color"
                   value={data.awayColor || data.awayBg || "#b00024"}
                   onChange={(e) => handleAwayColorChange(e.target.value)}
-                  style={{ 
-                    border: "none", 
-                    width: "28px", 
-                    height: "20px", 
-                    padding: "0", 
-                    background: "transparent", 
-                    cursor: "pointer" 
+                  style={{
+                    border: "none",
+                    width: "28px",
+                    height: "20px",
+                    padding: "0",
+                    background: "transparent",
+                    cursor: "pointer"
                   }}
                 />
               </div>
@@ -465,14 +465,14 @@ export default function UnifiedOperatorControls({
           )}
 
           {/* Away Score Controls */}
-          <div 
-            style={{ 
+          <div
+            style={{
               marginTop: "8px",
-              padding: "10px", 
-              background: scoreBg, 
-              borderRadius: "8px", 
-              display: "flex", 
-              flexDirection: "column", 
+              padding: "10px",
+              background: scoreBg,
+              borderRadius: "8px",
+              display: "flex",
+              flexDirection: "column",
               gap: "8px",
               border: isLight ? `1px solid ${borderCol}` : "none"
             }}
@@ -507,13 +507,13 @@ export default function UnifiedOperatorControls({
                 </Button>
               </div>
             </div>
-            
+
             <Button
               className="op-btn op-btn-danger"
               onClick={() => actions.triggerGoal("away")}
-              style={{ 
-                width: "100%", 
-                padding: "8px", 
+              style={{
+                width: "100%",
+                padding: "8px",
                 color: "#fff",
                 fontWeight: "bold",
                 fontSize: "12px",
@@ -531,30 +531,30 @@ export default function UnifiedOperatorControls({
 
       {/* SECTION 4: Timer & Audio Settings */}
       <div style={{ display: "flex", flexDirection: "column", gap: "10px", borderBottom: `1px solid ${borderCol}`, paddingBottom: "10px", marginBottom: "8px" }}>
-        <TimerControls 
-          data={data} 
-          actions={actions} 
-          displayTime={displayTime} 
-          formatTime={formatTime} 
-          btnMainClass={isLight ? "op-btn-main" : "op-b-btn-main"} 
+        <TimerControls
+          data={data}
+          actions={actions}
+          displayTime={displayTime}
+          formatTime={formatTime}
+          btnMainClass={isLight ? "op-btn-main" : "op-b-btn-main"}
         />
-        
-        <GoalAudioSettings 
-          data={data} 
-          updateMatch={actions.updateMatch} 
-          stopGoalAudio={actions.stopGoalAudio} 
-          previewGoalAudio={actions.previewGoalAudio} 
+
+        <GoalAudioSettings
+          data={data}
+          updateMatch={actions.updateMatch}
+          stopGoalAudio={actions.stopGoalAudio}
+          previewGoalAudio={actions.previewGoalAudio}
         />
       </div>
 
       {/* SECTION 5: Overlay Room Admin & Sync */}
-      <div 
-        style={{ 
-          display: "flex", 
-          flexWrap: "wrap", 
-          alignItems: "center", 
-          justifyContent: "space-between", 
-          gap: "10px" 
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "10px"
         }}
       >
         <OverlayRoomControls
@@ -562,7 +562,9 @@ export default function UnifiedOperatorControls({
           toggleOverlay={actions.toggleOverlay}
           roomId={roomId}
         />
-        
+
+
+
         <div className="op-section" style={{ margin: 0 }}>
           <Button
             className="op-btn"
@@ -585,14 +587,14 @@ export default function UnifiedOperatorControls({
           const abbr = makeTeamAbbr(club);
 
           if (logoTarget === "home") {
-            actions.updateMatch({ 
-              homeLogo: src, 
+            actions.updateMatch({
+              homeLogo: src,
               homeName: abbr,
               homeFullName: club.toUpperCase()
             });
           } else {
-            actions.updateMatch({ 
-              awayLogo: src, 
+            actions.updateMatch({
+              awayLogo: src,
               awayName: abbr,
               awayFullName: club.toUpperCase()
             });

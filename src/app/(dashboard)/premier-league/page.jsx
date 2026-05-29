@@ -5,9 +5,7 @@ import { useState } from "react";
 import { useColorScheme } from "@mui/material/styles";
 
 import Button from "@mui/material/Button";
-
 import ButtonGroup from "@mui/material/ButtonGroup";
-
 import Grid from "@mui/material/Grid";
 
 import {
@@ -17,12 +15,12 @@ import {
 } from "@/features/premier-league/hooks/usePremierLeagueData";
 import { PremierLeagueMain } from "@/features/premier-league/components/PremierLeagueSection";
 import { PremierLeagueRight } from "@/features/premier-league/components/PremierLeagueSidebar";
-
-// MUI Imports
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function PremierLeaguePage() {
   const { mode } = useColorScheme();
   const isDark = mode === "dark";
+  const { user, loading: loadingAuth } = useAuth();
 
   const { matches, loadingMatches, reloadMatches } = usePremierLeagueMatches();
   const { standings, loadingStandings, reloadStandings } = usePremierLeagueStandings();
@@ -35,6 +33,22 @@ export default function PremierLeaguePage() {
     reloadStandings();
     if (reloadNews) reloadNews();
   };
+
+  if (loadingAuth) {
+    return <div className="p-6 text-textSecondary text-sm">Loading Premier League Dashboard...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="p-4 w-full">
+        <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 mb-6 max-w-2xl">
+          <h3 className="font-semibold mb-2 text-lg">Access Restricted</h3>
+          <p className="text-sm mb-4">You must be logged in to use the Premier League Dashboard.</p>
+          <Button variant="contained" href="/login" color="warning" className="normal-case shadow-none font-bold">Go to Login Page</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 w-full">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
-import "@/app/dashboard/operator/overlay/layoutA.css";
+import "@/app/(dashboard)/dashboard/operator/overlay/layoutA.css";
 
 export default function LayoutA({ data, displayTime, formatTime }) {
   const [showGoal, setShowGoal] = useState(false);

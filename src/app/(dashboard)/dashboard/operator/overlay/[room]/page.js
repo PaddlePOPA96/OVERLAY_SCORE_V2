@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 
-import ScoreboardOverlay from "@/app/dashboard/operator/overlay/_components/ScoreboardOverlay";
+import ScoreboardOverlay from "@/app/(dashboard)/dashboard/operator/overlay/_components/ScoreboardOverlay";
 
 export default function OverlayRoomPage() {
   const params = useParams();

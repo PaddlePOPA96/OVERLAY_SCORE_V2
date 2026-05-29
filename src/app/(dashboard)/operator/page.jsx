@@ -1,10 +1,10 @@
 "use client";
-
+console.log("AKU FILE DASHBOARD GROUP");
 import { useEffect, useState } from "react";
 
 import { useTheme } from "@mui/material/styles";
 
-import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
+import OperatorRoot from "@/app/(dashboard)/dashboard/operator/_components/OperatorRoot";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function OperatorPage() {
@@ -13,7 +13,8 @@ export default function OperatorPage() {
   const activeTheme = theme.palette.mode;
 
   // Allow URL query/hash to override the default roomId
-  const [roomId, setRoomId] = useState("default");
+  const [roomId, setRoomId] = useState(null);
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -21,10 +22,10 @@ export default function OperatorPage() {
     const roomFromQuery = params.get("room") || "";
     const roomFromHash = window.location.hash.replace("#", "") || "";
 
-    setRoomId(roomFromQuery || roomFromHash || authRoomId || "default");
+    setRoomId(roomFromQuery || roomFromHash || authRoomId);
   }, [authRoomId]);
 
-  if (loading) {
+  if (loading || !roomId) {
     return <div className="p-6 text-textSecondary text-sm">Loading...</div>;
   }
 

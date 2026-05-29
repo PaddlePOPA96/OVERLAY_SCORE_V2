@@ -17,7 +17,11 @@ export default function OperatorRoot({
   requireAuth = true,
   theme: parentTheme,
 }) {
-  const roomId = initialRoomId || "default";
+  const roomId = initialRoomId;
+  if (!roomId) {
+    return <div className="text-white p-10">Loading Room...</div>;
+  }
+
   const [isAuthReady, setIsAuthReady] = useState(!requireAuth);
   const [theme, setTheme] = useState(parentTheme || "dark");
 
@@ -34,8 +38,8 @@ export default function OperatorRoot({
       }
     });
 
-    
-return () => unsub();
+
+    return () => unsub();
   }, [requireAuth]);
 
   // Synchronize state when parent theme prop changes
@@ -76,6 +80,7 @@ return () => unsub();
     }
   };
 
+  console.log("OperatorRoot roomId:", roomId);
   const {
     data,
     displayTime,

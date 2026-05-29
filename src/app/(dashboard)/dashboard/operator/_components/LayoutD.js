@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import "@/app/dashboard/operator/overlay/layoutD.css";
+import "@/app/(dashboard)/dashboard/operator/overlay/layoutD.css";
 
 export default function LayoutD({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay);

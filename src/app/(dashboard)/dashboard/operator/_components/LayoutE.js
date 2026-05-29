@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import "@/app/dashboard/operator/overlay/layoutE.css";
+import "@/app/(dashboard)/dashboard/operator/overlay/layoutE.css";
 
 export default function LayoutE({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay);

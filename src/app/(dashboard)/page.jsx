@@ -15,7 +15,7 @@ import { usePremierLeagueMatches, usePremierLeagueStandings, usePremierLeagueNew
 import { useChampionsLeagueMatches, useChampionsLeagueStandings } from '@/features/champions-league/hooks/useChampionsLeagueData'
 
 // Pre-load all section components at startup (no on-demand compile lag)
-const OperatorRoot = dynamic(() => import('@/app/dashboard/operator/_components/OperatorRoot'), { ssr: false })
+const OperatorRoot = dynamic(() => import('@/app/(dashboard)/dashboard/operator/_components/OperatorRoot'), { ssr: false })
 const CountdownTimer = dynamic(() => import('@/features/countdown/components/CountdownTimer'), { ssr: false })
 const PremierLeagueMain = dynamic(() => import('@/features/premier-league/components/PremierLeagueSection').then(m => ({ default: m.PremierLeagueMain })), { ssr: false })
 const PremierLeagueRight = dynamic(() => import('@/features/premier-league/components/PremierLeagueSidebar').then(m => ({ default: m.PremierLeagueRight })), { ssr: false })
@@ -31,7 +31,19 @@ function DashboardPageInner() {
   const { mode } = useColorScheme()
   const isDark = mode === 'dark'
   const theme = isDark ? 'dark' : 'light'
-  const { roomId } = useAuth()
+  const { roomId, user, loading: loadingAuth } = useAuth()
+
+  const RequireLogin = ({ children, title }) => {
+    if (loadingAuth) return <div className="p-6 text-textSecondary text-sm">Loading {title}...</div>;
+    if (!user) return (
+      <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 mb-6 max-w-2xl">
+        <h3 className="font-semibold mb-2 text-lg">Access Restricted</h3>
+        <p className="text-sm mb-4">You must be logged in to use the {title}.</p>
+        <Button variant="contained" href="/login" color="warning" className="normal-case shadow-none font-bold">Go to Login Page</Button>
+      </div>
+    );
+    return children;
+  }
 
   // Only load PL data when on PL or UCL sections
   const loadSports = activeSection === 'premier-league' || activeSection === 'ucl-table'
@@ -57,12 +69,16 @@ function DashboardPageInner() {
             <h1 className='text-2xl font-bold text-textPrimary'>Scoreboard Operator</h1>
             <p className='text-textSecondary text-sm'>Control the live scoreboard in real-time.</p>
           </header>
-          <OperatorRoot requireAuth={false} theme={theme} />
+          <RequireLogin title="Scoreboard Operator">
+            <OperatorRoot initialRoomId={roomId} requireAuth={false} theme={theme} />
+          </RequireLogin>
         </div>
       )}
 
       {activeSection === 'countdown-timer' && (
-        <CountdownTimer theme={theme} roomId={roomId} />
+        <RequireLogin title="Countdown Timer">
+          <CountdownTimer theme={theme} roomId={roomId} />
+        </RequireLogin>
       )}
 
       {/* ── RUNNING TEXT SETUP ── */}
@@ -72,87 +88,93 @@ function DashboardPageInner() {
             <h1 className='text-2xl font-bold text-textPrimary'>Running Text (OBS)</h1>
             <p className='text-textSecondary text-sm'>Configure the ticker overlay for OBS broadcast.</p>
           </header>
-          <RunningTextSetupContent />
+          <RequireLogin title="Running Text Setup">
+            <RunningTextSetupContent />
+          </RequireLogin>
         </div>
       )}
 
       {/* ── PREMIER LEAGUE ── */}
       {activeSection === 'premier-league' && (
-        <div>
-          <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
-            <div>
-              <h1 className='text-2xl font-bold text-textPrimary'>Premier League</h1>
-              <p className='text-textSecondary text-sm'>View schedules, scores, standings, and results.</p>
-            </div>
-            <div className='flex gap-2 items-center'>
-              <ButtonGroup variant='outlined' size='small'>
-                <Button onClick={() => setPlMode('matches')} variant={plMode === 'matches' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
-                  Schedules & Results
-                </Button>
-                <Button onClick={() => setPlMode('table')} variant={plMode === 'table' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
-                  Standings Table
-                </Button>
-              </ButtonGroup>
-              <Button onClick={() => { reloadMatches(); reloadStandings(); reloadNews?.() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
-                🔄 Refresh
-              </Button>
-            </div>
-          </header>
-          <Grid container spacing={6}>
-            <Grid item xs={12} lg={8}>
-              <div style={paperBg} className={panelClass}>
-                <PremierLeagueMain matches={matches} loading={loadingMatches} theme={theme} standings={standings} loadingStandings={loadingStandings} mode={plMode} isAdmin={false} onRefreshStandings={reloadStandings} onRefreshMatches={reloadMatches} />
+        <RequireLogin title="Premier League Dashboard">
+          <div>
+            <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+              <div>
+                <h1 className='text-2xl font-bold text-textPrimary'>Premier League</h1>
+                <p className='text-textSecondary text-sm'>View schedules, scores, standings, and results.</p>
               </div>
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
-                <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+              <div className='flex gap-2 items-center'>
+                <ButtonGroup variant='outlined' size='small'>
+                  <Button onClick={() => setPlMode('matches')} variant={plMode === 'matches' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Schedules & Results
+                  </Button>
+                  <Button onClick={() => setPlMode('table')} variant={plMode === 'table' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Standings Table
+                  </Button>
+                </ButtonGroup>
+                <Button onClick={() => { reloadMatches(); reloadStandings(); reloadNews?.() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
+                  🔄 Refresh
+                </Button>
               </div>
+            </header>
+            <Grid container spacing={6}>
+              <Grid item xs={12} lg={8}>
+                <div style={paperBg} className={panelClass}>
+                  <PremierLeagueMain matches={matches} loading={loadingMatches} theme={theme} standings={standings} loadingStandings={loadingStandings} mode={plMode} isAdmin={false} onRefreshStandings={reloadStandings} onRefreshMatches={reloadMatches} />
+                </div>
+              </Grid>
+              <Grid item xs={12} lg={4}>
+                <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
+                  <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
+          </div>
+        </RequireLogin>
       )}
 
       {/* ── UCL ── */}
       {activeSection === 'ucl-table' && (
-        <div>
-          <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
-            <div>
-              <h1 className='text-2xl font-bold text-textPrimary'>UEFA Champions League</h1>
-              <p className='text-textSecondary text-sm'>View UCL tables, schedules, results, and bracket stages.</p>
-            </div>
-            <div className='flex gap-2 items-center'>
-              <ButtonGroup variant='outlined' size='small'>
-                <Button onClick={() => setUclMode('matches')} variant={uclMode === 'matches' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
-                  Schedules & Results
-                </Button>
-                <Button onClick={() => setUclMode('table')} variant={uclMode === 'table' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
-                  UCL Table
-                </Button>
-                <Button onClick={() => setUclMode('bracket')} variant={uclMode === 'bracket' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
-                  Playoffs Bracket
-                </Button>
-              </ButtonGroup>
-              <Button onClick={() => { reloadUclMatches(); reloadUclStandings() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
-                🔄 Refresh
-              </Button>
-            </div>
-          </header>
-          <Grid container spacing={6}>
-            <Grid item xs={12} lg={8}>
-              <div style={paperBg} className={panelClass}>
-                {uclMode === 'matches' && <ChampionsLeagueMatches matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} onRefreshMatches={reloadUclMatches} isAdmin={false} />}
-                {uclMode === 'table' && <ChampionsLeagueTable standings={uclStandings} loadingStandings={loadingUclStandings} theme={theme} isAdmin={false} onRefreshStandings={reloadUclStandings} />}
-                {uclMode === 'bracket' && <ChampionsLeagueBracket matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} isAdmin={false} onRefreshMatches={reloadUclMatches} />}
+        <RequireLogin title="UEFA Champions League Dashboard">
+          <div>
+            <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+              <div>
+                <h1 className='text-2xl font-bold text-textPrimary'>UEFA Champions League</h1>
+                <p className='text-textSecondary text-sm'>View UCL tables, schedules, results, and bracket stages.</p>
               </div>
-            </Grid>
-            <Grid item xs={12} lg={4}>
-              <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
-                <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+              <div className='flex gap-2 items-center'>
+                <ButtonGroup variant='outlined' size='small'>
+                  <Button onClick={() => setUclMode('matches')} variant={uclMode === 'matches' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Schedules & Results
+                  </Button>
+                  <Button onClick={() => setUclMode('table')} variant={uclMode === 'table' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    UCL Table
+                  </Button>
+                  <Button onClick={() => setUclMode('bracket')} variant={uclMode === 'bracket' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Playoffs Bracket
+                  </Button>
+                </ButtonGroup>
+                <Button onClick={() => { reloadUclMatches(); reloadUclStandings() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
+                  🔄 Refresh
+                </Button>
               </div>
+            </header>
+            <Grid container spacing={6}>
+              <Grid item xs={12} lg={8}>
+                <div style={paperBg} className={panelClass}>
+                  {uclMode === 'matches' && <ChampionsLeagueMatches matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} onRefreshMatches={reloadUclMatches} isAdmin={false} />}
+                  {uclMode === 'table' && <ChampionsLeagueTable standings={uclStandings} loadingStandings={loadingUclStandings} theme={theme} isAdmin={false} onRefreshStandings={reloadUclStandings} />}
+                  {uclMode === 'bracket' && <ChampionsLeagueBracket matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} isAdmin={false} onRefreshMatches={reloadUclMatches} />}
+                </div>
+              </Grid>
+              <Grid item xs={12} lg={4}>
+                <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
+                  <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
+          </div>
+        </RequireLogin>
       )}
 
       {/* ── MANAGE USERS ── */}

@@ -48,6 +48,10 @@ export function useScoreboard(roomId = "default") {
   // Sync Firebase untuk room tertentu
   useEffect(() => {
     if (!roomId) return;
+    
+    // Reset state when roomId changes to prevent data carry-over
+    setIsLoaded(false);
+
     const matchRef = ref(db, `match_live/${roomId}`);
 
     const unsubscribe = onValue(matchRef, (snapshot) => {
@@ -58,12 +62,12 @@ export function useScoreboard(roomId = "default") {
         setIsLoaded(true);
         calculateTime(val);
       } else {
+        // If room doesn't exist, we still mark it as loaded so UI can render
         setIsLoaded(true);
       }
     });
 
-    
-return () => unsubscribe();
+    return () => unsubscribe();
   }, [roomId]);
 
   // Interval Lokal
