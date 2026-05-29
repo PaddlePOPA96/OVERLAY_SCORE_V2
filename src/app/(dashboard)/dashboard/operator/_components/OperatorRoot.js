@@ -18,9 +18,6 @@ export default function OperatorRoot({
   theme: parentTheme,
 }) {
   const roomId = initialRoomId;
-  if (!roomId) {
-    return <div className="text-white p-10">Loading Room...</div>;
-  }
 
   const [isAuthReady, setIsAuthReady] = useState(!requireAuth);
   const [theme, setTheme] = useState(parentTheme || "dark");
@@ -37,7 +34,6 @@ export default function OperatorRoot({
         setIsAuthReady(true);
       }
     });
-
 
     return () => unsub();
   }, [requireAuth]);
@@ -81,6 +77,7 @@ export default function OperatorRoot({
   };
 
   console.log("OperatorRoot roomId:", roomId);
+
   const {
     data,
     displayTime,
@@ -92,7 +89,7 @@ export default function OperatorRoot({
     toggleOverlay,
     stopGoalAudio,
     previewGoalAudio,
-  } = useScoreboard(roomId);
+  } = useScoreboard(roomId || "default");
 
   const actions = {
     updateMatch,
@@ -103,6 +100,10 @@ export default function OperatorRoot({
     stopGoalAudio,
     previewGoalAudio,
   };
+
+  if (!roomId) {
+    return <div className="text-white p-10">Loading Room...</div>;
+  }
 
   if (!isAuthReady) {
     return <div className="text-white p-10">Memeriksa sesi login...</div>;

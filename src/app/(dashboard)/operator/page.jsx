@@ -1,5 +1,4 @@
 "use client";
-console.log("AKU FILE DASHBOARD GROUP");
 import { useEffect, useState } from "react";
 
 import { useTheme } from "@mui/material/styles";

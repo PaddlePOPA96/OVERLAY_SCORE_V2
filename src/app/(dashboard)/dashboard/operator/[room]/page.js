@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useParams, useRouter } from "next/navigation";
+
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import OperatorRoot from "@/app/(dashboard)/dashboard/operator/_components/OperatorRoot";
@@ -12,6 +14,7 @@ export default function OperatorRoomPage() {
   const [authorized, setAuthorized] = useState(null); // null = loading
 
   const rawRoom = params?.room;
+
   const roomId =
     typeof rawRoom === "string"
       ? rawRoom
@@ -21,10 +24,12 @@ export default function OperatorRoomPage() {
 
   useEffect(() => {
     const auth = getAuth();
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         // Belum login → redirect ke login
         router.replace("/login");
+
         return;
       }
 
@@ -33,6 +38,7 @@ export default function OperatorRoomPage() {
       if (roomId !== "default" && user.uid !== roomId) {
         // Redirect ke room milik user sendiri
         router.replace(`/dashboard/operator/overlay/${user.uid}`);
+
         return;
       }
 
