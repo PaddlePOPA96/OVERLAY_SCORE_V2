@@ -27,7 +27,7 @@ const initialData = {
   state: 'New York',
   zipCode: '634880',
   country: 'usa',
-  language: 'arabic',
+  language: 'english',
   timezone: 'gmt-12',
   currency: 'usd'
 }
