@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+
 import { ref, set } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
@@ -13,8 +15,10 @@ export async function GET() {
   try {
     const today = new Date();
     const pastDate = new Date();
+
     pastDate.setDate(today.getDate() - 7);
     const futureDate = new Date();
+
     futureDate.setDate(today.getDate() + 60);
 
     const url = `${BASE_URL}/competitions/CL/matches?dateFrom=${formatDate(
@@ -44,7 +48,9 @@ export async function GET() {
     if (!res.ok) {
       const errorBody = await res.json().catch(() => ({}));
       const errorMessage = errorBody.message || res.statusText;
-      return NextResponse.json(
+
+      
+return NextResponse.json(
         { error: `Upstream API Error (${res.status}): ${errorMessage}` },
         { status: res.status }
       );

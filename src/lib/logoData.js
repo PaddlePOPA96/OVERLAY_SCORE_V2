@@ -460,7 +460,9 @@ export function buildLogoSrc(league, club) {
   if (!league || !club) return "";
   const leagueSegment = encodeURIComponent(league);
   const clubSegment = encodeURIComponent(club);
-  return `/logo/${leagueSegment}/${clubSegment}.png`;
+
+  
+return `/logo/${leagueSegment}/${clubSegment}.png`;
 }
 
 // Alias khusus untuk logo yang disimpan di /logo/other
@@ -493,6 +495,7 @@ const OTHER_LOGO_ALIAS = {
 function normalizeOtherKey(name) {
   return String(name || "")
     .toLowerCase()
+
     // buang accent (ā, ğ, dll)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -505,11 +508,14 @@ export function buildOtherLogoSrc(club) {
   const key = normalizeOtherKey(club);
   const fileBase = OTHER_LOGO_ALIAS[key] || club;
   const clubSegment = encodeURIComponent(fileBase);
-  return `/logo/other/${clubSegment}.png`;
+
+  
+return `/logo/other/${clubSegment}.png`;
 }
 
 export function makeTeamAbbr(club) {
   if (!club) return "";
+
   const cleaned = club
     .replace(/[()]/g, " ")
     .replace(/[^A-Za-zÀ-ÿ\s]/g, " ")
@@ -540,12 +546,14 @@ export function makeTeamAbbr(club) {
   ]);
 
   const words = cleaned.split(" ");
+
   const mainWords =
     words.filter((w) => !stopWords.has(w.toLowerCase())) || words;
 
   const target = mainWords.length > 0 ? mainWords : words;
 
   let letters = "";
+
   if (target.length >= 3) {
     letters =
       (target[0][0] || "") + (target[1][0] || "") + (target[2][0] || "");

@@ -5,24 +5,32 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
+
+import { ref, set, get, child } from "firebase/database";
+
 import { auth, googleProvider } from "@/lib/firebaseAuth";
 import { dbFirestore } from "@/lib/firebaseFirestore";
 import { db } from "@/lib/firebase"; // Realtime Database
-import { ref, set, get, child } from "firebase/database";
 
 export async function loginWithEmailPassword(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password);
-  return cred.user;
+
+  
+return cred.user;
 }
 
 export async function registerWithEmailPassword(email, password) {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
-  return cred.user;
+
+  
+return cred.user;
 }
 
 export async function loginWithGooglePopup() {
   const cred = await signInWithPopup(auth, googleProvider);
-  return cred.user;
+
+  
+return cred.user;
 }
 
 export async function sendResetPassword(email) {
@@ -55,6 +63,7 @@ export async function createUserWithRole(email, password, role) {
 export async function updateUserRole(uid, newRole) {
   // Update role di Firestore
   const userRef = doc(dbFirestore, "users", uid);
+
   await updateDoc(userRef, { role: newRole });
 
   // Update Realtime Database
@@ -86,6 +95,7 @@ export async function syncUserToFirestore(user) {
   // --- Sync to Realtime Database (NEW) ---
   try {
     const rtdbRef = ref(db);
+
     // Use try-read pattern
     const rtdbSnap = await get(child(rtdbRef, `users/${user.uid}`));
     
@@ -108,6 +118,7 @@ export async function syncUserToFirestore(user) {
 export async function deleteUserFromDb(uid) {
   // 1. Hapus dari Firestore
   const userRef = doc(dbFirestore, "users", uid);
+
   await deleteDoc(userRef);
 
   // 2. Hapus dari Realtime Database

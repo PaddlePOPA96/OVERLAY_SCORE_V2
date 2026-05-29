@@ -5,24 +5,29 @@ import "@/app/dashboard/operator/overlay/layoutB.css";
 function getContrastColor(hex) {
   if (!hex) return "#000000";
   let clean = hex.trim().replace(/^#/, "");
+
   if (clean.length === 3) {
     clean = clean
       .split("")
       .map((c) => c + c)
       .join("");
   }
+
   const r = parseInt(clean.slice(0, 2), 16) || 0;
   const g = parseInt(clean.slice(2, 4), 16) || 0;
   const b = parseInt(clean.slice(4, 6), 16) || 0;
 
   // rumus luminance sederhana (YIQ)
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 150 ? "#000000" : "#ffffff";
+
+  
+return yiq >= 150 ? "#000000" : "#ffffff";
 }
 
 export default function LayoutB({ data, displayTime, formatTime }) {
   const [animateIn, setAnimateIn] = useState(false);
   const [showGoal, setShowGoal] = useState(false);
+
   // null supaya animasi pertama kali juga jalan
   const [lastIntroId, setLastIntroId] = useState(null);
 
@@ -31,16 +36,21 @@ export default function LayoutB({ data, displayTime, formatTime }) {
       setLastIntroId(data.introId);
       setAnimateIn(true);
       const timer = setTimeout(() => setAnimateIn(false), 1200);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, data.introId, lastIntroId]);
 
   useEffect(() => {
     const now = Date.now();
+
     if (data.goalTrigger > 0 && (now - data.goalTrigger) < 5000) {
       setShowGoal(true);
       const timer = setTimeout(() => setShowGoal(false), 3000);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.goalTrigger]);
 
@@ -51,6 +61,7 @@ export default function LayoutB({ data, displayTime, formatTime }) {
   const awayBg = data.awayBg || "#e5e5e5";
 
   const overlayScale = data.isPreview ? "1.0" : "0.72";
+
   const boardStyle = {
     "--layout-b-home-bg": homeBg,
     "--layout-b-away-bg": awayBg,

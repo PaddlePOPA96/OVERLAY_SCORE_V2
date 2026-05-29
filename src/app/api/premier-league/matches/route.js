@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+
 import { ref, set, get } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
@@ -15,6 +17,7 @@ export async function GET(request) {
   try {
     // 1. Authorization Header Check
     const authHeader = request.headers.get("Authorization");
+
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "Unauthorized: Missing or invalid token" },
@@ -31,13 +34,16 @@ export async function GET(request) {
         { status: 401 }
       );
     }
+
     const decodedToken = verification;
 
     // 2. Main Logic (Fetch Data)
     const today = new Date();
     const pastDate = new Date();
+
     pastDate.setDate(today.getDate() - 7);
     const futureDate = new Date();
+
     futureDate.setDate(today.getDate() + 7);
 
     const url = `${BASE_URL}/competitions/PL/matches?dateFrom=${formatDate(
@@ -50,6 +56,7 @@ export async function GET(request) {
 
 
     let data;
+
     try {
       const res = await fetch(url, {
         headers: { "X-Auth-Token": API_KEY },
@@ -82,10 +89,13 @@ export async function GET(request) {
       }
     } catch (fetchError) {
       console.warn("[PL] External API failed, attempting fallback to Firebase:", fetchError);
+
       try {
         const snapshot = await get(ref(db, "pl_data/matches"));
+
         if (snapshot.exists()) {
           const cached = snapshot.val();
+
           data = cached.data;
         } else {
           throw fetchError;

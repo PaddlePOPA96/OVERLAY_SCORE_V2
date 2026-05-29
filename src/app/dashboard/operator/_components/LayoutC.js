@@ -16,11 +16,14 @@ export default function LayoutC({ data, displayTime, formatTime }) {
       setIsHiding(false);
     } else if (isVisible) {
       setIsHiding(true);
+
       const timer = setTimeout(() => {
         setIsVisible(false);
         setIsHiding(false);
       }, 600);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, isVisible]);
 
@@ -29,9 +32,12 @@ export default function LayoutC({ data, displayTime, formatTime }) {
     if (data.goalTrigger > 0 && data.goalTrigger !== lastTriggerRef.current) {
       lastTriggerRef.current = data.goalTrigger;
       setShowGoal(true);
+
       // Banner stays for 3 seconds, then slides back out
       const timer = setTimeout(() => setShowGoal(false), 3000);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.goalTrigger]);
 
@@ -42,6 +48,7 @@ export default function LayoutC({ data, displayTime, formatTime }) {
   const awayDisplayName = data.awayName || "AWAY";
 
   const overlayScale = data.isPreview ? "1.0" : "0.88";
+
   const boardStyle = {
     "--overlay-scale": overlayScale,
   };

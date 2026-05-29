@@ -16,25 +16,32 @@ export default function LayoutD({ data, displayTime, formatTime }) {
       setIsHiding(false);
     } else if (isVisible) {
       setIsHiding(true);
+
       const timer = setTimeout(() => {
         setIsVisible(false);
         setIsHiding(false);
       }, 600); // matches the layoutDOut animation length
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, isVisible]);
 
   // Goal animation logic
   useEffect(() => {
     const now = Date.now();
+
     if (data.goalTrigger > 0 && (now - data.goalTrigger) < 5000) {
       setGoalTeam(data.goalTeam || "");
       setShowGoal(true);
+
       const timer = setTimeout(() => {
         setShowGoal(false);
         setGoalTeam("");
       }, 3500);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.goalTrigger, data.goalTeam]);
 
@@ -63,6 +70,7 @@ export default function LayoutD({ data, displayTime, formatTime }) {
 
   // Dynamic CSS variables for the accents (Tailwind equivalent)
   const overlayScale = data.isPreview ? "1.0" : "1.95";
+
   const boardStyles = {
     "--home-accent-color": teamLeftColor,
     "--away-accent-color": teamRightColor,

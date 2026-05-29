@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
+
 import { signOut, onAuthStateChanged } from "firebase/auth";
+
+import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
 import { auth } from "@/lib/firebaseAuth";
 import OperatorA from "./OperatorA";
 import OperatorB from "./OperatorB";
@@ -31,7 +33,9 @@ export default function OperatorRoot({
         setIsAuthReady(true);
       }
     });
-    return () => unsub();
+
+    
+return () => unsub();
   }, [requireAuth]);
 
   // Synchronize state when parent theme prop changes
@@ -45,6 +49,7 @@ export default function OperatorRoot({
   useEffect(() => {
     if (!parentTheme && typeof window !== "undefined") {
       const stored = window.localStorage.getItem("scoreboard-theme");
+
       if (stored) {
         setTheme(stored);
       }
@@ -53,7 +58,9 @@ export default function OperatorRoot({
 
   const toggleTheme = () => {
     const nextTheme = theme === "dark" ? "light" : "dark";
+
     setTheme(nextTheme);
+
     if (typeof window !== "undefined") {
       window.localStorage.setItem("scoreboard-theme", nextTheme);
     }

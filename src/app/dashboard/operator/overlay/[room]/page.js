@@ -1,11 +1,13 @@
 "use client";
 
-import ScoreboardOverlay from "@/app/dashboard/operator/overlay/_components/ScoreboardOverlay";
 import { useParams } from "next/navigation";
+
+import ScoreboardOverlay from "@/app/dashboard/operator/overlay/_components/ScoreboardOverlay";
 
 export default function OverlayRoomPage() {
   const params = useParams();
   const rawRoom = params?.room;
+
   const roomId =
     typeof rawRoom === "string"
       ? rawRoom

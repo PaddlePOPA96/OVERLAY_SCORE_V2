@@ -1,7 +1,8 @@
 // React & Firebase Imports
 import { useEffect, useState } from 'react'
+
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '@/lib/firebaseAuth'
+
 
 // MUI Imports
 import Chip from '@mui/material/Chip'
@@ -9,6 +10,8 @@ import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
+import { auth } from '@/lib/firebaseAuth'
 
 // Component Imports
 import { Menu, SubMenu, MenuItem, MenuSection } from '@menu/vertical-menu'
@@ -44,7 +47,9 @@ const VerticalMenu = ({ scrollMenu }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, []);
 
   return (

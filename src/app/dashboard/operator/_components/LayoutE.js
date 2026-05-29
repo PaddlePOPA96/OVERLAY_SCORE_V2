@@ -17,11 +17,14 @@ export default function LayoutE({ data, displayTime, formatTime }) {
       setIsHiding(false);
     } else if (isVisible) {
       setIsHiding(true);
+
       const timer = setTimeout(() => {
         setIsVisible(false);
         setIsHiding(false);
       }, 600); // matches the layoutEOut duration
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, isVisible]);
 
@@ -31,11 +34,14 @@ export default function LayoutE({ data, displayTime, formatTime }) {
       lastTriggerRef.current = data.goalTrigger;
       setGoalTeam(data.goalTeam || "");
       setShowGoal(true);
+
       const timer = setTimeout(() => {
         setShowGoal(false);
         setGoalTeam("");
       }, 3500);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.goalTrigger, data.goalTeam]);
 
@@ -67,6 +73,7 @@ export default function LayoutE({ data, displayTime, formatTime }) {
 
   // Dynamic Scale Override: Lock to 1.0 in operator preview, and set scale to 1.25 to fit OBS 800x600 browser source perfectly
   const overlayScale = data.isPreview ? "1.0" : "1.25";
+
   const boardStyles = {
     "--overlay-scale": overlayScale,
   };
@@ -238,7 +245,9 @@ export default function LayoutE({ data, displayTime, formatTime }) {
           >
             {Array.from({ length: maxDiamonds }).map((_, i) => {
               const isActive = i < teamLeftSeriesScore;
-              return isActive ? (
+
+              
+return isActive ? (
                 <div
                   key={i}
                   className="w-2.5 h-2.5 rotate-45 border border-gray-100 bg-gray-200 shadow-[0_0_5px_rgba(255,255,255,0.6)] transition-all duration-300"
@@ -262,7 +271,9 @@ export default function LayoutE({ data, displayTime, formatTime }) {
           >
             {Array.from({ length: maxDiamonds }).map((_, i) => {
               const isActive = i < teamRightSeriesScore;
-              return isActive ? (
+
+              
+return isActive ? (
                 <div
                   key={i}
                   className="w-2.5 h-2.5 rotate-45 border border-gray-100 bg-gray-200 shadow-[0_0_5px_rgba(255,255,255,0.6)] transition-all duration-300"

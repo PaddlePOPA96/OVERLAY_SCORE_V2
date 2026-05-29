@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 
 // Halaman utama Operator: memilih layout A/B dan mengelola auth + room
@@ -12,6 +13,7 @@ export default function OperatorPage() {
     const params = new URLSearchParams(window.location.search);
     const roomFromQuery = params.get("room") || "";
     const roomFromHash = window.location.hash.replace("#", "") || "";
+
     setRoomId(roomFromQuery || roomFromHash || "default");
   }, []);
 

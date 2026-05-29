@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
 import { updateUserRole, syncUserToFirestore, deleteUserFromDb } from "@/lib/auth/service";
 import { auth } from "@/lib/firebaseAuth";
 
 export function UserManagementModal({ open, onClose, currentUserUid, isSuperAdmin }) {
-    if (!open) return null;
-
     const { users, loading } = useAllUsers();
 
     // Coba sync user sendiri saat modal dibuka, in case belum masuk
     useEffect(() => {
+        if (!open) return;
+
         if (auth.currentUser) {
             syncUserToFirestore(auth.currentUser).catch(console.error);
         }
-    }, []);
+    }, [open]);
+
+    if (!open) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 overflow-y-auto py-10">
@@ -89,6 +92,7 @@ function UserRow({ user, isMe, isSuperAdmin }) {
         if (isMe) return; // Guard
         setStatus("saving");
         setCurrentRole(newRole); // Optimistic update
+
         try {
             await updateUserRole(user.uid, newRole);
             setStatus("success");
@@ -96,6 +100,7 @@ function UserRow({ user, isMe, isSuperAdmin }) {
         } catch (err) {
             console.error(err);
             setStatus("error");
+
             // Revert? For now just show error.
         }
     };
@@ -103,9 +108,11 @@ function UserRow({ user, isMe, isSuperAdmin }) {
     const handleDelete = async () => {
         if (isMe) return;
         const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus akun ${user.email}?`);
+
         if (!confirmDelete) return;
 
         setStatus("deleting");
+
         try {
             await deleteUserFromDb(user.uid);
             setStatus("deleted");

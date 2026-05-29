@@ -1,7 +1,9 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { styled } from '@mui/material/styles'
 import Badge from '@mui/material/Badge'
 import Avatar from '@mui/material/Avatar'
@@ -15,6 +17,7 @@ import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
+
 import { auth } from '@/lib/firebaseAuth'
 
 const BadgeContentSpan = styled('span')({
@@ -38,7 +41,9 @@ const UserDropdown = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, []);
 
   const handleDropdownOpen = () => {
@@ -49,9 +54,11 @@ const UserDropdown = () => {
     if (url) {
       router.push(url)
     }
+
     if (anchorRef.current && anchorRef.current.contains(event?.target)) {
       return
     }
+
     setOpen(false)
   }
 

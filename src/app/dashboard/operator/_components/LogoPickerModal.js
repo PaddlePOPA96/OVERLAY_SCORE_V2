@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { LOGO_DATA, buildLogoSrc } from "@/lib/logoData";
 
 export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect }) {
@@ -35,18 +36,22 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
     // Validate type
     const validTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+
     if (!validTypes.includes(file.type)) {
       setUploadError("Format file tidak didukung. Harap gunakan format JPG, PNG, atau WEBP.");
-      return;
+      
+return;
     }
 
     setUploadError("");
     const reader = new FileReader();
+
     reader.onload = (e) => {
       const dataUrl = e.target.result;
       
       // Perform Canvas compression
       const img = new Image();
+
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const max_size = 400; // Max width or height (increased from 160 for high quality on scaled overlays)
@@ -68,10 +73,12 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext("2d");
+
         ctx.drawImage(img, 0, 0, width, height);
 
         // Compress to WebP or fall back to PNG
         let compressedBase64;
+
         try {
           compressedBase64 = canvas.toDataURL("image/webp", 0.85);
         } catch (err) {
@@ -97,6 +104,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     processAndCompressFile(file);
   };
 
@@ -104,13 +112,16 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
     e.preventDefault();
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
+
     processAndCompressFile(file);
   };
 
   const handleUrlChange = (e) => {
     const url = e.target.value;
+
     setWebUrl(url);
     setUploadError("");
+
     if (url.trim()) {
       setCustomSrc(url.trim());
     } else {
@@ -276,7 +287,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
               >
                 {clubs.map((club) => {
                   const src = buildLogoSrc(league, club);
-                  return (
+
+                  
+return (
                     <button
                       key={club}
                       type="button"

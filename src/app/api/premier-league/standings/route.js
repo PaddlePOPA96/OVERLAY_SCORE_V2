@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+
 import { ref, set, get } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 import { verifyIdToken } from "@/lib/firebaseAdmin";
 
@@ -9,22 +11,27 @@ const BASE_URL = "https://api.football-data.org/v4";
 export async function GET(request) {
   try {
     const authHeader = request.headers.get("Authorization");
+
     if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+
     const token = authHeader.split("Bearer ")[1];
     const verification = await verifyIdToken(token);
+
     if (!verification.success) {
       return NextResponse.json({ error: `Invalid Token: ${verification.error || 'unknown'}` }, { status: 401 });
     }
+
     // const decodedToken = verification;
 
 
 
     let data;
+
     try {
       if (!API_KEY) {
         throw new Error("Configuration Error: Missing FOOTBALL_DATA_API_KEY in server environment");
@@ -61,11 +68,15 @@ export async function GET(request) {
       }
     } catch (fetchError) {
       console.warn("[PL] External API failed, attempting fallback to Firebase:", fetchError);
+
       try {
         const snapshot = await get(ref(db, "pl_data/standings"));
+
         if (snapshot.exists()) {
           const cached = snapshot.val();
+
           data = cached.data;
+
           // You might check cached.lastUpdated here if you want to notify about staleness
         } else {
           throw fetchError; // No cached data, rethrow original error

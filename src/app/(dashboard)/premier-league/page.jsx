@@ -1,6 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
+import Button from "@mui/material/Button";
+
+import ButtonGroup from "@mui/material/ButtonGroup";
+
+import Grid from "@mui/material/Grid";
+
 import {
   usePremierLeagueMatches,
   usePremierLeagueStandings,
@@ -10,9 +17,6 @@ import { PremierLeagueMain } from "@/features/premier-league/components/PremierL
 import { PremierLeagueRight } from "@/features/premier-league/components/PremierLeagueSidebar";
 
 // MUI Imports
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Grid from "@mui/material/Grid";
 
 export default function PremierLeaguePage() {
   const { matches, loadingMatches, reloadMatches } = usePremierLeagueMatches();

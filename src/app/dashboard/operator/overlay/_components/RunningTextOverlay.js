@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { usePremierLeagueMatches } from "@/features/premier-league/hooks/usePremierLeagueData";
 import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from "@/lib/logoData";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
@@ -129,18 +130,24 @@ function MatchItem({ match }) {
 }
 
 const TEAM_STOP_WORDS = new Set(["fc", "afc", "cf", "sc", "club", "football", "the"]);
+
 function normalizeTeamName(name) {
     if (!name) return "";
-    return name.replace(/[()]/g, " ").replace(/[^A-Za-z0-9\s]/g, " ").split(/\s+/).filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase())).join(" ").toLowerCase().trim();
+    
+return name.replace(/[()]/g, " ").replace(/[^A-Za-z0-9\s]/g, " ").split(/\s+/).filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase())).join(" ").toLowerCase().trim();
 }
+
 function resolveClubLogo(league, apiName) {
     if (!league || !apiName) return "";
     const clubs = LOGO_DATA[league] || [];
     const target = normalizeTeamName(apiName);
+
     if (!target) return "";
     let best = clubs.find((club) => normalizeTeamName(club) === target);
+
     if (!best) best = clubs.find((club) => normalizeTeamName(club).includes(target));
     if (!best) best = clubs.find((club) => target.includes(normalizeTeamName(club)));
     if (best) return buildLogoSrc(league, best);
-    return buildOtherLogoSrc(apiName);
+    
+return buildOtherLogoSrc(apiName);
 }

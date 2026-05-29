@@ -1,14 +1,18 @@
 import { NextResponse } from "next/server";
+
 import { ref, set } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 const API_KEY =
   process.env.FOOTBALL_DATA_API_KEY || "0ea6f9faf31246dcb907c52fa33062b6";
+
 const BASE_URL = "https://api.football-data.org/v4";
 
 export async function GET(_req, { params }) {
   try {
     const id = params?.id;
+
     if (!id) {
       return NextResponse.json(
         { error: "Missing team id" },
@@ -17,6 +21,7 @@ export async function GET(_req, { params }) {
     }
 
     const url = `${BASE_URL}/teams/${encodeURIComponent(id)}`;
+
     const res = await fetch(url, {
       headers: { "X-Auth-Token": API_KEY },
       cache: "no-store",

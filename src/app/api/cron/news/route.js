@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+
 import { ref, set } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 const NEWS_URL =
@@ -9,6 +11,7 @@ export async function GET(request) {
     // Verifikasi Cron Secret (Vercel Cron otomatis mengirim header ini)
     // Untuk testing manual lokal, kita bisa skip atau set dummy di .env
     const authHeader = request.headers.get("authorization");
+
     if (
         process.env.CRON_SECRET &&
         authHeader !== `Bearer ${process.env.CRON_SECRET}`
@@ -18,11 +21,13 @@ export async function GET(request) {
 
     try {
         const res = await fetch(NEWS_URL, { cache: "no-store" });
+
         if (!res.ok) {
             throw new Error(`Failed to fetch news: ${res.status}`);
         }
 
         const data = await res.json();
+
         const articles = (data.articles || []).slice(0, 8).map((a) => ({
             id: a.id ?? a.headline,
             title: a.headline,

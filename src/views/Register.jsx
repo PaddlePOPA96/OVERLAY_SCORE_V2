@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
@@ -11,6 +13,7 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
+
 import Illustrations from '@components/Illustrations'
 import Logo from '@components/layout/shared/Logo'
 import { useImageVariant } from '@core/hooks/useImageVariant'
@@ -45,7 +48,8 @@ const Register = ({ mode }) => {
         type: "error",
         message: "Registration is disabled. Please contact the administrator via Telegram (081331890624) for manual account activation after payment.",
       });
-      return;
+      
+return;
     }
 
     if (password !== confirmPassword) {
@@ -53,12 +57,15 @@ const Register = ({ mode }) => {
         type: "error",
         message: "Passwords do not match.",
       });
-      return;
+      
+return;
     }
 
     setLoading(true);
+
     try {
       const user = await registerWithEmailPassword(email, password);
+
       router.push("/");
     } catch (err) {
       setStatus({

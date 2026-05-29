@@ -9,6 +9,7 @@ import { PremierLeagueMain } from "@/features/premier-league/components/PremierL
 // Halaman khusus tabel Premier League di dalam dashboard
 export default function PremierLeagueTablePage() {
   const { matches, loadingMatches } = usePremierLeagueMatches();
+
   const { standings, loadingStandings, reloadStandings } =
     usePremierLeagueStandings();
 

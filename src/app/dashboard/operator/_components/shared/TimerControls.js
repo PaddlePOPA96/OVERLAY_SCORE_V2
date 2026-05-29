@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
 
 export default function TimerControls({
@@ -21,6 +22,7 @@ export default function TimerControls({
 
   const handleSetTime = () => {
     const total = (parseInt(manualM, 10) || 0) * 60 + (parseInt(manualS, 10) || 0);
+
     actions.updateMatch({
       "timer/baseTime": total,
       "timer/startTime": null,

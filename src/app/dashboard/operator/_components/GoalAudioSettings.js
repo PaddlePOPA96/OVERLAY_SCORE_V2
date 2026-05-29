@@ -46,6 +46,7 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
       <button
         onClick={(e) => {
           e.preventDefault();
+
           if (typeof previewGoalAudio === "function") {
              previewGoalAudio(audioSource);
           }
@@ -77,6 +78,7 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
       <button
         onClick={(e) => {
           e.preventDefault();
+
           if (typeof stopGoalAudio === "function") {
             stopGoalAudio();
           }

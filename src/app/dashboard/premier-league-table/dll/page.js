@@ -9,6 +9,7 @@ import { PremierLeagueMain } from "@/features/premier-league/components/PremierL
 // Halaman lain-lain Premier League (jadwal & hasil) di dalam dashboard
 export default function PremierLeagueMiscPage() {
   const { matches, loadingMatches } = usePremierLeagueMatches();
+
   const { standings, loadingStandings, reloadStandings } =
     usePremierLeagueStandings();
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { registerWithEmailPassword, createUserWithRole } from "@/lib/auth/service";
 import { useUserRole } from "@/features/iam/hooks/useUserRole";
@@ -40,6 +41,7 @@ export function TopBar({
 
   useEffect(() => {
     if (!showAdminModal) return;
+
     const handler = (event) => {
       if (event.key === "Escape") {
         setShowAdminModal(false);
@@ -47,8 +49,10 @@ export function TopBar({
         setShowUserMgmt(false);
       }
     };
+
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    
+return () => window.removeEventListener("keydown", handler);
   }, [showAdminModal]);
 
   useEffect(() => {
@@ -62,13 +66,16 @@ export function TopBar({
   const handleAdminCreateUser = async (event) => {
     event.preventDefault();
     setAdminStatus({ type: "", message: "" });
+
+
     // ... existing logic ...
     if (!newUserEmail || !newUserPassword) {
       setAdminStatus({
         type: "error",
         message: "Isi email dan password untuk user baru.",
       });
-      return;
+      
+return;
     }
 
     if (newUserPassword !== newUserConfirm) {
@@ -76,10 +83,12 @@ export function TopBar({
         type: "error",
         message: "Password dan konfirmasi password tidak sama.",
       });
-      return;
+      
+return;
     }
 
     setAdminLoading(true);
+
     try {
       await createUserWithRole(newUserEmail, newUserPassword, newUserRole);
       setAdminStatus({
@@ -397,5 +406,6 @@ export function TopBar({
 
 function capitalize(s) {
   if (!s) return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  
+return s.charAt(0).toUpperCase() + s.slice(1);
 }

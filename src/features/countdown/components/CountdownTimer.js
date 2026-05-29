@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+
 import { ref, onValue, update } from "firebase/database";
+
 import { db } from "@/lib/firebase";
 import { audioOptions, getAudioLabel } from "@/lib/audioConfig";
 
@@ -31,8 +33,10 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
   useEffect(() => {
     if (!roomId) return;
     const timerRef = ref(db, timerPath);
+
     const unsubscribe = onValue(timerRef, (snapshot) => {
       const data = snapshot.val();
+
       if (data) {
         setTargetTime(data.targetTime || null);
         setIsRunning(data.isRunning || false);
@@ -57,15 +61,19 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     }, (error) => {
       console.error("Firebase read error:", error);
     });
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     let interval;
+
     if (isRunning && targetTime) {
       interval = setInterval(() => {
         const now = Date.now();
         const diff = targetTime - now;
+
         if (diff <= 0) {
           setCurrentRemaining(0);
           update(ref(db, timerPath), { isRunning: false, remainingMs: 0 }).catch(console.error);
@@ -76,11 +84,14 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     } else {
       setCurrentRemaining(remainingMs);
     }
-    return () => clearInterval(interval);
+
+    
+return () => clearInterval(interval);
   }, [isRunning, targetTime, remainingMs]);
 
   const handleStartPreset = (ms) => {
     const target = Date.now() + ms;
+
     console.log("Starting preset:", ms, "Target:", target);
     update(ref(db, timerPath), {
       targetTime: target,
@@ -96,7 +107,9 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
     const s = parseInt(seconds) || 0;
 
     const ms = (d * 86400 + h * 3600 + m * 60 + s) * 1000;
+
     console.log("Starting manual:", ms);
+
     if (ms > 0) {
       handleStartPreset(ms);
     }
@@ -143,6 +156,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
   const toggleTransparentBorder = () => {
     const newColor = borderColor === "transparent" ? "#000000" : "transparent";
+
     setBorderColor(newColor);
     update(ref(db, timerPath), {
       borderColor: newColor
@@ -158,6 +172,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
   const toggleTransparentFill = () => {
     const newColor = fillColor === "transparent" ? "#000000" : "transparent";
+
     setFillColor(newColor);
     update(ref(db, timerPath), {
       fillColor: newColor
@@ -173,6 +188,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
   const handleVolumeChange = (vol) => {
     const val = parseFloat(vol);
+
     setAudioVolume(val);
     update(ref(db, timerPath), {
       audioVolume: val
@@ -408,6 +424,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
               <button
                 onClick={() => {
                   const url = `${window.location.origin}/${roomId}/timer`;
+
                   navigator.clipboard.writeText(url);
                   alert("URL copied to clipboard!");
                 }}

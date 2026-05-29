@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -71,7 +72,7 @@ export default function RunningTextSetupPage() {
               <li>Paste the URL copied above into the URL field.</li>
               <li>Set Width: <strong>1920</strong> (or same as your OBS canvas width).</li>
               <li>Set Height: <strong>80</strong> (adjust depending on ticker size).</li>
-              <li>Check "Refresh browser when scene becomes active" if desired, and click OK.</li>
+              <li>Check &quot;Refresh browser when scene becomes active&quot; if desired, and click OK.</li>
             </ol>
           </div>
         </CardContent>

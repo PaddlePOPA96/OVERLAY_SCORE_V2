@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { ref, onValue } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 import { auth } from "@/lib/firebaseAuth";
 
@@ -14,6 +16,7 @@ export function usePremierLeagueMatches() {
             matchesRef,
             (snapshot) => {
                 const data = snapshot.val();
+
                 setMatches(Array.isArray(data) ? data : []);
                 setLoading(false);
             },
@@ -31,7 +34,9 @@ export function usePremierLeagueMatches() {
             if (!auth.currentUser) {
                 throw new Error("User must be logged in to refresh data");
             }
+
             const token = await auth.currentUser.getIdToken();
+
             if (!token) {
                 throw new Error("Failed to get authentication token");
             }
@@ -42,10 +47,13 @@ export function usePremierLeagueMatches() {
 
             if (!response.ok) {
                 let errorMsg = response.statusText;
+
                 try {
                     const errorBody = await response.json();
+
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { } // Ignore JSON parse error
+
                 throw new Error(`API returned ${response.status}: ${errorMsg}`);
             }
 
@@ -88,8 +96,10 @@ export function usePremierLeagueNews() {
 
     useEffect(() => {
         let cancelled = false;
+
         const load = async () => {
             setLoading(true);
+
             try {
                 // News is public-ish but better to be consistent if user wants strict security.
                 // However, news is usually loaded on mount automatically. 
@@ -97,11 +107,14 @@ export function usePremierLeagueNews() {
                 // But let's check if the API requires it. User said "don't let others access".
                 // We'll add the token if available.
                 const token = await auth.currentUser?.getIdToken();
+
                 const res = await fetch("/api/premier-league/news", {
                     headers: token ? { Authorization: `Bearer ${token}` } : {},
                 });
+
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
+
                 if (!cancelled) {
                     setNews(data.articles || []);
                 }
@@ -111,8 +124,10 @@ export function usePremierLeagueNews() {
                 if (!cancelled) setLoading(false);
             }
         };
+
         load();
-        return () => { cancelled = true; };
+        
+return () => { cancelled = true; };
     }, []);
 
     return { news, loadingNews: loading };
@@ -129,12 +144,15 @@ export function usePremierLeagueStandings() {
             standingsRef,
             (snapshot) => {
                 const data = snapshot.val();
+
                 if (Array.isArray(data)) {
                     const tableObj = data.find((s) => s.type === "TOTAL");
+
                     setStandings(Array.isArray(tableObj?.table) ? tableObj.table : []);
                 } else {
                     setStandings([]);
                 }
+
                 setLoading(false);
             },
             (error) => {
@@ -151,7 +169,9 @@ export function usePremierLeagueStandings() {
             if (!auth.currentUser) {
                 throw new Error("User must be logged in to refresh data");
             }
+
             const token = await auth.currentUser.getIdToken();
+
             if (!token) {
                 throw new Error("Failed to get authentication token");
             }
@@ -162,10 +182,13 @@ export function usePremierLeagueStandings() {
 
             if (!response.ok) {
                 let errorMsg = response.statusText;
+
                 try {
                     const errorBody = await response.json();
+
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { }
+
                 throw new Error(`API returned ${response.status}: ${errorMsg}`);
             }
 

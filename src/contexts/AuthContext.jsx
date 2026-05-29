@@ -1,7 +1,9 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
+
 import { onAuthStateChanged } from 'firebase/auth'
+
 import { auth } from '@/lib/firebaseAuth'
 
 const AuthContext = createContext({ user: null, loading: true, roomId: 'default' })
@@ -17,7 +19,9 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser)
       setLoading(false)
     })
-    return () => unsub()
+
+    
+return () => unsub()
   }, [])
 
   const roomId = user?.uid || 'default'

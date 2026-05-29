@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { ref, onValue } from "firebase/database";
-import { db } from "@/lib/firebase";
+
 import { useParams } from "next/navigation";
+
+import { ref, onValue } from "firebase/database";
+
+import { db } from "@/lib/firebase";
 
 export default function TimerOverlay() {
   const params = useParams();
@@ -28,10 +31,12 @@ export default function TimerOverlay() {
 
   const handleInteraction = () => {
     setPlayError(false);
+
     if (audioRef.current) {
       // Just a silent play/pause to unlock audio context without playing the actual sound
       audioRef.current.volume = 0;
       const playPromise = audioRef.current.play();
+
       if (playPromise !== undefined) {
         playPromise.then(() => {
           audioRef.current.pause();
@@ -46,9 +51,11 @@ export default function TimerOverlay() {
       audioRef.current.volume = audioVolume;
       audioRef.current.currentTime = 0;
       const playPromise = audioRef.current.play();
+
       if (playPromise !== undefined) {
         playPromise.catch(e => {
           console.error("Audio play error:", e);
+
           if (e.name === "NotAllowedError" || e.message.includes("interact")) {
             setPlayError(true);
           }
@@ -64,6 +71,7 @@ export default function TimerOverlay() {
         playSound();
       }
     }
+
     prevIsRunningRef.current = isRunning;
   }, [isRunning, targetTime, remainingMs]);
 
@@ -71,8 +79,10 @@ export default function TimerOverlay() {
     if (!roomId) return;
     const timerPath = `match_live/${roomId}/countdown_timer`;
     const timerRef = ref(db, timerPath);
+
     const unsubscribe = onValue(timerRef, (snapshot) => {
       const data = snapshot.val();
+
       if (data) {
         setTargetTime(data.targetTime || null);
         setIsRunning(data.isRunning || false);
@@ -95,17 +105,22 @@ export default function TimerOverlay() {
         setAudioSource("/sounds/brr-brr-patapim-alarm-clock.mp3");
       }
     });
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, [roomId]);
 
   useEffect(() => {
     let interval;
+
     if (isRunning && targetTime) {
       interval = setInterval(() => {
         const now = Date.now();
         const diff = targetTime - now;
+
         if (diff <= 0) {
           setCurrentRemaining(0);
+
           if (playedTargetRef.current !== targetTime) {
             playedTargetRef.current = targetTime;
             playSound();
@@ -117,7 +132,9 @@ export default function TimerOverlay() {
     } else {
       setCurrentRemaining(remainingMs);
     }
-    return () => clearInterval(interval);
+
+    
+return () => clearInterval(interval);
   }, [isRunning, targetTime, remainingMs]);
 
   const formatTime = (ms) => {

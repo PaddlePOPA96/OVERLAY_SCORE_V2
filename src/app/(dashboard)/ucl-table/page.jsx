@@ -1,6 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
+import Button from "@mui/material/Button";
+
+import ButtonGroup from "@mui/material/ButtonGroup";
+
+import Grid from "@mui/material/Grid";
+
 import {
   useChampionsLeagueMatches,
   useChampionsLeagueStandings,
@@ -19,9 +26,6 @@ import {
 import { PremierLeagueRight } from "@/features/premier-league/components/PremierLeagueSidebar";
 
 // MUI Imports
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import Grid from "@mui/material/Grid";
 
 export default function UCLTablePage() {
   const { uclMatches, loadingUclMatches, reloadUclMatches } = useChampionsLeagueMatches();

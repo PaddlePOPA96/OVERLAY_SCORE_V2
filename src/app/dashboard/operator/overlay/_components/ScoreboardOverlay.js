@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
+
 import { useScoreboard } from "@/features/match-simulation/hooks/useScoreboard";
 import LayoutA from "../../_components/LayoutA";
 import LayoutB from "../../_components/LayoutB";
 import LayoutC from "../../_components/LayoutC";
 import LayoutD from "../../_components/LayoutD";
 import LayoutE from "../../_components/LayoutE";
-import { useEffect, useState, useRef } from "react";
 import { useLayoutSettings } from "@/hooks/useLayoutSettings";
 
 export default function ScoreboardOverlay({ roomId = "default" }) {
@@ -27,7 +28,8 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
 
         if (prevGoalTrigger.current === null) {
             prevGoalTrigger.current = data.goalTrigger || 0;
-            return;
+            
+return;
         }
 
         const currentTrigger = data.goalTrigger || 0;
@@ -35,13 +37,16 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
         if (currentTrigger !== prevGoalTrigger.current && currentTrigger !== 0) {
             if (audioRef.current) {
                 const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
+
                 audioRef.current.src = data.goalAudioSource || "/sounds/goal.mp3";
                 audioRef.current.volume = audioVolume;
                 audioRef.current.currentTime = 0;
                 const p = audioRef.current.play();
+
                 if (p !== undefined) {
                     p.catch(e => {
                         console.error("Goal audio error:", e);
+
                         if (e.name === "NotAllowedError" || e.message.includes("interact")) {
                             setPlayError(true);
                         }
@@ -56,6 +61,7 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
     // Listen for stop signal directly from data changes
     useEffect(() => {
         if (!data || !data.goalAudioStop) return;
+
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
@@ -64,26 +70,33 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
 
     // Listen for preview audio signal
     const prevPreviewTrigger = useRef(null);
+
     useEffect(() => {
         if (!isLoaded || !data) return;
+
         if (prevPreviewTrigger.current === null) {
             prevPreviewTrigger.current = data.previewAudioTrigger || 0;
-            return;
+            
+return;
         }
 
         const currentTrigger = data.previewAudioTrigger || 0;
+
         if (currentTrigger !== prevPreviewTrigger.current && currentTrigger !== 0) {
             if (audioRef.current) {
                 // Set source to preview audio source
                 audioRef.current.src = data.previewAudioSource || "/sounds/goal.mp3";
                 const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1;
+
                 audioRef.current.volume = audioVolume;
                 audioRef.current.currentTime = 0;
                 
                 const p = audioRef.current.play();
+
                 if (p !== undefined) {
                     p.catch(e => {
                         console.error("Preview audio error:", e);
+
                         if (e.name === "NotAllowedError" || e.message.includes("interact")) {
                             setPlayError(true);
                         }
@@ -91,14 +104,17 @@ export default function ScoreboardOverlay({ roomId = "default" }) {
                 }
             }
         }
+
         prevPreviewTrigger.current = currentTrigger;
     }, [data?.previewAudioTrigger, data?.previewAudioSource, isLoaded]);
 
     const handleInteraction = () => {
         setPlayError(false);
+
         if (audioRef.current) {
             audioRef.current.volume = 0;
             const p = audioRef.current.play();
+
             if (p !== undefined) {
                 p.then(() => {
                     audioRef.current.pause();

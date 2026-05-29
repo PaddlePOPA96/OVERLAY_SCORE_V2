@@ -1,16 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "@/lib/firebaseAuth";
-import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
-import {
-  registerWithEmailPassword,
-  updateUserRole,
-  deleteUserFromDb,
-  syncUserToFirestore,
-} from "@/lib/auth/service";
+
 
 // MUI Imports
 import Card from "@mui/material/Card";
@@ -31,6 +26,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
+
+import {
+  registerWithEmailPassword,
+  updateUserRole,
+  deleteUserFromDb,
+  syncUserToFirestore,
+} from "@/lib/auth/service";
+import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
+import { auth } from "@/lib/firebaseAuth";
 
 const ADMIN_EMAIL = "admin@admin.com";
 
@@ -60,9 +64,12 @@ export default function AdminUserManagementPage() {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (!user) {
         router.replace("/login");
-        return;
+        
+return;
       }
+
       const isAdminUser = user.email === ADMIN_EMAIL;
+
       setIsAdmin(isAdminUser);
       setCurrentUserId(user.uid);
       setReady(true);
@@ -72,7 +79,9 @@ export default function AdminUserManagementPage() {
         syncUserToFirestore(user).catch(console.error);
       }
     });
-    return () => unsub();
+
+    
+return () => unsub();
   }, [router]);
 
   const handleCreateUser = async (event) => {
@@ -84,10 +93,12 @@ export default function AdminUserManagementPage() {
         type: "error",
         message: "Passwords do not match.",
       });
-      return;
+      
+return;
     }
 
     setLoading(true);
+
     try {
       await registerWithEmailPassword(email, password);
       setCreateStatus({
@@ -238,6 +249,7 @@ function UserRowItem({ row, isMe }) {
     if (isMe) return;
     setSaving(true);
     setRole(newRole);
+
     try {
       await updateUserRole(row.uid, newRole);
     } catch (err) {
@@ -251,9 +263,11 @@ function UserRowItem({ row, isMe }) {
   const handleDeleteUser = async () => {
     if (isMe) return;
     const confirm = window.confirm(`Are you sure you want to permanently delete user: ${row.email}?`);
+
     if (!confirm) return;
 
     setSaving(true);
+
     try {
       await deleteUserFromDb(row.uid);
       setDeleted(true);

@@ -14,7 +14,8 @@ const TEAM_STOP_WORDS = new Set([
 
 const normalizeTeamName = (name) => {
   if (!name) return "";
-  return name
+  
+return name
     .replace(/[()]/g, " ")
     .replace(/[^A-Za-z0-9\s]/g, " ")
     .split(/\s+/)
@@ -50,6 +51,7 @@ const CLUB_ALIAS = {
 const resolveAnyClubLogo = (apiName) => {
   if (!apiName) return "";
   const rawTarget = normalizeTeamName(apiName);
+
   if (!rawTarget) return "";
 
   const target = CLUB_ALIAS[rawTarget] || rawTarget;
@@ -63,6 +65,7 @@ const resolveAnyClubLogo = (apiName) => {
     let match = clubs.find(
       (club) => normalizeTeamName(club) === target
     );
+
     if (match) {
       bestLeague = league;
       bestClub = match;
@@ -72,6 +75,7 @@ const resolveAnyClubLogo = (apiName) => {
     match = clubs.find((club) =>
       normalizeTeamName(club).includes(target)
     );
+
     if (match && !bestClub) {
       bestLeague = league;
       bestClub = match;
@@ -81,6 +85,7 @@ const resolveAnyClubLogo = (apiName) => {
       match = clubs.find((club) =>
         target.includes(normalizeTeamName(club))
       );
+
       if (match) {
         bestLeague = league;
         bestClub = match;
@@ -93,7 +98,9 @@ const resolveAnyClubLogo = (apiName) => {
     if (bestLeague === "Kazakhstan - Premier League") {
       return buildOtherLogoSrc(bestClub);
     }
-    return buildLogoSrc(bestLeague, bestClub);
+
+    
+return buildLogoSrc(bestLeague, bestClub);
   }
 
   // Fallback: pakai logo di /logo/other jika tidak ada di LOGO_DATA
@@ -140,8 +147,10 @@ export function ChampionsLeagueTable({
   const formatGroupName = (group) => {
     if (!group) return "Group";
     const match = group.match(/GROUP_([A-H])/);
+
     if (match) return `Group ${match[1]}`;
-    return group.replace(/_/g, " ");
+    
+return group.replace(/_/g, " ");
   };
 
   return (
@@ -215,8 +224,10 @@ export function ChampionsLeagueTable({
                               const logoSrc = resolveAnyClubLogo(
                                 row.team?.name,
                               );
+
                               if (!logoSrc) return null;
-                              return (
+                              
+return (
                                 <img
                                   src={logoSrc}
                                   alt={row.team?.name || "TBD"}
@@ -302,7 +313,9 @@ export function ChampionsLeagueMatches({
   const formatDateTime = (m) => {
     if (!m.utcDate) return "";
     const d = new Date(m.utcDate);
-    return d.toLocaleString("id-ID", {
+
+    
+return d.toLocaleString("id-ID", {
       day: "numeric",
       month: "short",
       hour: "2-digit",
@@ -312,6 +325,7 @@ export function ChampionsLeagueMatches({
 
   const renderRow = (match) => {
     const isFinished = match.status === "FINISHED";
+
     const isLive =
       match.status === "IN_PLAY" || match.status === "PAUSED";
 

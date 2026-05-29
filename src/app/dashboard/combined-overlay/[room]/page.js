@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 
+import { useParams } from "next/navigation";
+
 import ScoreboardOverlay from "@/app/dashboard/operator/overlay/_components/ScoreboardOverlay";
 import RunningTextOverlay from "@/app/dashboard/operator/overlay/_components/RunningTextOverlay";
-import { useParams } from "next/navigation";
 
 export default function CombinedOverlayPage() {
     const params = useParams();
     const rawRoom = params?.room;
+
     const roomId =
         typeof rawRoom === "string"
             ? rawRoom
@@ -24,10 +26,12 @@ export default function CombinedOverlayPage() {
             // Calculate scale to fit 1920x1080 into current window
             const scaleX = window.innerWidth / 1920;
             const scaleY = window.innerHeight / 1080;
+
             // Use the smaller scale to fit entirely (letterbox)
             // Or use larger to cover (crop)? Standard for overlays is usually fit or exact match.
             // Let's use Math.min to ensure it fits without scrolling.
             const newScale = Math.min(scaleX, scaleY);
+
             setScale(newScale);
         };
 
@@ -35,7 +39,8 @@ export default function CombinedOverlayPage() {
         handleResize();
 
         window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+        
+return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     return (
@@ -47,6 +52,7 @@ export default function CombinedOverlayPage() {
                     height: 1080,
                     transform: `scale(${scale})`,
                     transformOrigin: "center center",
+
                     // overflow: "hidden", // Optional: Clip content outside 1080p?
                     position: "relative"
                 }}

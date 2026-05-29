@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { collection, onSnapshot } from "firebase/firestore";
+
 import { dbFirestore } from "@/lib/firebaseFirestore";
 
 export function useAllUsers() {
@@ -8,11 +10,13 @@ export function useAllUsers() {
 
     useEffect(() => {
         const usersRef = collection(dbFirestore, "users");
+
         const unsub = onSnapshot(usersRef, (snapshot) => {
             const userList = snapshot.docs.map((doc) => ({
                 uid: doc.id,
                 ...doc.data(),
             }));
+
             setUsers(userList);
             setLoading(false);
         }, (error) => {

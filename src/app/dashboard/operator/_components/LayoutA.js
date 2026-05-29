@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Image from "next/image";
 import "@/app/dashboard/operator/overlay/layoutA.css";
 
@@ -15,6 +16,8 @@ export default function LayoutA({ data, displayTime, formatTime }) {
   // Trigger animasi GOAL sederhana
   useEffect(() => {
     const now = Date.now();
+
+
     // Hanya tampilkan GOAL jika trigger masih "baru" (misalnya < 5 detik)
     if (data.goalTrigger > 0 && now - data.goalTrigger < 5000) {
       setGoalTeam(data.goalTeam || "");
@@ -34,9 +37,12 @@ export default function LayoutA({ data, displayTime, formatTime }) {
     if (data.showOverlay && data.introId !== lastIntroId) {
       setLastIntroId(data.introId);
       setAnimateIn(true);
+
       // biarkan class animasi aktif sedikit lebih lama supaya efek lebih halus
       const timer = setTimeout(() => setAnimateIn(false), 1800);
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, data.introId, lastIntroId]);
 
@@ -45,20 +51,25 @@ export default function LayoutA({ data, displayTime, formatTime }) {
     if (data.showOverlay) {
       setIsVisible(true);
       setIsHiding(false);
-      return;
+      
+return;
     }
 
     if (isVisible && !data.showOverlay) {
       setIsHiding(true);
+
       const timer = setTimeout(() => {
         setIsVisible(false);
         setIsHiding(false);
       }, 700); // durasi animasi hide di CSS
-      return () => clearTimeout(timer);
+
+      
+return () => clearTimeout(timer);
     }
   }, [data.showOverlay, isVisible]);
 
   const overlayScale = data.isPreview ? "1.0" : "0.78";
+
   const dynamicStyles = {
     "--score-left-color": data.homeColor || "#0040a0",
     "--score-right-color": data.awayColor || "#b00024",
@@ -72,14 +83,18 @@ export default function LayoutA({ data, displayTime, formatTime }) {
     if (showGoal && goalTeam === data.homeName) {
       return <span className="goal-text-anim">GOAL</span>;
     }
-    return <span className="layout-a-team-name">{data.homeName}</span>;
+
+    
+return <span className="layout-a-team-name">{data.homeName}</span>;
   };
 
   const renderRightContent = () => {
     if (showGoal && goalTeam === data.awayName) {
       return <span className="goal-text-anim">GOAL</span>;
     }
-    return <span className="layout-a-team-name">{data.awayName}</span>;
+
+    
+return <span className="layout-a-team-name">{data.awayName}</span>;
   };
 
   // Jika sudah selesai animasi hide, jangan render Layout A di overlay

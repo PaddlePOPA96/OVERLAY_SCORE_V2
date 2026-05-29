@@ -34,16 +34,23 @@ export const defaultMatchData = {
 export const formatTime = (seconds) => {
   const m = Math.floor(seconds / 60).toString().padStart(2, "0");
   const s = (seconds % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
+
+  
+return `${m}:${s}`;
 };
 
 export const computeDisplayTime = (timer, now = Date.now()) => {
   if (!timer) return 0;
+
   if (timer.isRunning) {
     const elapsed = Math.floor((now - timer.startTime) / 1000);
-    return timer.baseTime + elapsed;
+
+    
+return timer.baseTime + elapsed;
   }
-  return timer.baseTime;
+
+  
+return timer.baseTime;
 };
 
 export const createGoalUpdate = (data, team) => {
@@ -69,7 +76,9 @@ export const createToggleTimerUpdate = (data, now = Date.now()) => {
 
   if (data.timer.isRunning) {
     const elapsed = Math.floor((now - data.timer.startTime) / 1000);
-    return {
+
+    
+return {
       "timer/isRunning": false,
       "timer/baseTime": data.timer.baseTime + elapsed,
       "timer/startTime": null,
@@ -91,7 +100,9 @@ export const createResetTimerUpdate = () => ({
 
 export const createToggleOverlayUpdate = (data) => {
   const newState = !data.showOverlay;
-  return {
+
+  
+return {
     showOverlay: newState,
     introId: newState ? Date.now() : data.introId,
   };

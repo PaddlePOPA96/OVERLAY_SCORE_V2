@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { ref, onValue } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 export function useChampionsLeagueMatches() {
@@ -8,12 +10,16 @@ export function useChampionsLeagueMatches() {
 
     useEffect(() => {
         const matchesRef = ref(db, "ucl_data/matches/data/matches");
+
         const unsubscribe = onValue(matchesRef, (snapshot) => {
             const data = snapshot.val();
+
             setMatches(Array.isArray(data) ? data : []);
             setLoading(false);
         });
-        return () => unsubscribe();
+
+        
+return () => unsubscribe();
     }, []);
 
     const reloadUclMatches = async () => {
@@ -25,13 +31,18 @@ export function useChampionsLeagueMatches() {
 
             if (!response.ok) {
                 let errorMsg = response.statusText;
+
                 try {
                     const errorBody = await response.json();
+
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { }
+
                 throw new Error(`UCL matches API returned ${response.status}: ${errorMsg}`);
             } else {
                 const data = await response.json();
+
+
                 // Similar logic to PL: route.js saves 'data' (whole object).
                 // Hook listens to "ucl_data/matches/data/matches".
                 // So we need data.matches
@@ -40,6 +51,7 @@ export function useChampionsLeagueMatches() {
                 } else if (Array.isArray(data)) {
                     setMatches(data);
                 }
+
                 console.log("✅ Champions League matches refreshed successfully");
             }
         } catch (e) {
@@ -61,12 +73,16 @@ export function useChampionsLeagueStandings() {
 
     useEffect(() => {
         const standingsRef = ref(db, "ucl_data/standings/data/standings");
+
         const unsubscribe = onValue(standingsRef, (snapshot) => {
             const data = snapshot.val();
+
             setUclStandings(Array.isArray(data) ? data : []);
             setLoading(false);
         });
-        return () => unsubscribe();
+
+        
+return () => unsubscribe();
     }, []);
 
     const reloadUclStandings = async () => {
@@ -78,10 +94,13 @@ export function useChampionsLeagueStandings() {
 
             if (!response.ok) {
                 let errorMsg = response.statusText;
+
                 try {
                     const errorBody = await response.json();
+
                     if (errorBody.error) errorMsg = errorBody.error;
                 } catch { }
+
                 throw new Error(`UCL standings API returned ${response.status}: ${errorMsg}`);
             } else {
                 console.log("✅ Champions League standings refreshed successfully");

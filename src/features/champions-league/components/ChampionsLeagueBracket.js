@@ -14,7 +14,8 @@ const TEAM_STOP_WORDS = new Set([
 
 const normalizeTeamName = (name) => {
     if (!name) return "";
-    return name
+    
+return name
         .replace(/[()]/g, " ")
         .replace(/[^A-Za-z0-9\s]/g, " ")
         .split(/\s+/)
@@ -27,7 +28,9 @@ const normalizeTeamName = (name) => {
 const resolveAnyClubLogo = (apiName) => {
     if (!apiName) return "";
     const rawTarget = normalizeTeamName(apiName);
-    return buildOtherLogoSrc(apiName);
+
+    
+return buildOtherLogoSrc(apiName);
 };
 
 export function ChampionsLeagueBracket({
@@ -55,7 +58,8 @@ export function ChampionsLeagueBracket({
     // Group by stage
     const matchesByStage = knockoutStages.reduce((acc, stage) => {
         acc[stage] = bracketMatches.filter(m => m.stage === stage);
-        return acc;
+        
+return acc;
     }, {});
 
     const renderMatchCard = (match) => {

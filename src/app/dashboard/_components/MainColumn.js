@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+
 import dynamic from "next/dynamic";
+
 import { PremierLeagueMain } from "@/features/premier-league/components/PremierLeagueSection";
 import { ChampionsLeagueTable, ChampionsLeagueMatches } from "@/features/champions-league/components/UCLSection";
 import { ChampionsLeagueBracket } from "@/features/champions-league/components/ChampionsLeagueBracket";
@@ -56,6 +58,7 @@ export function MainColumn({
   onRefreshUclMatches,
 }) {
   const isDark = theme === "dark";
+
   const username = useMemo(
     () => user?.email?.split("@")[0] || "Operator",
     [user]
@@ -72,6 +75,7 @@ export function MainColumn({
   const [plMode, setPlMode] = useState(
     active === "pl-table" ? "table" : "matches"
   ); // "matches" | "table"
+
   const [uclMode, setUclMode] = useState("matches"); // "table" | "matches"
 
   return (
@@ -157,6 +161,7 @@ export function MainColumn({
                     type="button"
                     onClick={() => {
                       const url = `${window.location.origin}/dashboard/running-text`;
+
                       navigator.clipboard.writeText(url);
                       alert("URL copied!");
                     }}
@@ -180,7 +185,7 @@ export function MainColumn({
                   <li>Buat source baru: <strong>Browser</strong></li>
                   <li>Paste URL di atas.</li>
                   <li>Set Width: <strong>1920</strong> (atau sesuai canvas), Height: <strong>80</strong> (sesuaikan kebutuhan).</li>
-                  <li>Centang "Shutdown source when not visible" dsb jika perlu.</li>
+                  <li>Centang &quot;Shutdown source when not visible&quot; dsb jika perlu.</li>
                 </ol>
               </div>
             </div>

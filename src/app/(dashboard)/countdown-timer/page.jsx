@@ -1,8 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useAuth } from "@/contexts/AuthContext";
+
 import { useTheme } from "@mui/material/styles";
+
+import { useAuth } from "@/contexts/AuthContext";
 
 const CountdownTimer = dynamic(
   () => import("@/features/countdown/components/CountdownTimer"),

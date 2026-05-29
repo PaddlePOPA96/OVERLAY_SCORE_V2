@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
+import { useTheme } from "@mui/material/styles";
+
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTheme } from "@mui/material/styles";
 
 export default function OperatorPage() {
   const { user, loading, roomId: authRoomId } = useAuth();
@@ -18,6 +20,7 @@ export default function OperatorPage() {
     const params = new URLSearchParams(window.location.search);
     const roomFromQuery = params.get("room") || "";
     const roomFromHash = window.location.hash.replace("#", "") || "";
+
     setRoomId(roomFromQuery || roomFromHash || authRoomId || "default");
   }, [authRoomId]);
 

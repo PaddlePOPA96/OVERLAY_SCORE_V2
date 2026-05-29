@@ -14,6 +14,7 @@ export function PremierLeagueMain({
   onRefreshMatches,
 }) {
   const isDark = theme === "dark";
+
   const liveMatches =
     matches?.filter(
       (m) => m.status === "IN_PLAY" || m.status === "PAUSED"
@@ -23,13 +24,16 @@ export function PremierLeagueMain({
 
   const formatMatchTitle = (m) => {
     if (!m) return "Premier League Match";
-    return `${m.homeTeam?.shortName || m.homeTeam?.name || "TBD"} vs ${m.awayTeam?.shortName || m.awayTeam?.name || "TBD"}`;
+    
+return `${m.homeTeam?.shortName || m.homeTeam?.name || "TBD"} vs ${m.awayTeam?.shortName || m.awayTeam?.name || "TBD"}`;
   };
 
   const formatMatchVenue = (m) => {
     if (!m || !m.utcDate) return "Premier League Stadium";
     const date = new Date(m.utcDate);
-    return `${date.toLocaleDateString("id-ID", {
+
+    
+return `${date.toLocaleDateString("id-ID", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -77,8 +81,10 @@ export function PremierLeagueMain({
   // Sort logic
   // Past: Descending (terbaru di atas)
   pastFinished.sort((a, b) => new Date(b.utcDate) - new Date(a.utcDate));
+
   // Future: Ascending (terdekat di atas)
   futureMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+
   // Today: Ascending (biar urut jam main)
   todayMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
 
@@ -358,8 +364,10 @@ function PremierLeagueTableCard({
                             league,
                             row.team?.name
                           );
+
                           if (!logoSrc) return null;
-                          return (
+                          
+return (
                             <img
                               src={logoSrc}
                               alt={row.team?.name || "TBD"}
@@ -437,7 +445,8 @@ const TEAM_STOP_WORDS = new Set([
 
 function normalizeTeamName(name) {
   if (!name) return "";
-  return name
+  
+return name
     .replace(/[()]/g, " ")
     .replace(/[^A-Za-z0-9\s]/g, " ")
     .split(/\s+/)
@@ -451,6 +460,7 @@ function resolveClubLogo(league, apiName) {
   if (!league || !apiName) return "";
   const clubs = LOGO_DATA[league] || [];
   const target = normalizeTeamName(apiName);
+
   if (!target) return "";
 
   let best = clubs.find(
@@ -468,6 +478,7 @@ function resolveClubLogo(league, apiName) {
       target.includes(normalizeTeamName(club))
     );
   }
+
   if (best) {
     return buildLogoSrc(league, best);
   }
@@ -478,6 +489,7 @@ function resolveClubLogo(league, apiName) {
 
 export function PremierLeagueMatchRow({ match, theme }) {
   const isFinished = match.status === "FINISHED";
+
   const minute =
     match.status === "IN_PLAY" || match.status === "PAUSED"
       ? "LIVE"

@@ -106,8 +106,10 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
 function NavItem({ icon, label, active, isDark, ...props }) {
   const base =
     "w-full p-3 rounded-lg flex gap-3 items-center cursor-pointer transition text-sm";
+
   const activeClasses =
     "bg-purple-900/50 text-white border-l-4 border-purple-500";
+
   const inactiveClasses = isDark
     ? "text-gray-300 hover:bg-gray-800 hover:text-white"
     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900";

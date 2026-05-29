@@ -9,6 +9,7 @@ export default function proxy(request) {
         const allowedOrigins = [
             "http://localhost:3000",
             "https://overlay-score-v2.vercel.app",
+
             // Tambahkan domain lain jika ada custom domain
         ];
 
@@ -38,6 +39,7 @@ export default function proxy(request) {
         ];
 
         const isCron = request.nextUrl.pathname.startsWith("/api/cron");
+
         if (isCron) return NextResponse.next();
 
         // 1. Cek Origin (Fetch standard)
@@ -45,7 +47,9 @@ export default function proxy(request) {
             if (!allowedDomains.includes(origin)) {
                 return new NextResponse("Forbidden: Invalid Origin", { status: 403 });
             }
-            return NextResponse.next();
+
+            
+return NextResponse.next();
         }
 
         // 2. Jika Origin kosong, Cek Referer (Navigasi browser / Same-origin)
@@ -58,7 +62,9 @@ export default function proxy(request) {
             if (!isAllowedReferer) {
                 return new NextResponse("Forbidden: Invalid Referer", { status: 403 });
             }
-            return NextResponse.next();
+
+            
+return NextResponse.next();
         }
 
         // 3. Jika Origin & Referer kosong (Direct access via browser bar / Tools)

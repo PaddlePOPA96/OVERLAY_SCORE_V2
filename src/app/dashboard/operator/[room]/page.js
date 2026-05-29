@@ -1,12 +1,14 @@
 "use client";
 
 import { useParams } from "next/navigation";
+
 import OperatorRoot from "@/app/dashboard/operator/_components/OperatorRoot";
 
 // Halaman Operator versi dynamic route: /operator/[room]
 export default function OperatorRoomPage() {
   const params = useParams();
   const rawRoom = params?.room;
+
   const roomId =
     typeof rawRoom === "string"
       ? rawRoom

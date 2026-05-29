@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
@@ -13,6 +15,7 @@ import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Alert from '@mui/material/Alert'
+
 import Logo from '@components/layout/shared/Logo'
 import Illustrations from '@components/Illustrations'
 import themeConfig from '@configs/themeConfig'
@@ -44,8 +47,10 @@ const Login = ({ mode }) => {
     if (typeof window === "undefined") return;
     const savedRemember = window.localStorage.getItem("scoreboard-remember");
     const savedEmail = window.localStorage.getItem("scoreboard-email") || "";
+
     if (savedRemember === "1") {
       setRemember(true);
+
       if (savedEmail) {
         setEmail(savedEmail);
       }
@@ -54,6 +59,7 @@ const Login = ({ mode }) => {
 
   const handleAuthSuccess = (user) => {
     if (!user) return;
+
     if (typeof window !== "undefined") {
       if (remember) {
         window.localStorage.setItem("scoreboard-remember", "1");
@@ -63,6 +69,7 @@ const Login = ({ mode }) => {
         window.localStorage.removeItem("scoreboard-email");
       }
     }
+
     router.push("/");
   };
 
@@ -70,8 +77,10 @@ const Login = ({ mode }) => {
     e.preventDefault()
     setStatus({ type: "", message: "" })
     setLoading(true)
+
     try {
       const user = await loginWithEmailPassword(email, password);
+
       handleAuthSuccess(user);
     } catch (error) {
       setStatus({
@@ -89,12 +98,16 @@ const Login = ({ mode }) => {
         type: "error",
         message: "Google login is disabled. Please sign in using your admin-registered email & password.",
       });
-      return;
+      
+return;
     }
+
     setStatus({ type: "", message: "" })
     setLoading(true)
+
     try {
       const user = await loginWithGooglePopup();
+
       handleAuthSuccess(user);
     } catch (error) {
       setStatus({
@@ -112,9 +125,12 @@ const Login = ({ mode }) => {
         type: "error",
         message: "Please enter your email address to reset password.",
       });
-      return;
+      
+return;
     }
+
     setLoading(true);
+
     try {
       await sendResetPassword(email);
       setStatus({

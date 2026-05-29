@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+
 import { ref, onValue, update } from "firebase/database";
+
 import { db } from "@/lib/firebaseDb";
 
 // roomId / sessionId dipakai supaya beberapa pertandingan bisa jalan paralel
@@ -47,9 +49,11 @@ export function useScoreboard(roomId = "default") {
   useEffect(() => {
     if (!roomId) return;
     const matchRef = ref(db, `match_live/${roomId}`);
+
     const unsubscribe = onValue(matchRef, (snapshot) => {
       if (snapshot.exists()) {
         const val = snapshot.val();
+
         setData((prev) => ({ ...prev, ...val }));
         setIsLoaded(true);
         calculateTime(val);
@@ -57,23 +61,30 @@ export function useScoreboard(roomId = "default") {
         setIsLoaded(true);
       }
     });
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, [roomId]);
 
   // Interval Lokal
   useEffect(() => {
     let interval;
+
     if (data.timer?.isRunning) {
       interval = setInterval(() => { calculateTime(data); }, 500);
     }
-    return () => clearInterval(interval);
+
+    
+return () => clearInterval(interval);
   }, [data]);
 
   const calculateTime = (currentData) => {
     if (!currentData?.timer) return;
+
     if (currentData.timer.isRunning) {
       const now = Date.now();
       const elapsed = Math.floor((now - currentData.timer.startTime) / 1000);
+
       setDisplayTime(currentData.timer.baseTime + elapsed);
     } else {
       setDisplayTime(currentData.timer.baseTime);
@@ -88,7 +99,9 @@ export function useScoreboard(roomId = "default") {
   const triggerGoal = (team) => {
     const current =
       team === "home" ? data.homeScore || 0 : data.awayScore || 0;
+
     const newScore = Math.min(20, current + 1);
+
     updateMatch({
       [team === "home" ? "homeScore" : "awayScore"]: newScore,
       goalTrigger: Date.now(),
@@ -110,12 +123,15 @@ export function useScoreboard(roomId = "default") {
   const toggleTimer = () => {
     const now = Date.now();
     let updates = {};
+
     if (data.timer.isRunning) {
       const elapsed = Math.floor((now - data.timer.startTime) / 1000);
+
       updates = { "timer/isRunning": false, "timer/baseTime": data.timer.baseTime + elapsed, "timer/startTime": null };
     } else {
       updates = { "timer/isRunning": true, "timer/baseTime": data.timer.baseTime, "timer/startTime": now };
     }
+
     updateMatch(updates);
   };
 
@@ -125,6 +141,7 @@ export function useScoreboard(roomId = "default") {
 
   const toggleOverlay = () => {
     const newState = !data.showOverlay;
+
     updateMatch({
       showOverlay: newState,
       introId: newState ? Date.now() : data.introId // Trigger animasi saat unhide
@@ -134,7 +151,9 @@ export function useScoreboard(roomId = "default") {
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60).toString().padStart(2, "0");
     const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
+
+    
+return `${m}:${s}`;
   };
 
   return { data, isLoaded, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio, previewGoalAudio };

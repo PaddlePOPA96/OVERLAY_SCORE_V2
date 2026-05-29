@@ -6,6 +6,7 @@ export async function GET(request) {
     // Simple security check using CRON_SECRET if available
     // Vercel automatically sends this header for Cron jobs
     const authHeader = request.headers.get("authorization");
+
     if (
         process.env.CRON_SECRET &&
         authHeader !== `Bearer ${process.env.CRON_SECRET}`
@@ -42,8 +43,10 @@ export async function GET(request) {
         try {
             // Use full URL
             const res = await fetch(`${baseUrl}${path}`);
+
             if (res.ok) {
                 const data = await res.json();
+
                 results[path] = { status: "ok", count: Array.isArray(data) ? data.length : "object" };
             } else {
                 results[path] = { status: "error", code: res.status };

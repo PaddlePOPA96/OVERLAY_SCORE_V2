@@ -10,6 +10,7 @@ export function PremierLeagueRight({
   theme,
 }) {
   const isDark = theme === "dark";
+
   const headingClass = isDark
     ? "text-gray-400"
     : "text-slate-700";
@@ -19,14 +20,17 @@ export function PremierLeagueRight({
 
   useEffect(() => {
     if (!showNewsModal) return;
+
     const handler = (event) => {
       if (event.key === "Escape") {
         setShowNewsModal(false);
         setSelectedNews(null);
       }
     };
+
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    
+return () => window.removeEventListener("keydown", handler);
   }, [showNewsModal]);
 
   const liveMatch =
@@ -36,6 +40,7 @@ export function PremierLeagueRight({
 
   let scoreText = "0 : 0";
   let statusLabel = "Preview";
+
   if (liveMatch) {
     if (liveMatch.status === "FINISHED") {
       scoreText = `${liveMatch.score.fullTime.home ?? 0} : ${

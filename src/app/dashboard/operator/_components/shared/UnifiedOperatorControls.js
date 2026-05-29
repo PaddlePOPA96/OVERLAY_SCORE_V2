@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import LogoPickerModal from "../LogoPickerModal";
 import { makeTeamAbbr } from "@/lib/logoData";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ export default function UnifiedOperatorControls({
 
   const handlePeriodChange = (periodVal) => {
     let baseTimeVal = 0;
+
     if (periodVal === 2) {
       baseTimeVal = 45 * 60; // 45:00
     } else if (periodVal === 3) {
@@ -581,6 +583,7 @@ export default function UnifiedOperatorControls({
         onSelect={({ src, club }) => {
           if (!src || !club) return;
           const abbr = makeTeamAbbr(club);
+
           if (logoTarget === "home") {
             actions.updateMatch({ 
               homeLogo: src, 
@@ -594,6 +597,7 @@ export default function UnifiedOperatorControls({
               awayFullName: club.toUpperCase()
             });
           }
+
           setLogoModalOpen(false);
         }}
       />
