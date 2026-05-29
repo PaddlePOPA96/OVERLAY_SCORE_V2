@@ -99,7 +99,7 @@ export function PremierLeagueMain({
   return (
     <>
       {isMatchesMode && (
-        <div className="bg-gradient-to-r from-purple-800 to-indigo-900 rounded-2xl p-8 mb-8 relative overflow-hidden h-64 flex items-center shadow-lg shadow-purple-900/20">
+        <div className="bg-gradient-to-r from-purple-800 to-indigo-900 rounded-2xl p-8 mb-8 relative overflow-hidden h-64 flex items-center shadow-lg shadow-purple-900/20 w-full">
           <div className="w-2/3 z-10">
             <div className="flex items-center gap-2 mb-2">
               <span className="bg-white/20 px-2 py-0.5 rounded text-xs text-white">
@@ -157,11 +157,11 @@ export function PremierLeagueMain({
         </div>
       )}
 
-      <div className="space-y-6">
+      <div className="space-y-6 w-full">
 
 
         {isMatchesMode ? (
-          <div className="space-y-8">
+          <div className="space-y-8 w-full">
             {loading ? (
               <div className={`${cardClass} rounded-xl p-8`}>
                 <p className="text-center text-gray-400 text-sm">
@@ -303,7 +303,7 @@ function PremierLeagueTableCard({
 
   return (
     <div
-      className={`${cardClass} rounded-xl p-5 space-y-5 max-w-[1040px] mx-auto`}
+      className={`${cardClass} rounded-xl p-5 space-y-5`}
     >
       <div className="flex items-center justify-between">
         <p className={headingClass}>Klasemen Premier League</p>

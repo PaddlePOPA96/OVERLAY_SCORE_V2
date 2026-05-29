@@ -207,7 +207,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             {timerTitle}
           </h2>
         )}
-        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 font-mono w-full">
+        <div className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 font-mono w-full ${isDark ? 'text-white' : 'text-slate-900'}`}>
           <div className="flex flex-col items-center">
             <span>{timeParts.d}</span>
             <span className={`text-xs sm:text-sm md:text-base uppercase tracking-widest font-semibold mt-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Days</span>
@@ -249,7 +249,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
       <div className="grid md:grid-cols-2 gap-8 mt-8">
         {/* Presets */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-          <h3 className="text-lg font-bold mb-4">Quick Presets</h3>
+          <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Quick Presets</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button onClick={() => handleStartPreset(30 * 60 * 1000)} className="px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-all">
               30 Mins
@@ -265,22 +265,22 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
         {/* Manual Setup */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-          <h3 className="text-lg font-bold mb-4">Manual Setup</h3>
+          <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Manual Setup</h3>
           <div className="flex gap-2 mb-4">
             <div className="flex-1">
-              <label className="block text-xs text-slate-400 mb-1">Days</label>
+              <label className={`block text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Days</label>
               <input type="number" min="0" value={days} onChange={e => setDays(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
             </div>
             <div className="flex-1">
-              <label className="block text-xs text-slate-400 mb-1">Hours</label>
+              <label className={`block text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Hours</label>
               <input type="number" min="0" value={hours} onChange={e => setHours(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
             </div>
             <div className="flex-1">
-              <label className="block text-xs text-slate-400 mb-1">Mins</label>
+              <label className={`block text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Mins</label>
               <input type="number" min="0" value={minutes} onChange={e => setMinutes(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
             </div>
             <div className="flex-1">
-              <label className="block text-xs text-slate-400 mb-1">Secs</label>
+              <label className={`block text-xs mb-1 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Secs</label>
               <input type="number" min="0" value={seconds} onChange={e => setSeconds(e.target.value)} className={`w-full p-2 rounded-lg border text-center ${isDark ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`} placeholder="0" />
             </div>
           </div>
@@ -291,10 +291,10 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
         {/* Display Settings */}
         <div className={`p-6 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-          <h3 className="text-lg font-bold mb-4">Display Settings</h3>
+          <h3 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>Display Settings</h3>
 
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2">Timer Title:</label>
+            <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Timer Title:</label>
             <input
               type="text"
               value={timerTitle}
@@ -306,8 +306,8 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
           <div className="mb-6">
             <div className="flex justify-between mb-2">
-              <label className="block text-sm font-semibold">Alarm Volume:</label>
-              <span className="text-sm font-mono">{Math.round(audioVolume * 100)}%</span>
+              <label className={`block text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Alarm Volume:</label>
+              <span className={`text-sm font-mono ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{Math.round(audioVolume * 100)}%</span>
             </div>
             <input
               type="range"
@@ -321,7 +321,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2">Alarm Sound:</label>
+            <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Alarm Sound:</label>
             <div className="flex gap-2 items-center">
               <span className={`flex-1 p-3 rounded-lg border font-mono text-sm ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>
                 {getAudioLabel(audioSource)}
@@ -337,7 +337,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
 
           <div className="flex flex-col md:flex-row flex-wrap gap-8 mb-6">
             <div className="flex flex-col gap-2">
-              <label className="block text-sm font-semibold">Text Color:</label>
+              <label className={`block text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Text Color:</label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
@@ -350,7 +350,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="block text-sm font-semibold">Border Color:</label>
+              <label className={`block text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Border Color:</label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
@@ -374,7 +374,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="block text-sm font-semibold">Background / Fill:</label>
+              <label className={`block text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Background / Fill:</label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
@@ -398,7 +398,7 @@ export default function CountdownTimer({ theme = "dark", roomId = "default" }) {
             </div>
           </div>
 
-          <h3 className="text-lg font-bold mb-4 border-t border-slate-700/50 pt-4">OBS Setup</h3>
+          <h3 className={`text-lg font-bold mb-4 border-t pt-4 ${isDark ? 'border-slate-700/50 text-white' : 'border-slate-200 text-slate-900'}`}>OBS Setup</h3>
           <div>
             <label className="block text-xs uppercase text-slate-500 font-bold mb-2">Overlay URL</label>
             <div className="flex gap-2">

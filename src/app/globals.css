@@ -7,7 +7,6 @@
 }
 
 body {
-  background: transparent;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   margin: 0;
@@ -390,14 +389,15 @@ body {
 /* OPERATOR STYLES */
 .operator-a-container,
 .operator-b-container {
-  background: #111;
-  min-height: 100vh;
+  min-height: 100%;
   padding: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  color: #eee;
+  width: 100%;
+  overflow-x: hidden;
+  background: var(--mui-palette-background-default, #28243D);
 }
 
 @media (max-width: 768px) {
@@ -410,16 +410,18 @@ body {
 
 .operator-a-controls, 
 .operator-b-controls { 
-  width: 720px; 
-  max-width: calc(100vw - 32px); 
-  background: rgba(24,24,24,0.95); 
+  width: 100%; 
+  max-width: min(720px, calc(100vw - 24px)); 
+  background: var(--mui-palette-background-paper, #1e2235); 
   border-radius: 8px; 
   padding: 10px 12px; 
-  border: 1px solid #333; 
+  border: 1px solid var(--mui-palette-divider, #333); 
   display: flex; 
   flex-direction: column; 
   gap: 8px; 
-  font-size: 12px; 
+  font-size: 12px;
+  box-sizing: border-box;
+  color: var(--mui-palette-text-primary, #eee);
 }
 
 .op-section { 
@@ -433,13 +435,13 @@ body {
   min-width: 105px; 
   font-weight: 600; 
   font-size: 12px; 
-  color: #ccc; 
+  color: var(--mui-palette-text-secondary, #ccc); 
 }
 
 .op-tiny { 
   font-size: 11px; 
   margin-left: 5px; 
-  color: #e5e7eb; 
+  color: var(--mui-palette-text-secondary, #aaa); 
 }
 
 .op-btn { 
@@ -451,7 +453,9 @@ body {
   cursor: pointer; 
   font-size: 12px; 
   font-weight: 600; 
-  transition: 0.2s; 
+  transition: 0.2s;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .op-btn:hover { 
@@ -479,12 +483,23 @@ body {
 }
 
 .op-input { 
-  background: #2a2a2a; 
-  color: #fff; 
-  border: 1px solid #444; 
+  background: var(--mui-palette-action-hover, #2a2a2a); 
+  color: var(--mui-palette-text-primary, #fff); 
+  border: 1px solid var(--mui-palette-divider, #444); 
   padding: 4px 8px; 
   border-radius: 6px; 
-  font-size: 12px; 
+  font-size: 12px;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+select.op-input {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .op-room-row {
@@ -604,11 +619,55 @@ body {
   transform-origin: center; 
 }
 
+@media (max-width: 600px) {
+  .operator-a-preview-box,
+  .operator-b-preview-box {
+    height: 180px;
+    padding: 8px;
+  }
+  .operator-b-preview-box .layout-b-wrapper {
+    transform: scale(0.45);
+  }
+  .operator-b-preview-box .layout-c-container {
+    transform: scale(0.45);
+  }
+  .operator-b-preview-box .layout-d-container {
+    transform: scale(0.55);
+  }
+  .operator-b-preview-box .layout-e-container {
+    transform: scale(0.28);
+  }
+  .operator-a-preview-box #layout-a-root {
+    transform: scale(0.35);
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .operator-a-preview-box,
+  .operator-b-preview-box {
+    height: 240px;
+  }
+  .operator-b-preview-box .layout-b-wrapper {
+    transform: scale(0.65);
+  }
+  .operator-b-preview-box .layout-c-container {
+    transform: scale(0.65);
+  }
+  .operator-b-preview-box .layout-d-container {
+    transform: scale(0.8);
+  }
+  .operator-b-preview-box .layout-e-container {
+    transform: scale(0.52);
+  }
+  .operator-a-preview-box #layout-a-root {
+    transform: scale(0.5);
+  }
+}
+
 /* LIGHT MODE OPERATOR OVERRIDES */
 .operator-a-container.theme-light,
 .operator-b-container.theme-light {
-  background: radial-gradient(circle at top, #e5edff 0, #f9fafb 40%, #e5e7eb 100%) !important;
-  color: #0f172a !important;
+  color: #0f172a;
 }
 
 .theme-light h2,

@@ -17,7 +17,7 @@ export default function OperatorD({
   return (
     <div className={`operator-b-container ${isLight ? "theme-light" : ""}`}>
       <div className="w-full max-w-[900px] flex items-center justify-between mb-3">
-        <h2 className="text-xl font-bold" style={isLight ? { color: "#0f172a" } : { color: "#eee" }}>
+        <h2 className="text-xl font-bold text-textPrimary">
           ⚽ Operator Panel – Layout D (Valorant Esports)
         </h2>
       </div>

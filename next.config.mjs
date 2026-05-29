@@ -1,26 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  compress: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "media.api-sports.io",
-      },
-      {
-        protocol: "https",
-        hostname: "upload.wikimedia.org",
-      },
-      {
-        protocol: "https",
-        hostname: "www.thesportsdb.com",
-      },
-      {
-        protocol: "https",
-        hostname: "r2.thesportsdb.com",
-      },
-    ],
-  },
-};
+  basePath: process.env.BASEPATH
+}
 
-export default nextConfig;
+export default nextConfig

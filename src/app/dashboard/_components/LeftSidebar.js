@@ -58,6 +58,16 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
                 if (onClose) onClose();
               }}
             />
+            <NavItem
+              icon="⏱️"
+              label="Countdown Timer"
+              active={active === "countdown-timer"}
+              isDark={isDark}
+              onClick={() => {
+                setActive("countdown-timer");
+                if (onClose) onClose();
+              }}
+            />
 
 
 
@@ -81,31 +91,6 @@ export function LeftSidebar({ active, setActive, theme, user, streamActive, isOp
               isDark={isDark}
               onClick={() => {
                 setActive("ucl-table");
-                if (onClose) onClose();
-              }}
-            />
-
-
-            <div className="text-xs text-gray-300 uppercase tracking-wider mt-4 mb-1">
-              Dream Eleven
-            </div>
-            <NavItem
-              icon="⭐"
-              label="Dream Eleven"
-              active={active === "dream-eleven"}
-              isDark={isDark}
-              onClick={() => {
-                setActive("dream-eleven");
-                if (onClose) onClose();
-              }}
-            />
-            <NavItem
-              icon="⏱️"
-              label="Countdown Timer"
-              active={active === "countdown-timer"}
-              isDark={isDark}
-              onClick={() => {
-                setActive("countdown-timer");
                 if (onClose) onClose();
               }}
             />

@@ -19,18 +19,6 @@ const OperatorRoot = dynamic(
   }
 );
 
-const DreamElevenBuilder = dynamic(
-  () => import("@/features/dream-eleven/components/DreamElevenBuilder"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="text-sm text-slate-400">
-        Memuat Dream Eleven...
-      </div>
-    ),
-  }
-);
-
 const CountdownTimer = dynamic(
   () => import("@/features/countdown/components/CountdownTimer"),
   {
@@ -117,34 +105,6 @@ export function MainColumn({
               </div>
             )}
           </div>
-        </>
-      ) : active === "dream-eleven" ? (
-        <>
-          <header className="mb-8">
-            <h1 className={titleClass}>Dream Eleven</h1>
-            <p className={subtitleClass}>
-              Susun tim impian Premier League kamu di sini.
-            </p>
-          </header>
-          {user ? (
-            <DreamElevenBuilder />
-          ) : (
-            <div
-              className={`rounded-xl border-2 border-dashed p-6 text-sm ${isDark
-                ? "border-slate-700 bg-black/40 text-slate-200"
-                : "border-slate-200 bg-white text-slate-700"
-                }`}
-            >
-              <p className="font-semibold mb-1">
-                Fitur ini terkunci untuk pengguna belum login.
-              </p>
-              <p className="text-xs">
-                Silakan login terlebih dahulu melalui tombol{" "}
-                <span className="font-semibold">Login</span> di kanan atas untuk
-                mengakses Dream Eleven.
-              </p>
-            </div>
-          )}
         </>
       ) : active === "countdown-timer" ? (
         <>

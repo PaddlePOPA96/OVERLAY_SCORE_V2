@@ -71,8 +71,8 @@ export default function UnifiedOperatorControls({
       <div 
         style={{ 
           display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-          gap: "16px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))", 
+          gap: "12px",
           borderBottom: `1px solid ${borderCol}`,
           paddingBottom: "12px",
           marginBottom: "8px"
@@ -86,7 +86,7 @@ export default function UnifiedOperatorControls({
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           <label className="op-label" style={{ marginBottom: "2px", color: labelColor }}>Babak (Period)</label>
-          <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
             <Button
               className={`op-btn ${data.period === 1 ? "op-btn-active" : ""}`}
               variant={data.period === 1 ? "default" : "ghost"}
@@ -148,7 +148,7 @@ export default function UnifiedOperatorControls({
       <div 
         style={{ 
           display: "grid", 
-          gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", 
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", 
           gap: "18px",
           marginBottom: "8px"
         }}
@@ -224,8 +224,8 @@ export default function UnifiedOperatorControls({
           </div>
 
           {/* Names Setup */}
-          <div style={{ display: "flex", gap: "10px" }}>
-            <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 80px", minWidth: 0 }}>
               <label className="op-label" style={{ fontSize: "11px", color: labelColor }}>Abbr (Short Name)</label>
               <input
                 className="op-input"
@@ -235,7 +235,7 @@ export default function UnifiedOperatorControls({
                 style={{ width: "100%", marginTop: "4px" }}
               />
             </div>
-            <div style={{ flex: 2 }}>
+            <div style={{ flex: "2 1 140px", minWidth: 0 }}>
               <label className="op-label" style={{ fontSize: "11px", color: labelColor }}>Full Name (Modern layout)</label>
               <input
                 className="op-input"
@@ -288,7 +288,7 @@ export default function UnifiedOperatorControls({
               border: isLight ? `1px solid ${borderCol}` : "none"
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", justifycontent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span style={{ fontWeight: "600", fontSize: "11px", color: labelColor }}>Skor Home</span>
               <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                 <Button
@@ -411,8 +411,8 @@ export default function UnifiedOperatorControls({
           </div>
 
           {/* Names Setup */}
-          <div style={{ display: "flex", gap: "10px" }}>
-            <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 80px", minWidth: 0 }}>
               <label className="op-label" style={{ fontSize: "11px", color: labelColor }}>Abbr (Short Name)</label>
               <input
                 className="op-input"
@@ -422,7 +422,7 @@ export default function UnifiedOperatorControls({
                 style={{ width: "100%", marginTop: "4px" }}
               />
             </div>
-            <div style={{ flex: 2 }}>
+            <div style={{ flex: "2 1 140px", minWidth: 0 }}>
               <label className="op-label" style={{ fontSize: "11px", color: labelColor }}>Full Name (Modern layout)</label>
               <input
                 className="op-input"

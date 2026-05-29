@@ -18,7 +18,7 @@ export default function OperatorC({
   return (
     <div className={`operator-b-container ${isLight ? "theme-light" : ""}`}>
       <div className="w-full max-w-[900px] flex items-center justify-between mb-3">
-        <h2 className="text-xl font-bold" style={isLight ? { color: "#0f172a" } : { color: "#eee" }}>⚽ Operator Panel – Layout C (Modern)</h2>
+        <h2 className="text-xl font-bold text-textPrimary">⚽ Operator Panel – Layout C (Modern)</h2>
       </div>
 
       <Card className="operator-b-preview-box">
