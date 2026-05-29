@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import { onAuthStateChanged } from "firebase/auth";
+
 import { auth } from "@/lib/firebaseAuth";
 
 import OperatorRoot from "@/app/(dashboard)/dashboard/operator/_components/OperatorRoot";
