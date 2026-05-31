@@ -19,7 +19,19 @@ export default function DashboardLayoutContent({ children }) {
   const isOverlay = pathname.includes("/overlay") || pathname.includes("/running-text");
 
   if (isOverlay) {
-    return <>{children}</>;
+    return (
+      <>
+        {children}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            html, body, #__next, [data-mui-color-scheme], [data-mui-color-scheme="dark"], [data-mui-color-scheme="light"] {
+              background: transparent !important;
+              background-color: transparent !important;
+            }
+          `
+        }} />
+      </>
+    );
   }
 
   return (
