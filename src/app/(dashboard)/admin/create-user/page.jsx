@@ -29,6 +29,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 
+import { ref, set, onValue } from "firebase/database";
+
 import {
   registerWithEmailPassword,
   updateUserRole,
@@ -38,8 +40,9 @@ import {
 import { useAllUsers } from "@/features/iam/hooks/useAllUsers";
 import { useUserRole } from "@/features/iam/hooks/useUserRole";
 import { auth } from "@/lib/firebaseAuth";
+import { db } from "@/lib/firebaseDb";
 
-export default function AdminUserManagementPage() {
+export default function AdminUserManagementPage({ activeTab = "manage-users" }) {
   const router = useRouter();
 
   // Synchronously initialize state with active user session to bypass verification delay
@@ -58,6 +61,41 @@ export default function AdminUserManagementPage() {
   const [createStatus, setCreateStatus] = useState({ type: "", message: "" });
 
   const { users, loading: loadingUsers } = useAllUsers();
+  
+  // State for active leagues visibility controlled by Superadmin
+  const [leaguesSettings, setLeaguesSettings] = useState({
+    premier_league: true,
+    ucl: true,
+    world_cup: true,
+  });
+
+  useEffect(() => {
+    const leaguesRef = ref(db, "ucl_data/settings/leagues");
+
+    const unsubscribe = onValue(leaguesRef, (snapshot) => {
+      const val = snapshot.val();
+
+      if (val) {
+        setLeaguesSettings({
+          premier_league: val.premier_league !== false,
+          ucl: val.ucl !== false,
+          world_cup: val.world_cup !== false,
+        });
+      }
+    });
+
+    
+return () => unsubscribe();
+  }, []);
+
+  const handleToggleLeague = async (leagueKey, currentVal) => {
+    try {
+      await set(ref(db, `ucl_data/settings/leagues/${leagueKey}`), !currentVal);
+    } catch (e) {
+      console.error("Error setting league visibility:", e);
+      alert("Failed to update visibility: " + e.message);
+    }
+  };
 
   useEffect(() => {
     // Optimize: Proactively sync user to Firestore on mount if session is active
@@ -132,132 +170,208 @@ export default function AdminUserManagementPage() {
     );
   }
 
+  const titleMap = {
+    'create-user': { title: "Create Operator Account", subtitle: "Add a new scoreboard operator account to the system" },
+    'active-leagues': { title: "Active Leagues Visibility Settings", subtitle: "Toggle sidebar menu visibility of sports leagues for all operator profiles" },
+    'manage-users': { title: "Registered Operator Accounts", subtitle: "Manage role privileges, view synchronizations, and delete operator accounts" }
+  };
+
+  const currentHeader = titleMap[activeTab] || titleMap['manage-users'];
+
   return (
     <div className="p-4 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">User Management Console</h1>
-        <p className="text-slate-500 text-sm">Create new operator profiles, toggle roles, and manage active system accounts.</p>
+        <h1 className="text-2xl font-bold text-slate-800">{currentHeader.title}</h1>
+        <p className="text-slate-500 text-sm">{currentHeader.subtitle}</p>
       </div>
 
       <Grid container spacing={6}>
         {/* Create User Form Card */}
-        <Grid item xs={12} md={5}>
-          <Card variant="outlined" sx={{ borderRadius: 3 }}>
-            <CardHeader title="Create New Account" subheader="Add a new operator to the system" />
-            <CardContent className="space-y-4">
-              {createStatus.message && (
-                <Alert severity={createStatus.type === "error" ? "error" : "success"} className="text-xs">
-                  {createStatus.message}
-                </Alert>
-              )}
-              <form onSubmit={handleCreateUser} className="flex flex-col gap-4">
-                <TextField
-                  fullWidth
-                  label="Email Address"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="operator@example.com"
-                  size="small"
-                />
-                <TextField
-                  fullWidth
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="Minimum 6 characters"
-                  size="small"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                        >
-                          {showPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  fullWidth
-                  label="Confirm Password"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  placeholder="Confirm password"
-                  size="small"
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                          }
-                          edge="end"
-                        >
-                          {showConfirmPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <Button
-                  fullWidth
-                  variant="contained"
-                  type="submit"
-                  disabled={loading}
-                  className="font-semibold text-sm normal-case mt-2"
-                >
-                  {loading ? "Creating account..." : "Create Account"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
+        {activeTab === 'create-user' && (
+          <Grid item xs={12}>
+            <Card variant="outlined" sx={{ borderRadius: 3 }}>
+              <CardHeader title="Create New Account" subheader="Add a new operator to the system" />
+              <CardContent className="space-y-4">
+                {createStatus.message && (
+                  <Alert severity={createStatus.type === "error" ? "error" : "success"} className="text-xs">
+                    {createStatus.message}
+                  </Alert>
+                )}
+                <form onSubmit={handleCreateUser} className="flex flex-col gap-4">
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="operator@example.com"
+                    size="small"
+                  />
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="Minimum 6 characters"
+                    size="small"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Confirm Password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    placeholder="Confirm password"
+                    size="small"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
+                            edge="end"
+                          >
+                            {showConfirmPassword ? <i className='ri-eye-off-line' /> : <i className='ri-eye-line' />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    type="submit"
+                    disabled={loading}
+                    className="font-semibold text-sm normal-case mt-2"
+                  >
+                    {loading ? "Creating account..." : "Create Account"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
+        {/* Active Leagues Configuration */}
+        {activeTab === 'active-leagues' && (
+          <Grid item xs={12}>
+            <Card variant="outlined" sx={{ borderRadius: 3 }}>
+              <CardHeader 
+                title="Active Leagues Visibility" 
+                subheader="Toggle menu visibility for all accounts" 
+              />
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-divider">
+                  <div>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Premier League</Typography>
+                    <Typography variant="caption" color="text.secondary">Show or hide PL menu</Typography>
+                  </div>
+                  <Button 
+                    variant={leaguesSettings.premier_league ? "contained" : "outlined"} 
+                    color={leaguesSettings.premier_league ? "success" : "error"}
+                    size="small"
+                    className="normal-case font-semibold text-xs"
+                    onClick={() => handleToggleLeague("premier_league", leaguesSettings.premier_league)}
+                    sx={{ width: 130 }}
+                  >
+                    {leaguesSettings.premier_league ? "Active / Shown" : "Hidden"}
+                  </Button>
+                </div>
+
+                <div className="flex justify-between items-center py-2 border-b border-divider">
+                  <div>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>UEFA Champions League</Typography>
+                    <Typography variant="caption" color="text.secondary">Show or hide UCL menu</Typography>
+                  </div>
+                  <Button 
+                    variant={leaguesSettings.ucl ? "contained" : "outlined"} 
+                    color={leaguesSettings.ucl ? "success" : "error"}
+                    size="small"
+                    className="normal-case font-semibold text-xs"
+                    onClick={() => handleToggleLeague("ucl", leaguesSettings.ucl)}
+                    sx={{ width: 130 }}
+                  >
+                    {leaguesSettings.ucl ? "Active / Shown" : "Hidden"}
+                  </Button>
+                </div>
+
+                <div className="flex justify-between items-center py-2">
+                  <div>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>FIFA World Cup 2026</Typography>
+                    <Typography variant="caption" color="text.secondary">Show or hide World Cup menu</Typography>
+                  </div>
+                  <Button 
+                    variant={leaguesSettings.world_cup ? "contained" : "outlined"} 
+                    color={leaguesSettings.world_cup ? "success" : "error"}
+                    size="small"
+                    className="normal-case font-semibold text-xs"
+                    onClick={() => handleToggleLeague("world_cup", leaguesSettings.world_cup)}
+                    sx={{ width: 130 }}
+                  >
+                    {leaguesSettings.world_cup ? "Active / Shown" : "Hidden"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
 
         {/* Users List Card */}
-        <Grid item xs={12} md={7}>
-          <Card variant="outlined" sx={{ borderRadius: 3 }}>
-            <CardHeader
-              title={`Registered Accounts (${users.length})`}
-              subheader="List of synchronized Firestore user profiles"
-            />
-            <CardContent>
-              {loadingUsers ? (
-                <div className="text-center py-6 text-slate-400 text-sm">Loading users list...</div>
-              ) : users.length === 0 ? (
-                <div className="text-center py-6 text-slate-400 text-sm">No users found.</div>
-              ) : (
-                <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Email</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Role</TableCell>
-                        <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary', textAlign: 'right' }}>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {users.map((row) => (
-                        <UserRowItem
-                          key={row.uid}
-                          row={row}
-                          isMe={row.uid === currentUserId}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+        {activeTab === 'manage-users' && (
+          <Grid item xs={12}>
+            <Card variant="outlined" sx={{ borderRadius: 3 }}>
+              <CardHeader
+                title={`Registered Accounts (${users.length})`}
+                subheader="List of synchronized Firestore user profiles"
+              />
+              <CardContent>
+                {loadingUsers ? (
+                  <div className="text-center py-6 text-slate-400 text-sm">Loading users list...</div>
+                ) : users.length === 0 ? (
+                  <div className="text-center py-6 text-slate-400 text-sm">No users found.</div>
+                ) : (
+                  <TableContainer component={Paper} sx={{ boxShadow: 'none', border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Email</TableCell>
+                          <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary' }}>Role</TableCell>
+                          <TableCell sx={{ fontWeight: 600, fontSize: 11, py: 1.5, color: 'text.secondary', textAlign: 'right' }}>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {users.map((row) => (
+                          <UserRowItem
+                            key={row.uid}
+                            row={row}
+                            isMe={row.uid === currentUserId}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

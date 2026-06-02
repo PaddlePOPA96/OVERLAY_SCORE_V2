@@ -41,6 +41,7 @@ export default function UCLTablePage() {
   const { news, loadingNews, reloadNews } = usePremierLeagueNews();
 
   const [uclMode, setUclMode] = useState("matches"); // "matches" | "table" | "bracket"
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const handleRefresh = () => {
     reloadUclMatches();
@@ -81,6 +82,15 @@ export default function UCLTablePage() {
             </Button>
           </ButtonGroup>
           <Button
+            onClick={() => setShowSidebar(!showSidebar)}
+            variant="outlined"
+            color="primary"
+            size="small"
+            className="normal-case font-semibold text-xs"
+          >
+            {showSidebar ? "📋 Hide Sidebar" : "📋 Show Sidebar"}
+          </Button>
+          <Button
             onClick={handleRefresh}
             variant="text"
             color="secondary"
@@ -94,7 +104,7 @@ export default function UCLTablePage() {
 
       <Grid container spacing={6}>
         {/* Left Column: UCL content */}
-        <Grid item xs={12} lg={8}>
+        <Grid item xs={12} lg={showSidebar ? 8 : 12}>
           <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full">
             {uclMode === "matches" ? (
               <ChampionsLeagueMatches
@@ -125,17 +135,19 @@ export default function UCLTablePage() {
         </Grid>
 
         {/* Right Column: Shared News & Live Matches */}
-        <Grid item xs={12} lg={4}>
-          <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
-            <PremierLeagueRight
-              matches={plMatches}
-              loading={loadingPlMatches}
-              news={news}
-              loadingNews={loadingNews}
-              theme={isDark ? "dark" : "light"}
-            />
-          </div>
-        </Grid>
+        {showSidebar && (
+          <Grid item xs={12} lg={4}>
+            <div style={{ background: 'var(--mui-palette-background-paper)' }} className="border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6">
+              <PremierLeagueRight
+                matches={plMatches}
+                loading={loadingPlMatches}
+                news={news}
+                loadingNews={loadingNews}
+                theme={isDark ? "dark" : "light"}
+              />
+            </div>
+          </Grid>
+        )}
       </Grid>
     </div>
   );

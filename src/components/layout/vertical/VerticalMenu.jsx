@@ -4,13 +4,17 @@
 import { useEffect, useState } from 'react'
 
 import { onAuthStateChanged } from 'firebase/auth'
-import { doc, onSnapshot } from 'firebase/firestore'
+import { doc, onSnapshot, collection } from 'firebase/firestore'
+import { ref as dbRef, onValue as onDbValue } from 'firebase/database'
+
 
 // MUI Imports
 import { useTheme } from '@mui/material/styles'
 
 // Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
+import { db } from '@/lib/firebaseDb'
 
 import { auth } from '@/lib/firebaseAuth'
 import { dbFirestore } from '@/lib/firebaseFirestore'
@@ -40,15 +44,25 @@ const VerticalMenu = ({ scrollMenu }) => {
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
 
   const [isSuperAdmin, setIsSuperAdmin] = useState(false)
+  const [usersCount, setUsersCount] = useState(null)
+
+  const [activeLeagues, setActiveLeagues] = useState({
+    premier_league: true,
+    ucl: true,
+    world_cup: true
+  })
 
   useEffect(() => {
     let roleUnsub = () => { }
+    let usersUnsub = () => { }
 
     const authUnsub = onAuthStateChanged(auth, (currentUser) => {
       roleUnsub()
+      usersUnsub()
 
       if (!currentUser) {
         setIsSuperAdmin(false)
+        setUsersCount(null)
 
         return
       }
@@ -57,14 +71,45 @@ const VerticalMenu = ({ scrollMenu }) => {
 
       roleUnsub = onSnapshot(userRef, (snap) => {
         const role = snap.exists() ? snap.data().role : 'user'
+        const superAdmin = role === 'superadmin'
 
-        setIsSuperAdmin(role === 'superadmin')
+        setIsSuperAdmin(superAdmin)
+
+        if (superAdmin) {
+          const usersRef = collection(dbFirestore, 'users')
+
+          usersUnsub = onSnapshot(usersRef, (usersSnap) => {
+            setUsersCount(usersSnap.size)
+          }, (err) => {
+            console.error('Error fetching users count:', err)
+          })
+        } else {
+          setUsersCount(null)
+          usersUnsub()
+        }
       })
+    })
+
+    // Listen to leagues visibility settings in Realtime Database under client-allowed ucl_data node
+    const leaguesRef = dbRef(db, 'ucl_data/settings/leagues')
+
+    const leaguesUnsub = onDbValue(leaguesRef, (snapshot) => {
+      const val = snapshot.val()
+
+      if (val) {
+        setActiveLeagues({
+          premier_league: val.premier_league !== false,
+          ucl: val.ucl !== false,
+          world_cup: val.world_cup !== false
+        })
+      }
     })
 
     return () => {
       authUnsub()
       roleUnsub()
+      usersUnsub()
+      leaguesUnsub()
     }
   }, [])
 
@@ -99,18 +144,33 @@ const VerticalMenu = ({ scrollMenu }) => {
         </MenuSection>
 
         <MenuSection label='Sports Data'>
-          <MenuItem href='/?s=premier-league' icon={<i className='ri-football-line' />}>
-            Premier League
-          </MenuItem>
-          <MenuItem href='/?s=ucl-table' icon={<i className='ri-trophy-line' />}>
-            UCL Standings
-          </MenuItem>
+          {activeLeagues.premier_league && (
+            <MenuItem href='/?s=premier-league' icon={<i className='ri-football-line' />}>
+              Premier League
+            </MenuItem>
+          )}
+          {activeLeagues.ucl && (
+            <MenuItem href='/?s=ucl-table' icon={<i className='ri-trophy-line' />}>
+              UCL Standings
+            </MenuItem>
+          )}
+          {activeLeagues.world_cup && (
+            <MenuItem href='/?s=world-cup' icon={<i className='ri-global-line' />}>
+              World Cup 2026
+            </MenuItem>
+          )}
         </MenuSection>
 
         {isSuperAdmin && (
           <MenuSection label='Admin'>
+            <MenuItem href='/?s=create-user' icon={<i className='ri-user-add-line' />}>
+              Create New Account
+            </MenuItem>
+            <MenuItem href='/?s=active-leagues' icon={<i className='ri-settings-4-line' />}>
+              Active Leagues Visibility
+            </MenuItem>
             <MenuItem href='/?s=manage-users' icon={<i className='ri-shield-user-line' />}>
-              Manage Users
+              {`Registered Accounts${usersCount !== null ? ` (${usersCount})` : ''}`}
             </MenuItem>
           </MenuSection>
         )}

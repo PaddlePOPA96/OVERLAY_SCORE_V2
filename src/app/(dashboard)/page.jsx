@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid'
 import { useAuth } from '@/contexts/AuthContext'
 import { usePremierLeagueMatches, usePremierLeagueStandings, usePremierLeagueNews } from '@/features/premier-league/hooks/usePremierLeagueData'
 import { useChampionsLeagueMatches, useChampionsLeagueStandings } from '@/features/champions-league/hooks/useChampionsLeagueData'
+import { useWorldCupMatches, useWorldCupStandings } from '@/features/world-cup/hooks/useWorldCupData'
 
 // Pre-load all section components at startup (no on-demand compile lag)
 const OperatorRoot = dynamic(() => import('@/app/(dashboard)/dashboard/operator/_components/OperatorRoot'), { ssr: false })
@@ -24,6 +25,7 @@ const ChampionsLeagueTable = dynamic(() => import('@/features/champions-league/c
 const ChampionsLeagueBracket = dynamic(() => import('@/features/champions-league/components/ChampionsLeagueBracket').then(m => ({ default: m.ChampionsLeagueBracket })), { ssr: false })
 const RunningTextSetupContent = dynamic(() => import('@/app/(dashboard)/running-text-setup/page').then(m => ({ default: m.RunningTextSetupContent })), { ssr: false })
 const AdminUserManagement = dynamic(() => import('@/app/(dashboard)/admin/create-user/page'), { ssr: false })
+const WorldCupMain = dynamic(() => import('@/features/world-cup/components/WorldCupSection').then(m => ({ default: m.WorldCupMain })), { ssr: false })
 
 function DashboardPageInner() {
   const searchParams = useSearchParams()
@@ -53,9 +55,16 @@ function DashboardPageInner() {
   const { news, loadingNews, reloadNews } = usePremierLeagueNews()
   const { uclMatches, loadingUclMatches, reloadUclMatches } = useChampionsLeagueMatches()
   const { uclStandings, loadingUclStandings, reloadUclStandings } = useChampionsLeagueStandings()
+  const { wcMatches, loadingWcMatches, reloadWcMatches } = useWorldCupMatches()
+  const { wcStandings, loadingWcStandings, reloadWcStandings } = useWorldCupStandings()
 
   const [plMode, setPlMode] = useState('matches')
   const [uclMode, setUclMode] = useState('matches')
+  const [wcMode, setWcMode] = useState('matches')
+
+  const [showEplSidebar, setShowEplSidebar] = useState(true)
+  const [showUclSidebar, setShowUclSidebar] = useState(true)
+  const [showWcSidebar, setShowWcSidebar] = useState(true)
 
   const paperBg = { background: 'var(--mui-palette-background-paper)' }
   const panelClass = 'border border-slate-700/10 rounded-xl p-4 md:p-6 w-full h-full'
@@ -113,22 +122,27 @@ function DashboardPageInner() {
                     Standings Table
                   </Button>
                 </ButtonGroup>
+                <Button onClick={() => setShowEplSidebar(!showEplSidebar)} variant='outlined' color='primary' size='small' className='normal-case font-semibold text-xs'>
+                  {showEplSidebar ? '📋 Hide Sidebar' : '📋 Show Sidebar'}
+                </Button>
                 <Button onClick={() => { reloadMatches(); reloadStandings(); reloadNews?.() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
                   🔄 Refresh
                 </Button>
               </div>
             </header>
             <Grid container spacing={6}>
-              <Grid item xs={12} lg={8}>
+              <Grid item xs={12} lg={showEplSidebar ? 8 : 12}>
                 <div style={paperBg} className={panelClass}>
                   <PremierLeagueMain matches={matches} loading={loadingMatches} theme={theme} standings={standings} loadingStandings={loadingStandings} mode={plMode} isAdmin={false} onRefreshStandings={reloadStandings} onRefreshMatches={reloadMatches} />
                 </div>
               </Grid>
-              <Grid item xs={12} lg={4}>
-                <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
-                  <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
-                </div>
-              </Grid>
+              {showEplSidebar && (
+                <Grid item xs={12} lg={4}>
+                  <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
+                    <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+                  </div>
+                </Grid>
+              )}
             </Grid>
           </div>
         </RequireLogin>
@@ -155,32 +169,81 @@ function DashboardPageInner() {
                     Playoffs Bracket
                   </Button>
                 </ButtonGroup>
+                <Button onClick={() => setShowUclSidebar(!showUclSidebar)} variant='outlined' color='primary' size='small' className='normal-case font-semibold text-xs'>
+                  {showUclSidebar ? '📋 Hide Sidebar' : '📋 Show Sidebar'}
+                </Button>
                 <Button onClick={() => { reloadUclMatches(); reloadUclStandings() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
                   🔄 Refresh
                 </Button>
               </div>
             </header>
             <Grid container spacing={6}>
-              <Grid item xs={12} lg={8}>
+              <Grid item xs={12} lg={showUclSidebar ? 8 : 12}>
                 <div style={paperBg} className={panelClass}>
                   {uclMode === 'matches' && <ChampionsLeagueMatches matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} onRefreshMatches={reloadUclMatches} isAdmin={false} />}
                   {uclMode === 'table' && <ChampionsLeagueTable standings={uclStandings} loadingStandings={loadingUclStandings} theme={theme} isAdmin={false} onRefreshStandings={reloadUclStandings} />}
                   {uclMode === 'bracket' && <ChampionsLeagueBracket matches={uclMatches} loadingMatches={loadingUclMatches} theme={theme} isAdmin={false} onRefreshMatches={reloadUclMatches} />}
                 </div>
               </Grid>
-              <Grid item xs={12} lg={4}>
-                <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
-                  <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
-                </div>
-              </Grid>
+              {showUclSidebar && (
+                <Grid item xs={12} lg={4}>
+                  <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
+                    <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+                  </div>
+                </Grid>
+              )}
             </Grid>
           </div>
         </RequireLogin>
       )}
 
-      {/* ── MANAGE USERS ── */}
-      {activeSection === 'manage-users' && (
-        <AdminUserManagement />
+      {/* ── WORLD CUP 2026 ── */}
+      {activeSection === 'world-cup' && (
+        <RequireLogin title="FIFA World Cup 2026 Dashboard">
+          <div>
+            <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+              <div>
+                <h1 className='text-2xl font-bold text-textPrimary'>FIFA World Cup 2026</h1>
+                <p className='text-textSecondary text-sm'>View World Cup group tables, schedules, and results.</p>
+              </div>
+              <div className='flex gap-2 items-center'>
+                <ButtonGroup variant='outlined' size='small'>
+                  <Button onClick={() => setWcMode('matches')} variant={wcMode === 'matches' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Schedules & Results
+                  </Button>
+                  <Button onClick={() => setWcMode('table')} variant={wcMode === 'table' ? 'contained' : 'outlined'} className='normal-case font-semibold text-xs'>
+                    Standings Table
+                  </Button>
+                </ButtonGroup>
+                <Button onClick={() => setShowWcSidebar(!showWcSidebar)} variant='outlined' color='primary' size='small' className='normal-case font-semibold text-xs'>
+                  {showWcSidebar ? '📋 Hide Sidebar' : '📋 Show Sidebar'}
+                </Button>
+                <Button onClick={() => { reloadWcMatches(); reloadWcStandings() }} variant='text' color='secondary' size='small' className='normal-case text-xs'>
+                  🔄 Refresh
+                </Button>
+              </div>
+            </header>
+            <Grid container spacing={6}>
+              <Grid item xs={12} lg={showWcSidebar ? 8 : 12}>
+                <div style={paperBg} className={panelClass}>
+                  <WorldCupMain matches={wcMatches} loading={loadingWcMatches} theme={theme} standings={wcStandings} loadingStandings={loadingWcStandings} mode={wcMode} isAdmin={false} onRefreshStandings={reloadWcStandings} onRefreshMatches={reloadWcMatches} />
+                </div>
+              </Grid>
+              {showWcSidebar && (
+                <Grid item xs={12} lg={4}>
+                  <div style={paperBg} className={panelClass + ' flex flex-col gap-6'}>
+                    <PremierLeagueRight matches={matches} loading={loadingMatches} news={news} loadingNews={loadingNews} theme={theme} />
+                  </div>
+                </Grid>
+              )}
+            </Grid>
+          </div>
+        </RequireLogin>
+      )}
+
+      {/* ── MANAGE USERS & ADMIN CONSOLES ── */}
+      {(activeSection === 'manage-users' || activeSection === 'create-user' || activeSection === 'active-leagues') && (
+        <AdminUserManagement activeTab={activeSection} />
       )}
 
     </div>
