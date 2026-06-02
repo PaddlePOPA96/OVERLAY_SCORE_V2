@@ -128,6 +128,7 @@ return () => window.removeEventListener("keydown", handler);
                 title={item.title}
                 date={item.published}
                 image={item.image}
+                isDark={isDark}
                 onClick={() => {
                   setSelectedNews(item);
                   setShowNewsModal(true);
@@ -155,7 +156,7 @@ return () => window.removeEventListener("keydown", handler);
   );
 }
 
-function NewsItem({ title, date, image, onClick }) {
+function NewsItem({ title, date, image, isDark, onClick }) {
   const dateLabel = date
     ? new Date(date).toLocaleDateString("id-ID", {
         day: "numeric",
@@ -180,10 +181,10 @@ function NewsItem({ title, date, image, onClick }) {
         <div className="w-20 h-16 bg-gray-700 rounded-lg flex-shrink-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition" />
       )}
       <div className="flex flex-col justify-center">
-        <h4 className="text-sm text-gray-200 group-hover:text-purple-300 font-medium leading-snug mb-1 transition">
+        <h4 className={`text-sm font-medium leading-snug mb-1 transition ${isDark ? "text-white group-hover:text-purple-300" : "text-black group-hover:text-purple-700"}`}>
           {title}
         </h4>
-        <span className="text-[10px] text-gray-500">
+        <span className={`text-[10px] ${isDark ? "text-gray-300" : "text-gray-700"}`}>
           Sepak bola • {dateLabel || "Berita terkini"}
         </span>
       </div>
@@ -201,8 +202,8 @@ function NewsModal({ item, onClose, dark }) {
     : "";
 
   const containerClass = dark
-    ? "bg-slate-950 border border-slate-700 text-slate-100"
-    : "bg-white border border-slate-300 text-slate-900";
+    ? "bg-slate-950 border border-slate-700 text-white"
+    : "bg-white border border-slate-300 text-black";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
@@ -213,7 +214,7 @@ function NewsModal({ item, onClose, dark }) {
               {item.title}
             </h3>
             {dateLabel && (
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className={`text-[11px] mt-1 ${dark ? "text-slate-300" : "text-slate-700"}`}>
                 Sepak bola • {dateLabel}
               </p>
             )}
@@ -237,7 +238,7 @@ function NewsModal({ item, onClose, dark }) {
           </div>
         )}
         {item.description && (
-          <p className="text-xs leading-relaxed text-slate-200 mb-3">
+          <p className={`text-xs leading-relaxed mb-3 ${dark ? "text-white" : "text-black"}`}>
             {item.description}
           </p>
         )}

@@ -32,7 +32,7 @@ export function RunningTextSetupContent() {
         <p className="text-textSecondary text-sm">Configure, view, and embed the ticker running text overlay on OBS.</p>
       </div> */}
 
-      <Card className="max-w-3xl border border-slate-700/20 bg-slate-50 shadow-sm rounded-xl">
+      <Card className="w-full border border-slate-700/20 bg-slate-50 shadow-sm rounded-xl">
         <CardContent className="p-6 space-y-6">
           <div>
             <Typography variant="subtitle2" className="text-xs uppercase text-slate-500 font-bold mb-2">

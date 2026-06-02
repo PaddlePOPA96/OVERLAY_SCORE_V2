@@ -214,7 +214,7 @@ return () => clearInterval(interval);
   const timeParts = formatTime(currentRemaining);
 
   return (
-    <div className={`p-6 rounded-2xl border shadow-xl max-w-4xl mx-auto ${isDark ? 'bg-slate-950/90 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+    <div className={`p-6 rounded-2xl border shadow-xl w-full ${isDark ? 'bg-slate-950/90 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
 
       {/* Display */}
       <div className="flex flex-col items-center justify-center mb-8">

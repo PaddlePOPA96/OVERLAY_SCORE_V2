@@ -95,42 +95,62 @@ export function usePremierLeagueNews() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        let cancelled = false;
+        const newsRef = ref(db, "pl_data/news/articles");
 
-        const load = async () => {
-            setLoading(true);
+        const unsubscribe = onValue(
+            newsRef,
+            (snapshot) => {
+                const data = snapshot.val();
 
-            try {
-                // News is public-ish but better to be consistent if user wants strict security.
-                // However, news is usually loaded on mount automatically. 
-                // If we require token, it might fail on initial load if auth isn't ready.
-                // But let's check if the API requires it. User said "don't let others access".
-                // We'll add the token if available.
-                const token = await auth.currentUser?.getIdToken();
-
-                const res = await fetch("/api/premier-league/news", {
-                    headers: token ? { Authorization: `Bearer ${token}` } : {},
-                });
-
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-
-                if (!cancelled) {
-                    setNews(data.articles || []);
-                }
-            } catch {
-                if (!cancelled) setNews([]);
-            } finally {
-                if (!cancelled) setLoading(false);
+                setNews(Array.isArray(data) ? data : []);
+                setLoading(false);
+            },
+            (error) => {
+                console.error("Error reading news from Firebase:", error);
+                setLoading(false);
             }
-        };
+        );
 
-        load();
-        
-return () => { cancelled = true; };
+        return () => unsubscribe();
     }, []);
 
-    return { news, loadingNews: loading };
+    const reloadNews = async () => {
+        try {
+            if (!auth.currentUser) {
+                throw new Error("User must be logged in to refresh data");
+            }
+
+            const token = await auth.currentUser.getIdToken();
+
+            if (!token) {
+                throw new Error("Failed to get authentication token");
+            }
+
+            const response = await fetch("/api/premier-league/news", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                let errorMsg = response.statusText;
+
+                try {
+                    const errorBody = await response.json();
+
+                    if (errorBody.error) errorMsg = errorBody.error;
+                } catch { } // Ignore JSON parse error
+
+                throw new Error(`API returned ${response.status}: ${errorMsg}`);
+            }
+
+            console.log("✅ Premier League news refreshed successfully");
+        } catch (e) {
+            console.error("❌ Failed to reload news:", e.message);
+            throw e;
+        }
+    };
+
+    return { news, loadingNews: loading, reloadNews };
 }
 
 export function usePremierLeagueStandings() {

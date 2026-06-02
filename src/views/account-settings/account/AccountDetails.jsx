@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
+import Avatar from '@mui/material/Avatar'
 
 // Vars
 const initialData = {
@@ -38,7 +39,7 @@ const AccountDetails = () => {
   // States
   const [formData, setFormData] = useState(initialData)
   const [fileInput, setFileInput] = useState('')
-  const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
+  const [imgSrc, setImgSrc] = useState('')
   const [language, setLanguage] = useState(['English'])
 
   const handleDelete = value => {
@@ -69,14 +70,14 @@ const AccountDetails = () => {
 
   const handleFileInputReset = () => {
     setFileInput('')
-    setImgSrc('/images/avatars/1.png')
+    setImgSrc('')
   }
 
   return (
     <Card>
       <CardContent className='mbe-5'>
         <div className='flex max-sm:flex-col items-center gap-6'>
-          <img height={100} width={100} className='rounded' src={imgSrc} alt='Profile' />
+          <Avatar src={imgSrc || undefined} alt='Profile' variant='rounded' sx={{ width: 100, height: 100 }} />
           <div className='flex flex-grow flex-col gap-4'>
             <div className='flex flex-col sm:flex-row gap-4'>
               <Button component='label' size='small' variant='contained' htmlFor='account-settings-upload-image'>

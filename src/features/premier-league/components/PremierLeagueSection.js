@@ -185,7 +185,7 @@ return `${date.toLocaleDateString("id-ID", {
                 {/* Today Match Container */}
                 <div className={`${cardClass} rounded-xl p-5`}>
                   <div className="mb-4">
-                    <SectionLabel title="Today Match" />
+                    <SectionLabel title="Today Match" isDark={isDark} />
                   </div>
                   <div className="space-y-2">
                     {todayMatches.length > 0 ? (
@@ -207,7 +207,7 @@ return `${date.toLocaleDateString("id-ID", {
                 {/* Recent Matches Container */}
                 <div className={`${cardClass} rounded-xl p-5`}>
                   <div className="mb-4">
-                    <SectionLabel title="Recent Matches" />
+                    <SectionLabel title="Recent Matches" isDark={isDark} />
                   </div>
                   <div className="space-y-2">
                     {recentMatches.length > 0 ? (
@@ -229,7 +229,7 @@ return `${date.toLocaleDateString("id-ID", {
                 {/* Next Match Container */}
                 <div className={`${cardClass} rounded-xl p-5`}>
                   <div className="mb-4">
-                    <SectionLabel title="Next Match" />
+                    <SectionLabel title="Next Match" isDark={isDark} />
                   </div>
                   <div className="space-y-2">
                     {nextMatches.length ? (
@@ -274,30 +274,30 @@ function PremierLeagueTableCard({
   onRefreshStandings,
 }) {
   const headingClass = isDark
-    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-100"
-    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-500";
+    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-white"
+    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-black font-bold";
 
   const thClass = isDark
-    ? "text-left py-2 px-2 font-semibold text-slate-200 text-[13px]"
-    : "text-left py-2 px-2 font-semibold text-slate-600 text-[13px]";
+    ? "text-left py-2 px-2 font-semibold text-white text-[13px]"
+    : "text-left py-2 px-2 font-semibold text-black text-[13px]";
 
   const thCenterClass = `${thClass} text-center`;
 
   const posClass = isDark
-    ? "py-2 px-2 text-slate-300 text-sm"
-    : "py-2 px-2 text-slate-600 text-sm";
+    ? "py-2 px-2 text-white text-sm"
+    : "py-2 px-2 text-black text-sm";
 
   const clubClass = isDark
-    ? "py-2 pr-2 text-slate-50 font-medium text-sm"
-    : "py-2 pr-2 text-slate-800 font-medium text-sm";
+    ? "py-2 pr-2 text-white font-medium text-sm"
+    : "py-2 pr-2 text-black font-medium text-sm";
 
   const playedClass = isDark
-    ? "py-2 px-2 text-center text-slate-200 text-sm"
-    : "py-2 px-2 text-center text-slate-700 text-sm";
+    ? "py-2 px-2 text-center text-white text-sm"
+    : "py-2 px-2 text-center text-black text-sm";
 
   const pointsClass = isDark
     ? "py-2 px-2 text-center font-bold text-white text-sm"
-    : "py-2 px-2 text-center font-bold text-slate-900 text-sm";
+    : "py-2 px-2 text-center font-bold text-black text-sm";
 
   const logoBgClass = isDark
     ? "bg-slate-900"
@@ -405,10 +405,10 @@ return (
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="w-5 text-[11px] text-slate-400">
+                    <span className={`w-5 text-[11px] ${isDark ? "text-slate-400" : "text-slate-700"}`}>
                       {row.position}.
                     </span>
-                    <span className="font-medium text-slate-100">
+                    <span className={`font-medium ${isDark ? "text-white" : "text-black"}`}>
                       {row.team?.name || "TBD"}
                     </span>
                   </div>
@@ -425,9 +425,9 @@ return (
   );
 }
 
-function SectionLabel({ title }) {
+function SectionLabel({ title, isDark }) {
   return (
-    <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">
+    <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>
       {title}
     </p>
   );
@@ -544,8 +544,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
           <div className="flex flex-col min-w-0 text-center sm:text-left">
             <span
               className={`truncate text-sm sm:text-base ${isDark
-                ? "text-gray-200 group-hover:text-white"
-                : "text-slate-800 group-hover:text-slate-900"
+                ? "text-white"
+                : "text-black group-hover:text-purple-700"
                 }`}
             >
               {match.homeTeam?.shortName || match.homeTeam?.name || "TBD"}
@@ -571,8 +571,8 @@ export function PremierLeagueMatchRow({ match, theme }) {
         <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 justify-center sm:justify-end">
           <span
             className={`truncate text-sm sm:text-base order-2 sm:order-1 text-right ${isDark
-              ? "text-gray-200 group-hover:text-white"
-              : "text-slate-800 group-hover:text-slate-900"
+              ? "text-white"
+              : "text-black group-hover:text-purple-700"
               }`}
           >
             {match.awayTeam?.shortName || match.awayTeam?.name || "TBD"}

@@ -121,18 +121,18 @@ export function ChampionsLeagueTable({
     : "bg-white border border-slate-200 shadow-lg";
 
   const headingClass = isDark
-    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-100"
-    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-gray-500";
+    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-white"
+    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-black font-bold";
 
   const thClass = isDark
-    ? "text-left py-2 px-2 font-semibold text-slate-200 text-[13px]"
-    : "text-left py-2 px-2 font-semibold text-slate-600 text-[13px]";
+    ? "text-left py-2 px-2 font-semibold text-white text-[13px]"
+    : "text-left py-2 px-2 font-semibold text-black text-[13px]";
 
   const thCenterClass = `${thClass} text-center`;
 
   const cellText = isDark
-    ? "py-2 pr-2 text-slate-100 text-sm"
-    : "py-2 pr-2 text-slate-800 text-sm";
+    ? "py-2 pr-2 text-white text-sm"
+    : "py-2 pr-2 text-black text-sm";
 
   const cellCenter = `${cellText} text-center`;
 
@@ -184,13 +184,13 @@ return group.replace(/_/g, " ");
           {groups.map((group) => (
             <div
               key={group.group || group.stage || `group-${group.type}`}
-              className="rounded-lg border border-slate-700/60 bg-slate-900/40 overflow-hidden"
+              className={`rounded-lg border overflow-hidden ${isDark ? "border-slate-700/60 bg-slate-900/40" : "border-slate-200 bg-slate-50"}`}
             >
-              <div className="px-3 py-2 border-b border-slate-700/60 flex items-center justify-between">
-                <p className="text-xs font-semibold text-slate-100">
+              <div className={`px-3 py-2 border-b flex items-center justify-between ${isDark ? "border-slate-700/60 bg-slate-800/10" : "border-slate-200 bg-slate-100"}`}>
+                <p className={`text-xs font-semibold ${isDark ? "text-white" : "text-black"}`}>
                   {formatGroupName(group.group)}
                 </p>
-                <span className="text-[10px] text-slate-400">
+                <span className={`text-[10px] ${isDark ? "text-slate-400" : "text-slate-700"}`}>
                   {group.table?.length || 0} tim
                 </span>
               </div>
@@ -239,7 +239,7 @@ return (
                                 />
                               );
                             })()}
-                            <span>{row.team?.shortName || row.team?.name || "TBD"}</span>
+                            <span className={isDark ? "text-white" : "text-black"}>{row.team?.shortName || row.team?.name || "TBD"}</span>
                           </div>
                         </td>
                         <td className={cellCenter}>{row.playedGames}</td>
@@ -277,8 +277,8 @@ export function ChampionsLeagueMatches({
     : "bg-white border border-slate-200 shadow-sm";
 
   const headingClass = isDark
-    ? "text-xs uppercase tracking-[0.16em] text-gray-100"
-    : "text-xs uppercase tracking-[0.16em] text-gray-500";
+    ? "text-xs uppercase tracking-[0.16em] text-white"
+    : "text-xs uppercase tracking-[0.16em] text-black font-bold";
 
   const badgeBase =
     "text-sm font-mono border px-4 py-[4px] rounded-full";
@@ -363,8 +363,8 @@ return d.toLocaleString("id-ID", {
             )}
             <span
               className={`truncate ${isDark
-                ? "text-slate-50 text-sm md:text-base lg:text-lg"
-                : "text-slate-900 text-sm md:text-base lg:text-lg"
+                ? "text-white text-sm md:text-base lg:text-lg"
+                : "text-black text-sm md:text-base lg:text-lg"
                 }`}
             >
               {homeName}
@@ -384,8 +384,8 @@ return d.toLocaleString("id-ID", {
         <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
           <span
             className={`truncate text-right ${isDark
-              ? "text-slate-50 text-sm md:text-base lg:text-lg"
-              : "text-slate-900 text-sm md:text-base lg:text-lg"
+              ? "text-white text-sm md:text-base lg:text-lg"
+              : "text-black text-sm md:text-base lg:text-lg"
               }`}
           >
             {awayName}
@@ -441,7 +441,7 @@ return d.toLocaleString("id-ID", {
           {liveMatches.length > 0 && (
             <div className={`${cardClass} rounded-xl p-5`}>
               <div className="mb-4">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Live Matches</p>
+                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Live Matches</p>
               </div>
               <div className="space-y-2">
                 {sortByDate(liveMatches).map(renderRow)}
@@ -452,7 +452,7 @@ return d.toLocaleString("id-ID", {
           {/* Recent Matches Container */}
           <div className={`${cardClass} rounded-xl p-5`}>
             <div className="mb-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Hasil Terbaru</p>
+                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Hasil Terbaru</p>
             </div>
             <div className="space-y-2">
               {finishedMatches.length ? (
@@ -470,7 +470,7 @@ return d.toLocaleString("id-ID", {
           {/* Upcoming Matches Container */}
           <div className={`${cardClass} rounded-xl p-5`}>
             <div className="mb-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-gray-400 mt-1">Jadwal Mendatang</p>
+                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Jadwal Mendatang</p>
             </div>
             <div className="space-y-2">
               {upcomingMatches.length ? (

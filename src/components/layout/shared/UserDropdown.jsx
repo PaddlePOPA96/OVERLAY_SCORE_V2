@@ -86,7 +86,6 @@ return () => unsubscribe();
         <Avatar
           ref={anchorRef}
           alt={username}
-          src='/images/avatars/1.png'
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
         />
@@ -110,7 +109,7 @@ return () => unsubscribe();
               <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={username} src='/images/avatars/1.png' />
+                    <Avatar alt={username} />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium text-capitalize' color='text.primary'>
                         {username}

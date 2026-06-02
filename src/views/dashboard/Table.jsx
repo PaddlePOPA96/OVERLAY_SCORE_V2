@@ -15,7 +15,7 @@ import tableStyles from '@core/styles/table.module.css'
 // Vars
 const rowsData = [
   {
-    avatarSrc: '/images/avatars/1.png',
+    avatarSrc: '',
     name: 'Jordan Stevenson',
     username: '@amiccoo',
     email: 'Jacinthe_Blick@hotmail.com',

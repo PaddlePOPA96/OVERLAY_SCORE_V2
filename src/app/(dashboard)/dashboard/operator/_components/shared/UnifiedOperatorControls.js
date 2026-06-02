@@ -59,16 +59,16 @@ export default function UnifiedOperatorControls({
   };
 
   const isLight = theme === "light";
-  const labelColor = isLight ? "#1e293b" : "#aaa";
-  const tinyColor = isLight ? "#475569" : "#aaa";
+  const labelColor = isLight ? "#000000" : "#ffffff";
+  const tinyColor = isLight ? "#000000" : "#ffffff";
   const borderCol = isLight ? "#cbd5e1" : "#333";
   const cardBg = isLight ? "rgba(15, 23, 42, 0.02)" : "rgba(255, 255, 255, 0.02)";
   const cardBorder = isLight ? "1px solid #cbd5e1" : "1px solid #2e2e2e";
   const scoreBg = isLight ? "rgba(15, 23, 42, 0.03)" : "rgba(0, 0, 0, 0.2)";
-  const scoreNumColor = isLight ? "#0f172a" : "#ffffff";
+  const scoreNumColor = isLight ? "#000000" : "#ffffff";
 
   return (
-    <div className="operator-b-controls" style={{ width: "100%", maxWidth: "900px" }}>
+    <div className="operator-b-controls" style={{ width: "100%", maxWidth: "100%" }}>
       {/* SECTION 1: Layout & Babak Selection */}
       <div
         style={{
