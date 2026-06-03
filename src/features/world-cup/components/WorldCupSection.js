@@ -274,12 +274,31 @@ export function WorldCupMatches({ matches, loadingMatches, theme, isAdmin, onRef
 
   const logoBgClass = isDark ? 'bg-slate-900' : 'bg-white border border-slate-200'
 
-  const liveMatches = matches?.filter(m => m.status === 'IN_PLAY' || m.status === 'PAUSED') || []
+  const now = new Date()
+  const in7Days = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+  const in14Days = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000)
 
-  const upcomingMatches =
-    matches?.filter(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'POSTPONED') || []
+  // Exclude matches where either team is TBD (no name assigned yet)
+  const isKnownMatch = m =>
+    !!(m.homeTeam?.name || m.homeTeam?.shortName) && !!(m.awayTeam?.name || m.awayTeam?.shortName)
 
-  const finishedMatches = matches?.filter(m => m.status === 'FINISHED') || []
+  const liveMatches = matches?.filter(m => (m.status === 'IN_PLAY' || m.status === 'PAUSED') && isKnownMatch(m)) || []
+
+  const isUpcomingStatus = m =>
+    m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'POSTPONED'
+
+  const filterUpcoming = (deadline) =>
+    matches?.filter(m => {
+      if (!isKnownMatch(m) || !isUpcomingStatus(m) || !m.utcDate) return false
+      const matchDate = new Date(m.utcDate)
+      return matchDate >= now && matchDate <= deadline
+    }) || []
+
+  // Try 7 days first; if no matches found, expand to 14 days
+  const upcoming7 = filterUpcoming(in7Days)
+  const upcomingMatches = upcoming7.length > 0 ? upcoming7 : filterUpcoming(in14Days)
+
+  const finishedMatches = matches?.filter(m => m.status === 'FINISHED' && isKnownMatch(m)) || []
 
   const sortByDate = (list, asc = true) =>
     [...list].sort((a, b) =>

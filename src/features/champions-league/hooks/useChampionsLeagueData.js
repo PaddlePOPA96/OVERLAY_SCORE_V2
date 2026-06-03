@@ -38,20 +38,12 @@ export function useChampionsLeagueMatches() {
         } catch {}
 
         throw new Error(`UCL matches API returned ${response.status}: ${errorMsg}`)
-      } else {
-        const data = await response.json()
-
-        // Similar logic to PL: route.js saves 'data' (whole object).
-        // Hook listens to "ucl_data/matches/data/matches".
-        // So we need data.matches
-        if (data && Array.isArray(data.matches)) {
-          setMatches(data.matches)
-        } else if (Array.isArray(data)) {
-          setMatches(data)
-        }
-
-        console.log('✅ Champions League matches refreshed successfully')
       }
+
+      // Data disimpan ke Firebase RTDB oleh API route.
+      // onValue listener akan otomatis menerima update — tidak perlu setMatches() di sini.
+      await response.json() // consume body
+      console.log('✅ Champions League matches refreshed — Firebase listener will update state automatically')
     } catch (e) {
       console.error('❌ Failed to reload UCL matches:', e.message)
       throw e

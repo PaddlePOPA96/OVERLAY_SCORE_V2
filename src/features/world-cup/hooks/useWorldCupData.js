@@ -46,17 +46,12 @@ export function useWorldCupMatches() {
         } catch {}
 
         throw new Error(`World Cup matches API returned ${response.status}: ${errorMsg}`)
-      } else {
-        const data = await response.json()
-
-        if (data && Array.isArray(data.matches)) {
-          setMatches(data.matches)
-        } else if (Array.isArray(data)) {
-          setMatches(data)
-        }
-
-        console.log('✅ World Cup matches refreshed successfully')
       }
+
+      // Data disimpan ke Firebase RTDB oleh API route.
+      // onValue listener akan otomatis menerima update — tidak perlu setMatches() di sini.
+      await response.json() // consume body
+      console.log('✅ World Cup matches refreshed — Firebase listener will update state automatically')
     } catch (e) {
       console.error('❌ Failed to reload World Cup matches:', e.message)
       throw e

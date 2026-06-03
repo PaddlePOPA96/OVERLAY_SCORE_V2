@@ -4,6 +4,8 @@ import { ref, set, get } from 'firebase/database'
 
 import { db } from '@/lib/firebaseDb'
 import { verifyIdToken } from '@/lib/firebaseAdmin'
+import { dbFirestore } from '@/lib/firebaseFirestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'
@@ -28,7 +30,16 @@ export async function GET(request) {
       return NextResponse.json({ error: `Unauthorized: ${verification.error || 'Invalid token'}` }, { status: 401 })
     }
 
-    // 2. Fetch all matches of the tournament
+    // 2. Superadmin role check via Firestore
+    const uid = verification.uid
+    const userDoc = await getDoc(doc(dbFirestore, 'users', uid))
+    const role = userDoc.exists() ? userDoc.data().role : 'user'
+
+    if (role !== 'superadmin') {
+      return NextResponse.json({ error: 'Forbidden: Superadmin only' }, { status: 403 })
+    }
+
+    // 3. Fetch all matches of the tournament
     const url = `${BASE_URL}/competitions/WC/matches`
 
     if (!API_KEY) {

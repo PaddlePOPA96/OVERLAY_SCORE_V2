@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server'
 import { ref, set, get } from 'firebase/database'
 
 import { db } from '@/lib/firebaseDb'
+import { verifyIdToken } from '@/lib/firebaseAdmin'
+import { dbFirestore } from '@/lib/firebaseFirestore'
+import { doc, getDoc } from 'firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'
@@ -10,8 +13,6 @@ const BASE_URL = 'https://api.football-data.org/v4'
 function formatDate(date) {
   return date.toISOString().split('T')[0]
 }
-
-import { verifyIdToken } from '@/lib/firebaseAdmin'
 
 export async function GET(request) {
   try {
@@ -29,9 +30,16 @@ export async function GET(request) {
       return NextResponse.json({ error: `Unauthorized: ${verification.error || 'Invalid token'}` }, { status: 401 })
     }
 
-    const decodedToken = verification
+    // 2. Superadmin role check via Firestore
+    const uid = verification.uid
+    const userDoc = await getDoc(doc(dbFirestore, 'users', uid))
+    const role = userDoc.exists() ? userDoc.data().role : 'user'
 
-    // 2. Main Logic (Fetch Data)
+    if (role !== 'superadmin') {
+      return NextResponse.json({ error: 'Forbidden: Superadmin only' }, { status: 403 })
+    }
+
+    // 3. Main Logic
     const today = new Date()
     const pastDate = new Date()
 

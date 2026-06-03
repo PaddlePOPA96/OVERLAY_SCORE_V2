@@ -1,185 +1,101 @@
-## OVERLAY_SCORE_V2 – EPL Scoreboard Dashboard & Overlay
+# OVERLAY_SCORE_V2 – Live Football Scoreboard & Dashboard
 
-OVERLAY_SCORE_V2 is a Next.js 16 application for running a live football scoreboard and Premier League dashboard, built for streaming workflows (OBS / browser source) and operator control.
-
-The app combines:
-
-- A secure operator dashboard with authentication.
-- Real‑time scoreboard control UI (layouts A & B).
-- Browser‑source overlay pages for live broadcast.
-- A Premier League section with fixtures, results, table and news.
+A **Next.js 14** application for live football scoreboard control and multi-league dashboard, built for streaming workflows (OBS / Browser Source) and operator control.
 
 ---
 
-## Features
+## ✨ Features Overview
 
-### 1. Authentication & Dashboard
-
-- Email/password + Google login (`/login`, `/register`).
-- Protected dashboard at `/dashboard`:
-  - Sidebar navigation:
-    - **Scoreboard Operator**
-    - **Premier League → Jadwal & Hasil**
-    - **Premier League → Premier League Table**
-  - Dark / light theme toggle (per user, persisted in `localStorage`).
-
-### 2. Scoreboard Operator
-
-**Routes**
-
-- `/operator` – main operator (query `?room=` optional).
-- `/operator/[room]` – operator bound to a specific room ID.
-
-**Capabilities**
-
-- Two operator layouts:
-  - **Layout A** – horizontal bar overlay with gradient accents.
-  - **Layout B** – box‑style scoreboard with club logos & colors.
-- Full‑page operator experience inside `/dashboard` (no iframe).
-- Real‑time controls:
-  - Team names, scores, logos (with logo picker).
-  - Timer (start/pause/reset, manual time set).
-  - Period (1st, 2nd, Extra).
-  - Color / accent controls (kept in sync across layouts A & B).
-  - Overlay visibility toggle (`showOverlay`) with intro animation trigger.
-- Sync button (“Sync Semua Client”) to make the operator UI explicit about data refresh.
-
-### 3. Overlay Pages (for OBS / Browser Source)
-
-**Routes**
-
-- `/overlay/page.js` – base overlay entry.
-- `/overlay/[room]` – overlay tied to a given `roomId`.
-
-**Details**
-
-- Renders Layout A or Layout B according to live data.
-- Designed for 1920x1080 browser sources in OBS.
-- Overlay shows whatever the Operator sends through Firebase for that room.
-
-### 4. Premier League Dashboard
-
-**Routes & Views**
-
-- `/dashboard` → `Premier League → Jadwal & Hasil`:
-  - Hero “Match of the Day” (live match only when available).
-  - Sections:
-    - **Today Match**
-    - **Next Match**
-    - **Last Match**
-  - Match rows include:
-    - Status badge (`LIVE`, `FT`, `UPCOMING`).
-    - Club names, date, and logos.
-- `/dashboard` → `Premier League → Premier League Table`:
-  - Standings card with:
-    - `#`, `Club` (with logo), `M`, `W`, `D`, `L`, `SG`, `Poin`.
-  - Compact, EPL‑style layout, theme‑aware (dark/light).
-  - “Refresh” button (visible only for admin user, e.g. `admin@admin.com`) to re‑fetch standings on demand.
-
-**Data Sources**
-
-- `app/api/klasemen/route.js`
-  - `GET /api/klasemen` → Premier League standings from [football-data.org](https://www.football-data.org/).
-  - Also writes a snapshot to Firebase at `pl_data/standings` (for optional usage).
-- `app/api/pertandingan/route.js`
-  - `GET /api/pertandingan` → PL fixtures and results (±7 day window).
-  - Writes snapshot to `pl_data/matches`.
-- `app/api/news/route.js`
-  - `GET /api/news` → latest EPL news from ESPN (`eng.1`).
-- `app/api/teams/[id]/route.js`
-  - `GET /api/teams/:id` → team details (optional, for future enhancements).
-
-### 5. Firebase Integration
-
-- Realtime Database structure:
-
-  ```text
-  match_live/{roomId}
-    layout
-    showOverlay
-    introId
-    homeName / awayName
-    homeScore / awayScore
-    homeLogo / awayLogo
-    homeColor / awayColor
-    homeBg / awayBg
-    period
-    timer: { isRunning, baseTime, startTime }
-    goalTrigger
-    goalTeam
-
-  pl_data/standings
-    lastUpdated
-    data: { ...raw response from football-data.org... }
-
-  pl_data/matches
-    lastUpdated
-    data: { ...raw response from football-data.org... }
-
-  pl_data/teams/{id}
-    lastUpdated
-    data: { ...raw response for that team... }
-  ```
-
-- `hooks/useScoreboard.js` encapsulates all realtime read/write logic for `match_live/{roomId}`.
+| Feature | Description |
+|---|---|
+| 🎮 Scoreboard Operator | Real-time scoreboard control with two overlay layouts |
+| 📺 OBS Browser Source Overlays | Live score overlay + running text ticker |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League Dashboard | Fixtures, results, standings & news |
+| 🏆 Champions League Dashboard | UCL fixtures, results & group standings |
+| 🌍 World Cup Dashboard | FIFA World Cup 2026 schedules, results & group standings |
+| 📜 Running Text Ticker | Scrolling live match ticker for OBS |
+| 👥 User & Role Management | Superadmin / admin / user roles via Firestore |
+| 🌓 Dark / Light Mode | Per-user theme, persisted in localStorage |
 
 ---
 
-## Tech Stack
+## 🗂 Tech Stack
 
-- **Framework**: Next.js 16 (App Router, `app/` directory, client/server components).
-- **UI**:
-  - Tailwind CSS 4 (via `@tailwindcss/postcss`).
-  - Lightweight UI primitives (`components/ui/button`, `components/ui/card`).
-- **Auth**: Firebase Authentication (email/password + Google).
-- **Data**: Firebase Realtime Database.
-- **External APIs**:
-  - [football-data.org](https://www.football-data.org/) – standings & fixtures.
-  - ESPN Soccer API – latest Premier League news.
+- **Framework**: Next.js 14 (App Router)
+- **UI**: Material UI v6 + Tailwind CSS
+- **Auth**: Firebase Authentication (email/password + Google)
+- **Database**: Firebase Realtime Database + Firestore
+- **External API**: [football-data.org](https://www.football-data.org/) (PL, UCL, WC)
+- **Deployment**: Vercel (recommended)
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Prerequisites
 
-- Node.js 20+ (recommended to match Next.js 16 requirements).
-- npm (or pnpm/yarn/bun, but README uses npm examples).
-- A Firebase project with Realtime Database enabled.
-- A football-data.org API key.
+- Node.js 20+
+- pnpm (recommended) or npm
+- Firebase project with **Realtime Database** + **Firestore** enabled
+- A [football-data.org](https://www.football-data.org/) API key
+
+---
 
 ### 2. Environment Variables
 
-Create a `.env.local` file in the project root with at least:
+Create a `.env.local` file in the project root:
 
 ```bash
+# Firebase Client SDK (public)
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
-NEXT_PUBLIC_FIREBASE_APP_ID=...
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your-db-id.firebaseio.com
 
+# Firebase Admin SDK (server-side, keep private)
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxx@your_project.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+# Football Data API
 FOOTBALL_DATA_API_KEY=your_football_data_api_key
 ```
 
-The Firebase keys are read in `lib/firebase.js`, and the football API key is used in the API routes under `app/api/klasemen`, `app/api/pertandingan`, and `app/api/teams/[id]`.
+> ⚠️ **Never commit these values to git.** Use `.env.local` locally and set them as Vercel Environment Variables for production.
 
-#### 🔑 Cara Mendapatkan API Key (football-data.org):
-1. Kunjungi website [football-data.org](https://www.football-data.org/).
-2. Klik tombol **"Get your API key"** atau menu **"Register"**.
-3. Pilih plan **"Free"** (Gratis). Paket gratis ini sudah mendukung liga utama seperti Premier League (EPL), Champions League (UCL), dan World Cup (WC).
-4. Masukkan data Anda (Nama, Email) dan pilih tipe penggunaan (misalnya: *Personal / Non-commercial*).
-5. Kirim pendaftaran.
-6. Buka kotak masuk email Anda (periksa folder Spam/Promosi jika tidak langsung masuk).
-7. Cari email dari `football-data.org` yang berisi **API Token**.
-8. Salin token tersebut dan tempelkan ke file `.env` atau `.env.local` Anda pada bagian `FOOTBALL_DATA_API_KEY`.
+---
 
+### 🔑 Cara Mendapatkan `FOOTBALL_DATA_API_KEY`
+
+1. Kunjungi **[football-data.org](https://www.football-data.org/)**
+2. Klik **"Get your API key"** atau **"Register"**
+3. Pilih plan **Free** (gratis, sudah cukup untuk PL, UCL, dan WC)
+4. Daftar dengan nama & email, pilih tipe penggunaan (Personal / Non-commercial)
+5. Cek inbox email — cari email dari `football-data.org` berisi **API Token**
+6. Salin token → tempel ke `.env.local` sebagai `FOOTBALL_DATA_API_KEY`
+
+---
+
+### 🔑 Cara Mendapatkan Firebase Admin SDK Key
+
+1. Buka [Firebase Console](https://console.firebase.google.com/) → pilih project Anda
+2. Masuk ke **Project Settings** (ikon ⚙️ di sidebar) → tab **Service accounts**
+3. Klik **"Generate new private key"** → konfirmasi → file JSON akan diunduh
+4. Dari file JSON tersebut, salin nilai berikut ke `.env.local`:
+   - `project_id` → `FIREBASE_PROJECT_ID`
+   - `client_email` → `FIREBASE_CLIENT_EMAIL`
+   - `private_key` → `FIREBASE_PRIVATE_KEY` (pastikan dibungkus tanda kutip dan `\n` tetap ada)
+
+---
 
 ### 3. Install Dependencies
 
 ```bash
+pnpm install
+# atau
 npm install
 ```
 
@@ -189,87 +105,129 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
-
-Default flow:
-
-- Visit `/login` → authenticate.
-- After login, you are redirected to `/dashboard`.
-- From the sidebar:
-  - Open **Scoreboard Operator** to control overlays.
-  - Open **Premier League → Jadwal & Hasil** to see fixtures.
-  - Open **Premier League → Premier League Table** to see the standings.
+Buka `http://localhost:3000`.
 
 ---
 
-## Project Structure (High Level)
+## 📁 Project Structure
 
-```text
-app/
-  api/
-    klasemen/route.js        # PL standings API + Firebase snapshot
-    pertandingan/route.js    # PL fixtures/results API + snapshot
-    news/route.js            # EPL news feed
-    teams/[id]/route.js      # Team details
-  dashboard/
-    page.js                  # Auth‑protected dashboard shell
-    LeftSidebar.js
-    MainColumn.js
-    RightColumn.js
-    PremierLeagueSection.js  # PL hero + matches + standings
-    PremierLeagueSidebar.js  # Live matches + latest news panel
-    pl-data.js               # Hooks for matches/news/standings
-  operator/
-    page.js                  # /operator
-    [room]/page.js           # /operator/[room]
-    OperatorRoot.js          # Shared operator controller
-    OperatorA.js             # Layout A control UI
-    OperatorB.js             # Layout B control UI
-    OverlayRoomControls.js
-    LogoPickerModal.js
-    logoData.js              # Logo list + helper
-  overlay/
-    LayoutA.js
-    LayoutB.js
-    [room]/page.js           # /overlay/[room]
-login/, register/            # Auth pages
-lib/
-  firebase.js                # Firebase app + RTDB
-  firebaseAuth.js            # Firebase Auth singleton
-hooks/
-  useScoreboard.js           # Core scoreboard realtime hook
-public/
-  logo/England - Premier League/*.png  # Club logos used in UI
-  table.html                 # Original EPL dashboard HTML reference
+```
+src/
+├── app/
+│   ├── (dashboard)/
+│   │   ├── page.jsx                    # Main dashboard (query ?s= routing)
+│   │   ├── dashboard/
+│   │   │   ├── running-text/page.js    # OBS Running Text overlay page
+│   │   │   └── operator/               # Scoreboard operator UI
+│   │   ├── premier-league/page.jsx     # EPL fixtures & standings
+│   │   ├── ucl-table/page.jsx          # UCL fixtures & standings
+│   │   ├── world-cup/page.jsx          # World Cup fixtures & standings
+│   │   ├── running-text-setup/page.jsx # Running Text OBS setup
+│   │   ├── countdown-timer/page.jsx    # Countdown Timer overlay
+│   │   └── admin/create-user/page.jsx  # Admin user management
+│   ├── [room]/                         # Public overlay page (OBS source)
+│   └── api/
+│       ├── premier-league/             # PL matches, standings, news
+│       ├── champions-league/           # UCL matches, standings
+│       └── world-cup/                  # WC matches, standings
+├── features/
+│   ├── premier-league/                 # PL hooks & components
+│   ├── champions-league/               # UCL hooks & components
+│   ├── world-cup/                      # WC hooks & components
+│   ├── countdown/                      # Countdown timer feature
+│   └── iam/                            # User role hooks
+├── hooks/
+│   └── useLayoutSettings.js            # Shared overlay settings (RTDB)
+└── lib/
+    ├── firebase.js                     # Firebase Auth + RTDB client
+    ├── firebaseDb.js                   # Realtime Database instance
+    ├── firebaseFirestore.js            # Firestore instance
+    ├── firebaseAdmin.js                # Admin SDK (server-side)
+    └── logoData.js                     # Club/national team logo resolver
 ```
 
 ---
 
-## Firebase Rules (Example)
+## 🔥 Firebase Realtime Database Structure
 
 ```
+match_live/{roomId}
+  ├── layout              # "A" | "B"
+  ├── showOverlay         # boolean
+  ├── homeName / awayName
+  ├── homeScore / awayScore
+  ├── homeLogo / awayLogo
+  ├── homeColor / awayColor
+  ├── period              # "1st" | "2nd" | "Extra"
+  ├── timer               # { isRunning, baseTime, startTime }
+  └── goalTrigger / goalTeam
 
-Adjust according to your security requirements (for production, you may want more restrictive `pl_data` rules or server‑side write only).
+pl_data/
+  ├── matches/            # Premier League matches snapshot
+  ├── standings/          # PL standings snapshot
+  └── news/               # PL news articles
+
+ucl_data/
+  ├── matches/            # UCL matches snapshot
+  ├── standings/          # UCL standings snapshot
+  ├── wc_matches/         # World Cup matches snapshot
+  └── wc_standings/       # World Cup standings snapshot
+
+settings/{uid}/
+  └── runningText/
+      ├── source          # "premier-league" | "champions-league" | "world-cup"
+      ├── y               # Vertical offset (px)
+      └── scale           # Scale factor
+```
 
 ---
 
-## Deployment
+## 👥 User Roles
 
-You can deploy this project like any other Next.js 16 app:
+Roles disimpan di **Firestore** pada koleksi `users/{uid}`:
 
-- **Vercel** – easiest option, with automatic environment variable support.
-- **Custom Node server** – build and start:
+| Role | Akses |
+|---|---|
+| `superadmin` | Full access + bisa refresh data dari API |
+| `admin` | Akses dashboard, tidak bisa refresh API |
+| `user` | Akses terbatas |
 
-```bash
-npm run build
-npm start
-```
-
-Make sure the Firebase and API environment variables are configured in your hosting platform.
+> Tombol **"Refresh Source Data"** di halaman Running Text Setup hanya muncul untuk `superadmin`.
 
 ---
 
-## Notes
+## 📺 OBS Setup – Running Text Ticker
 
-- This README describes the current structure and flows of the project; if you add more overlays, leagues, or dashboards, update this document so future maintainers can quickly understand the system.
-- API keys for football-data.org and Firebase should **never** be committed to the repository; always keep them in environment variables or secure secrets stores.
+1. Buka **Running Text Setup** di sidebar (`?s=running-text`)
+2. Pilih sumber data: Premier League / Champions League / World Cup
+3. Klik **🔄 Refresh Source Data** (Superadmin only) untuk memuat data terbaru dari API ke Firebase
+4. Salin URL Overlay yang muncul, contoh: `https://your-app.vercel.app/dashboard/running-text`
+5. Di OBS → tambah **Browser Source** → tempel URL → set Width: `1920`, Height: `80`
+
+---
+
+## 📺 OBS Setup – Scoreboard Overlay
+
+1. Login sebagai operator → buka **Scoreboard Operator** di sidebar
+2. Catat URL overlay yang sesuai dengan Room ID Anda
+3. Di OBS → tambah **Browser Source** → tempel URL overlay (`/[roomId]`)
+4. Set resolusi sesuai canvas OBS (misal 1920×1080)
+
+---
+
+## 🚢 Deployment (Vercel)
+
+1. Push kode ke GitHub
+2. Import repo di [vercel.com](https://vercel.com)
+3. Set semua **Environment Variables** di Vercel dashboard (sama seperti `.env.local`)
+4. Deploy → selesai
+
+> Variabel `FIREBASE_PRIVATE_KEY` di Vercel: paste nilainya **tanpa** tanda kutip luar, tapi pastikan `\n` tetap ada di dalam string.
+
+---
+
+## 📝 Notes
+
+- Data dari football-data.org di-cache di Firebase RTDB. Client membaca dari Firebase (realtime), bukan langsung dari API.
+- API routes yang menulis ke Firebase hanya bisa dipanggil oleh user dengan role `superadmin` (diverifikasi via Firebase Admin SDK + Firestore).
+- API keys (`FOOTBALL_DATA_API_KEY`, Firebase Admin credentials) **tidak boleh di-commit** ke repository.

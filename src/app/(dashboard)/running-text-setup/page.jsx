@@ -10,7 +10,9 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
+import { auth } from '@/lib/firebase'
 import { useLayoutSettings } from '@/hooks/useLayoutSettings'
+import { useUserRole } from '@/features/iam/hooks/useUserRole'
 import { usePremierLeagueMatches } from '@/features/premier-league/hooks/usePremierLeagueData'
 import { useChampionsLeagueMatches } from '@/features/champions-league/hooks/useChampionsLeagueData'
 import { useWorldCupMatches } from '@/features/world-cup/hooks/useWorldCupData'
@@ -19,6 +21,14 @@ export function RunningTextSetupContent() {
   const [copied, setCopied] = useState(false)
   const [origin, setOrigin] = useState('')
   const { settings, loading: loadingSettings, updateSettings } = useLayoutSettings()
+
+  // Resolve current user & role for superadmin gate
+  const [currentUser, setCurrentUser] = useState(auth.currentUser || null)
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged(u => setCurrentUser(u))
+    return () => unsub()
+  }, [])
+  const { isSuperAdmin, loading: loadingRole } = useUserRole(currentUser)
 
   // Match hooks to trigger API reloads
   const { reloadMatches } = usePremierLeagueMatches()
@@ -95,15 +105,17 @@ export function RunningTextSetupContent() {
                   </Select>
                 </FormControl>
               </div>
-              <Button
-                variant='outlined'
-                color='secondary'
-                onClick={handleRefresh}
-                disabled={refreshing || loadingSettings}
-                className='normal-case font-semibold text-sm h-10 px-4'
-              >
-                {refreshing ? 'Refreshing...' : '🔄 Refresh Source Data'}
-              </Button>
+              {isSuperAdmin && (
+                <Button
+                  variant='outlined'
+                  color='secondary'
+                  onClick={handleRefresh}
+                  disabled={refreshing || loadingSettings}
+                  className='normal-case font-semibold text-sm h-10 px-4'
+                >
+                  {refreshing ? 'Refreshing...' : '🔄 Refresh Source Data'}
+                </Button>
+              )}
             </div>
             {refreshStatus && (
               <Typography
