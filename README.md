@@ -166,6 +166,17 @@ FOOTBALL_DATA_API_KEY=your_football_data_api_key
 
 The Firebase keys are read in `lib/firebase.js`, and the football API key is used in the API routes under `app/api/klasemen`, `app/api/pertandingan`, and `app/api/teams/[id]`.
 
+#### 🔑 Cara Mendapatkan API Key (football-data.org):
+1. Kunjungi website [football-data.org](https://www.football-data.org/).
+2. Klik tombol **"Get your API key"** atau menu **"Register"**.
+3. Pilih plan **"Free"** (Gratis). Paket gratis ini sudah mendukung liga utama seperti Premier League (EPL), Champions League (UCL), dan World Cup (WC).
+4. Masukkan data Anda (Nama, Email) dan pilih tipe penggunaan (misalnya: *Personal / Non-commercial*).
+5. Kirim pendaftaran.
+6. Buka kotak masuk email Anda (periksa folder Spam/Promosi jika tidak langsung masuk).
+7. Cari email dari `football-data.org` yang berisi **API Token**.
+8. Salin token tersebut dan tempelkan ke file `.env` atau `.env.local` Anda pada bagian `FOOTBALL_DATA_API_KEY`.
+
+
 ### 3. Install Dependencies
 
 ```bash
