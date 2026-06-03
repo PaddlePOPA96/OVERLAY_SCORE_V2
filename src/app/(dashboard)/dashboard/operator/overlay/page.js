@@ -3,7 +3,7 @@
 // /dashboard/operator/overlay/room123
 export default function OverlayRootInfo() {
   return (
-    <div style={{ padding: 32, fontFamily: "system-ui, sans-serif" }}>
+    <div style={{ padding: 32, fontFamily: '"Poppins", system-ui, sans-serif' }}>
       <h1 style={{ fontSize: 24, marginBottom: 16 }}>Overlay Multi Room</h1>
       <p>Gunakan URL seperti:</p>
       <pre

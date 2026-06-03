@@ -454,15 +454,121 @@ export const LOGO_DATA = {
     "Shakhtar Donetsk",
     "Zorya Lugansk",
   ],
+  "FIFA World Cup": [
+    "Argentina",
+    "Australia",
+    "Belgium",
+    "Brazil",
+    "Cameroon",
+    "Canada",
+    "Costa Rica",
+    "Croatia",
+    "Denmark",
+    "Ecuador",
+    "England",
+    "France",
+    "Germany",
+    "Ghana",
+    "Iran",
+    "Italy",
+    "Japan",
+    "Mexico",
+    "Morocco",
+    "Netherlands",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "South Korea",
+    "Spain",
+    "Switzerland",
+    "Tunisia",
+    "Ukraine",
+    "Uruguay",
+    "USA",
+    "Wales",
+    "Sweden",
+    "Algeria",
+    "Colombia",
+    "Egypt",
+    "Nigeria",
+    "Peru",
+    "Turkey",
+    "Chile",
+  ],
 };
 
 export function buildLogoSrc(league, club) {
   if (!league || !club) return "";
+
+  if (league === "FIFA World Cup") {
+    const countryMap = {
+      argentina: "ar",
+      australia: "au",
+      belgium: "be",
+      brazil: "br",
+      cameroon: "cm",
+      canada: "ca",
+      costarica: "cr",
+      croatia: "hr",
+      denmark: "dk",
+      ecuador: "ec",
+      england: "gb-eng",
+      france: "fr",
+      germany: "de",
+      ghana: "gh",
+      iran: "ir",
+      italy: "it",
+      japan: "jp",
+      mexico: "mx",
+      morocco: "ma",
+      netherlands: "nl",
+      poland: "pl",
+      portugal: "pt",
+      qatar: "qa",
+      saudiarabia: "sa",
+      senegal: "sn",
+      serbia: "rs",
+      southkorea: "kr",
+      spain: "es",
+      switzerland: "ch",
+      tunisia: "tn",
+      ukraine: "ua",
+      uruguay: "uy",
+      usa: "us",
+      wales: "gb-wls",
+      sweden: "se",
+      algeria: "dz",
+      colombia: "co",
+      egypt: "eg",
+      nigeria: "ng",
+      peru: "pe",
+      turkey: "tr",
+      chile: "cl",
+      austria: "at",
+      czechrepublic: "cz",
+      greece: "gr",
+      norway: "no",
+      romania: "ro",
+      russia: "ru",
+    };
+
+    const key = String(club).toLowerCase().replace(/[^a-z]/g, "");
+    const code = countryMap[key];
+
+    if (code) {
+      return `https://flagcdn.com/w160/${code}.png`;
+    }
+
+    return "https://flagcdn.com/w160/un.png";
+  }
+
   const leagueSegment = encodeURIComponent(league);
   const clubSegment = encodeURIComponent(club);
 
-  
-return `/logo/${leagueSegment}/${clubSegment}.png`;
+  return `/logo/${leagueSegment}/${clubSegment}.png`;
 }
 
 // Alias khusus untuk logo yang disimpan di /logo/other

@@ -2,7 +2,7 @@ const typography = fontFamily => ({
   fontFamily:
     typeof fontFamily === 'undefined' || fontFamily === ''
       ? [
-          'Inter',
+          'Poppins',
           'sans-serif',
           '-apple-system',
           'BlinkMacSystemFont',

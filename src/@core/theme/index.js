@@ -1,5 +1,5 @@
 // Next Imports
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 
 // Theme Options Imports
 import overrides from './overrides'
@@ -9,7 +9,7 @@ import shadows from './shadows'
 import customShadows from './customShadows'
 import typography from './typography'
 
-const inter = Inter({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800', '900'] })
+const poppins = Poppins({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700', '800', '900'] })
 
 const theme = (mode, direction) => {
   return {
@@ -28,7 +28,7 @@ const theme = (mode, direction) => {
       }
     },
     shadows: shadows(mode),
-    typography: typography(inter.style.fontFamily),
+    typography: typography(poppins.style.fontFamily),
     customShadows: customShadows(mode),
     mainColorChannels: {
       light: '46 38 61',
