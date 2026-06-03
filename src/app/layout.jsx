@@ -18,8 +18,7 @@ const poppins = Poppins({
 
 export const metadata = {
   title: 'SCOREBOS - Scoreboard Dashboard & Overlay',
-  description:
-    'Live sports scoreboard control and OBS broadcast overlay system.'
+  description: 'Live sports scoreboard control and OBS broadcast overlay system.'
 }
 
 const RootLayout = ({ children }) => {

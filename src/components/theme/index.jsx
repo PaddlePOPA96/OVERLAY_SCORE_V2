@@ -76,9 +76,7 @@ const ThemeProvider = props => {
         <>
           <ModeChanger />
           <CssBaseline />
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </>
       </CssVarsProvider>
     </AppRouterCacheProvider>

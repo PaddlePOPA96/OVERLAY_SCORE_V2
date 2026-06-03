@@ -1,5 +1,5 @@
-import { getDatabase } from "firebase/database";
+import { getDatabase } from 'firebase/database'
 
-import { app } from "./firebaseApp";
+import { app } from './firebaseApp'
 
-export const db = getDatabase(app);
+export const db = getDatabase(app)

@@ -1,204 +1,171 @@
-"use client";
+'use client'
 
-import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from "@/lib/logoData";
+import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from '@/lib/logoData'
 
-const TEAM_STOP_WORDS = new Set([
-  "fc",
-  "afc",
-  "cf",
-  "sc",
-  "club",
-  "football",
-  "the",
-]);
+const TEAM_STOP_WORDS = new Set(['fc', 'afc', 'cf', 'sc', 'club', 'football', 'the'])
 
-const normalizeTeamName = (name) => {
-  if (!name) return "";
-  
-return name
-    .replace(/[()]/g, " ")
-    .replace(/[^A-Za-z0-9\s]/g, " ")
+const normalizeTeamName = name => {
+  if (!name) return ''
+
+  return name
+    .replace(/[()]/g, ' ')
+    .replace(/[^A-Za-z0-9\s]/g, ' ')
     .split(/\s+/)
-    .filter((w) => !TEAM_STOP_WORDS.has(w.toLowerCase()))
-    .join(" ")
+    .filter(w => !TEAM_STOP_WORDS.has(w.toLowerCase()))
+    .join(' ')
     .toLowerCase()
-    .trim();
-};
+    .trim()
+}
 
 const CLUB_ALIAS = {
-  "bayern m nchen": "bayern munich",
-  bayern: "bayern munich",
-  "fc kopenhavn": "fc copenhagen",
-  kobenhavn: "fc copenhagen",
-  "k benhavn": "fc copenhagen",
-  kbenhavn: "fc copenhagen",
-  "sport lisboa e benfica": "sl benfica",
-  "olympique de marseille": "olympique marseille",
-  "galatasaray sk": "galatasaray",
-  "pae olympiakos sfp": "olympiacos piraeus",
-  "sk slavia praha": "sk slavia prague",
-  "qaraba a dam": "qarabagh",
-  "sporting clube de portugal": "sporting cp",
-  "sporting lisbon": "sporting cp",
-  sporting: "sporting cp",
-  olympiakos: "olympiacos piraeus",
-  olympiacos: "olympiacos piraeus",
-  inter: "inter milan",
-  internazionale: "inter milan",
-  "internazionale milano": "inter milan",
-};
+  'bayern m nchen': 'bayern munich',
+  bayern: 'bayern munich',
+  'fc kopenhavn': 'fc copenhagen',
+  kobenhavn: 'fc copenhagen',
+  'k benhavn': 'fc copenhagen',
+  kbenhavn: 'fc copenhagen',
+  'sport lisboa e benfica': 'sl benfica',
+  'olympique de marseille': 'olympique marseille',
+  'galatasaray sk': 'galatasaray',
+  'pae olympiakos sfp': 'olympiacos piraeus',
+  'sk slavia praha': 'sk slavia prague',
+  'qaraba a dam': 'qarabagh',
+  'sporting clube de portugal': 'sporting cp',
+  'sporting lisbon': 'sporting cp',
+  sporting: 'sporting cp',
+  olympiakos: 'olympiacos piraeus',
+  olympiacos: 'olympiacos piraeus',
+  inter: 'inter milan',
+  internazionale: 'inter milan',
+  'internazionale milano': 'inter milan'
+}
 
-const resolveAnyClubLogo = (apiName) => {
-  if (!apiName) return "";
-  const rawTarget = normalizeTeamName(apiName);
+const resolveAnyClubLogo = apiName => {
+  if (!apiName) return ''
+  const rawTarget = normalizeTeamName(apiName)
 
-  if (!rawTarget) return "";
+  if (!rawTarget) return ''
 
-  const target = CLUB_ALIAS[rawTarget] || rawTarget;
+  const target = CLUB_ALIAS[rawTarget] || rawTarget
 
-  let bestLeague = null;
-  let bestClub = null;
+  let bestLeague = null
+  let bestClub = null
 
   for (const [league, clubs] of Object.entries(LOGO_DATA)) {
-    if (!Array.isArray(clubs)) continue;
+    if (!Array.isArray(clubs)) continue
 
-    let match = clubs.find(
-      (club) => normalizeTeamName(club) === target
-    );
+    let match = clubs.find(club => normalizeTeamName(club) === target)
 
     if (match) {
-      bestLeague = league;
-      bestClub = match;
-      break;
+      bestLeague = league
+      bestClub = match
+      break
     }
 
-    match = clubs.find((club) =>
-      normalizeTeamName(club).includes(target)
-    );
+    match = clubs.find(club => normalizeTeamName(club).includes(target))
 
     if (match && !bestClub) {
-      bestLeague = league;
-      bestClub = match;
+      bestLeague = league
+      bestClub = match
     }
 
     if (!bestClub) {
-      match = clubs.find((club) =>
-        target.includes(normalizeTeamName(club))
-      );
+      match = clubs.find(club => target.includes(normalizeTeamName(club)))
 
       if (match) {
-        bestLeague = league;
-        bestClub = match;
+        bestLeague = league
+        bestClub = match
       }
     }
   }
 
   if (bestLeague && bestClub) {
     // Beberapa klub (misalnya FK Kairat) logonya disimpan di logo/other
-    if (bestLeague === "Kazakhstan - Premier League") {
-      return buildOtherLogoSrc(bestClub);
+    if (bestLeague === 'Kazakhstan - Premier League') {
+      return buildOtherLogoSrc(bestClub)
     }
 
-    
-return buildLogoSrc(bestLeague, bestClub);
+    return buildLogoSrc(bestLeague, bestClub)
   }
 
   // Fallback: pakai logo di /logo/other jika tidak ada di LOGO_DATA
-  return buildOtherLogoSrc(apiName);
-};
+  return buildOtherLogoSrc(apiName)
+}
 
-export function ChampionsLeagueTable({
-  standings,
-  loadingStandings,
-  theme,
-  isAdmin,
-  onRefreshStandings,
-}) {
-  const isDark = theme === "dark";
+export function ChampionsLeagueTable({ standings, loadingStandings, theme, isAdmin, onRefreshStandings }) {
+  const isDark = theme === 'dark'
 
-  const cardClass = isDark
-    ? "bg-gray-800/60 border border-gray-700/60"
-    : "bg-white border border-slate-200 shadow-lg";
+  const cardClass = isDark ? 'bg-gray-800/60 border border-gray-700/60' : 'bg-white border border-slate-200 shadow-lg'
 
   const headingClass = isDark
-    ? "text-[11px] md:text-xs uppercase tracking-[0.16em] text-white"
-    : "text-[11px] md:text-xs uppercase tracking-[0.16em] text-black font-bold";
+    ? 'text-[11px] md:text-xs uppercase tracking-[0.16em] text-white'
+    : 'text-[11px] md:text-xs uppercase tracking-[0.16em] text-black font-bold'
 
   const thClass = isDark
-    ? "text-left py-2 px-2 font-semibold text-white text-[13px]"
-    : "text-left py-2 px-2 font-semibold text-black text-[13px]";
+    ? 'text-left py-2 px-2 font-semibold text-white text-[13px]'
+    : 'text-left py-2 px-2 font-semibold text-black text-[13px]'
 
-  const thCenterClass = `${thClass} text-center`;
+  const thCenterClass = `${thClass} text-center`
 
-  const cellText = isDark
-    ? "py-2 pr-2 text-white text-sm"
-    : "py-2 pr-2 text-black text-sm";
+  const cellText = isDark ? 'py-2 pr-2 text-white text-sm' : 'py-2 pr-2 text-black text-sm'
 
-  const cellCenter = `${cellText} text-center`;
+  const cellCenter = `${cellText} text-center`
 
-  const groups = Array.isArray(standings)
-    ? standings.filter((s) => s.type === "TOTAL")
-    : [];
+  const groups = Array.isArray(standings) ? standings.filter(s => s.type === 'TOTAL') : []
 
-  const logoBgClass = isDark
-    ? "bg-slate-900"
-    : "bg-white border border-slate-200";
+  const logoBgClass = isDark ? 'bg-slate-900' : 'bg-white border border-slate-200'
 
-  const formatGroupName = (group) => {
-    if (!group) return "Group";
-    const match = group.match(/GROUP_([A-H])/);
+  const formatGroupName = group => {
+    if (!group) return 'Group'
+    const match = group.match(/GROUP_([A-H])/)
 
-    if (match) return `Group ${match[1]}`;
-    
-return group.replace(/_/g, " ");
-  };
+    if (match) return `Group ${match[1]}`
+
+    return group.replace(/_/g, ' ')
+  }
 
   return (
-    <div
-      className={`${cardClass} rounded-xl p-5 space-y-5 w-full max-w-[1040px] mx-auto`}
-    >
-      <div className="flex items-center justify-between">
+    <div className={`${cardClass} rounded-xl p-5 space-y-5 w-full max-w-[1040px] mx-auto`}>
+      <div className='flex items-center justify-between'>
         <p className={headingClass}>UEFA Champions League - Group Stage</p>
         {isAdmin && (
           <button
-            type="button"
+            type='button'
             onClick={onRefreshStandings}
-            className="text-[10px] px-2 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60"
+            className='text-[10px] px-2 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60'
             disabled={loadingStandings}
           >
-            {loadingStandings ? "Refreshing..." : "Refresh"}
+            {loadingStandings ? 'Refreshing...' : 'Refresh'}
           </button>
         )}
       </div>
 
       {loadingStandings ? (
-        <p className="text-center text-gray-400 text-sm">
-          Memuat klasemen UCL...
-        </p>
+        <p className='text-center text-gray-400 text-sm'>Memuat klasemen UCL...</p>
       ) : !groups.length ? (
-        <p className="text-center text-gray-400 text-sm">
-          Data klasemen UCL tidak tersedia.
-        </p>
+        <p className='text-center text-gray-400 text-sm'>Data klasemen UCL tidak tersedia.</p>
       ) : (
-        <div className="space-y-4">
-          {groups.map((group) => (
+        <div className='space-y-4'>
+          {groups.map(group => (
             <div
               key={group.group || group.stage || `group-${group.type}`}
-              className={`rounded-lg border overflow-hidden ${isDark ? "border-slate-700/60 bg-slate-900/40" : "border-slate-200 bg-slate-50"}`}
+              className={`rounded-lg border overflow-hidden ${isDark ? 'border-slate-700/60 bg-slate-900/40' : 'border-slate-200 bg-slate-50'}`}
             >
-              <div className={`px-3 py-2 border-b flex items-center justify-between ${isDark ? "border-slate-700/60 bg-slate-800/10" : "border-slate-200 bg-slate-100"}`}>
-                <p className={`text-xs font-semibold ${isDark ? "text-white" : "text-black"}`}>
+              <div
+                className={`px-3 py-2 border-b flex items-center justify-between ${isDark ? 'border-slate-700/60 bg-slate-800/10' : 'border-slate-200 bg-slate-100'}`}
+              >
+                <p className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-black'}`}>
                   {formatGroupName(group.group)}
                 </p>
-                <span className={`text-[10px] ${isDark ? "text-slate-400" : "text-slate-700"}`}>
+                <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-700'}`}>
                   {group.table?.length || 0} tim
                 </span>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-xs">
+              <div className='overflow-x-auto'>
+                <table className='min-w-full text-xs'>
                   <thead>
-                    <tr className="border-b border-slate-700/50">
+                    <tr className='border-b border-slate-700/50'>
                       <th className={thClass}>#</th>
                       <th className={thClass}>Klub</th>
                       <th className={thCenterClass}>T</th>
@@ -212,34 +179,31 @@ return group.replace(/_/g, " ");
                     </tr>
                   </thead>
                   <tbody>
-                    {(group.table || []).map((row) => (
-                      <tr
-                        key={row.team?.id || `team-${row.position}`}
-                        className="border-b border-slate-800/60"
-                      >
+                    {(group.table || []).map(row => (
+                      <tr key={row.team?.id || `team-${row.position}`} className='border-b border-slate-800/60'>
                         <td className={cellCenter}>{row.position}</td>
                         <td className={cellText}>
-                          <div className="flex items-center gap-2">
+                          <div className='flex items-center gap-2'>
                             {(() => {
-                              const logoSrc = resolveAnyClubLogo(
-                                row.team?.name,
-                              );
+                              const logoSrc = resolveAnyClubLogo(row.team?.name)
 
-                              if (!logoSrc) return null;
-                              
-return (
+                              if (!logoSrc) return null
+
+                              return (
                                 <img
                                   src={logoSrc}
-                                  alt={row.team?.name || "TBD"}
+                                  alt={row.team?.name || 'TBD'}
                                   className={`w-7 h-7 rounded-full object-contain ${logoBgClass}`}
-                                  onError={(e) => {
-                                    e.currentTarget.onerror = null;
-                                    e.currentTarget.style.display = "none";
+                                  onError={e => {
+                                    e.currentTarget.onerror = null
+                                    e.currentTarget.style.display = 'none'
                                   }}
                                 />
-                              );
+                              )
                             })()}
-                            <span className={isDark ? "text-white" : "text-black"}>{row.team?.shortName || row.team?.name || "TBD"}</span>
+                            <span className={isDark ? 'text-white' : 'text-black'}>
+                              {row.team?.shortName || row.team?.name || 'TBD'}
+                            </span>
                           </div>
                         </td>
                         <td className={cellCenter}>{row.playedGames}</td>
@@ -260,232 +224,197 @@ return (
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export function ChampionsLeagueMatches({
-  matches,
-  loadingMatches,
-  theme,
-  isAdmin,
-  onRefreshMatches,
-}) {
-  const isDark = theme === "dark";
+export function ChampionsLeagueMatches({ matches, loadingMatches, theme, isAdmin, onRefreshMatches }) {
+  const isDark = theme === 'dark'
 
-  const cardClass = isDark
-    ? "bg-gray-800/40 border border-gray-700/50"
-    : "bg-white border border-slate-200 shadow-sm";
+  const cardClass = isDark ? 'bg-gray-800/40 border border-gray-700/50' : 'bg-white border border-slate-200 shadow-sm'
 
   const headingClass = isDark
-    ? "text-xs uppercase tracking-[0.16em] text-white"
-    : "text-xs uppercase tracking-[0.16em] text-black font-bold";
+    ? 'text-xs uppercase tracking-[0.16em] text-white'
+    : 'text-xs uppercase tracking-[0.16em] text-black font-bold'
 
-  const badgeBase =
-    "text-sm font-mono border px-4 py-[4px] rounded-full";
+  const badgeBase = 'text-sm font-mono border px-4 py-[4px] rounded-full'
 
-  const logoBgClass = isDark
-    ? "bg-slate-900"
-    : "bg-white border border-slate-200";
+  const logoBgClass = isDark ? 'bg-slate-900' : 'bg-white border border-slate-200'
 
-  const liveMatches =
-    matches?.filter(
-      (m) => m.status === "IN_PLAY" || m.status === "PAUSED"
-    ) || [];
+  const liveMatches = matches?.filter(m => m.status === 'IN_PLAY' || m.status === 'PAUSED') || []
 
   const upcomingMatches =
-    matches?.filter(
-      (m) =>
-        m.status === "TIMED" ||
-        m.status === "SCHEDULED" ||
-        m.status === "POSTPONED"
-    ) || [];
+    matches?.filter(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'POSTPONED') || []
 
-  const finishedMatches =
-    matches?.filter((m) => m.status === "FINISHED") || [];
+  const finishedMatches = matches?.filter(m => m.status === 'FINISHED') || []
 
   const sortByDate = (list, asc = true) =>
     [...list].sort((a, b) =>
-      asc
-        ? new Date(a.utcDate) - new Date(b.utcDate)
-        : new Date(b.utcDate) - new Date(a.utcDate)
-    );
+      asc ? new Date(a.utcDate) - new Date(b.utcDate) : new Date(b.utcDate) - new Date(a.utcDate)
+    )
 
-  const formatDateTime = (m) => {
-    if (!m.utcDate) return "";
-    const d = new Date(m.utcDate);
+  const formatDateTime = m => {
+    if (!m.utcDate) return ''
+    const d = new Date(m.utcDate)
 
-    
-return d.toLocaleString("id-ID", {
-      day: "numeric",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+    return d.toLocaleString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
 
-  const renderRow = (match) => {
-    const isFinished = match.status === "FINISHED";
+  const renderRow = match => {
+    const isFinished = match.status === 'FINISHED'
 
-    const isLive =
-      match.status === "IN_PLAY" || match.status === "PAUSED";
+    const isLive = match.status === 'IN_PLAY' || match.status === 'PAUSED'
 
     const badgeClass = isFinished
       ? `${badgeBase} text-yellow-400 border-yellow-400/40`
       : isLive
         ? `${badgeBase} text-green-400 border-green-400/40`
-        : `${badgeBase} text-gray-300 border-gray-500/40`;
+        : `${badgeBase} text-gray-300 border-gray-500/40`
 
-    const homeLogo = resolveAnyClubLogo(match.homeTeam?.name);
-    const awayLogo = resolveAnyClubLogo(match.awayTeam?.name);
-    const homeName = match.homeTeam?.shortName || match.homeTeam?.name || "TBD";
-    const awayName = match.awayTeam?.shortName || match.awayTeam?.name || "TBD";
+    const homeLogo = resolveAnyClubLogo(match.homeTeam?.name)
+    const awayLogo = resolveAnyClubLogo(match.awayTeam?.name)
+    const homeName = match.homeTeam?.shortName || match.homeTeam?.name || 'TBD'
+    const awayName = match.awayTeam?.shortName || match.awayTeam?.name || 'TBD'
 
     return (
       <div
         key={match.id}
-        className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 py-4 md:py-5 px-4 md:px-5 rounded-2xl hover:bg-slate-800/80 transition-colors"
+        className='flex flex-col md:flex-row md:items-center md:justify-between gap-3 py-4 md:py-5 px-4 md:px-5 rounded-2xl hover:bg-slate-800/80 transition-colors'
       >
-        <div className="flex items-center gap-3 md:gap-5 flex-1 min-w-0">
-          <span className={badgeClass}>
-            {isFinished ? "FT" : isLive ? "LIVE" : "UPCOMING"}
-          </span>
-          <div className="flex items-center gap-2 min-w-0">
+        <div className='flex items-center gap-3 md:gap-5 flex-1 min-w-0'>
+          <span className={badgeClass}>{isFinished ? 'FT' : isLive ? 'LIVE' : 'UPCOMING'}</span>
+          <div className='flex items-center gap-2 min-w-0'>
             {homeLogo && (
               <img
                 src={homeLogo}
-                alt={match.homeTeam?.name || "TBD"}
+                alt={match.homeTeam?.name || 'TBD'}
                 className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.style.display = "none";
+                onError={e => {
+                  e.currentTarget.onerror = null
+                  e.currentTarget.style.display = 'none'
                 }}
               />
             )}
             <span
-              className={`truncate ${isDark
-                ? "text-white text-sm md:text-base lg:text-lg"
-                : "text-black text-sm md:text-base lg:text-lg"
-                }`}
+              className={`truncate ${
+                isDark ? 'text-white text-sm md:text-base lg:text-lg' : 'text-black text-sm md:text-base lg:text-lg'
+              }`}
             >
               {homeName}
             </span>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center md:flex-none">
-          <span className="text-[11px] md:text-xs lg:text-sm text-slate-400">
-            {formatDateTime(match)}
-          </span>
-          <span className="mt-1 text-lg md:text-xl lg:text-2xl font-semibold text-slate-50 bg-slate-950 px-4 md:px-5 py-2 rounded-2xl shadow-lg">
-            {isFinished || isLive
-              ? `${match.score?.fullTime?.home ?? 0} : ${match.score?.fullTime?.away ?? 0}`
-              : "VS"}
+        <div className='flex flex-col items-center justify-center md:flex-none'>
+          <span className='text-[11px] md:text-xs lg:text-sm text-slate-400'>{formatDateTime(match)}</span>
+          <span className='mt-1 text-lg md:text-xl lg:text-2xl font-semibold text-slate-50 bg-slate-950 px-4 md:px-5 py-2 rounded-2xl shadow-lg'>
+            {isFinished || isLive ? `${match.score?.fullTime?.home ?? 0} : ${match.score?.fullTime?.away ?? 0}` : 'VS'}
           </span>
         </div>
-        <div className="flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0">
+        <div className='flex items-center justify-between md:justify-end gap-3 md:gap-5 flex-1 min-w-0'>
           <span
-            className={`truncate text-right ${isDark
-              ? "text-white text-sm md:text-base lg:text-lg"
-              : "text-black text-sm md:text-base lg:text-lg"
-              }`}
+            className={`truncate text-right ${
+              isDark ? 'text-white text-sm md:text-base lg:text-lg' : 'text-black text-sm md:text-base lg:text-lg'
+            }`}
           >
             {awayName}
           </span>
           {awayLogo && (
             <img
               src={awayLogo}
-              alt={match.awayTeam?.name || "TBD"}
+              alt={match.awayTeam?.name || 'TBD'}
               className={`w-10 h-10 rounded-full object-contain ${logoBgClass}`}
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.style.display = "none";
+              onError={e => {
+                e.currentTarget.onerror = null
+                e.currentTarget.style.display = 'none'
               }}
             />
           )}
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
-
-    <div className="space-y-6 max-w-[1040px] mx-auto w-full">
-      <div className="flex items-center justify-between px-1">
+    <div className='space-y-6 max-w-[1040px] mx-auto w-full'>
+      <div className='flex items-center justify-between px-1'>
         <p className={headingClass}>Jadwal &amp; Hasil UCL</p>
         {isAdmin && (
           <button
-            type="button"
+            type='button'
             onClick={onRefreshMatches}
-            className="text-[10px] px-2 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60"
+            className='text-[10px] px-2 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60'
             disabled={loadingMatches}
           >
-            {loadingMatches ? "Refreshing..." : "Refresh"}
+            {loadingMatches ? 'Refreshing...' : 'Refresh'}
           </button>
         )}
       </div>
 
       {loadingMatches ? (
         <div className={`${cardClass} rounded-xl p-8`}>
-          <p className="text-center text-gray-400 text-sm">
-            Memuat jadwal dan hasil UCL...
-          </p>
+          <p className='text-center text-gray-400 text-sm'>Memuat jadwal dan hasil UCL...</p>
         </div>
       ) : !matches || matches.length === 0 ? (
         <div className={`${cardClass} rounded-xl p-8`}>
-          <p className="text-center text-gray-400 text-sm">
-            Tidak ada data pertandingan UCL untuk jendela waktu ini.
-          </p>
+          <p className='text-center text-gray-400 text-sm'>Tidak ada data pertandingan UCL untuk jendela waktu ini.</p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className='space-y-8'>
           {/* Live Matches Container */}
           {liveMatches.length > 0 && (
             <div className={`${cardClass} rounded-xl p-5`}>
-              <div className="mb-4">
-                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Live Matches</p>
+              <div className='mb-4'>
+                <p
+                  className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? 'text-white' : 'text-black font-semibold'}`}
+                >
+                  Live Matches
+                </p>
               </div>
-              <div className="space-y-2">
-                {sortByDate(liveMatches).map(renderRow)}
-              </div>
+              <div className='space-y-2'>{sortByDate(liveMatches).map(renderRow)}</div>
             </div>
           )}
 
           {/* Recent Matches Container */}
           <div className={`${cardClass} rounded-xl p-5`}>
-            <div className="mb-4">
-                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Hasil Terbaru</p>
+            <div className='mb-4'>
+              <p
+                className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? 'text-white' : 'text-black font-semibold'}`}
+              >
+                Hasil Terbaru
+              </p>
             </div>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {finishedMatches.length ? (
-                sortByDate(finishedMatches, false)
-                  .slice(0, 8)
-                  .map(renderRow)
+                sortByDate(finishedMatches, false).slice(0, 8).map(renderRow)
               ) : (
-                <p className="text-xs text-gray-400 italic">
-                  Belum ada hasil pertandingan dalam jendela waktu ini.
-                </p>
+                <p className='text-xs text-gray-400 italic'>Belum ada hasil pertandingan dalam jendela waktu ini.</p>
               )}
             </div>
           </div>
 
           {/* Upcoming Matches Container */}
           <div className={`${cardClass} rounded-xl p-5`}>
-            <div className="mb-4">
-                <p className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? "text-white" : "text-black font-semibold"}`}>Jadwal Mendatang</p>
+            <div className='mb-4'>
+              <p
+                className={`text-[11px] uppercase tracking-[0.16em] mt-1 ${isDark ? 'text-white' : 'text-black font-semibold'}`}
+              >
+                Jadwal Mendatang
+              </p>
             </div>
-            <div className="space-y-2">
+            <div className='space-y-2'>
               {upcomingMatches.length ? (
-                sortByDate(upcomingMatches)
-                  .slice(0, 8)
-                  .map(renderRow)
+                sortByDate(upcomingMatches).slice(0, 8).map(renderRow)
               ) : (
-                <p className="text-xs text-gray-400 italic">
-                  Tidak ada jadwal mendatang dalam 7 hari ke depan.
-                </p>
+                <p className='text-xs text-gray-400 italic'>Tidak ada jadwal mendatang dalam 7 hari ke depan.</p>
               )}
             </div>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

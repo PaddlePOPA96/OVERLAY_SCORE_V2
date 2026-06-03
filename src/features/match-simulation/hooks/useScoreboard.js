@@ -1,32 +1,30 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client'
+import { useEffect, useState } from 'react'
 
-import { ref, onValue, update } from "firebase/database";
+import { ref, onValue, update } from 'firebase/database'
 
-import { db } from "@/lib/firebaseDb";
+import { db } from '@/lib/firebaseDb'
 
 // roomId / sessionId dipakai supaya beberapa pertandingan bisa jalan paralel
-export function useScoreboard(roomId = "default") {
+export function useScoreboard(roomId = 'default') {
   const [data, setData] = useState({
-    layout: "B", // Default Layout
+    layout: 'B', // Default Layout
     showOverlay: true,
     introId: 0, // Untuk trigger animasi masuk
 
     // Data Tim
-    homeName: "MAN",
-    awayName: "WHU",
+    homeName: 'MAN',
+    awayName: 'WHU',
     homeScore: 0,
     awayScore: 0,
-    homeLogo:
-      "/logo/England%20-%20Premier%20League/Liverpool%20FC.png",
-    awayLogo:
-      "/logo/England%20-%20Premier%20League/Manchester%20City.png",
+    homeLogo: '/logo/England%20-%20Premier%20League/Liverpool%20FC.png',
+    awayLogo: '/logo/England%20-%20Premier%20League/Manchester%20City.png',
 
     // Warna & Style
-    homeColor: "#a40606", // Layout A gradient
-    awayColor: "#a40606", // Layout A gradient
-    homeBg: "#111111", // Layout B Box
-    awayBg: "#111111", // Layout B Box
+    homeColor: '#a40606', // Layout A gradient
+    awayColor: '#a40606', // Layout A gradient
+    homeBg: '#111111', // Layout B Box
+    awayBg: '#111111', // Layout B Box
 
     // Timer
     period: 1,
@@ -34,131 +32,152 @@ export function useScoreboard(roomId = "default") {
 
     // Goal
     goalTrigger: 0,
-    goalTeam: "",
+    goalTeam: '',
 
     // Series (BO3 / BO5) Settings
-    seriesType: "none",
+    seriesType: 'none',
     homeSeriesScore: 0,
-    awaySeriesScore: 0,
-  });
+    awaySeriesScore: 0
+  })
 
-  const [displayTime, setDisplayTime] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [displayTime, setDisplayTime] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   // Sync Firebase untuk room tertentu
   useEffect(() => {
-    if (!roomId) return;
-    
+    if (!roomId) return
+
     // Reset state when roomId changes to prevent data carry-over
-    setIsLoaded(false);
+    setIsLoaded(false)
 
-    const matchRef = ref(db, `match_live/${roomId}`);
+    const matchRef = ref(db, `match_live/${roomId}`)
 
-    const unsubscribe = onValue(matchRef, (snapshot) => {
+    const unsubscribe = onValue(matchRef, snapshot => {
       if (snapshot.exists()) {
-        const val = snapshot.val();
+        const val = snapshot.val()
 
-        setData((prev) => ({ ...prev, ...val }));
-        setIsLoaded(true);
-        calculateTime(val);
+        setData(prev => ({ ...prev, ...val }))
+        setIsLoaded(true)
+        calculateTime(val)
       } else {
         // If room doesn't exist, we still mark it as loaded so UI can render
-        setIsLoaded(true);
+        setIsLoaded(true)
       }
-    });
+    })
 
-    return () => unsubscribe();
-  }, [roomId]);
+    return () => unsubscribe()
+  }, [roomId])
 
   // Interval Lokal
   useEffect(() => {
-    let interval;
+    let interval
 
     if (data.timer?.isRunning) {
-      interval = setInterval(() => { calculateTime(data); }, 500);
+      interval = setInterval(() => {
+        calculateTime(data)
+      }, 500)
     }
 
-    
-return () => clearInterval(interval);
-  }, [data]);
+    return () => clearInterval(interval)
+  }, [data])
 
-  const calculateTime = (currentData) => {
-    if (!currentData?.timer) return;
+  const calculateTime = currentData => {
+    if (!currentData?.timer) return
 
     if (currentData.timer.isRunning) {
-      const now = Date.now();
-      const elapsed = Math.floor((now - currentData.timer.startTime) / 1000);
+      const now = Date.now()
+      const elapsed = Math.floor((now - currentData.timer.startTime) / 1000)
 
-      setDisplayTime(currentData.timer.baseTime + elapsed);
+      setDisplayTime(currentData.timer.baseTime + elapsed)
     } else {
-      setDisplayTime(currentData.timer.baseTime);
+      setDisplayTime(currentData.timer.baseTime)
     }
-  };
+  }
 
-  const updateMatch = (updates) => {
-    if (!roomId) return;
-    update(ref(db, `match_live/${roomId}`), updates);
-  };
+  const updateMatch = updates => {
+    if (!roomId) return
+    update(ref(db, `match_live/${roomId}`), updates)
 
-  const triggerGoal = (team) => {
-    const current =
-      team === "home" ? data.homeScore || 0 : data.awayScore || 0;
+    // If it's a slot-specific room, mirror updates to the main user room for the overlay
+    if (roomId.includes('_slot')) {
+      const mainRoomId = roomId.split('_slot')[0]
 
-    const newScore = Math.min(20, current + 1);
+      update(ref(db, `match_live/${mainRoomId}`), updates)
+    }
+  }
+
+  const triggerGoal = team => {
+    const current = team === 'home' ? data.homeScore || 0 : data.awayScore || 0
+
+    const newScore = Math.min(20, current + 1)
 
     updateMatch({
-      [team === "home" ? "homeScore" : "awayScore"]: newScore,
+      [team === 'home' ? 'homeScore' : 'awayScore']: newScore,
       goalTrigger: Date.now(),
-      goalTeam: team === "home" ? data.homeName : data.awayName
-    });
-  };
+      goalTeam: team === 'home' ? data.homeName : data.awayName
+    })
+  }
 
   const stopGoalAudio = () => {
-    updateMatch({ goalAudioStop: Date.now() });
-  };
+    updateMatch({ goalAudioStop: Date.now() })
+  }
 
-  const previewGoalAudio = (source) => {
+  const previewGoalAudio = source => {
     updateMatch({
       previewAudioTrigger: Date.now(),
       previewAudioSource: source
-    });
-  };
+    })
+  }
 
   const toggleTimer = () => {
-    const now = Date.now();
-    let updates = {};
+    const now = Date.now()
+    let updates = {}
 
     if (data.timer.isRunning) {
-      const elapsed = Math.floor((now - data.timer.startTime) / 1000);
+      const elapsed = Math.floor((now - data.timer.startTime) / 1000)
 
-      updates = { "timer/isRunning": false, "timer/baseTime": data.timer.baseTime + elapsed, "timer/startTime": null };
+      updates = { 'timer/isRunning': false, 'timer/baseTime': data.timer.baseTime + elapsed, 'timer/startTime': null }
     } else {
-      updates = { "timer/isRunning": true, "timer/baseTime": data.timer.baseTime, "timer/startTime": now };
+      updates = { 'timer/isRunning': true, 'timer/baseTime': data.timer.baseTime, 'timer/startTime': now }
     }
 
-    updateMatch(updates);
-  };
+    updateMatch(updates)
+  }
 
   const resetTimer = () => {
-    updateMatch({ "timer/isRunning": false, "timer/baseTime": 0, "timer/startTime": null });
-  };
+    updateMatch({ 'timer/isRunning': false, 'timer/baseTime': 0, 'timer/startTime': null })
+  }
 
   const toggleOverlay = () => {
-    const newState = !data.showOverlay;
+    const newState = !data.showOverlay
 
     updateMatch({
       showOverlay: newState,
       introId: newState ? Date.now() : data.introId // Trigger animasi saat unhide
-    });
+    })
   }
 
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
+  const formatTime = seconds => {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, '0')
 
-    
-return `${m}:${s}`;
-  };
+    const s = (seconds % 60).toString().padStart(2, '0')
 
-  return { data, isLoaded, displayTime, formatTime, updateMatch, toggleTimer, resetTimer, triggerGoal, toggleOverlay, stopGoalAudio, previewGoalAudio };
+    return `${m}:${s}`
+  }
+
+  return {
+    data,
+    isLoaded,
+    displayTime,
+    formatTime,
+    updateMatch,
+    toggleTimer,
+    resetTimer,
+    triggerGoal,
+    toggleOverlay,
+    stopGoalAudio,
+    previewGoalAudio
+  }
 }

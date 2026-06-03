@@ -1,31 +1,29 @@
 export default function LayoutSelector({ data, updateMatch, description }) {
   return (
     <div
-      className="op-section"
+      className='op-section'
       style={{
-        borderBottom: "1px solid #444",
-        paddingBottom: "10px",
-        marginBottom: "5px",
+        borderBottom: '1px solid #444',
+        paddingBottom: '10px',
+        marginBottom: '5px'
       }}
     >
-      <label className="op-label" htmlFor="operator-layout">
+      <label className='op-label' htmlFor='operator-layout'>
         Layout
       </label>
       <select
-        id="operator-layout"
-        className="op-input"
+        id='operator-layout'
+        className='op-input'
         value={data.layout}
-        onChange={(e) => updateMatch({ layout: e.target.value })}
+        onChange={e => updateMatch({ layout: e.target.value })}
       >
-        <option value="A">Layout A</option>
-        <option value="B">Layout B</option>
-        <option value="C">Layout C</option>
-        <option value="D">Layout D (Valorant Esports)</option>
-        <option value="E">Layout E (Valorant Overlay HUD)</option>
+        <option value='A'>Layout A</option>
+        <option value='B'>Layout B</option>
+        <option value='C'>Layout C</option>
+        <option value='D'>Layout D (Valorant Esports)</option>
+        <option value='E'>Layout E (Valorant Overlay HUD)</option>
       </select>
-      {description && (
-        <span className="op-tiny">{description}</span>
-      )}
+      {description && <span className='op-tiny'>{description}</span>}
     </div>
-  );
+  )
 }

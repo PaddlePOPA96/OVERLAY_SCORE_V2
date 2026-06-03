@@ -29,7 +29,7 @@ const BadgeContentSpan = styled('span')({
   boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
 })
 
-const ADMIN_EMAIL = "admin@admin.com";
+const ADMIN_EMAIL = 'admin@admin.com'
 
 const UserDropdown = () => {
   const [open, setOpen] = useState(false)
@@ -38,13 +38,12 @@ const UserDropdown = () => {
   const router = useRouter()
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+    const unsubscribe = onAuthStateChanged(auth, currentUser => {
+      setUser(currentUser)
+    })
 
-    
-return () => unsubscribe();
-  }, []);
+    return () => unsubscribe()
+  }, [])
 
   const handleDropdownOpen = () => {
     setOpen(prev => !prev)
@@ -62,17 +61,17 @@ return () => unsubscribe();
     setOpen(false)
   }
 
-  const handleLogout = async (e) => {
+  const handleLogout = async e => {
     try {
-      await signOut(auth);
-      handleDropdownClose(e, '/login');
+      await signOut(auth)
+      handleDropdownClose(e, '/login')
     } catch (err) {
-      console.error("Error signing out:", err);
+      console.error('Error signing out:', err)
     }
-  };
+  }
 
-  const username = user?.email ? user.email.split('@')[0] : "Operator";
-  const userRole = user?.email === ADMIN_EMAIL ? "Superuser" : "Operator";
+  const username = user?.email ? user.email.split('@')[0] : 'Operator'
+  const userRole = user?.email === ADMIN_EMAIL ? 'Superuser' : 'Operator'
 
   return (
     <>

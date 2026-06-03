@@ -8,19 +8,18 @@ export default function OverlayRootInfo() {
       <p>Gunakan URL seperti:</p>
       <pre
         style={{
-          background: "#111",
-          color: "#0f0",
+          background: '#111',
+          color: '#0f0',
           padding: 12,
           borderRadius: 8,
-          marginTop: 8,
+          marginTop: 8
         }}
       >
         /dashboard/operator/overlay/&lt;roomId&gt;
       </pre>
       <p style={{ marginTop: 12 }}>
-        Contoh: <code>/dashboard/operator/overlay/test-match</code> atau{" "}
-        <code>/dashboard/operator/overlay/001</code>.
+        Contoh: <code>/dashboard/operator/overlay/test-match</code> atau <code>/dashboard/operator/overlay/001</code>.
       </p>
     </div>
-  );
+  )
 }

@@ -7,7 +7,6 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { doc, onSnapshot, collection } from 'firebase/firestore'
 import { ref as dbRef, onValue as onDbValue } from 'firebase/database'
 
-
 // MUI Imports
 import { useTheme } from '@mui/material/styles'
 
@@ -53,10 +52,10 @@ const VerticalMenu = ({ scrollMenu }) => {
   })
 
   useEffect(() => {
-    let roleUnsub = () => { }
-    let usersUnsub = () => { }
+    let roleUnsub = () => {}
+    let usersUnsub = () => {}
 
-    const authUnsub = onAuthStateChanged(auth, (currentUser) => {
+    const authUnsub = onAuthStateChanged(auth, currentUser => {
       roleUnsub()
       usersUnsub()
 
@@ -69,7 +68,7 @@ const VerticalMenu = ({ scrollMenu }) => {
 
       const userRef = doc(dbFirestore, 'users', currentUser.uid)
 
-      roleUnsub = onSnapshot(userRef, (snap) => {
+      roleUnsub = onSnapshot(userRef, snap => {
         const role = snap.exists() ? snap.data().role : 'user'
         const superAdmin = role === 'superadmin'
 
@@ -78,11 +77,15 @@ const VerticalMenu = ({ scrollMenu }) => {
         if (superAdmin) {
           const usersRef = collection(dbFirestore, 'users')
 
-          usersUnsub = onSnapshot(usersRef, (usersSnap) => {
-            setUsersCount(usersSnap.size)
-          }, (err) => {
-            console.error('Error fetching users count:', err)
-          })
+          usersUnsub = onSnapshot(
+            usersRef,
+            usersSnap => {
+              setUsersCount(usersSnap.size)
+            },
+            err => {
+              console.error('Error fetching users count:', err)
+            }
+          )
         } else {
           setUsersCount(null)
           usersUnsub()
@@ -93,7 +96,7 @@ const VerticalMenu = ({ scrollMenu }) => {
     // Listen to leagues visibility settings in Realtime Database under client-allowed ucl_data node
     const leaguesRef = dbRef(db, 'ucl_data/settings/leagues')
 
-    const leaguesUnsub = onDbValue(leaguesRef, (snapshot) => {
+    const leaguesUnsub = onDbValue(leaguesRef, snapshot => {
       const val = snapshot.val()
 
       if (val) {
@@ -117,13 +120,13 @@ const VerticalMenu = ({ scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
       <Menu
         menuItemStyles={menuItemStyles(theme)}

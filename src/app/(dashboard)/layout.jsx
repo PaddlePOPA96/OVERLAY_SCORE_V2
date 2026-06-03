@@ -10,9 +10,7 @@ const Layout = async ({ children }) => {
   return (
     <Providers direction={direction}>
       <DashboardProvider>
-        <DashboardLayoutContent>
-          {children}
-        </DashboardLayoutContent>
+        <DashboardLayoutContent>{children}</DashboardLayoutContent>
       </DashboardProvider>
     </Providers>
   )

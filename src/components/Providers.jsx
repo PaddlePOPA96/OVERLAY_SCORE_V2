@@ -19,9 +19,7 @@ const Providers = props => {
   return (
     <VerticalNavProvider>
       <SettingsProvider settingsCookie={settingsCookie} mode={mode}>
-        <ThemeProvider direction={direction}>
-          {children}
-        </ThemeProvider>
+        <ThemeProvider direction={direction}>{children}</ThemeProvider>
       </SettingsProvider>
     </VerticalNavProvider>
   )

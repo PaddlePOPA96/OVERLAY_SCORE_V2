@@ -20,21 +20,17 @@ import Logo from '@components/layout/shared/Logo'
 import Illustrations from '@components/Illustrations'
 import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
-import {
-  loginWithEmailPassword,
-  loginWithGooglePopup,
-  sendResetPassword,
-} from "@/lib/auth/service";
+import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from '@/lib/auth/service'
 
-const GOOGLE_LOGIN_DISABLED = true;
+const GOOGLE_LOGIN_DISABLED = true
 
 const Login = ({ mode }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [status, setStatus] = useState({ type: "", message: "" })
+  const [status, setStatus] = useState({ type: '', message: '' })
 
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
@@ -44,49 +40,49 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const savedRemember = window.localStorage.getItem("scoreboard-remember");
-    const savedEmail = window.localStorage.getItem("scoreboard-email") || "";
+    if (typeof window === 'undefined') return
+    const savedRemember = window.localStorage.getItem('scoreboard-remember')
+    const savedEmail = window.localStorage.getItem('scoreboard-email') || ''
 
-    if (savedRemember === "1") {
-      setRemember(true);
+    if (savedRemember === '1') {
+      setRemember(true)
 
       if (savedEmail) {
-        setEmail(savedEmail);
+        setEmail(savedEmail)
       }
     }
-  }, []);
+  }, [])
 
-  const handleAuthSuccess = (user) => {
-    if (!user) return;
+  const handleAuthSuccess = user => {
+    if (!user) return
 
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       if (remember) {
-        window.localStorage.setItem("scoreboard-remember", "1");
-        window.localStorage.setItem("scoreboard-email", user.email || email || "");
+        window.localStorage.setItem('scoreboard-remember', '1')
+        window.localStorage.setItem('scoreboard-email', user.email || email || '')
       } else {
-        window.localStorage.removeItem("scoreboard-remember");
-        window.localStorage.removeItem("scoreboard-email");
+        window.localStorage.removeItem('scoreboard-remember')
+        window.localStorage.removeItem('scoreboard-email')
       }
     }
 
-    router.push("/");
-  };
+    router.push('/')
+  }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault()
-    setStatus({ type: "", message: "" })
+    setStatus({ type: '', message: '' })
     setLoading(true)
 
     try {
-      const user = await loginWithEmailPassword(email, password);
+      const user = await loginWithEmailPassword(email, password)
 
-      handleAuthSuccess(user);
+      handleAuthSuccess(user)
     } catch (error) {
       setStatus({
-        type: "error",
-        message: error?.message || "Login failed. Please check your credentials.",
-      });
+        type: 'error',
+        message: error?.message || 'Login failed. Please check your credentials.'
+      })
     } finally {
       setLoading(false)
     }
@@ -95,57 +91,57 @@ const Login = ({ mode }) => {
   const handleGoogleLogin = async () => {
     if (GOOGLE_LOGIN_DISABLED) {
       setStatus({
-        type: "error",
-        message: "Google login is disabled. Please sign in using your admin-registered email & password.",
-      });
-      
-return;
+        type: 'error',
+        message: 'Google login is disabled. Please sign in using your admin-registered email & password.'
+      })
+
+      return
     }
 
-    setStatus({ type: "", message: "" })
+    setStatus({ type: '', message: '' })
     setLoading(true)
 
     try {
-      const user = await loginWithGooglePopup();
+      const user = await loginWithGooglePopup()
 
-      handleAuthSuccess(user);
+      handleAuthSuccess(user)
     } catch (error) {
       setStatus({
-        type: "error",
-        message: error?.message || "Failed to login with Google.",
-      });
+        type: 'error',
+        message: error?.message || 'Failed to login with Google.'
+      })
     } finally {
       setLoading(false)
     }
-  };
+  }
 
   const handleResetPassword = async () => {
     if (!email) {
       setStatus({
-        type: "error",
-        message: "Please enter your email address to reset password.",
-      });
-      
-return;
+        type: 'error',
+        message: 'Please enter your email address to reset password.'
+      })
+
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     try {
-      await sendResetPassword(email);
+      await sendResetPassword(email)
       setStatus({
-        type: "success",
-        message: "Password reset link sent successfully.",
-      });
+        type: 'success',
+        message: 'Password reset link sent successfully.'
+      })
     } catch (error) {
       setStatus({
-        type: "error",
-        message: error?.message || "Failed to send reset email.",
-      });
+        type: 'error',
+        message: error?.message || 'Failed to send reset email.'
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6 bg-slate-900/10'>
@@ -157,10 +153,12 @@ return;
           <div className='flex flex-col gap-5'>
             <div>
               <Typography variant='h4' className='font-bold text-slate-800'>{`Scoreboard Panel 👋🏻`}</Typography>
-              <Typography className='mbs-1 text-slate-500 text-sm'>Please sign-in to your operator account to manage overlays.</Typography>
+              <Typography className='mbs-1 text-slate-500 text-sm'>
+                Please sign-in to your operator account to manage overlays.
+              </Typography>
             </div>
             {status.message && (
-              <Alert severity={status.type === "error" ? "error" : "success"} className="text-xs">
+              <Alert severity={status.type === 'error' ? 'error' : 'success'} className='text-xs'>
                 {status.message}
               </Alert>
             )}
@@ -209,12 +207,12 @@ return;
                   Forgot password?
                 </Typography>
               </div>
-              <Button fullWidth variant='contained' type='submit' disabled={loading} size="large">
-                {loading ? "Signing in..." : "Log In"}
+              <Button fullWidth variant='contained' type='submit' disabled={loading} size='large'>
+                {loading ? 'Signing in...' : 'Log In'}
               </Button>
               <div className='flex justify-center items-center flex-wrap gap-2 text-sm'>
-                <Typography variant="body2">New on our platform?</Typography>
-                <Typography component={Link} href='/register' color='primary' className="font-semibold text-sm">
+                <Typography variant='body2'>New on our platform?</Typography>
+                <Typography component={Link} href='/register' color='primary' className='font-semibold text-sm'>
                   Create an account
                 </Typography>
               </div>

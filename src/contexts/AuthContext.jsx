@@ -15,20 +15,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (currentUser) => {
+    const unsub = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser)
       setLoading(false)
     })
 
-    
-return () => unsub()
+    return () => unsub()
   }, [])
 
   const roomId = user?.uid || 'default'
 
-  return (
-    <AuthContext.Provider value={{ user, loading, roomId }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, loading, roomId }}>{children}</AuthContext.Provider>
 }
