@@ -155,6 +155,84 @@ export default function TimerOverlay() {
 
   const timeParts = formatTime(currentRemaining)
 
+  // Compute fill/border for card boxes
+  const boxBg = fillColor !== 'transparent' ? fillColor : 'rgba(255,255,255,0.15)'
+  const boxBorder = borderColor !== 'transparent' ? borderColor : 'transparent'
+  const boxBorderWidth = borderColor !== 'transparent' ? '4px' : '0px'
+
+  // Card-style digit box component (inline)
+  const DigitBox = ({ value, label }) => (
+    <div className='flex flex-col items-center gap-3'>
+      <div
+        style={{
+          backgroundColor: boxBg,
+          borderColor: boxBorder,
+          borderWidth: boxBorderWidth,
+          borderStyle: 'solid',
+          color: timerColor,
+          fontSize: '7rem',
+          lineHeight: 1,
+          minWidth: '160px',
+          textAlign: 'center',
+          borderRadius: '1.5rem',
+          padding: '1.25rem 1.5rem',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+          fontFamily: 'inherit',
+          fontWeight: 900,
+          letterSpacing: '-0.02em',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        {/* Subtle inner highlight */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '50%',
+            background: 'rgba(255,255,255,0.07)',
+            borderRadius: '1.5rem 1.5rem 0 0',
+            pointerEvents: 'none'
+          }}
+        />
+        <span style={{ position: 'relative', zIndex: 1 }}>{value}</span>
+      </div>
+      <span
+        style={{
+          color: timerColor,
+          opacity: 0.7,
+          fontSize: '1.1rem',
+          fontWeight: 700,
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          textShadow: '0 2px 8px rgba(0,0,0,0.6)'
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  )
+
+  // Colon separator
+  const Colon = () => (
+    <div
+      style={{
+        color: timerColor,
+        fontSize: '5rem',
+        fontWeight: 900,
+        lineHeight: 1,
+        paddingBottom: '2.8rem',
+        opacity: 0.85,
+        textShadow: '0 4px 10px rgba(0,0,0,0.5)',
+        userSelect: 'none'
+      }}
+    >
+      :
+    </div>
+  )
+
   // Return a transparent overlay for OBS
   return (
     <div
@@ -169,44 +247,31 @@ export default function TimerOverlay() {
       )}
       {timerTitle && (
         <h1
-          className='font-black tracking-widest uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] text-center -mb-4 relative z-10'
-          style={{ fontSize: '2.5rem', color: timerColor }}
+          className='font-black tracking-widest uppercase text-center mb-6 relative z-10'
+          style={{
+            fontSize: '2.5rem',
+            color: timerColor,
+            textShadow: '0 4px 12px rgba(0,0,0,0.8)',
+            letterSpacing: '0.25em'
+          }}
         >
           {timerTitle}
         </h1>
       )}
-      <div
-        className={`font-black tabular-nums tracking-tight flex items-center gap-4 font-mono drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] px-12 py-6 rounded-3xl ${borderColor !== 'transparent' ? 'border-8' : ''}`}
-        style={{
-          fontSize: '8rem',
-          color: timerColor,
-          borderColor: borderColor !== 'transparent' ? borderColor : 'transparent',
-          backgroundColor: fillColor !== 'transparent' ? fillColor : 'transparent'
-        }}
-      >
+
+      {/* Card-style DD:HH:MM:SS layout */}
+      <div className='flex items-end gap-3'>
         {timeParts.d !== '00' && (
           <>
-            <div className='flex flex-col items-center'>
-              <span>{timeParts.d}</span>
-              <span className='text-2xl uppercase tracking-widest font-semibold mt-2 text-gray-300'>Days</span>
-            </div>
-            <span className='opacity-80 pb-12'>:</span>
+            <DigitBox value={timeParts.d} label='Days' />
+            <Colon />
           </>
         )}
-        <div className='flex flex-col items-center'>
-          <span>{timeParts.h}</span>
-          <span className='text-2xl uppercase tracking-widest font-semibold mt-2 text-gray-300'>Hours</span>
-        </div>
-        <span className='opacity-80 pb-12'>:</span>
-        <div className='flex flex-col items-center'>
-          <span>{timeParts.m}</span>
-          <span className='text-2xl uppercase tracking-widest font-semibold mt-2 text-gray-300'>Mins</span>
-        </div>
-        <span className='opacity-80 pb-12'>:</span>
-        <div className='flex flex-col items-center'>
-          <span>{timeParts.s}</span>
-          <span className='text-2xl uppercase tracking-widest font-semibold mt-2 text-gray-300'>Secs</span>
-        </div>
+        <DigitBox value={timeParts.h} label='Hours' />
+        <Colon />
+        <DigitBox value={timeParts.m} label='Mins' />
+        <Colon />
+        <DigitBox value={timeParts.s} label='Secs' />
       </div>
     </div>
   )
