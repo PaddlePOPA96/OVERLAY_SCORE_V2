@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutC.css'
+import { getScale } from './overlay-scale.config'
 
 export default function LayoutC({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay)
@@ -45,7 +46,7 @@ export default function LayoutC({ data, displayTime, formatTime }) {
   const homeDisplayName = data.homeName || 'HOME'
   const awayDisplayName = data.awayName || 'AWAY'
 
-  const overlayScale = data.isPreview ? '1.0' : '0.88'
+  const overlayScale = getScale('C', data.isPreview)
 
   const boardStyle = {
     '--overlay-scale': overlayScale

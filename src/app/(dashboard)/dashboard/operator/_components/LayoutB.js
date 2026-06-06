@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutB.css'
+import { getScale } from './overlay-scale.config'
 
 // Pilih warna teks (hitam/putih) agar kontras dengan warna background
 function getContrastColor(hex) {
@@ -57,7 +58,7 @@ export default function LayoutB({ data, displayTime, formatTime }) {
   const homeBg = data.homeBg || '#ff4b4b'
   const awayBg = data.awayBg || '#e5e5e5'
 
-  const overlayScale = data.isPreview ? '1.0' : '0.72'
+  const overlayScale = getScale('B', data.isPreview)
 
   const boardStyle = {
     '--layout-b-home-bg': homeBg,

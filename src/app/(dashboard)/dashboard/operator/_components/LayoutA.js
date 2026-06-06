@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Image from 'next/image'
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutA.css'
+import { getScale } from './overlay-scale.config'
 
 export default function LayoutA({ data, displayTime, formatTime }) {
   const [showGoal, setShowGoal] = useState(false)
@@ -65,7 +66,7 @@ export default function LayoutA({ data, displayTime, formatTime }) {
     }
   }, [data.showOverlay, isVisible])
 
-  const overlayScale = data.isPreview ? '1.0' : '0.78'
+  const overlayScale = getScale('A', data.isPreview)
 
   const dynamicStyles = {
     '--score-left-color': data.homeColor || '#0040a0',

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutE.css'
+import { getScale } from './overlay-scale.config'
 
 export default function LayoutE({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay)
@@ -77,8 +78,8 @@ export default function LayoutE({ data, displayTime, formatTime }) {
   const seriesType = data.seriesType || 'bo3'
   const maxDiamonds = seriesType === 'bo5' ? 3 : 2
 
-  // Dynamic Scale Override: Lock to 1.0 in operator preview, and set scale to 1.25 to fit OBS 800x600 browser source perfectly
-  const overlayScale = data.isPreview ? '1.0' : '1.25'
+  // Scale config — ubah di overlay-scale.config.js
+  const overlayScale = getScale('E', data.isPreview)
 
   const boardStyles = {
     '--overlay-scale': overlayScale
