@@ -1,34 +1,68 @@
 'use client'
 
+import { useState } from 'react'
 import LayoutE from './LayoutE'
 import { Card } from '@/components/ui/card'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
+import MobileOperatorView from './MobileOperatorView'
 
 export default function OperatorE({ data, actions, displayTime, formatTime, roomId, theme }) {
   const isLight = theme === 'light'
+  const [viewMode, setViewMode] = useState('desktop')
 
   return (
     <div className={`operator-b-container ${isLight ? 'theme-light' : ''}`}>
-      <div className='w-full flex items-center justify-between mb-3'>
-        <h2 className='text-xl font-bold text-textPrimary'>⚽ Operator Panel – Layout E (Valorant Overlay HUD)</h2>
+
+      {/* ── Header + Mode Toggle Bar ── */}
+      <div className='op-topbar'>
+        <h2 className='op-topbar-title'>⚽ Layout E – Valorant HUD</h2>
+        <div className='op-mode-toggle'>
+          <button
+            className={`op-mode-btn ${viewMode === 'desktop' ? 'active' : ''}`}
+            onClick={() => setViewMode('desktop')}
+          >
+            <i className='ri-computer-line' />
+            <span>Desktop</span>
+          </button>
+          <button
+            className={`op-mode-btn ${viewMode === 'mobile' ? 'active' : ''}`}
+            onClick={() => setViewMode('mobile')}
+          >
+            <i className='ri-smartphone-line' />
+            <span>Mobile</span>
+          </button>
+        </div>
       </div>
 
-      <Card className='operator-b-preview-box'>
-        <LayoutE
-          data={{ ...data, showOverlay: true, isPreview: true }}
+      {viewMode === 'mobile' ? (
+        <MobileOperatorView
+          data={data}
+          actions={actions}
           displayTime={displayTime}
           formatTime={formatTime}
+          roomId={roomId}
+          theme={theme}
         />
-      </Card>
+      ) : (
+        <>
+          <Card className='operator-b-preview-box'>
+            <LayoutE
+              data={{ ...data, showOverlay: true, isPreview: true }}
+              displayTime={displayTime}
+              formatTime={formatTime}
+            />
+          </Card>
 
-      <UnifiedOperatorControls
-        data={data}
-        actions={actions}
-        displayTime={displayTime}
-        formatTime={formatTime}
-        roomId={roomId}
-        theme={theme}
-      />
+          <UnifiedOperatorControls
+            data={data}
+            actions={actions}
+            displayTime={displayTime}
+            formatTime={formatTime}
+            roomId={roomId}
+            theme={theme}
+          />
+        </>
+      )}
     </div>
   )
 }
