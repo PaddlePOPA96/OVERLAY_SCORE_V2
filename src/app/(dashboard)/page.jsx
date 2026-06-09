@@ -143,14 +143,14 @@ function DashboardPageInner() {
         </RequireLogin>
       )}
 
-      {/* ── TIKTOK OVERLAY ── */}
+      {/* ── TIKTOK & IG OVERLAY ── */}
       {activeSection === 'tiktok-overlay' && (
         <div>
           <header className='mb-4'>
-            <h1 className='text-2xl font-bold text-textPrimary'>TikTok Video Overlay</h1>
-            <p className='text-textSecondary text-sm'>Configure and trigger TikTok video overlays for OBS.</p>
+            <h1 className='text-2xl font-bold text-textPrimary'>Tiktok & IG Video Overlay</h1>
+            <p className='text-textSecondary text-sm'>Configure and trigger TikTok and Instagram video overlays for OBS.</p>
           </header>
-          <RequireLogin title='TikTok Video Overlay'>
+          <RequireLogin title='Tiktok & IG Video Overlay'>
             <TikTokOverlayControl theme={theme} roomId={roomId} />
           </RequireLogin>
         </div>

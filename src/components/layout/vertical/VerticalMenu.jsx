@@ -144,8 +144,8 @@ const VerticalMenu = ({ scrollMenu }) => {
           <MenuItem href='/?s=running-text' icon={<i className='ri-file-text-line' />}>
             Running Text (OBS)
           </MenuItem>
-          <MenuItem href='/?s=tiktok-overlay' icon={<i className='ri-tiktok-line' />}>
-            TikTok Video Overlay
+          <MenuItem href='/?s=tiktok-overlay' icon={<i className='ri-video-line' />}>
+            Tiktok & IG Overlay
           </MenuItem>
         </MenuSection>
 

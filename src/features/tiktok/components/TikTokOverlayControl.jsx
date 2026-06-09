@@ -78,7 +78,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
     const url = urlToCheck || tiktokUrl
 
     if (!url) {
-      setError('Please paste a TikTok link first!')
+      setError('Please paste a TikTok or Instagram Reels link first!')
 
       return null
     }
@@ -92,29 +92,33 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
     try {
       let resolvedResult = null
 
-      // 1. Try client-side fetch to tikwm directly first to bypass server IP block (403)
-      try {
-        const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`)
+      const isInstagram = url.includes('instagram.com') || url.includes('instagr.am')
 
-        if (response.ok) {
-          const result = await response.json()
+      // 1. Try client-side fetch to tikwm directly first (only for TikTok URLs) to bypass server IP block (403)
+      if (!isInstagram) {
+        try {
+          const response = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`)
 
-          if (result.code === 0 && result.data) {
-            resolvedResult = {
-              videoId: result.data.id,
-              videoUrl: result.data.play,
-              title: result.data.title || 'TikTok Video',
-              duration: result.data.duration || 25,
-              cover: result.data.cover || '',
-              finalUrl: url
+          if (response.ok) {
+            const result = await response.json()
+
+            if (result.code === 0 && result.data) {
+              resolvedResult = {
+                videoId: result.data.id,
+                videoUrl: result.data.play,
+                title: result.data.title || 'TikTok Video',
+                duration: result.data.duration || 25,
+                cover: result.data.cover || '',
+                finalUrl: url
+              }
             }
           }
+        } catch (clientErr) {
+          console.warn('Client-side direct fetch failed or CORS blocked, falling back to server resolver:', clientErr)
         }
-      } catch (clientErr) {
-        console.warn('Client-side direct fetch failed or CORS blocked, falling back to server resolver:', clientErr)
       }
 
-      // 2. If client-side fetch failed, fallback to hit our server-side API (which has extra backup APIs)
+      // 2. If client-side fetch failed, fallback to hit our server-side API (which has extra backup APIs and handles Instagram)
       if (!resolvedResult) {
         const response = await fetch('/api/tiktok', {
           method: 'POST',
@@ -127,7 +131,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
         const result = await response.json()
 
         if (!response.ok) {
-          throw new Error(result.error || 'Failed to resolve TikTok URL')
+          throw new Error(result.error || 'Failed to resolve Video URL')
         }
 
         resolvedResult = result
@@ -333,12 +337,12 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
           )}
 
           <div className="flex flex-col gap-4">
-            {/* TikTok Link Input */}
+            {/* TikTok / Instagram Reel Link Input */}
             <div>
               <label
                 className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
               >
-                TikTok Video Link
+                TikTok / Instagram Reel Link
               </label>
               <div className="flex gap-2">
                 <input
@@ -348,7 +352,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
                     setTiktokUrl(e.target.value)
                     setResolvedVideoId('') // Clear previous resolve on change
                   }}
-                  placeholder="https://vt.tiktok.com/ZS... atau https://www.tiktok.com/@..."
+                  placeholder="https://tiktok.com/... atau https://instagram.com/reel/..."
                   className={`flex-1 p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
                 />
                 <button

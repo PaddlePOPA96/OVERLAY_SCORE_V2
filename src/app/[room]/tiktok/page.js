@@ -225,7 +225,7 @@ export default function TikTokOverlay() {
               {sender}
             </span>
             <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-violet-500/20 text-violet-300 rounded border border-violet-500/30">
-              TikTok Link
+              {videoUrl?.includes('instagram') || videoUrl?.includes('fbcdn') ? 'Instagram Reel' : 'TikTok Video'}
             </span>
           </div>
 
