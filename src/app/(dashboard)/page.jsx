@@ -29,6 +29,10 @@ const OperatorRoot = dynamic(() => import('@/app/(dashboard)/dashboard/operator/
 
 const CountdownTimer = dynamic(() => import('@/features/countdown/components/CountdownTimer'), { ssr: false })
 
+const TikTokOverlayControl = dynamic(() => import('@/features/tiktok/components/TikTokOverlayControl'), {
+  ssr: false
+})
+
 const PremierLeagueMain = dynamic(
   () =>
     import('@/features/premier-league/components/PremierLeagueSection').then(m => ({ default: m.PremierLeagueMain })),
@@ -137,6 +141,19 @@ function DashboardPageInner() {
         <RequireLogin title='Countdown Timer'>
           <CountdownTimer theme={theme} roomId={roomId} />
         </RequireLogin>
+      )}
+
+      {/* ── TIKTOK OVERLAY ── */}
+      {activeSection === 'tiktok-overlay' && (
+        <div>
+          <header className='mb-4'>
+            <h1 className='text-2xl font-bold text-textPrimary'>TikTok Video Overlay</h1>
+            <p className='text-textSecondary text-sm'>Configure and trigger TikTok video overlays for OBS.</p>
+          </header>
+          <RequireLogin title='TikTok Video Overlay'>
+            <TikTokOverlayControl theme={theme} roomId={roomId} />
+          </RequireLogin>
+        </div>
       )}
 
       {/* ── RUNNING TEXT SETUP ── */}
