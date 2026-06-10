@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/firebase/index'
 
 const defaultSettings = {
   scoreboard: {

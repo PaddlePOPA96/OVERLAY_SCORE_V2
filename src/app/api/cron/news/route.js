@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { ref, set } from 'firebase/database'
 
-import { db } from '@/lib/firebaseDb'
+import { db } from '@/lib/firebase/db'
 
 const NEWS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news'
 

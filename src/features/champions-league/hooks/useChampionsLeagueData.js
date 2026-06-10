@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { ref, onValue } from 'firebase/database'
 
-import { db } from '@/lib/firebaseDb'
+import { db } from '@/lib/firebase/db'
 
 export function useChampionsLeagueMatches() {
   const [matches, setMatches] = useState([])
@@ -23,7 +23,7 @@ export function useChampionsLeagueMatches() {
 
   const reloadUclMatches = async () => {
     try {
-      const token = await import('@/lib/firebaseAuth').then(m => m.auth.currentUser?.getIdToken())
+      const token = await import('@/lib/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
       const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
       const response = await fetch('/api/champions-league/matches', { headers })
@@ -76,7 +76,7 @@ export function useChampionsLeagueStandings() {
 
   const reloadUclStandings = async () => {
     try {
-      const token = await import('@/lib/firebaseAuth').then(m => m.auth.currentUser?.getIdToken())
+      const token = await import('@/lib/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
       const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
       const response = await fetch('/api/champions-league/standings', { headers })

@@ -33,8 +33,8 @@ import { ref, set, onValue } from 'firebase/database'
 import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore } from '@/lib/auth/service'
 import { useAllUsers } from '@/features/iam/hooks/useAllUsers'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
-import { auth } from '@/lib/firebaseAuth'
-import { db } from '@/lib/firebaseDb'
+import { auth } from '@/lib/firebase/auth'
+import { db } from '@/lib/firebase/db'
 
 export default function AdminUserManagementPage({ activeTab = 'manage-users' }) {
   const router = useRouter()

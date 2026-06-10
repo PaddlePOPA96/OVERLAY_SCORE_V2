@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { doc, onSnapshot } from 'firebase/firestore'
 
-import { dbFirestore } from '@/lib/firebaseFirestore'
+import { dbFirestore } from '@/lib/firebase/firestore'
 
 export function useUserRole(user) {
   const [role, setRole] = useState(null)

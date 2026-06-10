@@ -1,5 +1,2 @@
-import { getDatabase } from 'firebase/database'
-
-import { app } from './firebaseApp'
-
-export const db = getDatabase(app)
+// ⚠️ DEPRECATED: import langsung dari '@/lib/firebase/db'
+export { db } from './firebase/db'

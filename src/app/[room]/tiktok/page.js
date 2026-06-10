@@ -4,20 +4,22 @@ import { useEffect, useState, useRef } from 'react'
 
 import { useParams } from 'next/navigation'
 
-import { ref, onValue } from 'firebase/database'
+import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/firebase/index'
 
-export default function TikTokOverlay() {
+export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
   const params = useParams()
-  const roomId = params.room
+  // Pakai prop jika tersedia (ketika dipakai sebagai komponen embed),
+  // fallback ke useParams ketika dirender sebagai standalone page /[room]/tiktok
+  const roomId = roomIdProp || params?.room
 
   // State values from Firebase
   const [videoId, setVideoId] = useState('')
   const [videoUrl, setVideoUrl] = useState('')
   const [sender, setSender] = useState('')
   const [message, setMessage] = useState('')
-  const [volume, setVolume] = useState(0.8)
+  const [volume, setVolume] = useState(0.1)
   const [showDuration, setShowDuration] = useState(25)
   const [layout, setLayout] = useState('glassmorphism')
   const [isPlaying, setIsPlaying] = useState(false)
@@ -78,7 +80,7 @@ export default function TikTokOverlay() {
         setVideoUrl(data.videoUrl || '')
         setSender(data.sender || 'Anonymous')
         setMessage(data.message || '')
-        setVolume(data.volume !== undefined ? data.volume : 0.8)
+        setVolume(data.volume !== undefined ? data.volume : 0.1)
         setLayout(data.layout || 'glassmorphism')
         setIsPlaying(data.isPlaying || false)
         setTriggeredAt(data.triggeredAt || 0)
@@ -90,12 +92,35 @@ export default function TikTokOverlay() {
     return () => unsubscribe()
   }, [roomId])
 
+  // Handle overlay completion and update Firebase state
+  const handleOverlayEnd = () => {
+    setVisible(false)
+    setProgressStart(false)
+
+    if (timerRef.current) clearTimeout(timerRef.current)
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current)
+
+    if (roomId) {
+      update(ref(db, `match_live/${roomId}/tiktok_overlay`), { isPlaying: false }).catch(console.error)
+    }
+  }
+
   // Trigger animations when triggeredAt changes
   useEffect(() => {
     if (triggeredAt > 0 && isPlaying && videoId) {
       // Avoid re-triggering if it is the same event
       if (triggeredAt === lastTriggeredRef.current) return
       lastTriggeredRef.current = triggeredAt
+
+      // Avoid triggering old alerts on mount/refresh (e.g. older than duration + 10s)
+      const ageMs = Date.now() - triggeredAt
+      const durationMs = showDuration * 1000
+
+      if (ageMs > durationMs + 10000) {
+        console.log('Skipping old alert trigger on load:', ageMs, 'ms old')
+
+        return
+      }
 
       // Reset any active timers
       if (timerRef.current) clearTimeout(timerRef.current)
@@ -110,18 +135,16 @@ export default function TikTokOverlay() {
       setProgressStart(true)
 
       // Hide overlay when duration ends (e.g. 500ms before removing DOM element to allow exit animation)
-      const durationMs = showDuration * 1000
-
       timerRef.current = setTimeout(() => {
         setVisible(false)
       }, durationMs - 500)
 
       // Fully clear state
       exitTimerRef.current = setTimeout(() => {
-        setProgressStart(false)
+        handleOverlayEnd()
       }, durationMs)
     }
-  }, [triggeredAt, isPlaying, videoId, showDuration])
+  }, [triggeredAt, isPlaying, videoId, showDuration, roomId])
 
   // Force close overlay if operator turns off isPlaying manually
   useEffect(() => {
@@ -252,7 +275,7 @@ export default function TikTokOverlay() {
               autoPlay
               playsInline
               controls={false}
-              onEnded={() => setVisible(false)}
+              onEnded={handleOverlayEnd}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (

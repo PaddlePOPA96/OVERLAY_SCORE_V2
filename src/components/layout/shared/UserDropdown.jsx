@@ -18,7 +18,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Button from '@mui/material/Button'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 
-import { auth } from '@/lib/firebaseAuth'
+import { auth } from '@/lib/firebase/auth'
 
 const BadgeContentSpan = styled('span')({
   width: 8,

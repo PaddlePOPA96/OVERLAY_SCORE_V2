@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 
 import { ref, onValue } from 'firebase/database'
 
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/firebase/index'
 
 export default function TimerOverlay() {
   const params = useParams()

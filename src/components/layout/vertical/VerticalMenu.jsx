@@ -13,10 +13,10 @@ import { useTheme } from '@mui/material/styles'
 // Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-import { db } from '@/lib/firebaseDb'
+import { db } from '@/lib/firebase/db'
 
-import { auth } from '@/lib/firebaseAuth'
-import { dbFirestore } from '@/lib/firebaseFirestore'
+import { auth } from '@/lib/firebase/auth'
+import { dbFirestore } from '@/lib/firebase/firestore'
 
 // Component Imports
 import { Menu, MenuItem, MenuSection } from '@menu/vertical-menu'

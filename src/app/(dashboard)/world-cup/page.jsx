@@ -13,7 +13,7 @@ import { WorldCupMain } from '@/features/world-cup/components/WorldCupSection'
 // Sidebar imports (Shared from Premier League feature)
 import { usePremierLeagueMatches, usePremierLeagueNews } from '@/features/premier-league/hooks/usePremierLeagueData'
 import { PremierLeagueRight } from '@/features/premier-league/components/PremierLeagueSidebar'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/components/providers/AuthContext'
 
 export default function WorldCupPage() {
   const { mode } = useColorScheme()

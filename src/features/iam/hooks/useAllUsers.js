@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { collection, onSnapshot } from 'firebase/firestore'
 
-import { dbFirestore } from '@/lib/firebaseFirestore'
+import { dbFirestore } from '@/lib/firebase/firestore'
 
 export function useAllUsers() {
   const [users, setUsers] = useState([])

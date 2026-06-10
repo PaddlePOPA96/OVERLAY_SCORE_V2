@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from 'react'
 
-import { ref, onValue, update, push, remove } from 'firebase/database'
+import { ref, onValue, update, push, remove, get } from 'firebase/database'
 
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/firebase/index'
 
 export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default' }) {
   const isDark = theme === 'dark'
 
   // Constant defaults for overlay settings as requested
   const alertSound = '/sounds/ikeve.mp3'
-  const volume = 0.8
   const layout = 'glassmorphism'
+
+  const [volume, setVolume] = useState(0.1)
 
   const [tiktokUrl, setTiktokUrl] = useState('')
   const [sender, setSender] = useState('')
@@ -28,8 +29,13 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
   const [currentOverlay, setCurrentOverlay] = useState(null)
   const [history, setHistory] = useState([])
 
+  // Ekstrak userId dari roomId (format: uid_slot1 / uid_slot2 / uid_slot3 atau roomId biasa)
+  const userId = roomId.includes('_slot') ? roomId.split('_slot')[0] : roomId
+
   const overlayPath = `match_live/${roomId}/tiktok_overlay`
-  const historyPath = `match_live/${roomId}/tiktok_history`
+
+  // History disimpan per UUID (bukan per room) supaya semua slot berbagi history
+  const historyPath = `users/${userId}/tiktok_history`
 
   // Fetch current overlay state from Firebase
   useEffect(() => {
@@ -64,8 +70,9 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
           ...data[key]
         }))
 
+        list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
         list.reverse()
-        setHistory(list.slice(0, 10)) // Keep last 10 entries
+        setHistory(list.slice(0, 5)) // Maks 5 entri terbaru
       } else {
         setHistory([])
       }
@@ -185,8 +192,8 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
       // Update overlay in Realtime DB
       await update(ref(db, overlayPath), payload)
 
-      // Add to history list
-      await push(ref(db, historyPath), {
+      // Add to history list + auto-trim ke maks 5
+      const newRef = await push(ref(db, historyPath), {
         videoId: data.videoId,
         videoUrl: payload.videoUrl || '',
         cover: payload.cover || '',
@@ -194,6 +201,23 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
         message: payload.message,
         timestamp: Date.now()
       })
+
+      // Trim: hapus item terlama kalau sudah lebih dari 5
+      const histSnap = await get(ref(db, historyPath))
+
+      if (histSnap.exists()) {
+        const allItems = Object.entries(histSnap.val())
+          .map(([key, val]) => ({ key, timestamp: val.timestamp || 0 }))
+          .sort((a, b) => a.timestamp - b.timestamp) // terlama dulu
+
+        const excess = allItems.length - 5
+
+        if (excess > 0) {
+          await Promise.all(
+            allItems.slice(0, excess).map(item => remove(ref(db, `${historyPath}/${item.key}`)))
+          )
+        }
+      }
 
       // Reset main input URL/sender/message for next use
       setTiktokUrl('')
@@ -405,6 +429,32 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
               </div>
             </div>
 
+            {/* Volume Control */}
+            <div>
+              <label
+                className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
+              >
+                Volume Video
+              </label>
+              <div className='flex items-center gap-3'>
+                <span className='text-lg select-none'>
+                  {volume <= 0 ? '🔇' : volume < 0.4 ? '🔈' : volume < 0.7 ? '🔉' : '🔊'}
+                </span>
+                <input
+                  type='range'
+                  min='0'
+                  max='1'
+                  step='0.05'
+                  value={volume}
+                  onChange={e => setVolume(parseFloat(e.target.value))}
+                  className='flex-1 accent-violet-500 cursor-pointer'
+                />
+                <span className={`text-xs font-mono font-bold w-9 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                  {Math.round(volume * 100)}%
+                </span>
+              </div>
+            </div>
+
             <div>
               <label
                 className={`block text-xs font-bold uppercase tracking-wider mb-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}
@@ -450,7 +500,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-base font-bold flex items-center gap-2">
             <i className="ri-history-line text-violet-500" />
-            Riwayat Pemutaran (Maks 10)
+            Riwayat Pemutaran (Maks 5)
           </h3>
           {history.length > 0 && (
             <button

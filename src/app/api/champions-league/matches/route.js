@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 
 import { ref, set, get } from 'firebase/database'
 
-import { db } from '@/lib/firebaseDb'
-import { verifyIdToken } from '@/lib/firebaseAdmin'
-import { dbFirestore } from '@/lib/firebaseFirestore'
+import { db } from '@/lib/firebase/db'
+import { verifyIdToken } from '@/lib/firebase/admin'
+import { dbFirestore } from '@/lib/firebase/firestore'
 import { doc, getDoc } from 'firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY

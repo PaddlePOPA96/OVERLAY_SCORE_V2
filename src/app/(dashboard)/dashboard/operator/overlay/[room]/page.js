@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 
-import ScoreboardOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_components/ScoreboardOverlay'
+import ScoreboardOverlay from '@/features/match-simulation/components/overlay/ScoreboardOverlay'
 import TikTokOverlay from '@/app/[room]/tiktok/page'
 
 export default function OverlayRoomPage() {
@@ -16,7 +16,7 @@ export default function OverlayRoomPage() {
     <>
       <ScoreboardOverlay roomId={roomId} />
       <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 50 }}>
-        <TikTokOverlay />
+        <TikTokOverlay roomId={roomId} />
       </div>
     </>
   )

@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 
 import { ref, get, set } from 'firebase/database'
 
-import { db } from '@/lib/firebaseDb'
-import { verifyIdToken } from '@/lib/firebaseAdmin'
+import { db } from '@/lib/firebase/db'
+import { verifyIdToken } from '@/lib/firebase/admin'
 
 const NEWS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news'
 

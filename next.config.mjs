@@ -13,7 +13,7 @@ const nextConfig = {
   // Tree-shake heavy packages — only import what is actually used
   experimental: {
     // Inline critical CSS and defer the rest, eliminating render-blocking CSS penalty
-    optimizeCss: true,
+    optimizeCss: process.env.NODE_ENV === 'production',
     // Tell Next.js to only bundle the MUI / Firebase submodules actually imported
     optimizePackageImports: [
       '@mui/material',

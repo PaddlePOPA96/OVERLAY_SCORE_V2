@@ -3,42 +3,13 @@ import { useEffect, useState } from 'react'
 
 import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebaseDb'
+import { db } from '@/lib/firebase/db'
+import { defaultMatchData, formatTime } from '@/utils/scoreboardLogic'
 
 // roomId / sessionId dipakai supaya beberapa pertandingan bisa jalan paralel
 export function useScoreboard(roomId = 'default') {
-  const [data, setData] = useState({
-    layout: 'B', // Default Layout
-    showOverlay: true,
-    introId: 0, // Untuk trigger animasi masuk
-
-    // Data Tim
-    homeName: 'MAN',
-    awayName: 'WHU',
-    homeScore: 0,
-    awayScore: 0,
-    homeLogo: '/logo/England%20-%20Premier%20League/Liverpool%20FC.png',
-    awayLogo: '/logo/England%20-%20Premier%20League/Manchester%20City.png',
-
-    // Warna & Style
-    homeColor: '#a40606', // Layout A gradient
-    awayColor: '#a40606', // Layout A gradient
-    homeBg: '#111111', // Layout B Box
-    awayBg: '#111111', // Layout B Box
-
-    // Timer
-    period: 1,
-    timer: { isRunning: false, baseTime: 0, startTime: 0 },
-
-    // Goal
-    goalTrigger: 0,
-    goalTeam: '',
-
-    // Series (BO3 / BO5) Settings
-    seriesType: 'none',
-    homeSeriesScore: 0,
-    awaySeriesScore: 0
-  })
+  // defaultMatchData diimpor dari shared/scoreboardLogic supaya tidak duplikat
+  const [data, setData] = useState(defaultMatchData)
 
   const [displayTime, setDisplayTime] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -157,15 +128,7 @@ export function useScoreboard(roomId = 'default') {
     })
   }
 
-  const formatTime = seconds => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, '0')
-
-    const s = (seconds % 60).toString().padStart(2, '0')
-
-    return `${m}:${s}`
-  }
+  // formatTime diimpor dari shared/scoreboardLogic — tidak perlu didefinisikan ulang di sini
 
   return {
     data,

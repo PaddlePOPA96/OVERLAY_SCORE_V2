@@ -6,7 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
-import OperatorRoot from '@/app/(dashboard)/dashboard/operator/_components/OperatorRoot'
+import OperatorRoot from '@/features/match-simulation/components/operator/OperatorRoot'
 
 export default function OperatorRoomPage() {
   const params = useParams()

@@ -16,7 +16,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 
 // Component Imports
 import ModeChanger from './ModeChanger'
-import { AuthProvider } from '@/contexts/AuthContext'
+import { AuthProvider } from '@/components/providers/AuthContext'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'

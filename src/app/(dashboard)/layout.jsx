@@ -1,6 +1,6 @@
 // Layout Imports
 import Providers from '@components/Providers'
-import { DashboardProvider } from '@/contexts/DashboardContext'
+import { DashboardProvider } from '@/components/providers/DashboardContext'
 import DashboardLayoutContent from '@/components/DashboardLayoutContent'
 
 const Layout = async ({ children }) => {

@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/components/providers/AuthContext'
 
 export default function DashboardAuthGuard({ children }) {
   const { user, loading } = useAuth()

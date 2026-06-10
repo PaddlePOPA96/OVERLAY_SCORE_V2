@@ -1,5 +1,2 @@
-import dynamic from 'next/dynamic'
-
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
-
-export default Chart
+// ⚠️ DEPRECATED: import langsung dari '@/lib/ApexCharts'
+export { default } from '@/lib/ApexCharts'

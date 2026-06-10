@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebase'
+import { db } from '@/lib/firebase/index'
 import { audioOptions, getAudioLabel } from '@/lib/audioConfig'
 
 export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
@@ -67,9 +67,10 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
     )
 
     return () => unsubscribe()
-  }, [])
+  }, [roomId, timerPath])
 
   useEffect(() => {
+    const timerPath = `match_live/${roomId}/countdown_timer`
     let interval
 
     if (isRunning && targetTime) {
@@ -89,7 +90,7 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
     }
 
     return () => clearInterval(interval)
-  }, [isRunning, targetTime, remainingMs])
+  }, [isRunning, targetTime, remainingMs, roomId])
 
   const handleStartPreset = ms => {
     const target = Date.now() + ms

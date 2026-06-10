@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { auth } from '@/lib/firebase'
+import { auth } from '@/lib/firebase/index'
 import { useLayoutSettings } from '@/hooks/useLayoutSettings'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
 import { usePremierLeagueMatches } from '@/features/premier-league/hooks/usePremierLeagueData'

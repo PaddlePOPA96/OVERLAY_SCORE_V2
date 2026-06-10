@@ -1,5 +1,2 @@
-import { getFirestore } from 'firebase/firestore'
-
-import { app } from './firebaseApp'
-
-export const dbFirestore = getFirestore(app)
+// ⚠️ DEPRECATED: import langsung dari '@/lib/firebase/firestore'
+export { dbFirestore } from './firebase/firestore'

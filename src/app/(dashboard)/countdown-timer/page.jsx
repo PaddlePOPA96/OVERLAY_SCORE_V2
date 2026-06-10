@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 
 import { useTheme } from '@mui/material/styles'
 
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/components/providers/AuthContext'
 
 const CountdownTimer = dynamic(() => import('@/features/countdown/components/CountdownTimer'), {
   ssr: false,
