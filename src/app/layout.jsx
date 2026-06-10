@@ -10,6 +10,9 @@ import '@/app/globals.css'
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
 
+// Component Imports
+import SecurityGuard from '@components/SecurityGuard'
+
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800', '900'],
@@ -36,7 +39,10 @@ const RootLayout = ({ children }) => {
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
       </head>
-      <body className={`${poppins.className} flex is-full min-bs-full flex-auto flex-col`}>{children}</body>
+      <body className={`${poppins.className} flex is-full min-bs-full flex-auto flex-col`}>
+        <SecurityGuard />
+        {children}
+      </body>
     </html>
   )
 }
