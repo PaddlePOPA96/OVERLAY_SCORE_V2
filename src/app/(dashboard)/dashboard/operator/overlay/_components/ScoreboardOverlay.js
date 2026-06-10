@@ -14,9 +14,10 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
   const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId)
   const [isMounted, setIsMounted] = useState(false)
   const [playError, setPlayError] = useState(false)
+  const [activeMediaSrc, setActiveMediaSrc] = useState(null)
+  const [activeMediaVol, setActiveMediaVol] = useState(1)
 
   const prevGoalTrigger = useRef(null)
-  const audioRef = useRef(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -28,31 +29,22 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
     if (prevGoalTrigger.current === null) {
       prevGoalTrigger.current = data.goalTrigger || 0
-
       return
     }
 
     const currentTrigger = data.goalTrigger || 0
 
     if (currentTrigger !== prevGoalTrigger.current && currentTrigger !== 0) {
-      if (audioRef.current) {
-        const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
-
-        audioRef.current.src = data.goalAudioSource || '/sounds/goal.mp3'
-        audioRef.current.volume = audioVolume
-        audioRef.current.currentTime = 0
-        const p = audioRef.current.play()
-
-        if (p !== undefined) {
-          p.catch(e => {
-            console.error('Goal audio error:', e)
-
-            if (e.name === 'NotAllowedError' || e.message.includes('interact')) {
-              setPlayError(true)
-            }
-          })
-        }
-      }
+      const vol = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
+      setActiveMediaVol(vol)
+      
+      // Force remount to re-trigger autoplay
+      setActiveMediaSrc(null)
+      setPlayError(false)
+      
+      setTimeout(() => {
+        setActiveMediaSrc(data.goalAudioSource || '/sounds/goal.mp3')
+      }, 50)
     }
 
     prevGoalTrigger.current = currentTrigger
@@ -61,11 +53,7 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
   // Listen for stop signal directly from data changes
   useEffect(() => {
     if (!data || !data.goalAudioStop) return
-
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-    }
+    setActiveMediaSrc(null)
   }, [data?.goalAudioStop])
 
   // Listen for preview audio signal
@@ -76,33 +64,21 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
     if (prevPreviewTrigger.current === null) {
       prevPreviewTrigger.current = data.previewAudioTrigger || 0
-
       return
     }
 
     const currentTrigger = data.previewAudioTrigger || 0
 
     if (currentTrigger !== prevPreviewTrigger.current && currentTrigger !== 0) {
-      if (audioRef.current) {
-        // Set source to preview audio source
-        audioRef.current.src = data.previewAudioSource || '/sounds/goal.mp3'
-        const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
-
-        audioRef.current.volume = audioVolume
-        audioRef.current.currentTime = 0
-
-        const p = audioRef.current.play()
-
-        if (p !== undefined) {
-          p.catch(e => {
-            console.error('Preview audio error:', e)
-
-            if (e.name === 'NotAllowedError' || e.message.includes('interact')) {
-              setPlayError(true)
-            }
-          })
-        }
-      }
+      const vol = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
+      setActiveMediaVol(vol)
+      
+      setActiveMediaSrc(null)
+      setPlayError(false)
+      
+      setTimeout(() => {
+        setActiveMediaSrc(data.previewAudioSource || '/sounds/goal.mp3')
+      }, 50)
     }
 
     prevPreviewTrigger.current = currentTrigger
@@ -110,17 +86,12 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
   const handleInteraction = () => {
     setPlayError(false)
-
-    if (audioRef.current) {
-      audioRef.current.volume = 0
-      const p = audioRef.current.play()
-
-      if (p !== undefined) {
-        p.then(() => {
-          audioRef.current.pause()
-          audioRef.current.volume = 1
-        }).catch(() => {})
-      }
+    // Interaction unlocks the browser audio context.
+    // If activeMediaSrc was set, we can just force it to remount to try playing again.
+    if (activeMediaSrc) {
+      const currentSrc = activeMediaSrc
+      setActiveMediaSrc(null)
+      setTimeout(() => setActiveMediaSrc(currentSrc), 50)
     }
   }
 
@@ -161,7 +132,30 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
         zIndex: 10
       }}
     >
-      <audio ref={audioRef} src={data.goalAudioSource || '/sounds/goal.mp3'} preload='auto' />
+      {/* Trick: Use video instead of audio tag dynamically mounted to bypass OBS Autoplay blocks */}
+      {activeMediaSrc && (
+        <video
+          autoPlay
+          src={activeMediaSrc}
+          style={{ display: 'none' }}
+          onEnded={() => setActiveMediaSrc(null)}
+          ref={(el) => {
+            if (el) {
+              el.volume = activeMediaVol
+              // Attempt programmatic play as a fallback and catch errors
+              const p = el.play()
+              if (p !== undefined) {
+                p.catch(e => {
+                  console.error('Media play error:', e)
+                  if (e.name === 'NotAllowedError' || e.message.includes('interact')) {
+                    setPlayError(true)
+                  }
+                })
+              }
+            }
+          }}
+        />
+      )}
       {playError && (
         <div
           onClick={handleInteraction}
