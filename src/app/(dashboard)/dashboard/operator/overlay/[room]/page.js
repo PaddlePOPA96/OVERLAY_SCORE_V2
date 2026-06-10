@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation'
 
 import ScoreboardOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_components/ScoreboardOverlay'
+import TikTokOverlay from '@/app/[room]/tiktok/page'
 
 export default function OverlayRoomPage() {
   const params = useParams()
@@ -11,5 +12,12 @@ export default function OverlayRoomPage() {
   const roomId =
     typeof rawRoom === 'string' ? rawRoom : Array.isArray(rawRoom) && rawRoom.length > 0 ? rawRoom[0] : 'default'
 
-  return <ScoreboardOverlay roomId={roomId} />
+  return (
+    <>
+      <ScoreboardOverlay roomId={roomId} />
+      <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 50 }}>
+        <TikTokOverlay />
+      </div>
+    </>
+  )
 }

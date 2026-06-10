@@ -32,6 +32,9 @@ function resolveInstagram(url) {
 }
 
 export async function POST(request) {
+  // Disable strict SSL checking for these third-party free APIs that often have self-signed or broken certificates
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
   try {
     const { url } = await request.json()
 

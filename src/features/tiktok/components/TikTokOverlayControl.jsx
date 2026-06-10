@@ -258,7 +258,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
   // Copy OBS URL
   const copyObsUrl = () => {
     if (typeof window === 'undefined') return
-    const url = `${window.location.origin}/${roomId}/tiktok`
+    const url = `${window.location.origin}/dashboard/operator/overlay/${roomId}`
 
     navigator.clipboard.writeText(url)
     alert('OBS Overlay URL copied to clipboard!')
@@ -274,17 +274,17 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
       >
         <h3 className="text-base font-bold mb-2 flex items-center gap-2">
           <i className="ri-broadcast-line text-violet-500 animate-pulse" />
-          OBS Studio Browser Source Setup
+          OBS Studio Browser Source Setup (Integrated)
         </h3>
         <p className={`text-xs mb-3 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
           Tambahkan URL di bawah ini sebagai **Browser Source** di OBS Anda. Atur resolusi menjadi **1920x1080** (atau
-          rasio 16:9).
+          rasio 16:9). Overlay ini sudah tergabung dengan **Scoreboard**.
         </p>
         <div className="flex gap-2">
           <code
             className={`flex-1 p-3 rounded text-xs font-mono overflow-x-auto whitespace-nowrap ${isDark ? 'bg-black text-violet-400' : 'bg-slate-200 text-violet-700'}`}
           >
-            {typeof window !== 'undefined' ? `${window.location.origin}/${roomId}/tiktok` : `/${roomId}/tiktok`}
+            {typeof window !== 'undefined' ? `${window.location.origin}/dashboard/operator/overlay/${roomId}` : `/dashboard/operator/overlay/${roomId}`}
           </code>
           <button
             onClick={copyObsUrl}
@@ -293,7 +293,7 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
             Copy
           </button>
           <a
-            href={`/${roomId}/tiktok`}
+            href={`/dashboard/operator/overlay/${roomId}`}
             target="_blank"
             rel="noreferrer"
             className={`px-4 py-2 border rounded-lg font-semibold text-xs flex items-center transition-all cursor-pointer ${isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'}`}
