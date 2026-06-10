@@ -18,6 +18,12 @@ export const AuthProvider = ({ children }) => {
     const unsub = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser)
       setLoading(false)
+      
+      if (currentUser) {
+        import('@/lib/auth/service').then(({ syncUserToFirestore }) => {
+          syncUserToFirestore(currentUser).catch(console.error)
+        })
+      }
     })
 
     return () => unsub()

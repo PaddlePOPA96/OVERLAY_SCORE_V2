@@ -30,7 +30,7 @@ import IconButton from '@mui/material/IconButton'
 
 import { ref, set, onValue } from 'firebase/database'
 
-import { registerWithEmailPassword, updateUserRole, deleteUserFromDb, syncUserToFirestore } from '@/lib/auth/service'
+import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore } from '@/lib/auth/service'
 import { useAllUsers } from '@/features/iam/hooks/useAllUsers'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
 import { auth } from '@/lib/firebaseAuth'
@@ -128,11 +128,10 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
     setLoading(true)
 
     try {
-      await registerWithEmailPassword(email, password)
+      await createUserWithRole(email, password, 'user')
       setCreateStatus({
         type: 'success',
-        message:
-          'User successfully created! Note: Firebase signs in new users automatically. Please sign out and sign back in as admin to manage other accounts.'
+        message: 'User successfully created and synchronized to Firestore!'
       })
       setEmail('')
       setPassword('')
