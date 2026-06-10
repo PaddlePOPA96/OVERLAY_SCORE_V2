@@ -28,11 +28,7 @@ const UnderMaintenance = ({ mode }) => {
           <Typography variant='h4'>Under Maintenance! 🚧</Typography>
           <Typography>Sorry for the inconvenience but we&#39;re performing some maintenance at the moment</Typography>
         </div>
-        <img
-          alt='error-illustration'
-          src='/images/illustrations/characters/6.png'
-          className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px]'
-        />
+        <i className='ri-tools-line text-8xl text-primary my-10'></i>
         <Button href='/' component={Link} variant='contained'>
           Back to Home
         </Button>

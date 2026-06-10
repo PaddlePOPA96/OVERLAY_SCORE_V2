@@ -23,6 +23,12 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from '@/lib/auth/service'
 import Divider from '@mui/material/Divider'
 
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogActions from '@mui/material/DialogActions'
+
 const GOOGLE_LOGIN_DISABLED = false
 
 const Login = ({ mode }) => {
@@ -32,6 +38,7 @@ const Login = ({ mode }) => {
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState({ type: '', message: '' })
+  const [errorPopup, setErrorPopup] = useState({ open: false, title: '', message: '' })
 
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
@@ -107,10 +114,18 @@ const Login = ({ mode }) => {
 
       handleAuthSuccess(user)
     } catch (error) {
-      setStatus({
-        type: 'error',
-        message: error?.message || 'Failed to login with Google.'
-      })
+      if (error?.message?.includes('Akses ditolak')) {
+        setErrorPopup({
+          open: true,
+          title: 'Google Account Not Registered',
+          message: error.message
+        })
+      } else {
+        setStatus({
+          type: 'error',
+          message: error?.message || 'Failed to login with Google.'
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -243,6 +258,23 @@ const Login = ({ mode }) => {
         </CardContent>
       </Card>
       <Illustrations maskImg={{ src: authBackground }} />
+
+      <Dialog open={errorPopup.open} onClose={() => setErrorPopup({ ...errorPopup, open: false })}>
+        <DialogTitle sx={{ fontWeight: 'bold', color: 'error.main' }}>
+          <i className="ri-error-warning-line mr-2 align-middle"></i>
+          {errorPopup.title}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText className="text-slate-700">
+            {errorPopup.message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button variant="contained" onClick={() => setErrorPopup({ ...errorPopup, open: false })} autoFocus>
+            Mengerti
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

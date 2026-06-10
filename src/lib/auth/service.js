@@ -1,4 +1,4 @@
-import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, getAdditionalUserInfo, deleteUser } from 'firebase/auth'
 import { doc, setDoc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore'
 
 import { ref, set, get, child } from 'firebase/database'
@@ -21,6 +21,13 @@ export async function registerWithEmailPassword(email, password) {
 
 export async function loginWithGooglePopup() {
   const cred = await signInWithPopup(auth, googleProvider)
+  const additionalInfo = getAdditionalUserInfo(cred)
+
+  if (additionalInfo?.isNewUser) {
+    // Delete the newly created user from Firebase Auth
+    await deleteUser(cred.user)
+    throw new Error('Akses ditolak: Akun Google ini belum terdaftar oleh Admin. Silakan hubungi Admin untuk mendaftarkan email Anda terlebih dahulu.')
+  }
 
   return cred.user
 }

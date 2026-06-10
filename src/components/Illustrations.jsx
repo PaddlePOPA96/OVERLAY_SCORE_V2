@@ -35,17 +35,17 @@ const Illustrations = props => {
   if (!hidden) {
     return (
       <>
-        {typeof image1 === 'undefined' || isImageObj(image1) ? (
+        {image1 && (isImageObj(image1) ? (
           <img
-            alt={image1?.alt || 'tree-1'}
-            src={image1?.src || '/images/illustrations/objects/tree-1.png'}
-            className={image1?.className || 'absolute inline-start-0 block-end-0'}
-            width={image1?.width}
-            height={image1?.height || 200}
+            alt={image1.alt || 'illustration-1'}
+            src={image1.src}
+            className={image1.className || 'absolute inline-start-0 block-end-0'}
+            width={image1.width}
+            height={image1.height || 200}
           />
         ) : (
           image1
-        )}
+        ))}
         {typeof maskImg === 'undefined' || isImageObj(maskImg) ? (
           <MaskImg
             alt={maskImg?.alt || 'mask'}
@@ -57,17 +57,17 @@ const Illustrations = props => {
         ) : (
           maskImg
         )}
-        {typeof image2 === 'undefined' || isImageObj(image2) ? (
+        {image2 && (isImageObj(image2) ? (
           <img
-            alt={image2?.alt || 'tree-2'}
-            src={image2?.src || '/images/illustrations/objects/tree-2.png'}
-            className={image2?.className || 'absolute inline-end-0 block-end-0'}
-            width={image2?.width}
-            height={image2?.height || 200}
+            alt={image2.alt || 'illustration-2'}
+            src={image2.src}
+            className={image2.className || 'absolute inline-end-0 block-end-0'}
+            width={image2.width}
+            height={image2.height || 200}
           />
         ) : (
           image2
-        )}
+        ))}
       </>
     )
   } else {

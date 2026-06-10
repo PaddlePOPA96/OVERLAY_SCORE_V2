@@ -31,11 +31,7 @@ const NotFound = ({ mode }) => {
           <Typography variant='h4'>Page Not Found ⚠️</Typography>
           <Typography>We couldn&#39;t find the page you are looking for.</Typography>
         </div>
-        <img
-          alt='error-illustration'
-          src='/images/illustrations/characters/5.png'
-          className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px]'
-        />
+        <i className='ri-error-warning-line text-8xl text-primary my-10'></i>
         <Button href='/' component={Link} variant='contained'>
           Back to Home
         </Button>
