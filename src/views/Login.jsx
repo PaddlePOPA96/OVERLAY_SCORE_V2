@@ -21,8 +21,9 @@ import Illustrations from '@components/Illustrations'
 import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from '@/lib/auth/service'
+import Divider from '@mui/material/Divider'
 
-const GOOGLE_LOGIN_DISABLED = true
+const GOOGLE_LOGIN_DISABLED = false
 
 const Login = ({ mode }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
@@ -217,6 +218,27 @@ const Login = ({ mode }) => {
                 </Typography>
               </div>
             </form>
+            
+            <Divider className='text-sm text-slate-400'>or</Divider>
+            
+            <Button
+              fullWidth
+              variant='outlined'
+              size='large'
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              className='text-slate-700 bg-white border-slate-300 hover:bg-slate-50'
+              startIcon={
+                <img
+                  src='https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg'
+                  alt='Google Logo'
+                  width={20}
+                  height={20}
+                />
+              }
+            >
+              Sign in with Google
+            </Button>
           </div>
         </CardContent>
       </Card>
