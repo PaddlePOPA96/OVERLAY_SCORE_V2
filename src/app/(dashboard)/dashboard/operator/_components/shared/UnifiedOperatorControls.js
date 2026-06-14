@@ -117,10 +117,10 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
               width: '100%',
               height: '36px',
               padding: '0 8px',
-              background: '#090d16',
+              background: isLight ? '#ffffff' : '#090d16',
               border: `1px solid ${borderCol}`,
               borderRadius: '6px',
-              color: '#fff',
+              color: isLight ? '#0f172a' : '#fff',
               fontSize: '12px'
             }}
           >
@@ -143,7 +143,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
               fontWeight: '600',
               fontSize: '12px',
               background: data.switchSides ? '#2563eb' : 'transparent',
-              color: '#fff',
+              color: data.switchSides ? '#ffffff' : (isLight ? '#0f172a' : '#fff'),
               border: `1px solid ${borderCol}`
             }}
           >
@@ -299,7 +299,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
                 >
                   -
                 </Button>
-                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center' }}>
+                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center', color: labelColor }}>
                   {data.homeSeriesScore || 0}
                 </span>
                 <Button
@@ -524,7 +524,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
                 >
                   -
                 </Button>
-                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center' }}>
+                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center', color: labelColor }}>
                   {data.awaySeriesScore || 0}
                 </span>
                 <Button
@@ -635,6 +635,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
           updateMatch={actions.updateMatch}
           stopGoalAudio={actions.stopGoalAudio}
           previewGoalAudio={actions.previewGoalAudio}
+          theme={theme}
         />
 
         <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: `1px dashed ${borderCol}` }}>

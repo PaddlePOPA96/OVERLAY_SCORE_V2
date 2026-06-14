@@ -2,7 +2,8 @@
 
 import { audioOptions } from '@/lib/audioConfig'
 
-export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, previewGoalAudio }) {
+export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, previewGoalAudio, theme }) {
+  const isLight = theme === 'light'
   const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
   const audioSource = data.goalAudioSource || '/sounds/goal.mp3'
 
@@ -10,11 +11,11 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
     <div
       style={{
         padding: '10px',
-        background: 'rgba(0,0,0,0.2)',
-        border: '1px solid #444',
+        background: isLight ? 'rgba(15, 23, 42, 0.04)' : 'rgba(0,0,0,0.2)',
+        border: isLight ? '1px solid #cbd5e1' : '1px solid #444',
         borderRadius: '8px',
         marginTop: '10px',
-        marginBottom: '10px'
+        marginBottom: '10px',
       }}
     >
       <label className='op-label' style={{ marginBottom: '10px', display: 'block', color: '#4ade80' }}>
@@ -23,8 +24,8 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
 
       <div style={{ marginBottom: '10px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-          <span className='op-tiny'>Volume:</span>
-          <span className='op-tiny font-mono'>{Math.round(audioVolume * 100)}%</span>
+          <span className='op-tiny' style={{ color: isLight ? '#0f172a' : '#ffffff' }}>Volume:</span>
+          <span className='op-tiny font-mono' style={{ color: isLight ? '#0f172a' : '#ffffff' }}>{Math.round(audioVolume * 100)}%</span>
         </div>
         <input
           type='range'
@@ -38,14 +39,20 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
       </div>
 
       <div>
-        <span className='op-tiny' style={{ display: 'block', marginBottom: '5px' }}>
+        <span className='op-tiny' style={{ display: 'block', marginBottom: '5px', color: isLight ? '#0f172a' : '#ffffff' }}>
           Sound:
         </span>
         <select
           value={audioSource}
           onChange={e => updateMatch({ goalAudioSource: e.target.value })}
           className='op-input'
-          style={{ width: '100%', padding: '8px', background: '#111', color: 'white' }}
+          style={{
+            width: '100%',
+            padding: '8px',
+            background: isLight ? '#ffffff' : '#111',
+            color: isLight ? '#0f172a' : 'white',
+            border: isLight ? '1px solid #cbd5e1' : '1px solid #444',
+          }}
         >
           {audioOptions.map(option => (
             <option key={option.value} value={option.value}>
@@ -59,7 +66,6 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
       <button
         onClick={e => {
           e.preventDefault()
-
           if (typeof previewGoalAudio === 'function') {
             previewGoalAudio(audioSource)
           }
@@ -91,7 +97,6 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
       <button
         onClick={e => {
           e.preventDefault()
-
           if (typeof stopGoalAudio === 'function') {
             stopGoalAudio()
           }

@@ -577,29 +577,47 @@ select.op-input {
 .operator-a-container.theme-light,
 .operator-b-container.theme-light {
   background: #f8fafc !important;
-  color: #000000 !important;
+  color: #0f172a !important;
 }
 
 .theme-light h2,
 .theme-light h3,
 .theme-light label,
 .theme-light .op-label {
-  color: #000000 !important;
+  color: #0f172a !important;
 }
 
 .theme-light .op-tiny {
-  color: #000000 !important;
+  color: #0f172a !important;
+}
+
+/* ── Catch ALL text descendants inside operator panel ── */
+.theme-light .operator-a-controls span,
+.theme-light .operator-b-controls span,
+.theme-light .operator-a-controls label,
+.theme-light .operator-b-controls label,
+.theme-light .operator-a-controls p,
+.theme-light .operator-b-controls p {
+  color: #0f172a !important;
+}
+
+/* But keep GOAL / colored action buttons white */
+.theme-light .op-btn-main,
+.theme-light .op-btn-danger,
+.theme-light .op-b-btn-main,
+.theme-light .op-btn-active {
+  color: #ffffff !important;
 }
 
 .theme-light .operator-a-controls,
 .theme-light .operator-b-controls {
   background: rgba(255, 255, 255, 0.96) !important;
   border: 1px solid #cbd5e1 !important;
-  color: #000000 !important;
+  color: #0f172a !important;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08) !important;
 }
 
-/* Home/Away inner cards inside UnifiedOperatorControls */
+/* Home/Away inner cards */
 .theme-light .operator-b-controls > div > div {
   background: rgba(15, 23, 42, 0.02) !important;
   border: 1px solid #cbd5e1 !important;
@@ -611,6 +629,16 @@ select.op-input {
 }
 
 .theme-light .op-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Override hardcoded dark selects inside operator controls */
+.theme-light select,
+.theme-light select.op-input,
+.theme-light .operator-a-controls select,
+.theme-light .operator-b-controls select {
   background: #ffffff !important;
   color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
@@ -628,6 +656,7 @@ select.op-input {
 
 .theme-light .op-btn:hover {
   background: #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
 .theme-light .op-btn-main {
@@ -646,7 +675,7 @@ select.op-input {
   border: none !important;
 }
 
-/* Active period buttons overrides */
+/* Active period buttons */
 .op-btn-active {
   background: #047857 !important;
   color: #ffffff !important;
@@ -657,7 +686,7 @@ select.op-input {
   background: #059669 !important;
 }
 
-/* Danger / Away Goal buttons overrides */
+/* Danger / Away Goal buttons */
 .op-btn-danger {
   background: #b91c1c !important;
   color: #ffffff !important;
@@ -674,7 +703,7 @@ select.op-input {
 
 .theme-light .operator-a-preview-box,
 .theme-light .operator-b-preview-box {
-  background: #1e293b !important; /* Keep preview background dark so layout text color is visible */
+  background: #1e293b !important;
   border: 1px solid #cbd5e1 !important;
   box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important;
 }
@@ -682,13 +711,75 @@ select.op-input {
 .theme-light .op-room-display {
   background: #f1f5f9 !important;
   border: 1px solid #cbd5e1 !important;
+}
+
+.theme-light .op-room-display,
+.theme-light .op-room-display span,
+.theme-light .op-room-display-label {
   color: #0f172a !important;
 }
 
-.theme-light .op-room-display-label {
-  color: #000000 !important;
+/* op-topbar in light mode */
+.theme-light .op-topbar {
+  background: #f1f5f9 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
 }
 
+.theme-light .op-topbar span,
+.theme-light .op-topbar h2,
+.theme-light .op-topbar h3 {
+  color: #0f172a !important;
+}
+
+/* Mode toggle buttons in light mode */
+.theme-light .op-mode-btn {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.theme-light .op-mode-btn.active {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+}
+
+/* ── GoalAudioSettings card - hardcoded dark backgrounds ── */
+.theme-light .operator-a-controls > div > div[style*="rgba(0,0,0"],
+.theme-light .operator-b-controls > div > div[style*="rgba(0,0,0"],
+.theme-light .operator-a-controls div[style*="rgba(0,0,0"],
+.theme-light .operator-b-controls div[style*="rgba(0,0,0"] {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Force all selects inside operator to be light */
+.theme-light .operator-a-controls select,
+.theme-light .operator-b-controls select,
+.theme-light .operator-a-controls select[style],
+.theme-light .operator-b-controls select[style] {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Force all spans/divs that have inline color: white in light mode */
+.theme-light .operator-a-controls [style*="color: white"],
+.theme-light .operator-b-controls [style*="color: white"],
+.theme-light .operator-a-controls [style*="color: #fff"],
+.theme-light .operator-b-controls [style*="color: #fff"],
+.theme-light .operator-a-controls [style*="color:#fff"],
+.theme-light .operator-b-controls [style*="color:#fff"] {
+  color: #0f172a !important;
+}
+
+/* Exception: keep actual action buttons white on colored bg */
+.theme-light button[style*="background: linear-gradient"],
+.theme-light button[style*="background:linear-gradient"],
+.theme-light button[style*="backgroundColor: #047857"],
+.theme-light button[style*="backgroundColor: #b91c1c"],
+.theme-light button[style*="backgroundColor: #2563eb"] {
+  color: #ffffff !important;
+}
 
 /* ═══════════════════════════════════════════
    MOBILE OPERATOR VIEW

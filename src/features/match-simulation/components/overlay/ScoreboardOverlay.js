@@ -9,6 +9,7 @@ import LayoutC from '../operator/LayoutC'
 import LayoutD from '../operator/LayoutD'
 import LayoutE from '../operator/LayoutE'
 import LayoutPildun from '../operator/LayoutPildun'
+import LayoutPildun2 from '../operator/LayoutPildun2'
 import { useLayoutSettings } from '@/hooks/useLayoutSettings'
 import ThirdTitleOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_components/ThirdTitleOverlay'
 
@@ -225,6 +226,8 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
             <LayoutE data={data} displayTime={displayTime} formatTime={formatTime} />
           ) : data.layout === 'Pildun' ? (
             <LayoutPildun data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : data.layout === 'Pildun2' ? (
+            <LayoutPildun2 data={data} displayTime={displayTime} formatTime={formatTime} />
           ) : (
             <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
           )}
