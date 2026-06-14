@@ -1,19 +1,28 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
+import { searchPlayers } from '@/actions/playerActions'
 
-export default function PlayerSearchModal({ isOpen, onClose, playersData, onSelect, theme = 'dark' }) {
+export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = 'dark' }) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [datalistOptions, setDatalistOptions] = useState([])
 
-  // Filter up to 50 options to prevent lag
-  const datalistOptions = useMemo(() => {
-    const safePlayers = Array.isArray(playersData) ? playersData : []
-    if (searchQuery.length < 4) return []
-    const lowerQuery = searchQuery.toLowerCase()
-    return safePlayers
-      .filter(p => p && p.name && p.name.toLowerCase().includes(lowerQuery))
-      .slice(0, 50)
-  }, [playersData, searchQuery])
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    if (searchQuery.length < 4) {
+      setDatalistOptions([])
+      return
+    }
+    
+    const delayDebounceFn = setTimeout(() => {
+      searchPlayers(searchQuery)
+        .then(results => setDatalistOptions(results || []))
+        .catch(() => {}) // silently catch to prevent console errors
+    }, 300)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [searchQuery, isOpen])
 
   if (!isOpen) return null
 

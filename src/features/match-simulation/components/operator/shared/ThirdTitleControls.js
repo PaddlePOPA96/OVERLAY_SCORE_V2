@@ -1,48 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import PlayerSearchModal from './PlayerSearchModal'
 
 export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
-  const [playersData, setPlayersData] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedPlayer, setSelectedPlayer] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [eventType, setEventType] = useState('goal') // goal, yellow_card, red_card
-  const [isLoading, setIsLoading] = useState(true)
 
   const isLight = theme === 'light'
   const labelColor = isLight ? '#000000' : '#ffffff'
   const borderCol = isLight ? '#cbd5e1' : '#333'
 
-  useEffect(() => {
-    fetch('/fix-player.json')
-      .then(res => res.json())
-      .then(data => {
-        const clubsArray = data.players || []
-        const flatPlayers = []
-        clubsArray.forEach(c => {
-          c.players.forEach(p => {
-            flatPlayers.push({ club: c.club, name: p.name, img_url: p.img_url })
-          })
-        })
-        setPlayersData(flatPlayers)
-        setIsLoading(false)
-      })
-      .catch(err => {
-        console.error('Error loading players:', err)
-        setIsLoading(false)
-      })
-  }, [])
-
   const handleShow = () => {
-    if (!searchQuery) return
-    const player = playersData.find(p => p.name === searchQuery)
-    if (player) {
-      actions.triggerThirdTitle(eventType, player.name, player.img_url)
-    } else {
-      actions.triggerThirdTitle(eventType, searchQuery, '')
-    }
+    if (!selectedPlayer) return
+    actions.triggerThirdTitle(eventType, selectedPlayer.name, selectedPlayer.img_url)
   }
 
   const handleHide = () => {
@@ -50,10 +23,6 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   }
 
   const isShowing = data?.thirdTitle?.isShowing
-
-  if (isLoading) {
-    return <div className="p-4 text-xs text-slate-400">Loading players database...</div>
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -97,7 +66,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
             }}
           >
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {searchQuery || 'Pilih pemain...'}
+              {selectedPlayer ? selectedPlayer.name : 'Pilih pemain...'}
             </span>
             <span style={{ fontSize: '10px', opacity: 0.6 }}>🔍 Cari</span>
           </div>
@@ -131,10 +100,9 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
       <PlayerSearchModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        playersData={playersData}
         theme={theme}
         onSelect={(p) => {
-          setSearchQuery(p.name)
+          setSelectedPlayer(p)
           setIsModalOpen(false)
         }}
       />
