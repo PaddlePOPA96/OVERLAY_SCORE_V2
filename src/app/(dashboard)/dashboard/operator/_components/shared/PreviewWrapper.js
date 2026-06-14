@@ -35,13 +35,16 @@ export default function PreviewWrapper({ children }) {
       ref={containerRef} 
       style={{ 
         width: '100%', 
+        maxWidth: '800px', // Prevent it from becoming huge on ultra-wide screens
+        margin: '0 auto', // Center it horizontally
         aspectRatio: '16/9', 
         position: 'relative', 
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#000'
+        backgroundColor: '#000',
+        borderRadius: '8px',
       }}
     >
       <div 

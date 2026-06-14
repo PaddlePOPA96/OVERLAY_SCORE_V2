@@ -15,6 +15,7 @@ import ThirdTitleOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_com
 
 export default function ScoreboardOverlay({ roomId = 'default' }) {
   const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId)
+
   const [isMounted, setIsMounted] = useState(false)
   const [playError, setPlayError] = useState(false)
   const [activeMediaSrc, setActiveMediaSrc] = useState(null)

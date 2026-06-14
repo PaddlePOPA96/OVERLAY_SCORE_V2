@@ -17,7 +17,7 @@ export const LAYOUT_SCALE = {
   C: { preview: '1.0', overlay: '2' }, // full-width modern bar
   D: { preview: '1.6', overlay: '1.6' }, // VCT compact HUD (with safe margins)
   E: { preview: '1.6', overlay: '1.6' }, // VCT compact HUD (with safe margins)
-  PILDUN2: { preview: '0.6', overlay: '0.8' }, // Built very large natively (1400px), needs scaling down
+  PILDUN2: { preview: '0.9', overlay: '1' }, // Native width 1400px, so 0.9 fits nicely in 1440px preview canvas
 }
 
 /**
