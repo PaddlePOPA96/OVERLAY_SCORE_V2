@@ -22,6 +22,7 @@ export default function LayoutSelector({ data, updateMatch, description }) {
         <option value='C'>Layout C</option>
         <option value='D'>Layout D (Valorant Esports)</option>
         <option value='E'>Layout E (Valorant Overlay HUD)</option>
+        <option value='Pildun'>Layout Pildun (World Cup 2026)</option>
       </select>
       {description && <span className='op-tiny'>{description}</span>}
     </div>

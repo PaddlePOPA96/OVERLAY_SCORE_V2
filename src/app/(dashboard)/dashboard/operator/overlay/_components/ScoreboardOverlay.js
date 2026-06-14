@@ -8,7 +8,9 @@ import LayoutB from '../../_components/LayoutB'
 import LayoutC from '../../_components/LayoutC'
 import LayoutD from '../../_components/LayoutD'
 import LayoutE from '../../_components/LayoutE'
+import LayoutPildun from '../../_components/LayoutPildun'
 import { useLayoutSettings } from '@/hooks/useLayoutSettings'
+import ThirdTitleOverlay from './ThirdTitleOverlay'
 
 export default function ScoreboardOverlay({ roomId = 'default' }) {
   const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId)
@@ -116,6 +118,9 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
   if (!isMounted) return null
 
+  // Check if third title is showing to hide main layout
+  const isThirdTitleShowing = data?.thirdTitle?.isShowing === true
+
   return (
     <div
       onClick={handleInteraction}
@@ -195,17 +200,37 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
           </div>
         </div>
       )}
-      {data.layout === 'A' ? (
-        <LayoutA data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'C' ? (
-        <LayoutC data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'D' ? (
-        <LayoutD data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'E' ? (
-        <LayoutE data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : (
-        <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
-      )}
+
+      {/* Main Scoreboard Layout */}
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
+          transform: isThirdTitleShowing ? 'translateY(-20px)' : 'translateY(0)',
+          opacity: isThirdTitleShowing ? 0 : 1,
+        }}
+      >
+        {data.layout === 'A' ? (
+          <LayoutA data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : data.layout === 'C' ? (
+          <LayoutC data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : data.layout === 'D' ? (
+          <LayoutD data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : data.layout === 'E' ? (
+          <LayoutE data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : data.layout === 'Pildun' ? (
+          <LayoutPildun data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : (
+          <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
+        )}
+      </div>
+
+      {/* Third Title Overlay Layer */}
+      <ThirdTitleOverlay data={data} />
     </div>
   )
 }

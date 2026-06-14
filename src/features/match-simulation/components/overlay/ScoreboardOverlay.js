@@ -8,7 +8,9 @@ import LayoutB from '../operator/LayoutB'
 import LayoutC from '../operator/LayoutC'
 import LayoutD from '../operator/LayoutD'
 import LayoutE from '../operator/LayoutE'
+import LayoutPildun from '../operator/LayoutPildun'
 import { useLayoutSettings } from '@/hooks/useLayoutSettings'
+import ThirdTitleOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_components/ThirdTitleOverlay'
 
 export default function ScoreboardOverlay({ roomId = 'default' }) {
   const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId)
@@ -123,15 +125,26 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
         position: 'absolute',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         pointerEvents: 'none',
-        transform: `translate(${x}px, ${y}px) scale(${scale})`,
-        transformOrigin: 'center center',
-        transition: 'transform 0.1s linear',
         zIndex: 10
       }}
     >
+      <div
+        style={{
+          position: 'relative',
+          width: '1440px',
+          height: '810px',
+          flexShrink: 0,
+          transform: `translate(${x}px, ${y}px) scale(${scale})`,
+          transformOrigin: 'center center',
+          transition: 'transform 0.1s linear',
+        }}
+      >
       {/* Trick: Use video instead of audio tag dynamically mounted to bypass OBS Autoplay blocks */}
       {activeMediaSrc && (
         <video
@@ -195,17 +208,30 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
           </div>
         </div>
       )}
-      {data.layout === 'A' ? (
-        <LayoutA data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'C' ? (
-        <LayoutC data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'D' ? (
-        <LayoutD data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : data.layout === 'E' ? (
-        <LayoutE data={data} displayTime={displayTime} formatTime={formatTime} />
-      ) : (
-        <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
-      )}
+      
+      <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <div style={{
+          width: '100%', height: '100%',
+          transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: data?.thirdTitle?.isShowing ? 'translateY(-40px)' : 'translateY(0)',
+        }}>
+          {data.layout === 'A' ? (
+            <LayoutA data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : data.layout === 'C' ? (
+            <LayoutC data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : data.layout === 'D' ? (
+            <LayoutD data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : data.layout === 'E' ? (
+            <LayoutE data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : data.layout === 'Pildun' ? (
+            <LayoutPildun data={data} displayTime={displayTime} formatTime={formatTime} />
+          ) : (
+            <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
+          )}
+        </div>
+        <ThirdTitleOverlay data={data} />
+      </div>
+      </div>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import LayoutB from './LayoutB'
 import { Card } from '@/components/ui/card'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 import MobileOperatorView from './MobileOperatorView'
+import PreviewWrapper from './shared/PreviewWrapper'
 
 export default function OperatorB({ data, actions, displayTime, formatTime, roomId, theme }) {
   const isLight = theme === 'light'
@@ -46,11 +47,20 @@ export default function OperatorB({ data, actions, displayTime, formatTime, room
       ) : (
         <>
           <Card className='operator-b-preview-box'>
-            <LayoutB
+            <PreviewWrapper>
+            <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+            <div style={{
+              width: '100%', height: '100%',
+
+            }}>
+              <LayoutB
               data={{ ...data, showOverlay: true, isPreview: true }}
               displayTime={displayTime}
               formatTime={formatTime}
             />
+            </div>
+          </div>
+            </PreviewWrapper>
           </Card>
 
           <UnifiedOperatorControls

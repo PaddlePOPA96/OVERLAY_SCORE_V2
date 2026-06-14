@@ -14,6 +14,7 @@ import OperatorB from './OperatorB'
 import OperatorC from './OperatorC'
 import OperatorD from './OperatorD'
 import OperatorE from './OperatorE'
+import OperatorPildun from './OperatorPildun'
 import MobileOperatorView from './MobileOperatorView'
 
 import LayoutA from './LayoutA'
@@ -21,6 +22,7 @@ import LayoutB from './LayoutB'
 import LayoutC from './LayoutC'
 import LayoutD from './LayoutD'
 import LayoutE from './LayoutE'
+import LayoutPildun from './LayoutPildun'
 
 // --- Scoreboard Slot Card Component ---
 function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) {
@@ -110,6 +112,10 @@ function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) 
 
     if (data.layout === 'E') {
       return <LayoutE data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
+    }
+
+    if (data.layout === 'Pildun') {
+      return <LayoutPildun data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
     }
 
     return <LayoutB data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
@@ -378,7 +384,9 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
     triggerGoal,
     toggleOverlay,
     stopGoalAudio,
-    previewGoalAudio
+    previewGoalAudio,
+    triggerThirdTitle,
+    hideThirdTitle
   } = useScoreboard(roomId || 'default')
 
   const [viewMode, setViewMode] = useState('desktop')
@@ -390,7 +398,9 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
     triggerGoal,
     toggleOverlay,
     stopGoalAudio,
-    previewGoalAudio
+    previewGoalAudio,
+    triggerThirdTitle,
+    hideThirdTitle
   }
 
   if (!data) {
@@ -423,6 +433,10 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
 
     if (data.layout === 'E') {
       return <OperatorE {...commonProps} />
+    }
+
+    if (data.layout === 'Pildun') {
+      return <OperatorPildun {...commonProps} />
     }
 
     return <OperatorB {...commonProps} />

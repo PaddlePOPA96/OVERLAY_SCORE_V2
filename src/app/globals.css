@@ -559,6 +559,7 @@ select.op-input {
 
 
 /* PREVIEW BOXES */
+
 .operator-a-preview-box,
 .operator-b-preview-box { 
   background: #222; 
@@ -567,121 +568,9 @@ select.op-input {
   margin-bottom: 12px; 
   width: 100%; 
   max-width: 100%; 
-  height: 320px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
   overflow: hidden; 
   position: relative;
   z-index: 1;
-}
-
-.operator-a-preview-box {
-  height: auto;
-  overflow: visible;
-}
-
-.operator-a-preview-box #layout-a-root { 
-  width: auto;
-  height: auto;
-  overflow: visible;
-  position: static;
-  transform: scale(0.7);
-  transform-origin: center;
-  margin-top: 20px;
-}
-
-.operator-b-preview-box #layout-b-root,
-.operator-b-preview-box #layout-c-root,
-.operator-b-preview-box #layout-e-root { 
-  width: auto; 
-  height: auto; 
-  position: static; 
-  display: block; 
-}
-
-/* Layout D root: keep as flex so centering mirrors the overlay page */
-.operator-b-preview-box #layout-d-root {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.operator-b-preview-box .layout-b-wrapper { 
-  transform: scale(0.95); 
-  transform-origin: center; 
-}
-
-.operator-b-preview-box .layout-c-container { 
-  transform: scale(1.0); 
-  transform-origin: center; 
-}
-
-/* Layout D: animation handles scale via --overlay-scale, no override needed */
-
-.operator-b-preview-box .layout-e-container { 
-  transform: scale(1.15); 
-  transform-origin: center; 
-}
-
-@media (max-width: 600px) {
-  .operator-a-preview-box,
-  .operator-b-preview-box {
-    height: 180px;
-    padding: 8px;
-  }
-  .operator-b-preview-box .layout-b-wrapper {
-    --overlay-scale: 0.45 !important;
-    transform: scale(0.45);
-  }
-  .operator-b-preview-box .layout-c-container {
-    --overlay-scale: 0.45 !important;
-    transform: scale(0.45);
-  }
-  .operator-b-preview-box .layout-d-container {
-    --overlay-scale: 0.55 !important;
-    transform: scale(0.55);
-  }
-  .operator-b-preview-box .layout-e-container {
-    --overlay-scale: 0.28 !important;
-    transform: scale(0.28);
-  }
-  .operator-a-preview-box #layout-a-root {
-    --overlay-scale: 0.35 !important;
-    transform: scale(0.35);
-  }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-  .operator-a-preview-box,
-  .operator-b-preview-box {
-    height: 240px;
-  }
-  .operator-b-preview-box .layout-b-wrapper {
-    --overlay-scale: 0.65 !important;
-    transform: scale(0.65);
-  }
-  .operator-b-preview-box .layout-c-container {
-    --overlay-scale: 0.65 !important;
-    transform: scale(0.65);
-  }
-  .operator-b-preview-box .layout-d-container {
-    --overlay-scale: 0.8 !important;
-    transform: scale(0.8);
-  }
-  .operator-b-preview-box .layout-e-container {
-    --overlay-scale: 0.52 !important;
-    transform: scale(0.52);
-  }
-  .operator-a-preview-box #layout-a-root {
-    --overlay-scale: 0.5 !important;
-    transform: scale(0.5);
-  }
 }
 
 /* LIGHT MODE OPERATOR OVERRIDES */

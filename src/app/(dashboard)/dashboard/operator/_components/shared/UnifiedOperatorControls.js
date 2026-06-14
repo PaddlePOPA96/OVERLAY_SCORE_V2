@@ -10,6 +10,7 @@ import LayoutSelector from './LayoutSelector'
 import TimerControls from './TimerControls'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
+import ThirdTitleControls from '@/features/match-simulation/components/operator/shared/ThirdTitleControls'
 
 export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
   const [logoModalOpen, setLogoModalOpen] = useState(false)
@@ -635,6 +636,10 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
           stopGoalAudio={actions.stopGoalAudio}
           previewGoalAudio={actions.previewGoalAudio}
         />
+
+        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: `1px dashed ${borderCol}` }}>
+          <ThirdTitleControls data={data} actions={actions} theme={theme} />
+        </div>
       </div>
 
       {/* SECTION 5: Overlay Room Admin & Sync */}

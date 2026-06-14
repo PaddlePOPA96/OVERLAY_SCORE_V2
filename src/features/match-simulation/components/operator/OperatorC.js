@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import LayoutC from './LayoutC'
 import { Card } from '@/components/ui/card'
+import PreviewWrapper from './shared/PreviewWrapper'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 import MobileOperatorView from './MobileOperatorView'
+import ThirdTitleOverlay from '@/app/(dashboard)/dashboard/operator/overlay/_components/ThirdTitleOverlay'
 
 export default function OperatorC({ data, actions, displayTime, formatTime, roomId, theme }) {
   const isLight = theme === 'light'
@@ -46,11 +48,23 @@ export default function OperatorC({ data, actions, displayTime, formatTime, room
       ) : (
         <>
           <Card className='operator-b-preview-box'>
-            <LayoutC
+            <PreviewWrapper>
+            <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+            <div style={{
+              width: '100%', height: '100%',
+              transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: data?.thirdTitle?.isShowing ? 'translateY(-40px)' : 'translateY(0)',
+              
+            }}>
+              <LayoutC
               data={{ ...data, showOverlay: true, isPreview: true }}
               displayTime={displayTime}
               formatTime={formatTime}
             />
+            </div>
+            <ThirdTitleOverlay data={data} />
+          </div>
+          </PreviewWrapper>
           </Card>
 
           <UnifiedOperatorControls

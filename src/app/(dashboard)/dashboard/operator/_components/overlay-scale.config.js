@@ -12,11 +12,11 @@
  */
 
 export const LAYOUT_SCALE = {
-  A: { preview: '1.0', overlay: '1' }, // full-width football broadcast
+  A: { preview: '0.75', overlay: '1' }, // full-width football broadcast
   B: { preview: '1.0', overlay: '2.72' }, // full-width vertical card
   C: { preview: '1.0', overlay: '2' }, // full-width modern bar
-  D: { preview: '1.6', overlay: '3.4' }, // VCT compact HUD (diperbesar)
-  E: { preview: '1.6', overlay: '2.4' }, // VCT compact HUD (diperbesar)
+  D: { preview: '1.6', overlay: '1.6' }, // VCT compact HUD (with safe margins)
+  E: { preview: '1.6', overlay: '1.6' }, // VCT compact HUD (with safe margins)
 }
 
 /**

@@ -128,6 +128,22 @@ export function useScoreboard(roomId = 'default') {
     })
   }
 
+  const triggerThirdTitle = (eventType, playerName, playerImg) => {
+    updateMatch({
+      'thirdTitle/isShowing': true,
+      'thirdTitle/eventType': eventType,
+      'thirdTitle/playerName': playerName,
+      'thirdTitle/playerImg': playerImg,
+      'thirdTitle/triggerId': Date.now()
+    })
+  }
+
+  const hideThirdTitle = () => {
+    updateMatch({
+      'thirdTitle/isShowing': false
+    })
+  }
+
   // formatTime diimpor dari shared/scoreboardLogic — tidak perlu didefinisikan ulang di sini
 
   return {
@@ -141,6 +157,8 @@ export function useScoreboard(roomId = 'default') {
     triggerGoal,
     toggleOverlay,
     stopGoalAudio,
-    previewGoalAudio
+    previewGoalAudio,
+    triggerThirdTitle,
+    hideThirdTitle
   }
 }
