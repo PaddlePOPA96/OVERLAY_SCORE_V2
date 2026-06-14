@@ -48,7 +48,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
     >
       <div
         style={{
-          width: '1400px',
+          width: '1440px',
           display: 'flex',
           alignItems: 'flex-end', // align to bottom so timer aligns with bar bottom
           justifyContent: 'center',

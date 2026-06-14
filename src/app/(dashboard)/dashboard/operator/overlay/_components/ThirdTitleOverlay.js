@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import { getScale } from '@/features/match-simulation/components/operator/overlay-scale.config'
 
 export default function ThirdTitleOverlay({ data }) {
   const { isShowing, eventType, playerName, playerImg, triggerId } = data.thirdTitle || {}
@@ -71,7 +72,11 @@ export default function ThirdTitleOverlay({ data }) {
   let customMarginTop = '260px' // Move down significantly for A, B, C, D, E
   if (layoutType === 'Pildun') {
     customMarginTop = '-40px' // Move up slightly for Pildun
+  } else if (layoutType === 'Pildun2') {
+    customMarginTop = '100px' // adjust for Pildun 2 position
   }
+
+  const overlayScale = layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.35 : 1
 
   return (
     <div
@@ -93,12 +98,14 @@ export default function ThirdTitleOverlay({ data }) {
         style={{
           display: 'flex',
           alignItems: 'stretch',
-          height: '100px',
+          height: layoutType === 'Pildun2' ? '120px' : '100px',
+          width: 'auto',
+          justifyContent: 'center',
           background: 'rgba(15, 23, 42, 0.95)',
           borderRadius: '16px',
           boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
           backdropFilter: 'blur(10px)',
-          transform: animateIn ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.95)',
+          transform: animateIn ? `translateY(0) scale(${overlayScale})` : `translateY(-20px) scale(${overlayScale * 0.95})`,
           opacity: animateIn ? 1 : 0,
           transition: 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease',
         }}
@@ -118,10 +125,10 @@ export default function ThirdTitleOverlay({ data }) {
             boxShadow: 'inset -5px 0 15px rgba(0,0,0,0.2)',
           }}
         >
-          <span style={{ fontSize: '40px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}>
+          <span style={{ fontSize: layoutType === 'Pildun2' ? '50px' : '40px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' }}>
             {eventIcon}
           </span>
-          <span style={{ fontSize: '14px', fontWeight: '800', letterSpacing: '1px', color: eventTextColor, marginTop: '4px', textAlign: 'center' }}>
+          <span style={{ fontSize: layoutType === 'Pildun2' ? '18px' : '14px', fontWeight: '800', letterSpacing: '1px', color: eventTextColor, marginTop: '4px', textAlign: 'center' }}>
             {eventText}
           </span>
         </div>
@@ -137,7 +144,7 @@ export default function ThirdTitleOverlay({ data }) {
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <span style={{ fontSize: '36px', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <span style={{ fontSize: layoutType === 'Pildun2' ? '54px' : '36px', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {localData.playerName || 'UNKNOWN PLAYER'}
             </span>
           </div>
@@ -145,10 +152,10 @@ export default function ThirdTitleOverlay({ data }) {
           {/* PLAYER PHOTO */}
           <div
             style={{
-              width: '140px',
-              height: '160px',
+              width: layoutType === 'Pildun2' ? '160px' : '140px',
+              height: layoutType === 'Pildun2' ? '180px' : '160px',
               position: 'relative',
-              marginTop: '-60px', // Make image pop out of the top
+              marginTop: layoutType === 'Pildun2' ? '-60px' : '-60px',
               zIndex: 2,
               filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))',
             }}
