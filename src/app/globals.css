@@ -2381,3 +2381,8 @@ nextjs-portal {
   display: none !important;
   pointer-events: none !important;
 }
+
+/* Fix sidebar navigation being covered by scoreboard previews or overlays */
+.ts-vertical-nav-root {
+  z-index: 100 !important;
+}

@@ -8,7 +8,7 @@ const StyledVerticalNav = styled.aside`
   position: sticky;
   inset-block-start: 0;
   block-size: 100dvh;
-  z-index: 9;
+  z-index: 100;
 
   /* Transition */
   transition-property: inline-size, min-inline-size, margin-inline-start, inset-inline-start;
