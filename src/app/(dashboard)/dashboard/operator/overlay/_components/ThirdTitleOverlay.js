@@ -73,7 +73,7 @@ export default function ThirdTitleOverlay({ data }) {
   if (layoutType === 'Pildun') {
     customMarginTop = '-40px' // Move up slightly for Pildun
   } else if (layoutType === 'Pildun2') {
-    customMarginTop = '100px' // adjust for Pildun 2 position
+    customMarginTop = '280px' // adjust for Pildun 2 position
   }
 
   const overlayScale = layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.35 : 1

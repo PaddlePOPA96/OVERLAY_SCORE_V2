@@ -1,20 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import LogoPickerModal from '../LogoPickerModal'
 import { makeTeamAbbr } from '@/lib/logoData'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import LayoutSelector from './LayoutSelector'
-import TimerControls from './TimerControls'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
 import ThirdTitleControls from './ThirdTitleControls'
 
 export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
+  const [activeTab, setActiveTab] = useState('scoreboard')
   const [logoModalOpen, setLogoModalOpen] = useState(false)
   const [logoTarget, setLogoTarget] = useState('home')
+  const [manualM, setManualM] = useState(0)
+  const [manualS, setManualS] = useState(0)
+
+  // Sync manual timer inputs when not running
+  useEffect(() => {
+    if (!data.timer?.isRunning) {
+      setManualM(Math.floor(displayTime / 60))
+      setManualS(displayTime % 60)
+    }
+  }, [displayTime, data.timer?.isRunning])
 
   const openLogoPicker = target => {
     setLogoTarget(target)
@@ -22,27 +31,17 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
   }
 
   const handleHomeColorChange = color => {
-    actions.updateMatch({
-      homeColor: color,
-      homeBg: color
-    })
+    actions.updateMatch({ homeColor: color, homeBg: color })
   }
 
   const handleAwayColorChange = color => {
-    actions.updateMatch({
-      awayColor: color,
-      awayBg: color
-    })
+    actions.updateMatch({ awayColor: color, awayBg: color })
   }
 
   const handlePeriodChange = periodVal => {
     let baseTimeVal = 0
-
-    if (periodVal === 2) {
-      baseTimeVal = 45 * 60 // 45:00
-    } else if (periodVal === 3) {
-      baseTimeVal = 90 * 60 // 90:00
-    }
+    if (periodVal === 2) baseTimeVal = 45 * 60
+    else if (periodVal === 3) baseTimeVal = 90 * 60
 
     actions.updateMatch({
       period: periodVal,
@@ -52,58 +51,260 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
     })
   }
 
+  const handleSetTime = () => {
+    const total = (parseInt(manualM, 10) || 0) * 60 + (parseInt(manualS, 10) || 0)
+    actions.updateMatch({
+      'timer/baseTime': total,
+      'timer/startTime': null,
+      'timer/isRunning': false
+    })
+  }
+
   const isLight = theme === 'light'
   const labelColor = isLight ? '#000000' : '#ffffff'
   const tinyColor = isLight ? '#000000' : '#ffffff'
   const borderCol = isLight ? '#cbd5e1' : '#333'
   const cardBg = isLight ? 'rgba(15, 23, 42, 0.02)' : 'rgba(255, 255, 255, 0.02)'
   const cardBorder = isLight ? '1px solid #cbd5e1' : '1px solid #2e2e2e'
-  const scoreBg = isLight ? 'rgba(15, 23, 42, 0.03)' : 'rgba(0, 0, 0, 0.2)'
-  const scoreNumColor = isLight ? '#000000' : '#ffffff'
 
-  return (
-    <div className='operator-b-controls' style={{ width: '100%', maxWidth: '100%' }}>
-      {/* SECTION 1: Layout & Babak Selection */}
+  const homeScore = data.homeScore ?? 0
+  const awayScore = data.awayScore ?? 0
+  const homeName = data.homeName || 'HOME'
+  const awayName = data.awayName || 'AWAY'
+  const isRunning = data.timer?.isRunning || false
+  const isLive = data.showOverlay || false
+  const period = data.period || 1
+
+  // ══════════════════════════════════════════════════════
+  //  TAB 1: SCOREBOARD (Live match controls - BIG buttons)
+  // ══════════════════════════════════════════════════════
+  const renderScoreboardTab = () => (
+    <div className={`op-tab-pane ${activeTab === 'scoreboard' ? 'active' : 'inactive'}`}>
+
+      {/* ── Overlay Live Toggle ── */}
+      <div className='op-overlay-toggle'>
+        <div className='op-overlay-toggle-label'>
+          <span style={{ fontSize: '18px' }}>{isLive ? '🟢' : '🔴'}</span>
+          <div>
+            <div>Overlay</div>
+            <span className={`op-overlay-toggle-status ${isLive ? 'live' : 'off'}`}>
+              {isLive ? 'LIVE' : 'OFFLINE'}
+            </span>
+          </div>
+        </div>
+        <button
+          className={`op-toggle-big ${isLive ? 'on' : 'off'}`}
+          onClick={() => actions.toggleOverlay()}
+        >
+          <span className='op-toggle-big-knob' />
+        </button>
+      </div>
+
+      {/* ── Timer Section ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className='op-timer-display'>
+          <span className='op-timer-time'>{formatTime(displayTime)}</span>
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            className={`op-timer-btn ${isRunning ? 'pause' : 'start'}`}
+            onClick={() => actions.toggleTimer()}
+          >
+            <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '18px' }} />
+            {isRunning ? 'Pause' : 'Start'}
+          </button>
+          <button className='op-timer-btn reset' onClick={() => actions.resetTimer()}>
+            <i className='ri-restart-line' style={{ fontSize: '16px' }} />
+            Reset
+          </button>
+        </div>
+
+        {/* Manual set time */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 0 0' }}>
+          <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor, minWidth: '55px' }}>Set Time:</span>
+          <input
+            className='op-input'
+            type='number'
+            style={{ width: '56px', height: '38px', textAlign: 'center', fontSize: '14px' }}
+            value={manualM}
+            onChange={e => setManualM(e.target.value)}
+            min={0}
+          />
+          <span style={{ color: labelColor, fontWeight: '700', fontSize: '16px' }}>:</span>
+          <input
+            className='op-input'
+            type='number'
+            style={{ width: '56px', height: '38px', textAlign: 'center', fontSize: '14px' }}
+            value={manualS}
+            onChange={e => setManualS(e.target.value)}
+            min={0}
+            max={59}
+          />
+          <button
+            className='op-timer-btn reset'
+            style={{ minHeight: '38px', padding: '6px 16px', fontSize: '12px' }}
+            onClick={handleSetTime}
+          >
+            Set
+          </button>
+        </div>
+      </div>
+
+      {/* ── Period Selection ── */}
+      <div style={{ display: 'flex', gap: '8px' }}>
+        {[
+          { val: 1, label: '1st Half' },
+          { val: 2, label: '2nd Half' },
+          { val: 3, label: 'Extra Time' }
+        ].map(p => (
+          <button
+            key={p.val}
+            className={`op-period-btn-big ${period === p.val ? 'active' : ''}`}
+            onClick={() => handlePeriodChange(p.val)}
+          >
+            {p.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Score + Goal Controls (side by side) ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        {/* HOME Team */}
+        <div className='op-team-score-card'>
+          <div className='op-team-score-header'>
+            <div className='op-team-score-logo' style={{ borderLeft: `3px solid ${data.homeColor || '#3b82f6'}` }}>
+              {data.homeLogo ? (
+                <img src={data.homeLogo} alt={homeName} />
+              ) : (
+                <span style={{ fontSize: '18px', fontWeight: '800', color: data.homeColor || '#3b82f6' }}>
+                  {homeName.charAt(0)}
+                </span>
+              )}
+            </div>
+            <div>
+              <div className='op-team-score-name'>{homeName}</div>
+              <div className='op-team-score-label'>Home</div>
+            </div>
+          </div>
+
+          {/* Score display */}
+          <div className='op-score-display'>
+            <button
+              className='op-score-adjust-btn'
+              onClick={() => actions.updateMatch({ homeScore: Math.max(0, homeScore - 1) })}
+            >
+              −
+            </button>
+            <span className='op-score-num-big'>{homeScore}</span>
+            <button
+              className='op-score-adjust-btn'
+              onClick={() => actions.updateMatch({ homeScore: Math.min(20, homeScore + 1) })}
+            >
+              +
+            </button>
+          </div>
+
+          {/* GOAL button */}
+          <button
+            className='op-goal-btn-big home'
+            onClick={() => actions.triggerGoal('home')}
+          >
+            <span className='op-goal-emoji'>⚽</span>
+            GOAL HOME
+          </button>
+        </div>
+
+        {/* AWAY Team */}
+        <div className='op-team-score-card'>
+          <div className='op-team-score-header'>
+            <div className='op-team-score-logo' style={{ borderLeft: `3px solid ${data.awayColor || '#ef4444'}` }}>
+              {data.awayLogo ? (
+                <img src={data.awayLogo} alt={awayName} />
+              ) : (
+                <span style={{ fontSize: '18px', fontWeight: '800', color: data.awayColor || '#ef4444' }}>
+                  {awayName.charAt(0)}
+                </span>
+              )}
+            </div>
+            <div>
+              <div className='op-team-score-name'>{awayName}</div>
+              <div className='op-team-score-label'>Away</div>
+            </div>
+          </div>
+
+          {/* Score display */}
+          <div className='op-score-display'>
+            <button
+              className='op-score-adjust-btn'
+              onClick={() => actions.updateMatch({ awayScore: Math.max(0, awayScore - 1) })}
+            >
+              −
+            </button>
+            <span className='op-score-num-big'>{awayScore}</span>
+            <button
+              className='op-score-adjust-btn'
+              onClick={() => actions.updateMatch({ awayScore: Math.min(20, awayScore + 1) })}
+            >
+              +
+            </button>
+          </div>
+
+          {/* GOAL button */}
+          <button
+            className='op-goal-btn-big away'
+            onClick={() => actions.triggerGoal('away')}
+          >
+            <span className='op-goal-emoji'>⚽</span>
+            GOAL AWAY
+          </button>
+        </div>
+      </div>
+
+      {/* ── Tukar Posisi (Switch Sides) ── */}
+      <button
+        className={data.switchSides ? 'op-period-btn-big active' : 'op-period-btn-big'}
+        onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
+        style={{ width: '100%' }}
+      >
+        🔄 {data.switchSides ? 'Kiri-Kanan Ditukar' : 'Tukar Posisi Tim (Halftime)'}
+      </button>
+
+      {/* ── Reset Match ── */}
+      <button
+        className='op-reset-btn'
+        onClick={() => {
+          if (typeof window !== 'undefined' && window.confirm('Reset skor pertandingan? Semua skor dan timer akan direset.')) {
+            actions.updateMatch({ homeScore: 0, awayScore: 0 })
+            actions.resetTimer()
+          }
+        }}
+      >
+        🔄 Reset Pertandingan
+      </button>
+
+      {/* ── Overlay Room URL (compact) ── */}
+      <OverlayRoomControls showOverlay={isLive} toggleOverlay={actions.toggleOverlay} roomId={roomId} compact />
+    </div>
+  )
+
+  // ══════════════════════════════════════════════════════
+  //  TAB 2: PENGATURAN TIM (Team settings, layout, audio)
+  // ══════════════════════════════════════════════════════
+  const renderSettingsTab = () => (
+    <div className={`op-tab-pane ${activeTab === 'settings' ? 'active' : 'inactive'}`}>
+
+      {/* ── Layout & Series ── */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
           gap: '12px',
           borderBottom: `1px solid ${borderCol}`,
-          paddingBottom: '12px',
-          marginBottom: '8px'
+          paddingBottom: '14px'
         }}
       >
         <div>
           <LayoutSelector data={data} updateMatch={actions.updateMatch} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label className='op-label' style={{ marginBottom: '2px', color: labelColor }}>
-            Babak (Period)
-          </label>
-          <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Button
-              className={`op-btn ${data.period === 1 ? 'op-btn-active' : ''}`}
-              variant={data.period === 1 ? 'default' : 'ghost'}
-              onClick={() => handlePeriodChange(1)}
-            >
-              1st Half
-            </Button>
-            <Button
-              className={`op-btn ${data.period === 2 ? 'op-btn-active' : ''}`}
-              variant={data.period === 2 ? 'default' : 'ghost'}
-              onClick={() => handlePeriodChange(2)}
-            >
-              2nd Half
-            </Button>
-            <Button
-              className={`op-btn ${data.period === 3 ? 'op-btn-active' : ''}`}
-              variant={data.period === 3 ? 'default' : 'ghost'}
-              onClick={() => handlePeriodChange(3)}
-            >
-              Extra
-            </Button>
-          </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <label className='op-label' style={{ marginBottom: '2px', color: labelColor }}>
@@ -115,13 +316,13 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
             onChange={e => actions.updateMatch({ seriesType: e.target.value, homeSeriesScore: 0, awaySeriesScore: 0 })}
             style={{
               width: '100%',
-              height: '36px',
-              padding: '0 8px',
-              background: '#090d16',
+              height: '40px',
+              padding: '0 10px',
+              background: isLight ? '#ffffff' : '#090d16',
               border: `1px solid ${borderCol}`,
-              borderRadius: '6px',
-              color: '#fff',
-              fontSize: '12px'
+              borderRadius: '8px',
+              color: isLight ? '#0f172a' : '#fff',
+              fontSize: '13px'
             }}
           >
             <option value='none'>Single Match (Normal)</option>
@@ -129,73 +330,42 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
             <option value='bo5'>Best of 5 (BO5)</option>
           </select>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label className='op-label' style={{ marginBottom: '2px', color: labelColor }}>
-            Tukar Posisi (Halftime)
-          </label>
-          <Button
-            className={`op-btn ${data.switchSides ? 'op-btn-active' : ''}`}
-            variant={data.switchSides ? 'default' : 'outline'}
-            onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
-            style={{
-              width: '100%',
-              height: '36px',
-              fontWeight: '600',
-              fontSize: '12px',
-              background: data.switchSides ? '#2563eb' : 'transparent',
-              color: '#fff',
-              border: `1px solid ${borderCol}`
-            }}
-          >
-            {data.switchSides ? '🔄 Kiri-Kanan Ditukar' : '🔄 Tukar Posisi Tim'}
-          </Button>
-        </div>
       </div>
 
-      {/* SECTION 2 & 3: Side-by-Side Team setup and Score panels */}
+      {/* ── Home & Away Team Setup (side by side) ── */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
-          gap: '18px',
-          marginBottom: '8px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+          gap: '16px'
         }}
       >
-        {/* HOME (LEFT) TEAM CARD */}
+        {/* HOME TEAM CARD */}
         <div
           style={{
             background: cardBg,
             border: cardBorder,
-            borderRadius: '10px',
+            borderRadius: '12px',
             padding: '16px',
             display: 'flex',
             flexDirection: 'column',
             gap: '12px'
           }}
         >
-          <h3
-            style={{
-              fontSize: '14px',
-              fontWeight: '700',
-              color: '#60a5fa',
-              borderBottom: `1px solid ${borderCol}`,
-              paddingBottom: '6px',
-              margin: '0'
-            }}
-          >
+          <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#60a5fa', borderBottom: `1px solid ${borderCol}`, paddingBottom: '6px', margin: '0' }}>
             🏠 Home Team (Left Side)
           </h3>
 
-          {/* Logo Picker & Color Thumbnail Row */}
+          {/* Logo + Color */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div
               onClick={() => openLogoPicker('home')}
               style={{
-                width: '56px',
-                height: '56px',
+                width: '64px',
+                height: '64px',
                 background: isLight ? '#f8fafc' : '#0d0d0d',
                 border: `1px solid ${borderCol}`,
-                borderRadius: '8px',
+                borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -205,222 +375,95 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
               title='Pilih Logo'
             >
               {data.homeLogo ? (
-                <img
-                  src={data.homeLogo}
-                  alt='Home Logo'
-                  style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
-                />
+                <img src={data.homeLogo} alt='Home Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
               ) : (
-                <span style={{ fontSize: '10px', color: '#666' }}>No Logo</span>
+                <span style={{ fontSize: '11px', color: '#666' }}>No Logo</span>
               )}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
-              <Button
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+              <button
                 className='op-btn'
-                variant='outline'
-                size='sm'
                 onClick={() => openLogoPicker('home')}
-                style={{ alignSelf: 'flex-start', padding: '2px 10px', fontSize: '11px' }}
+                style={{ alignSelf: 'flex-start', padding: '6px 14px', fontSize: '12px', borderRadius: '8px', minHeight: '36px' }}
               >
-                Pilih Logo
-              </Button>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>
-                  Warna:
-                </span>
+                📁 Pilih Logo
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>Warna:</span>
                 <input
                   type='color'
                   value={data.homeColor || data.homeBg || '#ff4b4b'}
                   onChange={e => handleHomeColorChange(e.target.value)}
-                  style={{
-                    border: 'none',
-                    width: '28px',
-                    height: '20px',
-                    padding: '0',
-                    background: 'transparent',
-                    cursor: 'pointer'
-                  }}
+                  style={{ border: 'none', width: '36px', height: '28px', padding: '0', background: 'transparent', cursor: 'pointer' }}
                 />
               </div>
             </div>
           </div>
 
-          {/* Names Setup */}
+          {/* Names */}
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 80px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>
-                Abbr (Short Name)
-              </label>
+              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Abbr</label>
               <input
                 className='op-input'
                 value={data.homeName || ''}
                 onChange={e => actions.updateMatch({ homeName: e.target.value })}
                 placeholder='E.g. ARS'
-                style={{ width: '100%', marginTop: '4px' }}
+                style={{ width: '100%', marginTop: '4px', height: '36px' }}
               />
             </div>
             <div style={{ flex: '2 1 140px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>
-                Full Name (Modern layout)
-              </label>
+              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Full Name</label>
               <input
                 className='op-input'
                 value={data.homeFullName || ''}
                 onChange={e => actions.updateMatch({ homeFullName: e.target.value })}
                 placeholder='E.g. ARSENAL'
-                style={{ width: '100%', marginTop: '4px' }}
+                style={{ width: '100%', marginTop: '4px', height: '36px' }}
               />
             </div>
           </div>
 
-          {/* Series Score (BO3/BO5) Row */}
+          {/* Series Score */}
           {(data.seriesType === 'bo3' || data.seriesType === 'bo5') && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '8px 10px',
-                background: 'rgba(255,255,255,0.02)',
-                borderRadius: '6px',
-                border: `1px dashed ${borderCol}`,
-                marginTop: '6px'
-              }}
-            >
-              <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor }}>Game Wins (Series Score)</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
+              <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor }}>Game Wins</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  type='button'
-                  onClick={() => actions.updateMatch({ homeSeriesScore: Math.max(0, (data.homeSeriesScore || 0) - 1) })}
-                  style={{ width: '24px', height: '24px', padding: 0 }}
-                >
-                  -
-                </Button>
-                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center' }}>
-                  {data.homeSeriesScore || 0}
-                </span>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  type='button'
-                  onClick={() =>
-                    actions.updateMatch({
-                      homeSeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.homeSeriesScore || 0) + 1)
-                    })
-                  }
-                  style={{ width: '24px', height: '24px', padding: 0 }}
-                >
-                  +
-                </Button>
+                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.max(0, (data.homeSeriesScore || 0) - 1) })}>−</button>
+                <span style={{ fontSize: '16px', fontWeight: '700', width: '24px', textAlign: 'center', color: labelColor }}>{data.homeSeriesScore || 0}</span>
+                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.homeSeriesScore || 0) + 1) })}>+</button>
               </div>
             </div>
           )}
-
-          {/* Home Score Controls */}
-          <div
-            style={{
-              marginTop: '8px',
-              padding: '10px',
-              background: scoreBg,
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              border: isLight ? `1px solid ${borderCol}` : 'none'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontWeight: '600', fontSize: '11px', color: labelColor }}>Skor Home</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  onClick={() => actions.updateMatch({ homeScore: Math.max(0, (data.homeScore || 0) - 1) })}
-                  style={{ width: '28px', height: '28px', padding: 0 }}
-                >
-                  -
-                </Button>
-                <input
-                  className='op-input'
-                  type='number'
-                  min={0}
-                  max={20}
-                  value={data.homeScore ?? 0}
-                  onChange={e =>
-                    actions.updateMatch({ homeScore: Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)) })
-                  }
-                  style={{ width: '42px', textAlign: 'center', height: '28px', padding: '0 2px', color: scoreNumColor }}
-                />
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  onClick={() => actions.updateMatch({ homeScore: Math.min(20, (data.homeScore || 0) + 1) })}
-                  style={{ width: '28px', height: '28px', padding: 0 }}
-                >
-                  +
-                </Button>
-              </div>
-            </div>
-
-            <Button
-              className='op-btn op-btn-main'
-              onClick={() => actions.triggerGoal('home')}
-              style={{
-                width: '100%',
-                padding: '8px',
-                backgroundColor: '#047857',
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}
-            >
-              ⚽ GOAL HOME +1
-            </Button>
-          </div>
         </div>
 
-        {/* AWAY (RIGHT) TEAM CARD */}
+        {/* AWAY TEAM CARD */}
         <div
           style={{
             background: cardBg,
             border: cardBorder,
-            borderRadius: '10px',
+            borderRadius: '12px',
             padding: '16px',
             display: 'flex',
             flexDirection: 'column',
             gap: '12px'
           }}
         >
-          <h3
-            style={{
-              fontSize: '14px',
-              fontWeight: '700',
-              color: '#f87171',
-              borderBottom: `1px solid ${borderCol}`,
-              paddingBottom: '6px',
-              margin: '0'
-            }}
-          >
+          <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#f87171', borderBottom: `1px solid ${borderCol}`, paddingBottom: '6px', margin: '0' }}>
             ✈️ Away Team (Right Side)
           </h3>
 
-          {/* Logo Picker & Color Thumbnail Row */}
+          {/* Logo + Color */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div
               onClick={() => openLogoPicker('away')}
               style={{
-                width: '56px',
-                height: '56px',
+                width: '64px',
+                height: '64px',
                 background: isLight ? '#f8fafc' : '#0d0d0d',
                 border: `1px solid ${borderCol}`,
-                borderRadius: '8px',
+                borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -430,230 +473,98 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
               title='Pilih Logo'
             >
               {data.awayLogo ? (
-                <img
-                  src={data.awayLogo}
-                  alt='Away Logo'
-                  style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
-                />
+                <img src={data.awayLogo} alt='Away Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
               ) : (
-                <span style={{ fontSize: '10px', color: '#666' }}>No Logo</span>
+                <span style={{ fontSize: '11px', color: '#666' }}>No Logo</span>
               )}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
-              <Button
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+              <button
                 className='op-btn'
-                variant='outline'
-                size='sm'
                 onClick={() => openLogoPicker('away')}
-                style={{ alignSelf: 'flex-start', padding: '2px 10px', fontSize: '11px' }}
+                style={{ alignSelf: 'flex-start', padding: '6px 14px', fontSize: '12px', borderRadius: '8px', minHeight: '36px' }}
               >
-                Pilih Logo
-              </Button>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>
-                  Warna:
-                </span>
+                📁 Pilih Logo
+              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>Warna:</span>
                 <input
                   type='color'
                   value={data.awayColor || data.awayBg || '#b00024'}
                   onChange={e => handleAwayColorChange(e.target.value)}
-                  style={{
-                    border: 'none',
-                    width: '28px',
-                    height: '20px',
-                    padding: '0',
-                    background: 'transparent',
-                    cursor: 'pointer'
-                  }}
+                  style={{ border: 'none', width: '36px', height: '28px', padding: '0', background: 'transparent', cursor: 'pointer' }}
                 />
               </div>
             </div>
           </div>
 
-          {/* Names Setup */}
+          {/* Names */}
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 80px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>
-                Abbr (Short Name)
-              </label>
+              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Abbr</label>
               <input
                 className='op-input'
                 value={data.awayName || ''}
                 onChange={e => actions.updateMatch({ awayName: e.target.value })}
                 placeholder='E.g. CHE'
-                style={{ width: '100%', marginTop: '4px' }}
+                style={{ width: '100%', marginTop: '4px', height: '36px' }}
               />
             </div>
             <div style={{ flex: '2 1 140px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>
-                Full Name (Modern layout)
-              </label>
+              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Full Name</label>
               <input
                 className='op-input'
                 value={data.awayFullName || ''}
                 onChange={e => actions.updateMatch({ awayFullName: e.target.value })}
                 placeholder='E.g. CHELSEA'
-                style={{ width: '100%', marginTop: '4px' }}
+                style={{ width: '100%', marginTop: '4px', height: '36px' }}
               />
             </div>
           </div>
 
-          {/* Series Score (BO3/BO5) Row */}
+          {/* Series Score */}
           {(data.seriesType === 'bo3' || data.seriesType === 'bo5') && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '8px 10px',
-                background: 'rgba(255,255,255,0.02)',
-                borderRadius: '6px',
-                border: `1px dashed ${borderCol}`,
-                marginTop: '6px'
-              }}
-            >
-              <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor }}>Game Wins (Series Score)</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
+              <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor }}>Game Wins</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  type='button'
-                  onClick={() => actions.updateMatch({ awaySeriesScore: Math.max(0, (data.awaySeriesScore || 0) - 1) })}
-                  style={{ width: '24px', height: '24px', padding: 0 }}
-                >
-                  -
-                </Button>
-                <span style={{ fontSize: '13px', fontWeight: '700', width: '20px', textAlign: 'center' }}>
-                  {data.awaySeriesScore || 0}
-                </span>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  type='button'
-                  onClick={() =>
-                    actions.updateMatch({
-                      awaySeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.awaySeriesScore || 0) + 1)
-                    })
-                  }
-                  style={{ width: '24px', height: '24px', padding: 0 }}
-                >
-                  +
-                </Button>
+                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.max(0, (data.awaySeriesScore || 0) - 1) })}>−</button>
+                <span style={{ fontSize: '16px', fontWeight: '700', width: '24px', textAlign: 'center', color: labelColor }}>{data.awaySeriesScore || 0}</span>
+                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.awaySeriesScore || 0) + 1) })}>+</button>
               </div>
             </div>
           )}
-
-          {/* Away Score Controls */}
-          <div
-            style={{
-              marginTop: '8px',
-              padding: '10px',
-              background: scoreBg,
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              border: isLight ? `1px solid ${borderCol}` : 'none'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontWeight: '600', fontSize: '11px', color: labelColor }}>Skor Away</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  onClick={() => actions.updateMatch({ awayScore: Math.max(0, (data.awayScore || 0) - 1) })}
-                  style={{ width: '28px', height: '28px', padding: 0 }}
-                >
-                  -
-                </Button>
-                <input
-                  className='op-input'
-                  type='number'
-                  min={0}
-                  max={20}
-                  value={data.awayScore ?? 0}
-                  onChange={e =>
-                    actions.updateMatch({ awayScore: Math.max(0, Math.min(20, parseInt(e.target.value, 10) || 0)) })
-                  }
-                  style={{ width: '42px', textAlign: 'center', height: '28px', padding: '0 2px', color: scoreNumColor }}
-                />
-                <Button
-                  className='op-btn'
-                  variant='ghost'
-                  onClick={() => actions.updateMatch({ awayScore: Math.min(20, (data.awayScore || 0) + 1) })}
-                  style={{ width: '28px', height: '28px', padding: 0 }}
-                >
-                  +
-                </Button>
-              </div>
-            </div>
-
-            <Button
-              className='op-btn op-btn-danger'
-              onClick={() => actions.triggerGoal('away')}
-              style={{
-                width: '100%',
-                padding: '8px',
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px'
-              }}
-            >
-              ⚽ GOAL AWAY +1
-            </Button>
-          </div>
         </div>
       </div>
 
-      {/* SECTION 4: Timer & Audio Settings */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          borderBottom: `1px solid ${borderCol}`,
-          paddingBottom: '10px',
-          marginBottom: '8px'
-        }}
-      >
-        <TimerControls
-          data={data}
-          actions={actions}
-          displayTime={displayTime}
-          formatTime={formatTime}
-          btnMainClass={isLight ? 'op-btn-main' : 'op-b-btn-main'}
-        />
-
+      {/* ── Goal Audio Settings ── */}
+      <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: '14px' }}>
         <GoalAudioSettings
           data={data}
           updateMatch={actions.updateMatch}
           stopGoalAudio={actions.stopGoalAudio}
           previewGoalAudio={actions.previewGoalAudio}
         />
-
-        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: `1px dashed ${borderCol}` }}>
-          <ThirdTitleControls data={data} actions={actions} theme={theme} />
-        </div>
       </div>
 
-      {/* SECTION 5: Overlay Room Admin & Sync */}
+      {/* ── Third Title Controls ── */}
+      <div style={{ borderTop: `1px dashed ${borderCol}`, paddingTop: '14px' }}>
+        <ThirdTitleControls data={data} actions={actions} theme={theme} />
+      </div>
+
+      {/* ── Overlay Room Admin ── */}
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '10px'
+          gap: '10px',
+          borderTop: `1px solid ${borderCol}`,
+          paddingTop: '14px'
         }}
       >
         <OverlayRoomControls showOverlay={data.showOverlay} toggleOverlay={actions.toggleOverlay} roomId={roomId} />
-
         <div className='op-section' style={{ margin: 0 }}>
           <Button
             className='op-btn'
@@ -676,22 +587,41 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
           const abbr = makeTeamAbbr(club)
 
           if (logoTarget === 'home') {
-            actions.updateMatch({
-              homeLogo: src,
-              homeName: abbr,
-              homeFullName: club.toUpperCase()
-            })
+            actions.updateMatch({ homeLogo: src, homeName: abbr, homeFullName: club.toUpperCase() })
           } else {
-            actions.updateMatch({
-              awayLogo: src,
-              awayName: abbr,
-              awayFullName: club.toUpperCase()
-            })
+            actions.updateMatch({ awayLogo: src, awayName: abbr, awayFullName: club.toUpperCase() })
           }
 
           setLogoModalOpen(false)
         }}
       />
+    </div>
+  )
+
+  return (
+    <div className='operator-b-controls' style={{ width: '100%', maxWidth: '100%' }}>
+      {/* ── Tab Buttons ── */}
+      <div className='op-tabs'>
+        <button
+          className={`op-tab-btn ${activeTab === 'scoreboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('scoreboard')}
+        >
+          <i className='ri-gamepad-line' />
+          🎮 Scoreboard
+        </button>
+        <button
+          className={`op-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+          onClick={() => setActiveTab('settings')}
+        >
+          <i className='ri-settings-3-line' />
+          ⚙️ Pengaturan Tim
+        </button>
+      </div>
+
+      <div className='op-tab-container'>
+        {renderScoreboardTab()}
+        {renderSettingsTab()}
+      </div>
     </div>
   )
 }
