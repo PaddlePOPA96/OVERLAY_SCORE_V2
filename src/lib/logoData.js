@@ -495,11 +495,18 @@ export const LOGO_DATA = {
     'Peru',
     'Turkey',
     'Chile'
+  ],
+  'VCT Pacific': [
+    'Paper Rex'
   ]
 }
 
 export function buildLogoSrc(league, club) {
   if (!league || !club) return ''
+
+  if (club.toLowerCase() === 'paper rex') {
+    return 'https://images.seeklogo.com/logo-png/45/2/paper-rex-logo-png_seeklogo-455546.png'
+  }
 
   if (league === 'FIFA World Cup') {
     const countryMap = {
@@ -614,6 +621,10 @@ function normalizeOtherKey(name) {
 
 export function buildOtherLogoSrc(club) {
   if (!club) return ''
+
+  if (club.toLowerCase() === 'paper rex') {
+    return 'https://images.seeklogo.com/logo-png/45/2/paper-rex-logo-png_seeklogo-455546.png'
+  }
   const key = normalizeOtherKey(club)
   const fileBase = OTHER_LOGO_ALIAS[key] || club
   const clubSegment = encodeURIComponent(fileBase)
@@ -712,6 +723,10 @@ function localNormalizeTeamName(name) {
 
 export function resolveAnyClubLogo(apiName) {
   if (!apiName) return ''
+
+  if (apiName.toLowerCase() === 'paper rex') {
+    return 'https://images.seeklogo.com/logo-png/45/2/paper-rex-logo-png_seeklogo-455546.png'
+  }
   const rawTarget = localNormalizeTeamName(apiName)
 
   if (!rawTarget) return ''
