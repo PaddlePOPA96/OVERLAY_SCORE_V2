@@ -245,12 +245,6 @@ export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
       onClick={handleInteraction}
       className="w-screen h-screen bg-transparent overflow-hidden font-sans relative flex items-center justify-center cursor-pointer"
     >
-      {/* Autoplay block alert */}
-      {playError && (
-        <div className="absolute top-8 bg-red-500 text-white px-6 py-2 rounded-full font-bold shadow-lg animate-pulse z-50 text-xs">
-          ⚠️ Autoplay Blocked! Click anywhere on screen to enable audio.
-        </div>
-      )}
 
       {/* Slider Widget Card */}
       <div

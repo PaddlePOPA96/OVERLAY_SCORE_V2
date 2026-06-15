@@ -162,45 +162,7 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
           }}
         />
       )}
-      {playError && (
-        <div
-          onClick={handleInteraction}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 99999,
-            pointerEvents: 'auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            cursor: 'pointer'
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: '#ef4444',
-              color: 'white',
-              padding: '15px 30px',
-              borderRadius: '30px',
-              fontWeight: 'bold',
-              fontFamily: '"Poppins", sans-serif',
-              fontSize: '20px',
-              boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
-              textAlign: 'center'
-            }}
-          >
-            ⚠️ Autoplay Blocked!
-            <br />
-            <span style={{ fontSize: '14px', fontWeight: 'normal' }}>
-              Click anywhere on this screen to enable Goal Sound.
-            </span>
-          </div>
-        </div>
-      )}
+
 
       {/* Main Scoreboard Layout */}
       <div

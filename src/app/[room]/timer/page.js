@@ -240,11 +240,7 @@ export default function TimerOverlay() {
       className='w-screen h-screen flex flex-col items-center justify-center bg-transparent overflow-hidden font-sans cursor-pointer'
     >
       <audio ref={audioRef} src={audioSource} preload='auto' />
-      {playError && (
-        <div className='absolute top-8 bg-red-500 text-white px-6 py-2 rounded-full font-bold shadow-lg animate-pulse z-50'>
-          ⚠️ Autoplay Blocked! Click here to play alarm
-        </div>
-      )}
+
       {timerTitle && (
         <h1
           className='font-black tracking-widest uppercase text-center mb-6 relative z-10'
