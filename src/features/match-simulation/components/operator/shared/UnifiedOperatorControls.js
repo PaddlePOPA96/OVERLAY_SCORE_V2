@@ -102,44 +102,44 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
       {/* ── Timer Section ── */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <div className='op-timer-display' style={{ padding: '8px 12px', marginBottom: '2px', borderRadius: '10px' }}>
-          <span className='op-timer-time' style={{ fontSize: '24px', minWidth: '80px' }}>{formatTime(displayTime)}</span>
+        <div className='op-timer-display' style={{ padding: '6px 10px', marginBottom: '2px', borderRadius: '8px' }}>
+          <span className='op-timer-time' style={{ fontSize: '20px', minWidth: '70px' }}>{formatTime(displayTime)}</span>
         </div>
         <div style={{ display: 'flex', gap: '6px' }}>
           <button
             className={`op-timer-btn ${isRunning ? 'pause' : 'start'}`}
             onClick={() => actions.toggleTimer()}
-            style={{ minHeight: '36px', padding: '6px 14px', fontSize: '12px', borderRadius: '8px' }}
+            style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
           >
-            <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '14px' }} />
+            <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '12px' }} />
             {isRunning ? 'Pause' : 'Start'}
           </button>
           <button 
             className='op-timer-btn reset' 
             onClick={() => actions.resetTimer()}
-            style={{ minHeight: '36px', padding: '6px 14px', fontSize: '12px', borderRadius: '8px' }}
+            style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
           >
-            <i className='ri-restart-line' style={{ fontSize: '12px' }} />
+            <i className='ri-restart-line' style={{ fontSize: '11px' }} />
             Reset
           </button>
         </div>
 
         {/* Manual set time */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 0 0' }}>
-          <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor, minWidth: '55px' }}>Set Time:</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 0 0' }}>
+          <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor, minWidth: '55px' }}>Set Time:</span>
           <input
             className='op-input'
             type='number'
-            style={{ width: '56px', height: '38px', textAlign: 'center', fontSize: '14px' }}
+            style={{ width: '48px', height: '30px', textAlign: 'center', fontSize: '12px', padding: '0 4px' }}
             value={manualM}
             onChange={e => setManualM(e.target.value)}
             min={0}
           />
-          <span style={{ color: labelColor, fontWeight: '700', fontSize: '16px' }}>:</span>
+          <span style={{ color: labelColor, fontWeight: '700', fontSize: '14px' }}>:</span>
           <input
             className='op-input'
             type='number'
-            style={{ width: '56px', height: '38px', textAlign: 'center', fontSize: '14px' }}
+            style={{ width: '48px', height: '30px', textAlign: 'center', fontSize: '12px', padding: '0 4px' }}
             value={manualS}
             onChange={e => setManualS(e.target.value)}
             min={0}
@@ -147,7 +147,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
           />
           <button
             className='op-timer-btn reset'
-            style={{ minHeight: '38px', padding: '6px 16px', fontSize: '12px' }}
+            style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
             onClick={handleSetTime}
           >
             Set
