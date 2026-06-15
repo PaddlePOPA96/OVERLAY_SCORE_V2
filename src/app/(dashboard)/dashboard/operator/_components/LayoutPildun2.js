@@ -43,8 +43,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
 
   return (
     <div
-      className='absolute inset-0 flex items-start justify-center pointer-events-none font-sans'
-      style={{ paddingTop: '80px' }}
+      className='absolute inset-0 flex items-center justify-center pointer-events-none font-sans'
     >
       <div
         style={{
@@ -56,7 +55,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
           opacity: animateIn ? 1 : 0,
           transition: 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease',
           position: 'relative',
-          transformOrigin: 'top center',
+          transformOrigin: 'center center',
         }}
       >
         {/* ── WHOLE BAR: Timer + Gradient Border together ── */}
