@@ -274,14 +274,21 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         🔄 Reset Pertandingan
       </button>
 
-      {/* ── Goal Audio Settings ── */}
-      <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: '14px', marginTop: '10px' }}>
-        <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} previewGoalAudio={actions.previewGoalAudio} theme={theme} />
-      </div>
-
-      {/* ── Third Title Controls ── */}
-      <div style={{ borderTop: `1px dashed ${borderCol}`, paddingTop: '14px', marginTop: '10px' }}>
-        <ThirdTitleControls data={data} actions={actions} theme={theme} />
+      {/* ── Goal Audio & Third Title Controls (Side-by-Side) ── */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+        gap: '12px', 
+        borderTop: `1px solid ${borderCol}`, 
+        paddingTop: '12px', 
+        marginTop: '12px' 
+      }}>
+        <div>
+          <GoalAudioSettings data={data} updateMatch={actions.updateMatch} stopGoalAudio={actions.stopGoalAudio} previewGoalAudio={actions.previewGoalAudio} theme={theme} />
+        </div>
+        <div>
+          <ThirdTitleControls data={data} actions={actions} theme={theme} />
+        </div>
       </div>
 
       <OverlayRoomControls showOverlay={isLive} toggleOverlay={actions.toggleOverlay} roomId={roomId} compact />
@@ -319,76 +326,62 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '16px', marginTop: '14px' }}>
         {/* HOME TEAM */}
-        <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#60a5fa', borderBottom: `1px solid ${borderCol}`, paddingBottom: '6px', margin: '0' }}>🏠 Home Team (Left Side)</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div onClick={() => openLogoPicker('home')} style={{ width: '64px', height: '64px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden' }} title='Pilih Logo'>
-              {data.homeLogo ? <img src={data.homeLogo} alt='Home Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '11px', color: '#666' }}>No Logo</span>}
+        <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#60a5fa', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>🏠 Home Team (Left Side)</h3>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div onClick={() => openLogoPicker('home')} style={{ width: '48px', height: '48px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0 }} title='Pilih Logo'>
+              {data.homeLogo ? <img src={data.homeLogo} alt='Home Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '10px', color: '#666' }}>Logo</span>}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-              <button className='op-btn' onClick={() => openLogoPicker('home')} style={{ alignSelf: 'flex-start', padding: '6px 14px', fontSize: '12px', borderRadius: '8px', minHeight: '36px' }}>📁 Pilih Logo</button>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>Warna:</span>
-                <input type='color' value={data.homeColor || data.homeBg || '#ff4b4b'} onChange={e => handleHomeColorChange(e.target.value)} style={{ border: 'none', width: '36px', height: '28px', padding: '0', background: 'transparent', cursor: 'pointer' }} />
+            
+            <div style={{ display: 'flex', gap: '6px', flex: 1, alignItems: 'center' }}>
+              <input className='op-input' value={data.homeName || ''} onChange={e => actions.updateMatch({ homeName: e.target.value })} placeholder='Abbr' style={{ width: '55px', height: '32px', fontSize: '12px' }} />
+              <input className='op-input' value={data.homeFullName || ''} onChange={e => actions.updateMatch({ homeFullName: e.target.value })} placeholder='Full Name' style={{ flex: 1, height: '32px', fontSize: '12px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }} title="Pilih Warna">
+                <input type='color' value={data.homeColor || data.homeBg || '#ff4b4b'} onChange={e => handleHomeColorChange(e.target.value)} style={{ border: 'none', width: '28px', height: '24px', padding: '0', background: 'transparent', cursor: 'pointer' }} />
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1 1 80px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Abbr</label>
-              <input className='op-input' value={data.homeName || ''} onChange={e => actions.updateMatch({ homeName: e.target.value })} placeholder='E.g. ARS' style={{ width: '100%', marginTop: '4px', height: '36px' }} />
-            </div>
-            <div style={{ flex: '2 1 140px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Full Name</label>
-              <input className='op-input' value={data.homeFullName || ''} onChange={e => actions.updateMatch({ homeFullName: e.target.value })} placeholder='E.g. ARSENAL' style={{ width: '100%', marginTop: '4px', height: '36px' }} />
-            </div>
-          </div>
+
           {(data.seriesType === 'bo3' || data.seriesType === 'bo5') && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
-              <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor }}>Game Wins</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.max(0, (data.homeSeriesScore || 0) - 1) })}>−</button>
-                <span style={{ fontSize: '16px', fontWeight: '700', width: '24px', textAlign: 'center', color: labelColor }}>{data.homeSeriesScore || 0}</span>
-                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.homeSeriesScore || 0) + 1) })}>+</button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
+              <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor }}>Wins</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button className='op-score-adjust-btn' style={{ width: '28px', height: '28px', fontSize: '14px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.max(0, (data.homeSeriesScore || 0) - 1) })}>−</button>
+                <span style={{ fontSize: '14px', fontWeight: '700', width: '16px', textAlign: 'center', color: labelColor }}>{data.homeSeriesScore || 0}</span>
+                <button className='op-score-adjust-btn' style={{ width: '28px', height: '28px', fontSize: '14px' }} onClick={() => actions.updateMatch({ homeSeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.homeSeriesScore || 0) + 1) })}>+</button>
               </div>
             </div>
           )}
         </div>
 
         {/* AWAY TEAM */}
-        <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#f87171', borderBottom: `1px solid ${borderCol}`, paddingBottom: '6px', margin: '0' }}>✈️ Away Team (Right Side)</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div onClick={() => openLogoPicker('away')} style={{ width: '64px', height: '64px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden' }} title='Pilih Logo'>
-              {data.awayLogo ? <img src={data.awayLogo} alt='Away Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '11px', color: '#666' }}>No Logo</span>}
+        <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#f87171', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>✈️ Away Team (Right Side)</h3>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div onClick={() => openLogoPicker('away')} style={{ width: '48px', height: '48px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0 }} title='Pilih Logo'>
+              {data.awayLogo ? <img src={data.awayLogo} alt='Away Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '10px', color: '#666' }}>Logo</span>}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-              <button className='op-btn' onClick={() => openLogoPicker('away')} style={{ alignSelf: 'flex-start', padding: '6px 14px', fontSize: '12px', borderRadius: '8px', minHeight: '36px' }}>📁 Pilih Logo</button>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span className='op-tiny' style={{ margin: 0, color: tinyColor }}>Warna:</span>
-                <input type='color' value={data.awayColor || data.awayBg || '#b00024'} onChange={e => handleAwayColorChange(e.target.value)} style={{ border: 'none', width: '36px', height: '28px', padding: '0', background: 'transparent', cursor: 'pointer' }} />
+            
+            <div style={{ display: 'flex', gap: '6px', flex: 1, alignItems: 'center' }}>
+              <input className='op-input' value={data.awayName || ''} onChange={e => actions.updateMatch({ awayName: e.target.value })} placeholder='Abbr' style={{ width: '55px', height: '32px', fontSize: '12px' }} />
+              <input className='op-input' value={data.awayFullName || ''} onChange={e => actions.updateMatch({ awayFullName: e.target.value })} placeholder='Full Name' style={{ flex: 1, height: '32px', fontSize: '12px' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }} title="Pilih Warna">
+                <input type='color' value={data.awayColor || data.awayBg || '#b00024'} onChange={e => handleAwayColorChange(e.target.value)} style={{ border: 'none', width: '28px', height: '24px', padding: '0', background: 'transparent', cursor: 'pointer' }} />
               </div>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1 1 80px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Abbr</label>
-              <input className='op-input' value={data.awayName || ''} onChange={e => actions.updateMatch({ awayName: e.target.value })} placeholder='E.g. CHE' style={{ width: '100%', marginTop: '4px', height: '36px' }} />
-            </div>
-            <div style={{ flex: '2 1 140px', minWidth: 0 }}>
-              <label className='op-label' style={{ fontSize: '11px', color: labelColor }}>Full Name</label>
-              <input className='op-input' value={data.awayFullName || ''} onChange={e => actions.updateMatch({ awayFullName: e.target.value })} placeholder='E.g. CHELSEA' style={{ width: '100%', marginTop: '4px', height: '36px' }} />
-            </div>
-          </div>
+
           {(data.seriesType === 'bo3' || data.seriesType === 'bo5') && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
-              <span style={{ fontSize: '12px', fontWeight: '600', color: labelColor }}>Game Wins</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.max(0, (data.awaySeriesScore || 0) - 1) })}>−</button>
-                <span style={{ fontSize: '16px', fontWeight: '700', width: '24px', textAlign: 'center', color: labelColor }}>{data.awaySeriesScore || 0}</span>
-                <button className='op-score-adjust-btn' style={{ width: '36px', height: '36px', fontSize: '16px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.awaySeriesScore || 0) + 1) })}>+</button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: `1px dashed ${borderCol}` }}>
+              <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor }}>Wins</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button className='op-score-adjust-btn' style={{ width: '28px', height: '28px', fontSize: '14px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.max(0, (data.awaySeriesScore || 0) - 1) })}>−</button>
+                <span style={{ fontSize: '14px', fontWeight: '700', width: '16px', textAlign: 'center', color: labelColor }}>{data.awaySeriesScore || 0}</span>
+                <button className='op-score-adjust-btn' style={{ width: '28px', height: '28px', fontSize: '14px' }} onClick={() => actions.updateMatch({ awaySeriesScore: Math.min(data.seriesType === 'bo3' ? 2 : 3, (data.awaySeriesScore || 0) + 1) })}>+</button>
               </div>
             </div>
           )}
@@ -396,7 +389,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
       </div>
 
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '10px', borderTop: `1px solid ${borderCol}`, paddingTop: '14px' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '10px', borderTop: `1px solid ${borderCol}`, marginTop: '14px', paddingTop: '14px' }}>
         <OverlayRoomControls showOverlay={data.showOverlay} toggleOverlay={actions.toggleOverlay} roomId={roomId} />
         <div className='op-section' style={{ margin: 0 }}>
           <Button className='op-btn' variant='outline' onClick={() => alert('Data tersinkronisasi otomatis dengan Realtime Database!')} style={{ fontSize: '11px' }}>🔄 Sync Semua Client</Button>
