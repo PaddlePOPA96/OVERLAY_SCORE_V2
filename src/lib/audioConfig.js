@@ -7,7 +7,10 @@ export const audioOptions = [
   { label: 'antek-antek', value: '/sounds/antek.mp3' },
   { label: 'jokowi', value: '/sounds/jokowi.mp3' },
   { label: 'dj-kicau-mania', value: '/sounds/dj-kicau-mania.mp3' },
-  { label: 'kenapa nyak', value: '/sounds/kenapa-nya.mp3' }
+  { label: 'kenapa nyak', value: '/sounds/kenapa-nya.mp3' },
+  { label: 'shapeofmy.mp3', value: '/sounds/shapeofmy.mp3' },
+
+
 ]
 
 export const getAudioLabel = value => {
