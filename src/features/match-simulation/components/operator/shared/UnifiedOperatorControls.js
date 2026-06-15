@@ -101,20 +101,25 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
       </div>
 
       {/* ── Timer Section ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <div className='op-timer-display'>
-          <span className='op-timer-time'>{formatTime(displayTime)}</span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <div className='op-timer-display' style={{ padding: '8px 12px', marginBottom: '2px', borderRadius: '10px' }}>
+          <span className='op-timer-time' style={{ fontSize: '24px', minWidth: '80px' }}>{formatTime(displayTime)}</span>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '6px' }}>
           <button
             className={`op-timer-btn ${isRunning ? 'pause' : 'start'}`}
             onClick={() => actions.toggleTimer()}
+            style={{ minHeight: '36px', padding: '6px 14px', fontSize: '12px', borderRadius: '8px' }}
           >
-            <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '18px' }} />
+            <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '14px' }} />
             {isRunning ? 'Pause' : 'Start'}
           </button>
-          <button className='op-timer-btn reset' onClick={() => actions.resetTimer()}>
-            <i className='ri-restart-line' style={{ fontSize: '16px' }} />
+          <button 
+            className='op-timer-btn reset' 
+            onClick={() => actions.resetTimer()}
+            style={{ minHeight: '36px', padding: '6px 14px', fontSize: '12px', borderRadius: '8px' }}
+          >
+            <i className='ri-restart-line' style={{ fontSize: '12px' }} />
             Reset
           </button>
         </div>
@@ -281,6 +286,21 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
       >
         🔄 Reset Pertandingan
       </button>
+
+      {/* ── Goal Audio Settings ── */}
+      <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: '14px', marginTop: '10px' }}>
+        <GoalAudioSettings
+          data={data}
+          updateMatch={actions.updateMatch}
+          stopGoalAudio={actions.stopGoalAudio}
+          previewGoalAudio={actions.previewGoalAudio}
+        />
+      </div>
+
+      {/* ── Third Title Controls ── */}
+      <div style={{ borderTop: `1px dashed ${borderCol}`, paddingTop: '14px', marginTop: '10px' }}>
+        <ThirdTitleControls data={data} actions={actions} theme={theme} />
+      </div>
 
       {/* ── Overlay Room URL (compact) ── */}
       <OverlayRoomControls showOverlay={isLive} toggleOverlay={actions.toggleOverlay} roomId={roomId} compact />
@@ -537,20 +557,6 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         </div>
       </div>
 
-      {/* ── Goal Audio Settings ── */}
-      <div style={{ borderTop: `1px solid ${borderCol}`, paddingTop: '14px' }}>
-        <GoalAudioSettings
-          data={data}
-          updateMatch={actions.updateMatch}
-          stopGoalAudio={actions.stopGoalAudio}
-          previewGoalAudio={actions.previewGoalAudio}
-        />
-      </div>
-
-      {/* ── Third Title Controls ── */}
-      <div style={{ borderTop: `1px dashed ${borderCol}`, paddingTop: '14px' }}>
-        <ThirdTitleControls data={data} actions={actions} theme={theme} />
-      </div>
 
       {/* ── Overlay Room Admin ── */}
       <div
