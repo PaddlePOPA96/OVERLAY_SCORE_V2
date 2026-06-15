@@ -40,6 +40,8 @@ export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
     setPlayError(false)
 
     if (videoRef.current) {
+      videoRef.current.muted = false
+      videoRef.current.volume = volume
       videoRef.current.play().catch(err => {
         console.error('Interaction play failed:', err)
       })
@@ -56,16 +58,46 @@ export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
   // Try to play video programmatically when it changes
   useEffect(() => {
     if (visible && videoUrl && videoRef.current) {
+      videoRef.current.volume = volume
+      
       const playPromise = videoRef.current.play()
 
       if (playPromise !== undefined) {
         playPromise.catch(err => {
-          console.warn('Video autoplay blocked by browser policy:', err)
+          console.warn('Video autoplay blocked by browser policy, attempting muted play:', err)
           setPlayError(true)
+          
+          // Fallback to muted playback so visual alert still runs
+          if (videoRef.current) {
+            videoRef.current.muted = true
+            videoRef.current.play().catch(muteErr => {
+              console.error('Even muted play failed:', muteErr)
+            })
+          }
         })
       }
     }
-  }, [visible, videoUrl])
+  }, [visible, videoUrl, volume])
+
+  // Global listener to unlock audio on first user gesture anywhere on screen
+  useEffect(() => {
+    const unlock = () => {
+      setPlayError(false)
+      if (videoRef.current) {
+        videoRef.current.muted = false
+        videoRef.current.volume = volume
+        videoRef.current.play().catch(() => {})
+      }
+      window.removeEventListener('click', unlock)
+      window.removeEventListener('keypress', unlock)
+    }
+    window.addEventListener('click', unlock)
+    window.addEventListener('keypress', unlock)
+    return () => {
+      window.removeEventListener('click', unlock)
+      window.removeEventListener('keypress', unlock)
+    }
+  }, [volume])
 
   // Subscribe to Firebase Realtime DB updates
   useEffect(() => {
