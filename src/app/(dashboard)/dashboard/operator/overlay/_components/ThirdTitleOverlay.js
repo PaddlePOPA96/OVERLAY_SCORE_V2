@@ -62,6 +62,12 @@ export default function ThirdTitleOverlay({ data }) {
     bgGradient = 'linear-gradient(90deg, #7f1d1d 0%, #ef4444 100%)' // Red
     iconColor = '#ef4444'
     eventTextColor = '#fef2f2'
+  } else if (localData.eventType === 'mvp') {
+    eventIcon = '🏆'
+    eventText = 'MVP'
+    bgGradient = 'linear-gradient(90deg, #6d28d9 0%, #a855f7 100%)' // Purple/Violet
+    iconColor = '#a855f7'
+    eventTextColor = '#f5f3ff'
   }
 
   // Fallback image handling

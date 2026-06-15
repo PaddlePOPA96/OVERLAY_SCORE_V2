@@ -48,6 +48,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
             <option value="goal">⚽ Goal</option>
             <option value="yellow_card">🟨 Yellow Card</option>
             <option value="red_card">🟥 Red Card</option>
+            <option value="mvp">🏆 MVP</option>
           </select>
         </div>
 
