@@ -15,7 +15,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
       timeout1 = setTimeout(() => setAnimateIn(true), 50)
     } else {
       setAnimateIn(false)
-      timeout2 = setTimeout(() => setRenderState(false), 500)
+      timeout2 = setTimeout(() => setRenderState(false), 1400)
     }
 
     return () => {
@@ -45,28 +45,104 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
     <div
       className='absolute inset-0 flex items-center justify-center pointer-events-none font-sans'
     >
+      <style>{`
+        .frame-svg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          transform-origin: center;
+          transform: scaleX(var(--start-scale)) scaleY(1) translate3d(0,0,0);
+          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+          filter: drop-shadow(0 0 8px var(--glow-color));
+          will-change: transform, opacity; 
+          overflow: visible; 
+          pointer-events: none;
+        }
+        .f1 { 
+          --start-scale: calc(1 - 3 * 0.01); 
+          --glow-color: rgba(255, 53, 3, 0.5); 
+          color: #FF3503; 
+          z-index: 4; 
+          animation-delay: 0s;
+          transition-delay: 0.24s;
+        }
+        .f2 { 
+          --start-scale: calc(1 - 2 * 0.01); 
+          --glow-color: rgba(133, 179, 250, 0.5); 
+          color: #85B3FA; 
+          z-index: 3; 
+          animation-delay: 0.22s;
+          transition-delay: 0.16s;
+        }
+        .f3 { 
+          --start-scale: calc(1 - 1 * 0.01); 
+          --glow-color: rgba(0, 194, 75, 0.5); 
+          color: #00C24B; 
+          z-index: 2; 
+          animation-delay: 0.44s;
+          transition-delay: 0.08s;
+        }
+        .f4 { 
+          --start-scale: calc(1 - 0 * 0.01); 
+          --glow-color: rgba(90, 14, 19, 0.5); 
+          color: #5A0E13; 
+          z-index: 1; 
+          animation-delay: 0.66s;
+          transition-delay: 0s;
+        }
+        .animate-close {
+          animation-name: smoothClose;
+          animation-duration: 0.6s;
+          animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+          animation-fill-mode: forwards;
+        }
+        @keyframes smoothClose {
+          0% {
+            transform: scaleX(var(--start-scale)) scaleY(1) translate3d(0,0,0);
+            opacity: 1;
+          }
+          100% {
+            transform: scaleX(0) scaleY(1) translate3d(0,0,0);
+            opacity: 0;
+          }
+        }
+      `}</style>
       <div
         style={{
           width: '1400px',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          /* 🚀 PERUBAHAN ANIMASI UTAMA:
-            Saat OFF/Mulai: scaleX(0) akan membuat container menguncup ke tengah.
-            Saat ON: scaleX(1) akan membuka lebar ke kiri dan ke kanan.
-          */
-          transform: animateIn
-            ? `scaleX(1) translateY(0) scale(${overlayScale})`
-            : `scaleX(0) translateY(-20px) scale(${overlayScale * 0.95})`,
+          transform: `scale(${overlayScale})`,
           opacity: animateIn ? 1 : 0,
-          // Efek cubic-bezier memberikan sedikit pantulan (bounce) yang smooth saat membuka
-          transition: 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease',
+          transition: animateIn ? 'opacity 0.4s ease' : 'opacity 0.4s ease 1.0s',
           position: 'relative',
-          transformOrigin: 'center center', // Memastikan poros pembukaannya tepat dari tengah-tengah logo FIFA
+          transformOrigin: 'center center',
         }}
       >
+        {/* LAPISAN 4 (Hitam - 100% Lebar) */}
+        <svg className={`frame-svg f4${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none">
+          <path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" />
+        </svg>
 
-        {/* ── 1. MAIN ROW CONTAINER (Timer, Red Strip, Navy Berdempetan Tanpa Sela) ── */}
+        {/* LAPISAN 3 (Hijau Toska - 99% Lebar) */}
+        <svg className={`frame-svg f3${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none">
+          <path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" />
+        </svg>
+
+        {/* LAPISAN 2 (Biru - 98% Lebar) */}
+        <svg className={`frame-svg f2${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none">
+          <path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" />
+        </svg>
+
+        {/* LAPISAN 1 (Merah - 97% Lebar) */}
+        <svg className={`frame-svg f1${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none">
+          <path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" />
+        </svg>
+
+        {/* ── 1. MAIN ROW CONTAINER (Timer, Red Strip, Navy Berdempetan Tanya Sela) ── */}
         <div
           style={{
             display: 'flex',
@@ -75,6 +151,11 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             height: '120px',
             position: 'relative',
             zIndex: 10,
+            transform: animateIn ? 'scaleX(1) scaleY(1)' : 'scaleX(0) scaleY(1)',
+            transformOrigin: 'center center',
+            transition: animateIn
+              ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s'
+              : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         >
 
@@ -334,6 +415,11 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             borderRadius: '0 0 32px 32px',
             zIndex: 1,
             boxShadow: '0 12px 32px rgba(0,0,0,0.5)',
+            transform: animateIn ? 'scaleX(1)' : 'scaleX(0)',
+            transformOrigin: 'center center',
+            transition: animateIn
+              ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s'
+              : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
           }}
         />
 
