@@ -303,6 +303,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  borderRadius: '8px 0 0 8px',
                   flexShrink: 0,
                 }}
               >
@@ -390,6 +391,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
               <div
                 style={{
                   width: '120px',
+                  borderRadius: '0 8px 8px 0',
                   background: '#00FFD0',
                   display: 'flex',
                   alignItems: 'center',
