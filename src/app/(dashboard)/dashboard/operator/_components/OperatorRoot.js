@@ -16,7 +16,6 @@ import OperatorD from './OperatorD'
 import OperatorE from './OperatorE'
 import OperatorPildun from './OperatorPildun'
 import OperatorPildun2 from './OperatorPildun2'
-import MobileOperatorView from './MobileOperatorView'
 
 import LayoutA from './LayoutA'
 import LayoutB from './LayoutB'
@@ -395,8 +394,6 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
     hideThirdTitle
   } = useScoreboard(roomId || 'default')
 
-  const [viewMode, setViewMode] = useState('desktop')
-
   const actions = {
     updateMatch,
     toggleTimer,
@@ -468,26 +465,7 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
               <h3 className='text-sm font-bold text-white leading-tight'>{slotName}</h3>
             </div>
           </div>
-          {/* ── Desktop / Mobile Mode Toggle ── */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div className='op-mode-toggle'>
-              <button
-                className={`op-mode-btn ${viewMode === 'desktop' ? 'active' : ''}`}
-                onClick={() => setViewMode('desktop')}
-                title='Desktop View'
-              >
-                <i className='ri-computer-line' style={{ fontSize: '13px' }} />
-                <span>Desktop</span>
-              </button>
-              <button
-                className={`op-mode-btn ${viewMode === 'mobile' ? 'active' : ''}`}
-                onClick={() => setViewMode('mobile')}
-                title='Mobile View'
-              >
-                <i className='ri-smartphone-line' style={{ fontSize: '13px' }} />
-                <span>Mobile</span>
-              </button>
-            </div>
             <button
               onClick={onBackToSlots}
               className='flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-slate-850 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-all shadow-sm cursor-pointer'
@@ -499,18 +477,7 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
         </div>
       )}
 
-      {viewMode === 'mobile' ? (
-        <MobileOperatorView
-          data={data}
-          actions={actions}
-          displayTime={displayTime}
-          formatTime={formatTime}
-          roomId={roomId}
-          theme={theme}
-        />
-      ) : (
-        renderOperator()
-      )}
+      {renderOperator()}
     </div>
   )
 }

@@ -26,10 +26,6 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <h3 style={{ fontSize: '13px', fontWeight: 'bold', color: labelColor, margin: 0 }}>
-        🌟 Third Title Overlay (Events)
-      </h3>
-      
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         {/* Event Type */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: '100px' }}>

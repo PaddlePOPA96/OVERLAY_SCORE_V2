@@ -129,12 +129,41 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
     }
   }
 
-  const handleApplyCustomLogo = () => {
+  const handleApplyCustomLogo = (e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (typeof document !== 'undefined') {
+      document.activeElement?.blur()
+    }
     if (!customSrc || !customClubName.trim()) return
     onSelect({
       src: customSrc,
       club: customClubName.trim()
     })
+  }
+
+  const handleClose = (e) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (typeof document !== 'undefined') {
+      document.activeElement?.blur()
+    }
+    onClose()
+  }
+
+  const handleSelectClub = (e, logoInfo) => {
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+    if (typeof document !== 'undefined') {
+      document.activeElement?.blur()
+    }
+    onSelect(logoInfo)
   }
 
   return (
@@ -170,8 +199,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
         >
           <span style={{ fontWeight: 700, fontSize: 16, color: '#60a5fa' }}>Pengaturan Logo Tim Scoreboard</span>
           <button
+            type='button'
             className='op-btn'
-            onClick={onClose}
+            onClick={handleClose}
             style={{
               padding: '5px 12px',
               background: '#1f2937',
@@ -289,7 +319,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                     <button
                       key={club}
                       type='button'
-                      onClick={() => onSelect({ src, club, league })}
+                      onClick={(e) => handleSelectClub(e, { src, club, league })}
                       style={{
                         background: '#090d16',
                         borderRadius: 12,
@@ -582,7 +612,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                   </button>
                   <button
                     type='button'
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
                       setCustomSrc('')
                       setWebUrl('')
                       setCustomClubName(defaultClubName || '')

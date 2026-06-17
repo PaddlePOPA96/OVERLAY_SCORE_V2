@@ -17,9 +17,6 @@ export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, pr
         marginBottom: '10px'
       }}
     >
-      <label className='op-label' style={{ marginBottom: '10px', display: 'block', color: '#4ade80' }}>
-        Goal Audio Settings
-      </label>
 
       <div style={{ marginBottom: '10px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
