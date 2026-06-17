@@ -298,12 +298,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
               {/* ── LEFT SCORE (Cyan) ── */}
               <div
                 style={{
-                  width: '120px',
+                  width: '100px',
                   background: '#00FFD0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '8px 0 0 8px',
+                  borderRadius: '16px 0 0 16px',
                   flexShrink: 0,
                 }}
               >
@@ -390,8 +390,8 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
               {/* ── RIGHT SCORE (Cyan) ── */}
               <div
                 style={{
-                  width: '120px',
-                  borderRadius: '0 8px 8px 0',
+                  width: '100px',
+                  borderRadius: '0 16px 16px 0',
                   background: '#00FFD0',
                   display: 'flex',
                   alignItems: 'center',
