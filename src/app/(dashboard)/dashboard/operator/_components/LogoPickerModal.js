@@ -134,9 +134,11 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
       e.preventDefault()
       e.stopPropagation()
     }
+
     if (typeof document !== 'undefined') {
       document.activeElement?.blur()
     }
+
     if (!customSrc || !customClubName.trim()) return
     onSelect({
       src: customSrc,
@@ -149,9 +151,11 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
       e.preventDefault()
       e.stopPropagation()
     }
+
     if (typeof document !== 'undefined') {
       document.activeElement?.blur()
     }
+
     onClose()
   }
 
@@ -160,9 +164,11 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
       e.preventDefault()
       e.stopPropagation()
     }
+
     if (typeof document !== 'undefined') {
       document.activeElement?.blur()
     }
+
     onSelect(logoInfo)
   }
 

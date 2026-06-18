@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import Image from 'next/image'
+
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutA.css'
 import { getScale } from './overlay-scale.config'
 

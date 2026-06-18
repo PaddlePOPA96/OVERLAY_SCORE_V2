@@ -16,11 +16,7 @@ import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Alert from '@mui/material/Alert'
 
-import Logo from '@components/layout/shared/Logo'
-import Illustrations from '@components/Illustrations'
-import themeConfig from '@configs/themeConfig'
-import { useImageVariant } from '@core/hooks/useImageVariant'
-import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from '@/lib/auth/service'
+
 import Divider from '@mui/material/Divider'
 
 import Dialog from '@mui/material/Dialog'
@@ -28,6 +24,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
+
+import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from '@/lib/auth/service'
+import themeConfig from '@configs/themeConfig'
+import Illustrations from '@components/Illustrations'
+import Logo from '@components/layout/Logo'
 
 const GOOGLE_LOGIN_DISABLED = false
 
@@ -44,7 +45,7 @@ const Login = ({ mode }) => {
   const lightImg = '/images/pages/auth-v1-mask-light.png'
 
   const router = useRouter()
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const authBackground = mode === 'light' ? lightImg : darkImg
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   useEffect(() => {

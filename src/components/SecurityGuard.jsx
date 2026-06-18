@@ -10,8 +10,10 @@ export default function SecurityGuard() {
     // 1. Blokir Menu Klik Kanan (Context Menu)
     const handleContextMenu = (e) => {
       e.preventDefault()
-      return false
+      
+return false
     }
+
     document.addEventListener('contextmenu', handleContextMenu)
 
     // 2. Blokir Tombol Shortcut Keyboard
@@ -19,7 +21,8 @@ export default function SecurityGuard() {
       // F12
       if (e.key === 'F12' || e.keyCode === 123) {
         e.preventDefault()
-        return false
+        
+return false
       }
 
       // Check key character / code
@@ -43,14 +46,17 @@ export default function SecurityGuard() {
 
       if (isInspect || isViewSource || isSavePage) {
         e.preventDefault()
-        return false
+        
+return false
       }
     }
+
     document.addEventListener('keydown', handleKeyDown)
 
     // 3. Deteksi DevTools dan Debugger Loop
     // Jika DevTools terbuka, statement `debugger` akan dipicu dan mem-pause halaman browser.
     let intervalId
+
     const startDebuggerLoop = () => {
       const check = () => {
         const startTime = performance.now()

@@ -2,7 +2,7 @@
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // Font Imports
-import { Poppins } from 'next/font/google'
+import { Inter } from 'next/font/google'
 
 // Style Imports
 import '@/app/globals.css'
@@ -13,10 +13,9 @@ import '@assets/iconify-icons/generated-icons.css'
 // Component Imports
 import SecurityGuard from '@components/SecurityGuard'
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-poppins'
+  variable: '--font-inter'
 })
 
 export const metadata = {
@@ -29,7 +28,7 @@ const RootLayout = ({ children }) => {
   const direction = 'ltr'
 
   return (
-    <html id='__next' lang='en' dir={direction} className={poppins.variable}>
+    <html id='__next' lang='en' dir={direction} className={inter.variable}>
       <head>
         {/* Preconnect to Firebase origins – saves ~560ms on first auth request (LCP) */}
         <link rel='preconnect' href='https://identitytoolkit.googleapis.com' />
@@ -39,7 +38,7 @@ const RootLayout = ({ children }) => {
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
       </head>
-      <body className={`${poppins.className} flex is-full min-bs-full flex-auto flex-col`}>
+      <body className={`${inter.className} flex is-full min-bs-full flex-auto flex-col`}>
         <SecurityGuard />
         {children}
       </body>

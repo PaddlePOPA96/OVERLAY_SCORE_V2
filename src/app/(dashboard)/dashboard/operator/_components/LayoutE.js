@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
+
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutE.css'
 import { getScale } from './overlay-scale.config'
 

@@ -10,6 +10,7 @@ import { db } from '@/lib/firebase/index'
 
 export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
   const params = useParams()
+
   // Pakai prop jika tersedia (ketika dipakai sebagai komponen embed),
   // fallback ke useParams ketika dirender sebagai standalone page /[room]/tiktok
   const roomId = roomIdProp || params?.room
@@ -83,17 +84,22 @@ export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
   useEffect(() => {
     const unlock = () => {
       setPlayError(false)
+
       if (videoRef.current) {
         videoRef.current.muted = false
         videoRef.current.volume = volume
         videoRef.current.play().catch(() => {})
       }
+
       window.removeEventListener('click', unlock)
       window.removeEventListener('keypress', unlock)
     }
+
     window.addEventListener('click', unlock)
     window.addEventListener('keypress', unlock)
-    return () => {
+
+    
+return () => {
       window.removeEventListener('click', unlock)
       window.removeEventListener('keypress', unlock)
     }

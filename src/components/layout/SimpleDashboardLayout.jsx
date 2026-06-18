@@ -1,22 +1,18 @@
 'use client'
 
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
-// Layout Imports
-import LayoutWrapper from '@layouts/LayoutWrapper'
-import VerticalLayout from '@layouts/VerticalLayout'
-
-// Component Imports
-import Navigation from '@components/layout/vertical/Navigation'
-import Navbar from '@components/layout/vertical/Navbar'
-import VerticalFooter from '@components/layout/vertical/Footer'
+import SimpleSidebar from './SimpleSidebar'
+import SimpleTopbar from './SimpleTopbar'
 import DashboardAuthGuard from '@/components/DashboardAuthGuard'
 
-export default function DashboardLayoutContent({ children }) {
+export default function SimpleDashboardLayout({ children }) {
   const pathname = usePathname()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   // Public OBS graphic overlays shouldn't have layout templates or login guards
-  const isOverlay = pathname.includes('/overlay') || pathname.includes('/running-text')
+  const isOverlay = pathname.includes('/dashboard/operator/overlay') || pathname.includes('/dashboard/running-text')
 
   if (isOverlay) {
     return (
@@ -38,13 +34,15 @@ export default function DashboardLayoutContent({ children }) {
 
   return (
     <DashboardAuthGuard>
-      <LayoutWrapper
-        verticalLayout={
-          <VerticalLayout navigation={<Navigation />} navbar={<Navbar />} footer={<VerticalFooter />}>
+      <div className="flex h-[100dvh] w-full overflow-hidden">
+        <SimpleSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        <div className="flex flex-col flex-1 min-w-0">
+          <SimpleTopbar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+          <main className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
             {children}
-          </VerticalLayout>
-        }
-      />
+          </main>
+        </div>
+      </div>
     </DashboardAuthGuard>
   )
 }

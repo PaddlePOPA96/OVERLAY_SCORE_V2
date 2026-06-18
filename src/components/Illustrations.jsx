@@ -5,7 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
+
 
 // Styled Components
 const MaskImg = styled('img')({
@@ -26,7 +26,7 @@ const Illustrations = props => {
   // Hook
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
-  const maskBackground = useImageVariant(mode, lightImg, darkImg)
+  const maskBackground = mode === 'light' ? lightImg : darkImg
 
   function isImageObj(obj) {
     return obj && typeof obj === 'object' && 'src' in obj

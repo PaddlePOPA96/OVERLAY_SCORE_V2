@@ -4,7 +4,11 @@
 import styled from '@emotion/styled'
 
 // Component Imports
-import MaterioLogo from '@core/svg/Logo'
+const MaterioLogo = (props) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12 2L2 22h20L12 2z"/>
+  </svg>
+)
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'

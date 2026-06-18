@@ -1,14 +1,14 @@
 // Component Imports
 import Providers from '@components/Providers'
-import BlankLayout from '@layouts/BlankLayout'
 
 const Layout = ({ children }) => {
-  // Vars
   const direction = 'ltr'
 
   return (
     <Providers direction={direction}>
-      <BlankLayout>{children}</BlankLayout>
+      <div className='flex flex-col min-h-[100dvh]'>
+        {children}
+      </div>
     </Providers>
   )
 }

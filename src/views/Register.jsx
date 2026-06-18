@@ -15,8 +15,8 @@ import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 
 import Illustrations from '@components/Illustrations'
-import Logo from '@components/layout/shared/Logo'
-import { useImageVariant } from '@core/hooks/useImageVariant'
+import Logo from '@components/layout/Logo'
+
 import { registerWithEmailPassword, loginWithGooglePopup } from '@/lib/auth/service'
 
 const REGISTRATION_DISABLED = true
@@ -33,7 +33,7 @@ const Register = ({ mode }) => {
   const lightImg = '/images/pages/auth-v1-mask-light.png'
 
   const router = useRouter()
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const authBackground = mode === 'light' ? lightImg : darkImg
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async e => {

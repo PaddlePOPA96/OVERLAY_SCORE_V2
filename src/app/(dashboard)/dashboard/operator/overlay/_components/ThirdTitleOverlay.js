@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+
 import { getScale } from '@/features/match-simulation/components/operator/overlay-scale.config'
 
 export default function ThirdTitleOverlay({ data }) {
@@ -76,6 +77,7 @@ export default function ThirdTitleOverlay({ data }) {
   // Dynamic position adjustment based on layout
   const layoutType = data.layout || 'B'
   let customMarginTop = '260px' // Move down significantly for A, B, C, D, E
+
   if (layoutType === 'Pildun') {
     customMarginTop = '-40px' // Move up slightly for Pildun
   } else if (layoutType === 'Pildun2') {

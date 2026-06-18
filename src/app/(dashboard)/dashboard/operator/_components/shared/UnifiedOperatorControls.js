@@ -18,6 +18,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedTab = localStorage.getItem('operatorActiveTab')
+
       if (savedTab === 'scoreboard' || savedTab === 'settings') {
         setActiveTab(savedTab)
       }
@@ -26,10 +27,12 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
   const changeTab = (tab) => {
     setActiveTab(tab)
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('operatorActiveTab', tab)
     }
   }
+
   const [logoTarget, setLogoTarget] = useState('home')
   const [manualM, setManualM] = useState(0)
   const [manualS, setManualS] = useState(0)
@@ -63,6 +66,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
   const handlePeriodChange = periodVal => {
     let baseTimeVal = 0
+
     if (periodVal === 2) baseTimeVal = 45 * 60
     else if (periodVal === 3) baseTimeVal = 90 * 60
 
@@ -76,6 +80,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
   const handleSetTime = () => {
     const total = (parseInt(manualM, 10) || 0) * 60 + (parseInt(manualS, 10) || 0)
+
     actions.updateMatch({
       'timer/baseTime': total,
       'timer/startTime': null,
@@ -521,11 +526,13 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         onSelect={({ src, club }) => {
           if (!src || !club) return
           const abbr = makeTeamAbbr(club)
+
           if (logoTarget === 'home') {
             actions.updateMatch({ homeLogo: src, homeName: abbr, homeFullName: club.toUpperCase() })
           } else {
             actions.updateMatch({ awayLogo: src, awayName: abbr, awayFullName: club.toUpperCase() })
           }
+
           setLogoModalOpen(false)
         }}
       />

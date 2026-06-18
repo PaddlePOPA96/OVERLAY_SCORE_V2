@@ -286,9 +286,15 @@ function ScoreboardSlotSelector({ userId, onSelect, theme }) {
         await set(slotRef, defaultData)
       }
 
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(`active-scoreboard-slot-${userId}`, slotRoomId)
+      }
       onSelect(slotRoomId)
     } catch (err) {
       console.error('Failed to activate slot:', err)
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(`active-scoreboard-slot-${userId}`, slotRoomId)
+      }
       onSelect(slotRoomId)
     }
   }
@@ -537,7 +543,13 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
             return prev
           }
 
-          return null
+          if (typeof window !== 'undefined') {
+            const savedSlot = window.localStorage.getItem(`active-scoreboard-slot-${user.uid}`)
+            
+            if (savedSlot) return savedSlot
+          }
+
+          return `${user.uid}_slot1`
         })
       }
     }
@@ -585,7 +597,12 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
       theme={theme}
       toggleTheme={toggleTheme}
       onLogout={handleLogout}
-      onBackToSlots={isCustomRoom ? null : () => setActiveRoomId(null)}
+      onBackToSlots={isCustomRoom ? null : () => {
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem(`active-scoreboard-slot-${currentUserId}`)
+        }
+        setActiveRoomId(null)
+      }}
     />
   )
 }

@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import Illustrations from '@components/Illustrations'
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
+
 
 const NotFound = ({ mode }) => {
   // Vars
@@ -19,7 +19,7 @@ const NotFound = ({ mode }) => {
   const lightImg = '/images/pages/misc-mask-light.png'
 
   // Hooks
-  const miscBackground = useImageVariant(mode, lightImg, darkImg)
+  const miscBackground = mode === 'light' ? lightImg : darkImg
 
   return (
     <div className='flex items-center justify-center min-bs-[100dvh] relative p-6 overflow-x-hidden'>
