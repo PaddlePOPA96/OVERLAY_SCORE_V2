@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 import { ref, onValue, update } from 'firebase/database'
 
@@ -13,6 +13,16 @@ export function useScoreboard(roomId = 'default') {
 
   const [displayTime, setDisplayTime] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
+  const serverTimeOffsetRef = useRef(0)
+
+  // Sync Firebase Server Time Offset
+  useEffect(() => {
+    const offsetRef = ref(db, '.info/serverTimeOffset')
+    const unsubscribe = onValue(offsetRef, snap => {
+      serverTimeOffsetRef.current = snap.val() || 0
+    })
+    return () => unsubscribe()
+  }, [])
 
   // Sync Firebase untuk room tertentu
   useEffect(() => {
@@ -56,7 +66,7 @@ export function useScoreboard(roomId = 'default') {
     if (!currentData?.timer) return
 
     if (currentData.timer.isRunning) {
-      const now = Date.now()
+      const now = Date.now() + serverTimeOffsetRef.current
       const elapsed = Math.floor((now - currentData.timer.startTime) / 1000)
 
       setDisplayTime(currentData.timer.baseTime + elapsed)
@@ -84,24 +94,24 @@ export function useScoreboard(roomId = 'default') {
 
     updateMatch({
       [team === 'home' ? 'homeScore' : 'awayScore']: newScore,
-      goalTrigger: Date.now(),
+      goalTrigger: Date.now() + serverTimeOffsetRef.current,
       goalTeam: team === 'home' ? data.homeName : data.awayName
     })
   }
 
   const stopGoalAudio = () => {
-    updateMatch({ goalAudioStop: Date.now() })
+    updateMatch({ goalAudioStop: Date.now() + serverTimeOffsetRef.current })
   }
 
   const previewGoalAudio = source => {
     updateMatch({
-      previewAudioTrigger: Date.now(),
+      previewAudioTrigger: Date.now() + serverTimeOffsetRef.current,
       previewAudioSource: source
     })
   }
 
   const toggleTimer = () => {
-    const now = Date.now()
+    const now = Date.now() + serverTimeOffsetRef.current
     let updates = {}
 
     if (data.timer.isRunning) {
@@ -124,7 +134,7 @@ export function useScoreboard(roomId = 'default') {
 
     updateMatch({
       showOverlay: newState,
-      introId: newState ? Date.now() : data.introId // Trigger animasi saat unhide
+      introId: newState ? Date.now() + serverTimeOffsetRef.current : data.introId // Trigger animasi saat unhide
     })
   }
 
@@ -134,7 +144,7 @@ export function useScoreboard(roomId = 'default') {
       'thirdTitle/eventType': eventType,
       'thirdTitle/playerName': playerName,
       'thirdTitle/playerImg': playerImg,
-      'thirdTitle/triggerId': Date.now()
+      'thirdTitle/triggerId': Date.now() + serverTimeOffsetRef.current
     })
   }
 

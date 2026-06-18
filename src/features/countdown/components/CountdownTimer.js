@@ -29,6 +29,15 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false)
 
   const timerPath = `match_live/${roomId}/countdown_timer`
+  const serverTimeOffsetRef = useRef(0)
+
+  useEffect(() => {
+    const offsetRef = ref(db, '.info/serverTimeOffset')
+    const unsubscribe = onValue(offsetRef, snap => {
+      serverTimeOffsetRef.current = snap.val() || 0
+    })
+    return () => unsubscribe()
+  }, [])
 
   useEffect(() => {
     if (!roomId) return
@@ -75,7 +84,7 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
 
     if (isRunning && targetTime) {
       interval = setInterval(() => {
-        const now = Date.now()
+        const now = Date.now() + serverTimeOffsetRef.current
         const diff = targetTime - now
 
         if (diff <= 0) {
@@ -93,7 +102,7 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
   }, [isRunning, targetTime, remainingMs, roomId])
 
   const handleStartPreset = ms => {
-    const target = Date.now() + ms
+    const target = Date.now() + serverTimeOffsetRef.current + ms
 
     console.log('Starting preset:', ms, 'Target:', target)
     update(ref(db, timerPath), {
@@ -128,7 +137,7 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
 
   const handleResume = () => {
     update(ref(db, timerPath), {
-      targetTime: Date.now() + remainingMs,
+      targetTime: Date.now() + serverTimeOffsetRef.current + remainingMs,
       isRunning: true,
       remainingMs: remainingMs
     }).catch(console.error)

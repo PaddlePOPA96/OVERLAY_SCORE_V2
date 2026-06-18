@@ -28,6 +28,15 @@ export default function TimerOverlay() {
   const audioRef = useRef(null)
   const prevIsRunningRef = useRef(false)
   const playedTargetRef = useRef(null)
+  const serverTimeOffsetRef = useRef(0)
+
+  useEffect(() => {
+    const offsetRef = ref(db, '.info/serverTimeOffset')
+    const unsubscribe = onValue(offsetRef, snap => {
+      serverTimeOffsetRef.current = snap.val() || 0
+    })
+    return () => unsubscribe()
+  }, [])
 
   const handleInteraction = () => {
     setPlayError(false)
@@ -116,7 +125,7 @@ export default function TimerOverlay() {
 
     if (isRunning && targetTime) {
       interval = setInterval(() => {
-        const now = Date.now()
+        const now = Date.now() + serverTimeOffsetRef.current
         const diff = targetTime - now
 
         if (diff <= 0) {
