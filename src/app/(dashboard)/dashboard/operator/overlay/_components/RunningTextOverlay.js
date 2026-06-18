@@ -2,6 +2,6 @@
 // Semua logika ada di shared component: @/components/ui/RunningTextOverlay
 import RunningTextOverlay from '@/components/ui/RunningTextOverlay'
 
-export default function RunningTextOverlay() {
+export default function RunningTextOverlayWidget() {
   return <RunningTextOverlay isPageMode={false} />
 }

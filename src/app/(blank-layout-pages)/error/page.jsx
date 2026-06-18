@@ -8,4 +8,4 @@ const ErrorPage = () => {
   return <NotFound />
 }
 
-export default Error
+export default ErrorPage

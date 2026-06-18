@@ -289,12 +289,15 @@ function ScoreboardSlotSelector({ userId, onSelect, theme }) {
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(`active-scoreboard-slot-${userId}`, slotRoomId)
       }
+
       onSelect(slotRoomId)
     } catch (err) {
       console.error('Failed to activate slot:', err)
+
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(`active-scoreboard-slot-${userId}`, slotRoomId)
       }
+
       onSelect(slotRoomId)
     }
   }
@@ -601,6 +604,7 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
         if (typeof window !== 'undefined') {
           window.localStorage.removeItem(`active-scoreboard-slot-${currentUserId}`)
         }
+
         setActiveRoomId(null)
       }}
     />
