@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+
 import { usePathname } from 'next/navigation'
+
+import DashboardAuthGuard from '@/components/DashboardAuthGuard'
 
 import SimpleSidebar from './SimpleSidebar'
 import SimpleTopbar from './SimpleTopbar'
-import DashboardAuthGuard from '@/components/DashboardAuthGuard'
 
 export default function SimpleDashboardLayout({ children }) {
   const pathname = usePathname()
