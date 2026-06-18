@@ -14,10 +14,10 @@ import Button from '@mui/material/Button'
 import Form from '@components/Form'
 import DirectionalIcon from '@components/DirectionalIcon'
 import Illustrations from '@components/Illustrations'
-import Logo from '@components/layout/shared/Logo'
+import Logo from '@components/layout/Logo'
 
 // Hook Imports
-import { useImageVariant } from '@core/hooks/useImageVariant'
+
 
 const ForgotPassword = ({ mode }) => {
   // Vars
@@ -25,7 +25,7 @@ const ForgotPassword = ({ mode }) => {
   const lightImg = '/images/pages/auth-v1-mask-light.png'
 
   // Hooks
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const authBackground = mode === 'light' ? lightImg : darkImg
 
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6'>

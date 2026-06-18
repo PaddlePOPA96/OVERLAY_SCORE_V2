@@ -11,6 +11,7 @@ export default function PreviewWrapper({ children }) {
       if (containerRef.current) {
         // Calculate the scale needed to fit 1440px into the container width
         const width = containerRef.current.clientWidth
+
         setScale(width / 1440)
       }
     }

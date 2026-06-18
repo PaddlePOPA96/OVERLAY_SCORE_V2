@@ -183,8 +183,12 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
   return (
     <div className='p-4 space-y-6'>
       <div>
-        <h1 className='text-2xl font-bold text-slate-800'>{currentHeader.title}</h1>
-        <p className='text-slate-500 text-sm'>{currentHeader.subtitle}</p>
+        <Typography variant='h5' color='text.primary' sx={{ fontWeight: 'bold', mb: 0.5 }}>
+          {currentHeader.title}
+        </Typography>
+        <Typography variant='body2' color='text.secondary'>
+          {currentHeader.subtitle}
+        </Typography>
       </div>
 
       <Grid container spacing={6}>
@@ -271,7 +275,7 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
               <CardContent className='space-y-4'>
                 <div className='flex justify-between items-center py-2 border-b border-divider'>
                   <div>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography variant='body2' color='text.primary' sx={{ fontWeight: 600 }}>
                       Premier League
                     </Typography>
                     <Typography variant='caption' color='text.secondary'>
@@ -292,7 +296,7 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
 
                 <div className='flex justify-between items-center py-2 border-b border-divider'>
                   <div>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography variant='body2' color='text.primary' sx={{ fontWeight: 600 }}>
                       UEFA Champions League
                     </Typography>
                     <Typography variant='caption' color='text.secondary'>
@@ -313,7 +317,7 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
 
                 <div className='flex justify-between items-center py-2'>
                   <div>
-                    <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                    <Typography variant='body2' color='text.primary' sx={{ fontWeight: 600 }}>
                       FIFA World Cup 2026
                     </Typography>
                     <Typography variant='caption' color='text.secondary'>

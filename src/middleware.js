@@ -23,12 +23,15 @@ export default function middleware(request) {
       
       // Izinkan domain resmi
       const isOfficialDomain = allowedDomains.some(domain => url.startsWith(domain))
+
       if (isOfficialDomain) return true
       
       // Izinkan deployment preview dari Vercel (*.vercel.app)
       try {
         const parsedUrl = new URL(url)
-        return parsedUrl.hostname.endsWith('.vercel.app')
+
+        
+return parsedUrl.hostname.endsWith('.vercel.app')
       } catch (e) {
         return false
       }
@@ -36,6 +39,7 @@ export default function middleware(request) {
 
     // Pengecualian khusus untuk API Cron
     const isCron = request.nextUrl.pathname.startsWith('/api/cron')
+
     if (isCron) return NextResponse.next()
 
     // 1. Cek Origin (Fetch standard dari browser client)
@@ -43,7 +47,9 @@ export default function middleware(request) {
       if (!isAllowed(origin)) {
         return new NextResponse('Forbidden: Invalid Origin', { status: 403 })
       }
-      return NextResponse.next()
+
+      
+return NextResponse.next()
     }
 
     // 2. Jika Origin kosong, Cek Referer (Navigasi halaman / Same-origin fetch)
@@ -51,7 +57,9 @@ export default function middleware(request) {
       if (!isAllowed(referer)) {
         return new NextResponse('Forbidden: Invalid Referer', { status: 403 })
       }
-      return NextResponse.next()
+
+      
+return NextResponse.next()
     }
 
     // 3. Jika Origin & Referer kosong (Direct access via URL bar / curl / Postman)

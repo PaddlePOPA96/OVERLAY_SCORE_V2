@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import { searchPlayers } from '@/actions/playerActions'
 
 export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = 'dark' }) {
@@ -12,7 +13,8 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
     
     if (searchQuery.length < 4) {
       setDatalistOptions([])
-      return
+      
+return
     }
     
     const delayDebounceFn = setTimeout(() => {
@@ -78,6 +80,7 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
+
               if (datalistOptions.length > 0) {
                 onSelect(datalistOptions[0]);
                 setSearchQuery('');

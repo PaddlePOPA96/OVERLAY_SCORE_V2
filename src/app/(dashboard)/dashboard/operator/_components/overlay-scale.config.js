@@ -26,5 +26,7 @@ export const LAYOUT_SCALE = {
  */
 export function getScale(layout, isPreview) {
   const cfg = LAYOUT_SCALE[layout] ?? LAYOUT_SCALE.A
-  return isPreview ? cfg.preview : cfg.overlay
+
+  
+return isPreview ? cfg.preview : cfg.overlay
 }

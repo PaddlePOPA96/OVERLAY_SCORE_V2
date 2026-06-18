@@ -32,13 +32,15 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
     if (prevGoalTrigger.current === null) {
       prevGoalTrigger.current = data.goalTrigger || 0
-      return
+      
+return
     }
 
     const currentTrigger = data.goalTrigger || 0
 
     if (currentTrigger !== prevGoalTrigger.current && currentTrigger !== 0) {
       const vol = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
+
       setActiveMediaVol(vol)
       
       // Force remount to re-trigger autoplay
@@ -67,13 +69,15 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
     if (prevPreviewTrigger.current === null) {
       prevPreviewTrigger.current = data.previewAudioTrigger || 0
-      return
+      
+return
     }
 
     const currentTrigger = data.previewAudioTrigger || 0
 
     if (currentTrigger !== prevPreviewTrigger.current && currentTrigger !== 0) {
       const vol = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
+
       setActiveMediaVol(vol)
       
       setActiveMediaSrc(null)
@@ -89,10 +93,13 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
 
   const handleInteraction = () => {
     setPlayError(false)
+
+
     // Interaction unlocks the browser audio context.
     // If activeMediaSrc was set, we can just force it to remount to try playing again.
     if (activeMediaSrc) {
       const currentSrc = activeMediaSrc
+
       setActiveMediaSrc(null)
       setTimeout(() => setActiveMediaSrc(currentSrc), 50)
     }
@@ -148,11 +155,14 @@ export default function ScoreboardOverlay({ roomId = 'default' }) {
           ref={(el) => {
             if (el) {
               el.volume = activeMediaVol
+
               // Attempt programmatic play as a fallback and catch errors
               const p = el.play()
+
               if (p !== undefined) {
                 p.catch(e => {
                   console.error('Media play error:', e)
+
                   if (e.name === 'NotAllowedError' || e.message.includes('interact')) {
                     setPlayError(true)
                   }

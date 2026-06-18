@@ -46,6 +46,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
   const handlePeriodChange = periodVal => {
     let baseTimeVal = 0
+
     if (periodVal === 2) baseTimeVal = 45 * 60
     else if (periodVal === 3) baseTimeVal = 90 * 60
 
@@ -59,6 +60,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
   const handleSetTime = () => {
     const total = (parseInt(manualM, 10) || 0) * 60 + (parseInt(manualS, 10) || 0)
+
     actions.updateMatch({
       'timer/baseTime': total,
       'timer/startTime': null,

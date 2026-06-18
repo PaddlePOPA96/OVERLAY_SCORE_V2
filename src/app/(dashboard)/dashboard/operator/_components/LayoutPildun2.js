@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { getScale } from './overlay-scale.config'
 
 export default function LayoutPildun2({ data, displayTime, formatTime }) {

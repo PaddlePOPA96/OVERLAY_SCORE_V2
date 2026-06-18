@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutB.css'
 import { getScale } from './overlay-scale.config'
 

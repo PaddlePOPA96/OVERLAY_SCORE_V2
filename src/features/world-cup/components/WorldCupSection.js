@@ -291,7 +291,9 @@ export function WorldCupMatches({ matches, loadingMatches, theme, isAdmin, onRef
     matches?.filter(m => {
       if (!isKnownMatch(m) || !isUpcomingStatus(m) || !m.utcDate) return false
       const matchDate = new Date(m.utcDate)
-      return matchDate >= now && matchDate <= deadline
+
+      
+return matchDate >= now && matchDate <= deadline
     }) || []
 
   // Try 7 days first; if no matches found, expand to 14 days

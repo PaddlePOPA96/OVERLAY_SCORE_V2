@@ -18,10 +18,13 @@ export function useScoreboard(roomId = 'default') {
   // Sync Firebase Server Time Offset
   useEffect(() => {
     const offsetRef = ref(db, '.info/serverTimeOffset')
+
     const unsubscribe = onValue(offsetRef, snap => {
       serverTimeOffsetRef.current = snap.val() || 0
     })
-    return () => unsubscribe()
+
+    
+return () => unsubscribe()
   }, [])
 
   // Sync Firebase untuk room tertentu

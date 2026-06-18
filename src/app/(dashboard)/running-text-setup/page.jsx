@@ -24,9 +24,12 @@ export function RunningTextSetupContent() {
 
   // Resolve current user & role for superadmin gate
   const [currentUser, setCurrentUser] = useState(auth.currentUser || null)
+
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(u => setCurrentUser(u))
-    return () => unsub()
+
+    
+return () => unsub()
   }, [])
   const { isSuperAdmin, loading: loadingRole } = useUserRole(currentUser)
 

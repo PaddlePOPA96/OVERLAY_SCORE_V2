@@ -41,6 +41,8 @@ export async function searchPlayers(query) {
     if (p.name.toLowerCase().includes(lowerQuery)) {
       results.push(p)
     }
+
+
     // 3. PENTING: Berhenti looping jika sudah mencapai 50 item (Bukan di-slice di akhir)
     if (results.length === 50) break
   }

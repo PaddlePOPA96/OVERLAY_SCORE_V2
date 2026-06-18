@@ -33,10 +33,13 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
 
   useEffect(() => {
     const offsetRef = ref(db, '.info/serverTimeOffset')
+
     const unsubscribe = onValue(offsetRef, snap => {
       serverTimeOffsetRef.current = snap.val() || 0
     })
-    return () => unsubscribe()
+
+    
+return () => unsubscribe()
   }, [])
 
   useEffect(() => {

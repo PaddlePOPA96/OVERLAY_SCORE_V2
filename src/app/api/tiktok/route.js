@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
 import { exec } from 'child_process'
+
+import { NextResponse } from 'next/server'
 
 function resolveInstagram(url) {
   return new Promise((resolve, reject) => {
@@ -10,11 +11,13 @@ function resolveInstagram(url) {
     exec(cmd, (error, stdout, stderr) => {
       if (error) {
         console.error('yt-dlp exec error:', stderr)
-        return reject(new Error('Failed to resolve Instagram Reels URL'))
+        
+return reject(new Error('Failed to resolve Instagram Reels URL'))
       }
 
       try {
         const data = JSON.parse(stdout)
+
         resolve({
           videoId: data.display_id || data.id || 'instagram_video',
           videoUrl: data.url || null,
@@ -49,7 +52,9 @@ export async function POST(request) {
 
     if (isInstagram) {
       const igResult = await resolveInstagram(targetUrl)
-      return NextResponse.json(igResult)
+
+      
+return NextResponse.json(igResult)
     }
 
     // Support short URLs like vt.tiktok.com, vm.tiktok.com, tiktok.com/t/, v.tiktok.com

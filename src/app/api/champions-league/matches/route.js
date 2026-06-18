@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server'
 
 import { ref, set, get } from 'firebase/database'
 
+import { doc, getDoc } from 'firebase/firestore'
+
 import { db } from '@/lib/firebase/db'
 import { verifyIdToken } from '@/lib/firebase/admin'
 import { dbFirestore } from '@/lib/firebase/firestore'
-import { doc, getDoc } from 'firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'
@@ -35,20 +36,12 @@ export async function GET(request) {
     const userDoc = await getDoc(doc(dbFirestore, 'users', uid))
     const role = userDoc.exists() ? userDoc.data().role : 'user'
 
-    if (role !== 'superadmin') {
-      return NextResponse.json({ error: 'Forbidden: Superadmin only' }, { status: 403 })
+    if (!['superadmin', 'operator'].includes(role)) {
+      return NextResponse.json({ error: 'Forbidden: Admin or Operator only' }, { status: 403 })
     }
 
     // 3. Main Logic
-    const today = new Date()
-    const pastDate = new Date()
-
-    pastDate.setDate(today.getDate() - 7)
-    const futureDate = new Date()
-
-    futureDate.setDate(today.getDate() + 60)
-
-    const url = `${BASE_URL}/competitions/CL/matches?dateFrom=${formatDate(pastDate)}&dateTo=${formatDate(futureDate)}`
+    const url = `${BASE_URL}/competitions/CL/matches`
 
     if (!API_KEY) {
       return NextResponse.json(

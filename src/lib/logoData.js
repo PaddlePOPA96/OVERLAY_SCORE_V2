@@ -625,6 +625,7 @@ export function buildOtherLogoSrc(club) {
   if (club.toLowerCase() === 'paper rex') {
     return 'https://images.seeklogo.com/logo-png/45/2/paper-rex-logo-png_seeklogo-455546.png'
   }
+
   const key = normalizeOtherKey(club)
   const fileBase = OTHER_LOGO_ALIAS[key] || club
   const clubSegment = encodeURIComponent(fileBase)
@@ -727,6 +728,7 @@ export function resolveAnyClubLogo(apiName) {
   if (apiName.toLowerCase() === 'paper rex') {
     return 'https://images.seeklogo.com/logo-png/45/2/paper-rex-logo-png_seeklogo-455546.png'
   }
+
   const rawTarget = localNormalizeTeamName(apiName)
 
   if (!rawTarget) return ''

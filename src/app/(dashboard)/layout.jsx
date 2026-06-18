@@ -1,16 +1,14 @@
-// Layout Imports
 import Providers from '@components/Providers'
 import { DashboardProvider } from '@/components/providers/DashboardContext'
-import DashboardLayoutContent from '@/components/DashboardLayoutContent'
+import SimpleDashboardLayout from '@/components/layout/SimpleDashboardLayout'
 
 const Layout = async ({ children }) => {
-  // Vars
   const direction = 'ltr'
 
   return (
     <Providers direction={direction}>
       <DashboardProvider>
-        <DashboardLayoutContent>{children}</DashboardLayoutContent>
+        <SimpleDashboardLayout>{children}</SimpleDashboardLayout>
       </DashboardProvider>
     </Providers>
   )

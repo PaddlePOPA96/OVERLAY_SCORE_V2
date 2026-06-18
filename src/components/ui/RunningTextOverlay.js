@@ -13,6 +13,7 @@ import { useLayoutSettings } from '@/hooks/useLayoutSettings'
 function getIndonesianDateString(utcDateStr) {
   if (!utcDateStr) return ''
   const date = new Date(utcDateStr)
+
   try {
     return date
       .toLocaleDateString('id-ID', {
@@ -28,7 +29,8 @@ function getIndonesianDateString(utcDateStr) {
 
 function resolveNationalLogo(team) {
   if (team?.crest) return team.crest
-  return buildLogoSrc('FIFA World Cup', team?.name || team?.shortName)
+  
+return buildLogoSrc('FIFA World Cup', team?.name || team?.shortName)
 }
 
 const TEAM_STOP_WORDS = new Set(['fc', 'afc', 'cf', 'sc', 'club', 'football', 'the'])
@@ -95,8 +97,10 @@ function MatchItem({ match, activeSource }) {
   }
 
   let timeText = 'VS'
+
   if (!showScore && match.utcDate) {
     const d = new Date(match.utcDate)
+
     timeText = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
   }
 
@@ -187,7 +191,8 @@ export default function RunningTextOverlay({ isPageMode = false }) {
   useEffect(() => {
     if (!activeMatches || activeMatches.length === 0) {
       setTickerItems([])
-      return
+      
+return
     }
 
     if (activeSource === 'world-cup') {
@@ -197,6 +202,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
 
       activeMatches.forEach(m => {
         if (!m.utcDate) return
+
         if (m.status === 'IN_PLAY' || m.status === 'PAUSED') {
           live.push(m)
         } else if (m.status === 'FINISHED') {
@@ -216,6 +222,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
 
       // Combine and sort chronologically (ascending)
       const combined = [...live, ...recentFinished, ...soonestUpcoming]
+
       combined.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate))
 
       // Group and insert separators
@@ -224,6 +231,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
 
       combined.forEach(m => {
         const dateStr = getIndonesianDateString(m.utcDate)
+
         if (dateStr && dateStr !== lastDateStr) {
           itemsWithSeparators.push({
             isSeparator: true,
@@ -232,6 +240,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
           })
           lastDateStr = dateStr
         }
+
         itemsWithSeparators.push(m)
       })
 
@@ -264,6 +273,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
   if (loadingMatches || loadingSettings) {
     return isPageMode ? <div className='text-white p-2 font-mono text-xs'>Loading data...</div> : null
   }
+
   if (!tickerItems.length) {
     return isPageMode ? (
       <div className='text-white p-2 font-mono text-xs'>No active or recent matches found.</div>
@@ -279,6 +289,7 @@ export default function RunningTextOverlay({ isPageMode = false }) {
   // Resolve active static header text based on active source and live matches
   const hasLive = tickerItems.some(i => !i.isSeparator && (i.status === 'IN_PLAY' || i.status === 'PAUSED'))
   let labelText = ''
+
   if (activeSource === 'premier-league') {
     labelText = hasLive ? 'EPL LIVE' : 'PREMIER LEAGUE'
   } else if (activeSource === 'champions-league') {
@@ -312,14 +323,18 @@ export default function RunningTextOverlay({ isPageMode = false }) {
               if (item.isSeparator) {
                 return <SeparatorItem key={item.key || `sep-${index}`} dateText={item.dateText} />
               }
-              return <MatchItem key={item.id} match={item} activeSource={activeSource} />
+
+              
+return <MatchItem key={item.id} match={item} activeSource={activeSource} />
             })}
             {/* Duplicates for seamless loop  */}
             {tickerItems.map((item, index) => {
               if (item.isSeparator) {
                 return <SeparatorItem key={`dup-${item.key || `sep-${index}`}`} dateText={item.dateText} />
               }
-              return <MatchItem key={`dup-${item.id}`} match={item} activeSource={activeSource} />
+
+              
+return <MatchItem key={`dup-${item.id}`} match={item} activeSource={activeSource} />
             })}
           </div>
         </div>

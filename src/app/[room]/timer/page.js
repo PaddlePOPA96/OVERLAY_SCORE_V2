@@ -32,10 +32,13 @@ export default function TimerOverlay() {
 
   useEffect(() => {
     const offsetRef = ref(db, '.info/serverTimeOffset')
+
     const unsubscribe = onValue(offsetRef, snap => {
       serverTimeOffsetRef.current = snap.val() || 0
     })
-    return () => unsubscribe()
+
+    
+return () => unsubscribe()
   }, [])
 
   const handleInteraction = () => {
