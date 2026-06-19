@@ -22,7 +22,29 @@ export default function StreamsPage() {
     const [uid, setUid] = useState(null);
     const [currentChannel, setCurrentChannel] = useState('');
 
+    let isYoutube = false;
+    let youtubeId = '';
+    
+    if (currentChannel) {
+        if (currentChannel.includes('youtube.com/watch')) {
+            isYoutube = true;
+            try {
+                youtubeId = new URL(currentChannel).searchParams.get('v');
+            } catch (e) {
+                // Ignore parsing errors
+            }
+        } else if (currentChannel.includes('youtu.be/')) {
+            isYoutube = true;
+            youtubeId = currentChannel.split('youtu.be/')[1]?.split('?')[0];
+        } else if (currentChannel.includes('youtube.com/embed/')) {
+            isYoutube = true;
+            youtubeId = currentChannel.split('youtube.com/embed/')[1]?.split('?')[0];
+        }
+    }
+
     useEffect(() => {
+        if (isYoutube) return; // Do not initialize HLS for YouTube
+
         const video = videoRef.current;
         if (!video) return;
 
@@ -229,7 +251,18 @@ export default function StreamsPage() {
                 {/* Bagian Kiri: Video & Judul */}
                 <div className={styles.videoSection}>
                     <div className={styles.videoWrapper}>
-                        <video ref={videoRef} className={styles.video} controls autoPlay playsInline></video>
+                        {isYoutube && youtubeId ? (
+                            <iframe 
+                                className={styles.video} 
+                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`} 
+                                frameBorder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowFullScreen
+                                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                            ></iframe>
+                        ) : (
+                            <video ref={videoRef} className={styles.video} controls autoPlay playsInline></video>
+                        )}
                     </div>
                     <div className={styles.metaData}>
                         <h1 className={styles.title}>SELAMAT ULANG TAHUN</h1>
