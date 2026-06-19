@@ -5,6 +5,7 @@ import Hls from 'hls.js';
 import styles from './streams.module.css';
 import { db } from '@/lib/firebase/db';
 import { ref, push, onValue, serverTimestamp } from 'firebase/database';
+import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
     const videoRef = useRef(null);
@@ -243,6 +244,8 @@ export default function StreamsPage() {
                 </div>
 
             </div>
+            {/* Running Text Ticker at the bottom */}
+            <RunningTextOverlay isPageMode={true} />
         </div>
     );
 }
