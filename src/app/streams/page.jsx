@@ -43,31 +43,41 @@ export default function StreamsPage() {
     }
 
     useEffect(() => {
-        if (isYoutube) return; // Do not initialize HLS for YouTube
+        if (isYoutube) {
+            if (hlsRef.current) {
+                hlsRef.current.destroy();
+                hlsRef.current = null;
+            }
+            return;
+        }
 
         const video = videoRef.current;
         if (!video) return;
 
-        if (Hls.isSupported()) {
-            if (!hlsRef.current) {
-                const hls = new Hls({
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90
-                });
+        // Selalu bersihkan instance lama karena tag <video> mungkin baru saja dimount ulang
+        if (hlsRef.current) {
+            hlsRef.current.destroy();
+            hlsRef.current = null;
+        }
 
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    setTimeout(() => {
-                        video.play().catch((err) => console.log('Autoplay blocked:', err));
-                    }, 500);
-                });
-                
-                hls.attachMedia(video);
-                hlsRef.current = hls;
-            }
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true,
+                backBufferLength: 90
+            });
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                setTimeout(() => {
+                    video.play().catch((err) => console.log('Autoplay blocked:', err));
+                }, 500);
+            });
+            
+            hls.attachMedia(video);
+            hlsRef.current = hls;
             
             if (currentChannel) {
-                hlsRef.current.loadSource(currentChannel);
+                hls.loadSource(currentChannel);
             }
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             if (currentChannel) {
@@ -79,7 +89,7 @@ export default function StreamsPage() {
                 });
             }
         }
-    }, [currentChannel]);
+    }, [currentChannel, isYoutube]);
 
     useEffect(() => {
         const urlRef = ref(db, 'settings/stream_url');
@@ -254,11 +264,11 @@ export default function StreamsPage() {
                         {isYoutube && youtubeId ? (
                             <iframe 
                                 className={styles.video} 
-                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0`} 
+                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`} 
                                 frameBorder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowFullScreen
-                                style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                                style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
                         ) : (
                             <video ref={videoRef} className={styles.video} controls autoPlay playsInline></video>
