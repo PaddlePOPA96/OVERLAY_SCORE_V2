@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, usePathname } from 'next/navigation'
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, onSnapshot, collection } from 'firebase/firestore'
@@ -14,10 +14,17 @@ import { dbFirestore } from '@/lib/firebase/firestore'
 import { db } from '@/lib/firebase/db'
 import Logo from './Logo'
 
-const NavItem = ({ href, icon, children, currentParam }) => {
-  // Extract the 's' parameter from the href
-  const targetParam = href.split('s=')[1]
-  const isActive = currentParam === targetParam || (!currentParam && targetParam === 'operator')
+const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
+  const pathname = usePathname()
+  
+  let isActive = false
+  if (isDirectPath) {
+    isActive = pathname === href
+  } else {
+    // Extract the 's' parameter from the href
+    const targetParam = href.split('s=')[1]
+    isActive = pathname === '/' && (currentParam === targetParam || (!currentParam && targetParam === 'operator'))
+  }
 
   return (
     <Link
@@ -156,6 +163,7 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
             {activeLeagues.world_cup && (
               <NavItem currentParam={activeSection} href="/?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
             )}
+            <NavItem currentParam={activeSection} href="/streams" icon="ri-tv-line" isDirectPath={true}>Live Streams</NavItem>
           </NavSection>
 
           {isSuperAdmin && (
