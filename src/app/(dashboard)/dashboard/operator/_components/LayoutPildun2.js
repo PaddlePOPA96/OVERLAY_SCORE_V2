@@ -244,43 +244,43 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   flex: 1,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  paddingLeft: '20px',
+                  justifyContent: 'center',
                   gap: '16px',
                   overflow: 'hidden',
                 }}
               >
                 <div
                   style={{
-                    width: '68px',
-                    height: '44px',
+                    width: '90px',
+                    height: '60px',
                     borderRadius: '6px',
-                    flexShrink: 0,
-                    background: teamLeftColor,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  }}
-                />
-                <div
-                  style={{
-                    width: '68px',
-                    height: '68px',
-                    borderRadius: '50%',
                     background: '#D9D9D9',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                   }}
                 >
                   {teamLeftLogo && (
                     <img
                       src={teamLeftLogo}
                       alt={teamLeftName}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   )}
                 </div>
+                <div
+                  style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    flexShrink: 0,
+                    background: teamLeftColor,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  }}
+                />
                 <span
                   style={{
                     color: '#ffffff',
@@ -411,8 +411,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   flex: 1,
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  paddingRight: '20px',
+                  justifyContent: 'center',
                   gap: '16px',
                   overflow: 'hidden',
                 }}
@@ -432,35 +431,36 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 </span>
                 <div
                   style={{
-                    width: '68px',
-                    height: '68px',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '50%',
+                    flexShrink: 0,
+                    background: teamRightColor,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  }}
+                />
+                <div
+                  style={{
+                    width: '90px',
+                    height: '60px',
+                    borderRadius: '6px',
                     background: '#D9D9D9',
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                   }}
                 >
                   {teamRightLogo && (
                     <img
                       src={teamRightLogo}
                       alt={teamRightName}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '4px' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   )}
                 </div>
-                <div
-                  style={{
-                    width: '68px',
-                    height: '44px',
-                    borderRadius: '6px',
-                    flexShrink: 0,
-                    background: teamRightColor,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  }}
-                />
               </div>
             </div>
 
