@@ -19,6 +19,9 @@ export default function StreamsPage() {
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [cooldown, setCooldown] = useState(0);
+    const [isNameSet, setIsNameSet] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    const [uid, setUid] = useState(null);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -78,6 +81,23 @@ export default function StreamsPage() {
         };
     }, []);
 
+    // Load saved name and uid from local storage to avoid hydration mismatch
+    useEffect(() => {
+        setIsMounted(true);
+        const savedName = localStorage.getItem('chat_username');
+        if (savedName) {
+            setName(savedName);
+            setIsNameSet(true);
+        }
+
+        let savedUid = localStorage.getItem('chat_uid');
+        if (!savedUid) {
+            savedUid = 'uid_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+            localStorage.setItem('chat_uid', savedUid);
+        }
+        setUid(savedUid);
+    }, []);
+
     useEffect(() => {
         const chatRef = ref(db, 'live_streams_chat');
         const unsubscribe = onValue(chatRef, (snapshot) => {
@@ -125,6 +145,7 @@ export default function StreamsPage() {
         try {
             const chatRef = ref(db, 'live_streams_chat');
             await push(chatRef, {
+                uid: uid,
                 name: name.trim(),
                 message: message.trim(),
                 timestamp: serverTimestamp()
@@ -136,6 +157,16 @@ export default function StreamsPage() {
             alert("Gagal mengirim pesan: " + error.message);
         } finally {
             setIsSending(false);
+        }
+    };
+
+    const handleSaveName = (e) => {
+        e.preventDefault();
+        const trimmed = name.trim();
+        if (trimmed) {
+            localStorage.setItem('chat_username', trimmed);
+            setName(trimmed);
+            setIsNameSet(true);
         }
     };
 
@@ -210,36 +241,58 @@ export default function StreamsPage() {
                     </div>
 
                     <div className={styles.chatInputArea}>
-                        <form onSubmit={handleSendMessage} className={styles.chatForm}>
-                            <div className={styles.inputRow}>
-                                <input
-                                    type="text"
-                                    placeholder="Nama..."
-                                    className={styles.nameInput}
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    maxLength={20}
-                                    required
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Ketik pesan di sini..."
-                                    className={styles.messageInput}
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    maxLength={200}
-                                    required
-                                    autoComplete="off"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className={styles.sendBtn}
-                                disabled={isSending || cooldown > 0 || !name.trim() || !message.trim()}
-                            >
-                                {cooldown > 0 ? `${cooldown}s` : 'Kirim'}
-                            </button>
-                        </form>
+                        {!isMounted ? (
+                            <div style={{ height: '50px' }}></div>
+                        ) : !isNameSet ? (
+                            <form onSubmit={handleSaveName} className={styles.chatForm}>
+                                <div style={{ fontSize: '13px', color: '#aaa', marginBottom: '4px' }}>Masukkan nama untuk mulai chat:</div>
+                                <div className={styles.inputRow}>
+                                    <input
+                                        type="text"
+                                        placeholder="Ketik nama kamu..."
+                                        className={styles.messageInput}
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        maxLength={20}
+                                        required
+                                        autoFocus
+                                    />
+                                    <button
+                                        type="submit"
+                                        className={styles.sendBtn}
+                                        disabled={!name.trim()}
+                                    >
+                                        Simpan
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleSendMessage} className={styles.chatForm}>
+                                <div style={{ fontSize: '12px', color: '#aaa', display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                    <span>Chat sebagai: <strong style={{color: '#f1f1f1'}}>{name}</strong></span>
+                                    <span style={{ cursor: 'pointer', color: '#3ea6ff' }} onClick={() => setIsNameSet(false)}>Ubah</span>
+                                </div>
+                                <div className={styles.inputRow}>
+                                    <input
+                                        type="text"
+                                        placeholder="Ketik pesan di sini..."
+                                        className={styles.messageInput}
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        maxLength={200}
+                                        required
+                                        autoComplete="off"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className={styles.sendBtn}
+                                        disabled={isSending || cooldown > 0 || !message.trim()}
+                                    >
+                                        {cooldown > 0 ? `${cooldown}s` : 'Kirim'}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
                     </div>
                 </div>
 
