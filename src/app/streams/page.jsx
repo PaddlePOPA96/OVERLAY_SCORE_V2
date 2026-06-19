@@ -12,8 +12,6 @@ export default function StreamsPage() {
     const hlsRef = useRef(null);
     const chatEndRef = useRef(null);
 
-    const currentChannel = 'https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8';
-
     const [chats, setChats] = useState([]);
     const [name, setName] = useState('');
     const [message, setMessage] = useState('');
@@ -22,57 +20,60 @@ export default function StreamsPage() {
     const [isNameSet, setIsNameSet] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [uid, setUid] = useState(null);
+    const [currentChannel, setCurrentChannel] = useState('');
 
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
 
-        const loadVideo = (url) => {
-            if (hlsRef.current) {
-                hlsRef.current.destroy();
-                hlsRef.current = null;
-            }
-
-            if (Hls.isSupported()) {
+        if (Hls.isSupported()) {
+            if (!hlsRef.current) {
                 const hls = new Hls({
-                    lowLatencyMode: true,
                     enableWorker: true,
+                    lowLatencyMode: true,
                     backBufferLength: 90
                 });
-                hlsRef.current = hls;
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     setTimeout(() => {
-                        video.play().catch(e => console.log("Autoplay prevented by browser:", e));
+                        video.play().catch((err) => console.log('Autoplay blocked:', err));
                     }, 500);
                 });
-
-                hls.on(Hls.Events.ERROR, function (event, data) {
-                    if (data.fatal) {
-                        switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                hls.destroy();
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
-                video.addEventListener('loadedmetadata', function () {
-                    video.play().catch(e => console.log("Autoplay prevented by browser:", e));
+                
+                hls.attachMedia(video);
+                hlsRef.current = hls;
+            }
+            
+            if (currentChannel) {
+                hlsRef.current.loadSource(currentChannel);
+            }
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            if (currentChannel) {
+                video.src = currentChannel;
+                video.addEventListener('loadedmetadata', () => {
+                    setTimeout(() => {
+                        video.play().catch((err) => console.log('Autoplay blocked:', err));
+                    }, 500);
                 });
             }
-        };
+        }
+    }, [currentChannel]);
 
-        loadVideo(currentChannel);
+    useEffect(() => {
+        const urlRef = ref(db, 'settings/stream_url');
+        const unsub = onValue(urlRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setCurrentChannel(snapshot.val());
+            } else {
+                // Default fallback if not set
+                setCurrentChannel('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8');
+            }
+        });
+        return () => unsub();
+    }, []);
 
+    // Cleanup HLS on unmount
+    useEffect(() => {
         return () => {
             if (hlsRef.current) {
                 hlsRef.current.destroy();

@@ -27,6 +27,10 @@ const OperatorRoot = dynamic(() => import('@/app/(dashboard)/dashboard/operator/
   ssr: false
 })
 
+const StreamUrlManager = dynamic(() => import('@/features/match-simulation/components/operator/StreamUrlManager'), {
+  ssr: false
+})
+
 const CountdownTimer = dynamic(() => import('@/features/countdown/components/CountdownTimer'), { ssr: false })
 
 const TikTokOverlayControl = dynamic(() => import('@/features/tiktok/components/TikTokOverlayControl'), {
@@ -132,6 +136,7 @@ function DashboardPageInner() {
             <p className='text-textSecondary text-sm'>Control the live scoreboard in real-time.</p>
           </header>
           <RequireLogin title='Scoreboard Operator'>
+            <StreamUrlManager theme={theme} />
             <OperatorRoot initialRoomId={roomId} requireAuth={false} theme={theme} />
           </RequireLogin>
         </div>
