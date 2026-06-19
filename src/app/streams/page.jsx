@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import styles from './streams.module.css';
 import { db } from '@/lib/firebase/db';
-import { ref, push, onValue, serverTimestamp } from 'firebase/database';
+import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update } from 'firebase/database';
 import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
@@ -160,13 +160,31 @@ export default function StreamsPage() {
         }
     };
 
-    const handleSaveName = (e) => {
+    const handleSaveName = async (e) => {
         e.preventDefault();
         const trimmed = name.trim();
         if (trimmed) {
             localStorage.setItem('chat_username', trimmed);
             setName(trimmed);
             setIsNameSet(true);
+
+            // Update all past messages with this UID to the new name
+            if (uid) {
+                const chatRef = ref(db, 'live_streams_chat');
+                const q = query(chatRef, orderByChild('uid'), equalTo(uid));
+                try {
+                    const snapshot = await get(q);
+                    if (snapshot.exists()) {
+                        const updates = {};
+                        snapshot.forEach((childSnapshot) => {
+                            updates[childSnapshot.key + '/name'] = trimmed;
+                        });
+                        await update(chatRef, updates);
+                    }
+                } catch (err) {
+                    console.error("Failed to update previous names:", err);
+                }
+            }
         }
     };
 
@@ -230,12 +248,24 @@ export default function StreamsPage() {
                                 Belum ada pesan. Mulai obrolan!
                             </div>
                         ) : (
-                            chats.map((chat) => (
-                                <div key={chat.id} className={styles.chatMessage}>
-                                    <span className={styles.chatName}>{chat.name}</span>
-                                    <span className={styles.chatText}>{chat.message}</span>
-                                </div>
-                            ))
+                            chats.map((chat) => {
+                                const isMe = chat.uid === uid;
+                                return (
+                                    <div 
+                                        key={chat.id} 
+                                        className={styles.chatMessage}
+                                        style={isMe ? { backgroundColor: 'rgba(62, 166, 255, 0.1)', padding: '6px 8px', borderRadius: '6px' } : {}}
+                                    >
+                                        <span 
+                                            className={styles.chatName}
+                                            style={isMe ? { color: '#3ea6ff' } : {}}
+                                        >
+                                            {chat.name}
+                                        </span>
+                                        <span className={styles.chatText}>{chat.message}</span>
+                                    </div>
+                                );
+                            })
                         )}
                         <div ref={chatEndRef} />
                     </div>
