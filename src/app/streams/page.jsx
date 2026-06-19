@@ -23,12 +23,18 @@ export default function StreamsPage() {
             }
 
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                const hls = new Hls({
+                    lowLatencyMode: true,
+                    enableWorker: true,
+                    backBufferLength: 90
+                });
                 hlsRef.current = hls;
                 hls.loadSource(url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    video.play().catch(e => console.log("Autoplay prevented by browser:", e));
+                    setTimeout(() => {
+                        video.play().catch(e => console.log("Autoplay prevented by browser:", e));
+                    }, 500);
                 });
 
                 hls.on(Hls.Events.ERROR, function (event, data) {
@@ -94,7 +100,7 @@ export default function StreamsPage() {
                 </div>
 
                 <div className={styles.videoWrapper}>
-                    <video ref={videoRef} className={styles.video} controls autoPlay playsInline muted></video>
+                    <video ref={videoRef} className={styles.video} controls autoPlay playsInline></video>
                 </div>
             </div>
         </div>
