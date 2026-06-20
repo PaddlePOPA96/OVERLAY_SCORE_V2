@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 
-import { useScoreboard } from '@/features/match-simulation/hooks/useScoreboard'
+import { useScoreboard } from '@/hooks/useScoreboard'
 import LayoutA from '../../_components/LayoutA'
 import LayoutB from '../../_components/LayoutB'
 import LayoutC from '../../_components/LayoutC'
@@ -183,8 +183,8 @@ return
           top: 0,
           left: 0,
           transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease',
-          transform: isThirdTitleShowing ? 'translateY(-20px)' : 'translateY(0)',
-          opacity: isThirdTitleShowing ? 0 : 1,
+          transform: 'translateY(0)',
+          opacity: 1,
         }}
       >
         {data.layout === 'A' ? (

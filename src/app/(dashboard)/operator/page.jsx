@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 import { useTheme } from '@mui/material/styles'
 
-import OperatorRoot from '@/features/match-simulation/components/operator/OperatorRoot'
+import OperatorRoot from '@/app/(dashboard)/dashboard/operator/_components/OperatorRoot'
 import { useAuth } from '@/components/providers/AuthContext'
 
 export default function OperatorPage() {

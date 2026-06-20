@@ -4,6 +4,8 @@ import { ref, set } from 'firebase/database'
 
 import { db } from '@/lib/firebase/db'
 
+export const dynamic = 'force-dynamic'
+
 const NEWS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news'
 
 export async function GET(request) {

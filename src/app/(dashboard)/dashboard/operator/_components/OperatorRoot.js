@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { ref, set, get, onValue } from 'firebase/database'
 
-import { useScoreboard } from '@/features/match-simulation/hooks/useScoreboard'
+import { useScoreboard } from '@/hooks/useScoreboard'
 import { auth } from '@/lib/firebase/auth'
 import { useAuth } from '@/components/providers/AuthContext'
 import { db } from '@/lib/firebase/db'

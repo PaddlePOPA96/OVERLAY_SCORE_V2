@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { getScale } from '@/features/match-simulation/components/operator/overlay-scale.config'
+import { getScale } from '../../_components/overlay-scale.config'
 
 export default function ThirdTitleOverlay({ data }) {
   const { isShowing, eventType, playerName, playerImg, triggerId } = data.thirdTitle || {}

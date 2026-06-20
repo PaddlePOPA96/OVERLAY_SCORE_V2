@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import LayoutSelector from './LayoutSelector'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
-import ThirdTitleControls from '@/features/match-simulation/components/operator/shared/ThirdTitleControls'
+import ThirdTitleControls from './ThirdTitleControls'
 
 export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('scoreboard')
