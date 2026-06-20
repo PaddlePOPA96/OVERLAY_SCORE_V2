@@ -6,8 +6,9 @@ import { Button, TextField, Box, Typography, Paper } from '@mui/material';
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
   const [token, setToken] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [saving, setSaving] = useState(false);
-  const [extractedFeedback, setExtractedFeedback] = useState(false);
+  const [feedback, setFeedback] = useState({ text: '', isError: false });
   const isLight = theme === 'light';
 
   useEffect(() => {
@@ -47,7 +48,6 @@ export default function StreamUrlManager({ theme }) {
     // 2. Detect query parameter token/auth/key/pass/hash
     const queryParams = ['token', 'auth', 'key', 'token_id', 'pass', 'hash'];
     try {
-      // Treat as URL or string with query parameters
       const hasHttp = rawUrl.startsWith('http://') || rawUrl.startsWith('https://');
       const urlObj = new URL(hasHttp ? rawUrl : `http://dummy.com/${rawUrl}`);
       for (const param of queryParams) {
@@ -75,25 +75,58 @@ export default function StreamUrlManager({ theme }) {
     return { token: '', templatedUrl: rawUrl };
   };
 
-  const handleUrlChange = (value) => {
-    const result = extractAndTemplateToken(value.trim());
-    if (result.token) {
-      setUrl(result.templatedUrl);
-      setToken(result.token);
-      setExtractedFeedback(true);
-      setTimeout(() => setExtractedFeedback(false), 3000);
+  const isUrl = (str) => {
+    const trimmed = str.trim();
+    return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trimmed.includes('.mpd');
+  };
+
+  const getPendingValues = (input) => {
+    const trimmed = input.trim();
+    if (!trimmed) return { pendingUrl: url, pendingToken: token, type: '' };
+
+    if (isUrl(trimmed)) {
+      const result = extractAndTemplateToken(trimmed);
+      if (result.token) {
+        return { pendingUrl: result.templatedUrl, pendingToken: result.token, type: 'url_with_token' };
+      } else {
+        return { pendingUrl: trimmed, pendingToken: '', type: 'url_only' };
+      }
     } else {
-      setUrl(value);
+      return { pendingUrl: url, pendingToken: trimmed, type: 'token_only' };
     }
   };
 
+  const { pendingUrl, pendingToken, type } = getPendingValues(inputValue);
+  const resolvedLiveUrl = url ? url.replace(/{token}/gi, token).replace(/\[token\]/gi, token) : '';
+  const previewUrl = pendingUrl ? pendingUrl.replace(/{token}/gi, pendingToken).replace(/\[token\]/gi, pendingToken) : '';
+
   const handleSave = async () => {
+    if (!inputValue.trim()) return;
     setSaving(true);
     try {
-      await set(ref(db, 'settings/stream_url'), url.trim());
-      await set(ref(db, 'settings/stream_token'), token.trim());
+      await set(ref(db, 'settings/stream_url'), pendingUrl.trim());
+      await set(ref(db, 'settings/stream_token'), pendingToken.trim());
+      setInputValue('');
+      setFeedback({ text: '✓ Pengaturan berhasil disimpan!', isError: false });
+      setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
       console.error("Failed to save stream settings:", err);
+      setFeedback({ text: '❌ Gagal menyimpan pengaturan.', isError: true });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const applyPreset = async (presetUrl) => {
+    setSaving(true);
+    try {
+      await set(ref(db, 'settings/stream_url'), presetUrl);
+      await set(ref(db, 'settings/stream_token'), '');
+      setInputValue('');
+      setFeedback({ text: '✓ Preset berhasil diterapkan!', isError: false });
+      setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
+    } catch (err) {
+      console.error("Failed to save preset:", err);
     } finally {
       setSaving(false);
     }
@@ -116,20 +149,33 @@ export default function StreamUrlManager({ theme }) {
         <Typography variant="h6" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>
           Live Stream Global URL
         </Typography>
+
+        {/* Current Active URL */}
+        <Box sx={{ p: 2, bgcolor: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)', borderRadius: 2, border: '1px dashed', borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }}>
+          <Typography variant="caption" display="block" sx={{ color: isLight ? '#666' : '#aaa', mb: 0.5, fontWeight: 'bold' }}>
+            URL AKTIF SAAT INI (RESOLVED):
+          </Typography>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: resolvedLiveUrl ? (isLight ? '#1e293b' : '#cbd5e1') : (isLight ? '#94a3b8' : '#64748b') }}>
+            {resolvedLiveUrl || 'Belum ada siaran aktif'}
+          </Typography>
+        </Box>
+
         <Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>
-          Update the m3u8 link and token here to change the broadcast channel across all /streams viewers in real-time. Use <code>{'{token}'}</code> in the URL to insert the token dynamically.
+          Tempel URL .m3u8 baru di bawah ini. Sistem akan otomatis memisahkan tokennya. Jika nanti token kedaluwarsa, Anda <strong>cukup menempelkan token baru saja</strong> di kolom yang sama.
         </Typography>
         
-        <Box display="flex" flexDirection="column" gap={2}>
+        <Box display="flex" gap={2} alignItems="stretch" flexWrap="wrap">
           <TextField 
             fullWidth
             size="small"
             variant="outlined"
-            label="Broadcast Stream URL / Template"
-            placeholder="https://example.com/live/stream.m3u8 (gunakan {token} sebagai placeholder)"
-            value={url}
-            onChange={(e) => handleUrlChange(e.target.value)}
-            sx={{
+            label="Masukkan URL Aliran atau Token Baru"
+            placeholder="Tempel URL m3u8 utuh ATAU tempel token baru saja..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            sx={{ 
+              flex: 1, 
+              minWidth: '280px',
               '& .MuiOutlinedInput-root': {
                 color: isLight ? '#000' : '#fff',
                 '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)' }
@@ -137,39 +183,37 @@ export default function StreamUrlManager({ theme }) {
               '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' }
             }}
           />
-          <Box display="flex" gap={2} alignItems="center" flexWrap="wrap">
-            <TextField 
-              size="small"
-              variant="outlined"
-              label="Access Token (Opsional)"
-              placeholder="Masukkan token di sini..."
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              sx={{ 
-                flex: 1, 
-                minWidth: '250px',
-                '& .MuiOutlinedInput-root': {
-                  color: isLight ? '#000' : '#fff',
-                  '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)' }
-                },
-                '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' }
-              }}
-            />
-            <Button 
-              variant="contained" 
-              color="primary" 
-              onClick={handleSave} 
-              disabled={saving}
-              sx={{ textTransform: 'none', fontWeight: 'bold', height: '40px' }}
-            >
-              {saving ? 'Saving...' : 'Save Broadcast URL'}
-            </Button>
-          </Box>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleSave} 
+            disabled={saving || !inputValue.trim()}
+            sx={{ textTransform: 'none', fontWeight: 'bold', height: '40px', px: 3 }}
+          >
+            {saving ? 'Saving...' : 'Simpan Perubahan'}
+          </Button>
         </Box>
-        
-        {extractedFeedback && (
-          <Typography variant="caption" sx={{ color: '#22c55e', fontWeight: '500' }}>
-            ✓ Token terdeteksi dan berhasil diekstrak otomatis!
+
+        {/* Real-time Feedback & Preview */}
+        {inputValue.trim() && (
+          <Box sx={{ p: 2, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2, border: '1px solid', borderColor: 'rgba(34, 197, 94, 0.2)' }}>
+            <Typography variant="caption" display="block" sx={{ color: '#22c55e', fontWeight: 'bold', mb: 1 }}>
+              {type === 'url_with_token' && '✓ Terdeteksi: URL Lengkap (Token otomatis dipisahkan)'}
+              {type === 'url_only' && '✓ Terdeteksi: URL Baru (Tanpa Token)'}
+              {type === 'token_only' && '✓ Terdeteksi: Token Baru (Menggunakan Template URL Lama)'}
+            </Typography>
+            <Typography variant="caption" display="block" sx={{ color: isLight ? '#666' : '#aaa', mb: 0.5 }}>
+              PREVIEW HASIL GABUNGAN:
+            </Typography>
+            <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: isLight ? '#1e293b' : '#94a3b8' }}>
+              {previewUrl}
+            </Typography>
+          </Box>
+        )}
+
+        {feedback.text && !inputValue.trim() && (
+          <Typography variant="caption" sx={{ color: feedback.isError ? '#ef4444' : '#22c55e', fontWeight: '500' }}>
+            {feedback.text}
           </Typography>
         )}
         
@@ -182,7 +226,7 @@ export default function StreamUrlManager({ theme }) {
             variant="outlined" 
             size="small" 
             color="inherit"
-            onClick={() => { setUrl('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8'); setToken(''); }}
+            onClick={() => applyPreset('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8')}
             sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
           >
             CazeTV (Brasil)
@@ -191,7 +235,7 @@ export default function StreamUrlManager({ theme }) {
             variant="outlined" 
             size="small" 
             color="inherit"
-            onClick={() => { setUrl('https://ott-balancer.tvri.go.id/live/eds/TVRIWorld/hls/TVRIWorld.m3u8'); setToken(''); }}
+            onClick={() => applyPreset('https://ott-balancer.tvri.go.id/live/eds/TVRIWorld/hls/TVRIWorld.m3u8')}
             sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
           >
             TVRI World (1080p)
@@ -200,7 +244,7 @@ export default function StreamUrlManager({ theme }) {
             variant="outlined" 
             size="small" 
             color="inherit"
-            onClick={() => { setUrl('https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8'); setToken(''); }}
+            onClick={() => applyPreset('https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8')}
             sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
           >
             TVRI Sport HD (720p)
