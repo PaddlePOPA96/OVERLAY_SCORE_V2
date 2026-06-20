@@ -21,10 +21,12 @@ export default function StreamsPage() {
     const [isMounted, setIsMounted] = useState(false);
     const [uid, setUid] = useState(null);
     const [currentChannel, setCurrentChannel] = useState('');
+    const [rawUrl, setRawUrl] = useState('');
+    const [streamToken, setStreamToken] = useState('');
 
     let isYoutube = false;
     let youtubeId = '';
-    
+
     if (currentChannel) {
         if (currentChannel.includes('youtube.com/watch')) {
             isYoutube = true;
@@ -72,10 +74,10 @@ export default function StreamsPage() {
                     video.play().catch((err) => console.log('Autoplay blocked:', err));
                 }, 500);
             });
-            
+
             hls.attachMedia(video);
             hlsRef.current = hls;
-            
+
             if (currentChannel) {
                 hls.loadSource(currentChannel);
             }
@@ -93,16 +95,39 @@ export default function StreamsPage() {
 
     useEffect(() => {
         const urlRef = ref(db, 'settings/stream_url');
-        const unsub = onValue(urlRef, (snapshot) => {
+        const unsubUrl = onValue(urlRef, (snapshot) => {
             if (snapshot.exists()) {
-                setCurrentChannel(snapshot.val());
+                setRawUrl(snapshot.val());
             } else {
-                // Default fallback if not set
-                setCurrentChannel('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8');
+                setRawUrl('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8');
             }
         });
-        return () => unsub();
+
+        const tokenRef = ref(db, 'settings/stream_token');
+        const unsubToken = onValue(tokenRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setStreamToken(snapshot.val());
+            } else {
+                setStreamToken('');
+            }
+        });
+
+        return () => {
+            unsubUrl();
+            unsubToken();
+        };
     }, []);
+
+    useEffect(() => {
+        if (rawUrl) {
+            let finalUrl = rawUrl;
+            if (streamToken) {
+                finalUrl = rawUrl.replace(/{token}/gi, streamToken)
+                                 .replace(/\[token\]/gi, streamToken);
+            }
+            setCurrentChannel(finalUrl);
+        }
+    }, [rawUrl, streamToken]);
 
     // Cleanup HLS on unmount
     useEffect(() => {
@@ -262,11 +287,11 @@ export default function StreamsPage() {
                 <div className={styles.videoSection}>
                     <div className={styles.videoWrapper}>
                         {isYoutube && youtubeId ? (
-                            <iframe 
-                                className={styles.video} 
-                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`} 
-                                frameBorder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            <iframe
+                                className={styles.video}
+                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
@@ -295,12 +320,12 @@ export default function StreamsPage() {
                             chats.map((chat) => {
                                 const isMe = chat.uid === uid;
                                 return (
-                                    <div 
-                                        key={chat.id} 
+                                    <div
+                                        key={chat.id}
                                         className={styles.chatMessage}
                                         style={isMe ? { backgroundColor: 'rgba(62, 166, 255, 0.1)', padding: '6px 8px', borderRadius: '6px' } : {}}
                                     >
-                                        <span 
+                                        <span
                                             className={styles.chatName}
                                             style={isMe ? { color: '#3ea6ff' } : {}}
                                         >
@@ -343,7 +368,7 @@ export default function StreamsPage() {
                         ) : (
                             <form onSubmit={handleSendMessage} className={styles.chatForm}>
                                 <div style={{ fontSize: '12px', color: '#aaa', display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                    <span>Chat sebagai: <strong style={{color: '#f1f1f1'}}>{name}</strong></span>
+                                    <span>Chat sebagai: <strong style={{ color: '#f1f1f1' }}>{name}</strong></span>
                                     <span style={{ cursor: 'pointer', color: '#3ea6ff' }} onClick={() => setIsNameSet(false)}>Ubah</span>
                                 </div>
                                 <div className={styles.inputRow}>
