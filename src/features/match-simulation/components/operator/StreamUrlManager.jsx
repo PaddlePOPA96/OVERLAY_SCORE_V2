@@ -14,6 +14,7 @@ export default function StreamUrlManager({ theme }) {
   const [newPresetTitle, setNewPresetTitle] = useState('');
   const [newPresetUrl, setNewPresetUrl] = useState('');
   const [syncVod, setSyncVod] = useState(false);
+  const [useProxy, setUseProxy] = useState(false);
   const isLight = theme === 'light';
 
   useEffect(() => {
@@ -52,11 +53,19 @@ export default function StreamUrlManager({ theme }) {
       }
     });
 
+    const proxyRef = ref(db, 'settings/stream_use_proxy');
+    const unsubProxy = onValue(proxyRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setUseProxy(snapshot.val());
+      }
+    });
+
     return () => {
       unsubUrl();
       unsubToken();
       unsubPresets();
       unsubSync();
+      unsubProxy();
     };
   }, []);
 
@@ -64,7 +73,6 @@ export default function StreamUrlManager({ theme }) {
     let extractedToken = '';
     let templatedUrl = rawUrl;
 
-    // 1. Detect path token format like /token-XXXX/
     const pathTokenRegex = /\/token-([a-zA-Z0-9%_\-\.\+=]+)/i;
     const pathMatch = rawUrl.match(pathTokenRegex);
     if (pathMatch) {
@@ -73,7 +81,6 @@ export default function StreamUrlManager({ theme }) {
       return { token: extractedToken, templatedUrl };
     }
 
-    // 2. Detect query parameter token/auth/key/pass/hash
     const queryParams = ['token', 'auth', 'key', 'token_id', 'pass', 'hash'];
     try {
       const hasHttp = rawUrl.startsWith('http://') || rawUrl.startsWith('https://');
@@ -82,8 +89,8 @@ export default function StreamUrlManager({ theme }) {
         if (urlObj.searchParams.has(param)) {
           extractedToken = urlObj.searchParams.get(param);
           urlObj.searchParams.set(param, '{token}');
-          templatedUrl = hasHttp 
-            ? urlObj.toString() 
+          templatedUrl = hasHttp
+            ? urlObj.toString()
             : urlObj.toString().replace('http://dummy.com/', '');
           return { token: extractedToken, templatedUrl };
         }
@@ -151,6 +158,11 @@ export default function StreamUrlManager({ theme }) {
     await set(ref(db, 'settings/stream_sync_vod'), newValue);
   };
 
+  const handleToggleProxy = async (e) => {
+    const newValue = e.target.checked;
+    await set(ref(db, 'settings/stream_use_proxy'), newValue);
+  };
+
   const applyPreset = async (presetUrl) => {
     setSaving(true);
     try {
@@ -179,7 +191,7 @@ export default function StreamUrlManager({ theme }) {
 
   const handleSavePresetModal = () => {
     if (!newPresetTitle.trim() || !newPresetUrl.trim()) return;
-    
+
     const newPresetRef = push(ref(db, 'settings/stream_presets'));
     set(newPresetRef, { title: newPresetTitle.trim(), url: newPresetUrl.trim() }).then(() => {
       setModalOpen(false);
@@ -198,17 +210,17 @@ export default function StreamUrlManager({ theme }) {
   };
 
   return (
-    <Paper 
-        elevation={0}
-        sx={{ 
-            p: 3, 
-            mb: 4, 
-            border: '1px solid', 
-            borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
-            borderRadius: 3,
-            bgcolor: isLight ? 'rgba(255,255,255,0.8)' : 'rgba(15, 23, 42, 0.4)',
-            backdropFilter: 'blur(10px)'
-        }}
+    <Paper
+      elevation={0}
+      sx={{
+        p: 3,
+        mb: 4,
+        border: '1px solid',
+        borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
+        borderRadius: 3,
+        bgcolor: isLight ? 'rgba(255,255,255,0.8)' : 'rgba(15, 23, 42, 0.4)',
+        backdropFilter: 'blur(10px)'
+      }}
     >
       <Box display="flex" flexDirection="column" gap={2}>
         <Typography variant="h6" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>
@@ -228,9 +240,9 @@ export default function StreamUrlManager({ theme }) {
         <Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>
           Tempel URL .m3u8 baru di bawah ini. Sistem akan otomatis memisahkan tokennya. Jika nanti token kedaluwarsa, Anda <strong>cukup menempelkan token baru saja</strong> di kolom yang sama.
         </Typography>
-        
+
         <Box display="flex" gap={2} alignItems="stretch" flexWrap="wrap">
-          <TextField 
+          <TextField
             fullWidth
             size="small"
             variant="outlined"
@@ -238,8 +250,8 @@ export default function StreamUrlManager({ theme }) {
             placeholder="Tempel URL m3u8 utuh ATAU tempel token baru saja..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            sx={{ 
-              flex: 1, 
+            sx={{
+              flex: 1,
               minWidth: '280px',
               '& .MuiOutlinedInput-root': {
                 color: isLight ? '#000' : '#fff',
@@ -248,10 +260,10 @@ export default function StreamUrlManager({ theme }) {
               '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' }
             }}
           />
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSave} 
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
             disabled={saving || !inputValue.trim()}
             sx={{ textTransform: 'none', fontWeight: 'bold', height: '40px', px: 3 }}
           >
@@ -261,10 +273,11 @@ export default function StreamUrlManager({ theme }) {
 
         <FormControlLabel
           control={
-            <Switch 
-              checked={syncVod} 
-              onChange={handleToggleSync} 
+            <Switch
+              checked={syncVod}
+              onChange={handleToggleSync}
               color="primary"
+              size="small"
             />
           }
           label={
@@ -272,61 +285,78 @@ export default function StreamUrlManager({ theme }) {
               Aktifkan Sinkronisasi Waktu (Hanya untuk Video Rekaman/VOD YouTube)
             </Typography>
           }
-          sx={{ mt: 0 }}
+          sx={{ m: 0 }}
         />
 
-        {/* Real-time Feedback & Preview */}
-        {inputValue.trim() && (
-          <Box sx={{ p: 2, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2, border: '1px solid', borderColor: 'rgba(34, 197, 94, 0.2)' }}>
-            <Typography variant="caption" display="block" sx={{ color: '#22c55e', fontWeight: 'bold', mb: 1 }}>
-              {type === 'url_with_token' && '✓ Terdeteksi: URL Lengkap (Token otomatis dipisahkan)'}
-              {type === 'url_only' && '✓ Terdeteksi: URL Baru (Tanpa Token)'}
-              {type === 'token_only' && '✓ Terdeteksi: Token Baru (Menggunakan Template URL Lama)'}
-            </Typography>
-            <Typography variant="caption" display="block" sx={{ color: isLight ? '#666' : '#aaa', mb: 0.5 }}>
-              PREVIEW HASIL GABUNGAN:
-            </Typography>
-            <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: isLight ? '#1e293b' : '#94a3b8' }}>
-              {previewUrl}
-            </Typography>
-          </Box>
-        )}
-
-        {feedback.text && !inputValue.trim() && (
-          <Typography variant="caption" sx={{ color: feedback.isError ? '#ef4444' : '#22c55e', fontWeight: '500' }}>
-            {feedback.text}
-          </Typography>
-        )}
-        
-        {/* Preset Links */}
-        <Box display="flex" gap={1} flexWrap="wrap" mt={1} alignItems="center">
-          <Typography variant="caption" sx={{ color: isLight ? '#666' : '#aaa', display: 'flex', alignItems: 'center', mr: 1 }}>
-            Quick Presets:
-          </Typography>
-          
-          {presets.map(preset => (
-            <Chip 
-              key={preset.id}
-              label={preset.title}
-              onClick={() => applyPreset(preset.url)}
-              onDelete={() => handleDeletePreset(preset.id)}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={useProxy}
+              onChange={handleToggleProxy}
               color="primary"
-              variant="outlined"
               size="small"
-              sx={{ color: isLight ? '#444' : '#ccc', borderColor: isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)' }}
             />
-          ))}
+          }
+          label={
+            <Typography variant="body2" sx={{ color: isLight ? '#444' : '#ccc' }}>
+              Sembunyikan URL m3u8 Asli (Gunakan Proxy Siluman)
+            </Typography>
+          }
+          sx={{ m: 0 }}
+        />
+      </Box>
 
-          <Button 
-            variant="outlined" 
-            size="small" 
-            color="inherit"
-            onClick={handleOpenModal}
-            sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc', borderRadius: '16px', py: 0.2 }}
-          >
-            + Tambah Preset
-          </Button>
+      {/* Real-time Feedback & Preview */}
+      {inputValue.trim() && (
+        <Box sx={{ p: 2, mt: 2, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2, border: '1px solid', borderColor: 'rgba(34, 197, 94, 0.2)' }}>
+          <Typography variant="caption" display="block" sx={{ color: '#22c55e', fontWeight: 'bold', mb: 1 }}>
+            {type === 'url_with_token' && '✓ Terdeteksi: URL Lengkap (Token otomatis dipisahkan)'}
+            {type === 'url_only' && '✓ Terdeteksi: URL Baru (Tanpa Token)'}
+            {type === 'token_only' && '✓ Terdeteksi: Token Baru (Menggunakan Template URL Lama)'}
+          </Typography>
+          <Typography variant="caption" display="block" sx={{ color: isLight ? '#666' : '#aaa', mb: 0.5 }}>
+            PREVIEW HASIL GABUNGAN:
+          </Typography>
+          <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: isLight ? '#1e293b' : '#94a3b8' }}>
+            {previewUrl}
+          </Typography>
         </Box>
+      )}
+
+      {feedback.text && !inputValue.trim() && (
+        <Typography variant="caption" sx={{ display: 'block', mt: 1, color: feedback.isError ? '#ef4444' : '#22c55e', fontWeight: '500' }}>
+          {feedback.text}
+        </Typography>
+      )}
+
+      {/* Preset Links */}
+      <Box display="flex" gap={1} flexWrap="wrap" mt={2} alignItems="center">
+        <Typography variant="caption" sx={{ color: isLight ? '#666' : '#aaa', display: 'flex', alignItems: 'center', mr: 1 }}>
+          Quick Presets:
+        </Typography>
+
+        {presets.map(preset => (
+          <Chip
+            key={preset.id}
+            label={preset.title}
+            onClick={() => applyPreset(preset.url)}
+            onDelete={() => handleDeletePreset(preset.id)}
+            color="primary"
+            variant="outlined"
+            size="small"
+            sx={{ color: isLight ? '#444' : '#ccc', borderColor: isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)' }}
+          />
+        ))}
+
+        <Button
+          variant="outlined"
+          size="small"
+          color="inherit"
+          onClick={handleOpenModal}
+          sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc', borderRadius: '16px', py: 0.2 }}
+        >
+          + Tambah Preset
+        </Button>
       </Box>
 
       {/* Add Preset Modal */}

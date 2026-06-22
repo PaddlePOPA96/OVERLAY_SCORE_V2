@@ -25,24 +25,30 @@ export default function StreamsPage() {
     const [streamToken, setStreamToken] = useState('');
     const [streamStartTime, setStreamStartTime] = useState(0);
     const [streamSyncVod, setStreamSyncVod] = useState(false);
+    const [streamUseProxy, setStreamUseProxy] = useState(false);
 
     let isYoutube = false;
     let youtubeId = '';
 
     if (currentChannel) {
-        if (currentChannel.includes('youtube.com/watch')) {
+        // Resolve proxy path if any to check for YouTube
+        const decodedChannel = currentChannel.includes('/api/stream.m3u8?u=') 
+            ? Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8') 
+            : currentChannel;
+
+        if (decodedChannel.includes('youtube.com/watch')) {
             isYoutube = true;
             try {
-                youtubeId = new URL(currentChannel).searchParams.get('v');
+                youtubeId = new URL(decodedChannel).searchParams.get('v');
             } catch (e) {
                 // Ignore parsing errors
             }
-        } else if (currentChannel.includes('youtu.be/')) {
+        } else if (decodedChannel.includes('youtu.be/')) {
             isYoutube = true;
-            youtubeId = currentChannel.split('youtu.be/')[1]?.split('?')[0];
-        } else if (currentChannel.includes('youtube.com/embed/')) {
+            youtubeId = decodedChannel.split('youtu.be/')[1]?.split('?')[0];
+        } else if (decodedChannel.includes('youtube.com/embed/')) {
             isYoutube = true;
-            youtubeId = currentChannel.split('youtube.com/embed/')[1]?.split('?')[0];
+            youtubeId = decodedChannel.split('youtube.com/embed/')[1]?.split('?')[0];
         }
     }
 
@@ -144,11 +150,21 @@ export default function StreamsPage() {
             }
         });
 
+        const proxyRef = ref(db, 'settings/stream_use_proxy');
+        const unsubProxy = onValue(proxyRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setStreamUseProxy(snapshot.val());
+            } else {
+                setStreamUseProxy(false);
+            }
+        });
+
         return () => {
             unsubUrl();
             unsubToken();
             unsubStartTime();
             unsubSync();
+            unsubProxy();
         };
     }, []);
 
@@ -159,9 +175,16 @@ export default function StreamsPage() {
                 finalUrl = rawUrl.replace(/{token}/gi, streamToken)
                     .replace(/\[token\]/gi, streamToken);
             }
+
+            // Apply proxy if enabled and not a YouTube link
+            if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be')) {
+                const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
+            }
+
             setCurrentChannel(finalUrl);
         }
-    }, [rawUrl, streamToken]);
+    }, [rawUrl, streamToken, streamUseProxy]);
 
     // Cleanup HLS on unmount
     useEffect(() => {
