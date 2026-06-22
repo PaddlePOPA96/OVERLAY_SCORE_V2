@@ -15,6 +15,9 @@ export default function StreamUrlManager({ theme }) {
   const [newPresetUrl, setNewPresetUrl] = useState('');
   const [syncVod, setSyncVod] = useState(false);
   const [useProxy, setUseProxy] = useState(false);
+  const [title, setTitle] = useState('');
+  const [header, setHeader] = useState('');
+  const [headerCountry, setHeaderCountry] = useState('');
   const isLight = theme === 'light';
 
   useEffect(() => {
@@ -60,12 +63,33 @@ export default function StreamUrlManager({ theme }) {
       }
     });
 
+    const titleRef = ref(db, 'settings/stream_title');
+    const unsubTitle = onValue(titleRef, (snapshot) => {
+      if (snapshot.exists()) setTitle(snapshot.val());
+      else setTitle('SELAMAT ULANG TAHUN');
+    });
+
+    const headerRef = ref(db, 'settings/stream_header');
+    const unsubHeader = onValue(headerRef, (snapshot) => {
+      if (snapshot.exists()) setHeader(snapshot.val());
+      else setHeader('HUITOTOO');
+    });
+
+    const headerCountryRef = ref(db, 'settings/stream_header_country');
+    const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => {
+      if (snapshot.exists()) setHeaderCountry(snapshot.val());
+      else setHeaderCountry('ID');
+    });
+
     return () => {
       unsubUrl();
       unsubToken();
       unsubPresets();
       unsubSync();
       unsubProxy();
+      unsubTitle();
+      unsubHeader();
+      unsubHeaderCountry();
     };
   }, []);
 
@@ -269,6 +293,41 @@ export default function StreamUrlManager({ theme }) {
           >
             {saving ? 'Saving...' : 'Simpan Perubahan'}
           </Button>
+        </Box>
+
+        <Box sx={{ p: 2, bgcolor: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', borderRadius: 2, border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
+          <Typography variant="caption" display="block" sx={{ color: isLight ? '#666' : '#aaa', mb: 1.5, fontWeight: 'bold' }}>
+            TAMPILAN HALAMAN STREAM
+          </Typography>
+          <Box display="flex" gap={2} flexWrap="wrap">
+            <TextField
+              size="small"
+              variant="outlined"
+              label="Judul Stream (Bawah Video)"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={() => set(ref(db, 'settings/stream_title'), title.trim())}
+              sx={{ flex: 2, minWidth: '200px', '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+            />
+            <TextField
+              size="small"
+              variant="outlined"
+              label="Teks Logo Header"
+              value={header}
+              onChange={(e) => setHeader(e.target.value)}
+              onBlur={() => set(ref(db, 'settings/stream_header'), header.trim())}
+              sx={{ flex: 1, minWidth: '150px', '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+            />
+            <TextField
+              size="small"
+              variant="outlined"
+              label="Kode Negara Header"
+              value={headerCountry}
+              onChange={(e) => setHeaderCountry(e.target.value)}
+              onBlur={() => set(ref(db, 'settings/stream_header_country'), headerCountry.trim())}
+              sx={{ width: '120px', '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+            />
+          </Box>
         </Box>
 
         <FormControlLabel

@@ -26,6 +26,9 @@ export default function StreamsPage() {
     const [streamStartTime, setStreamStartTime] = useState(0);
     const [streamSyncVod, setStreamSyncVod] = useState(false);
     const [streamUseProxy, setStreamUseProxy] = useState(false);
+    const [streamTitle, setStreamTitle] = useState('SELAMAT ULANG TAHUN');
+    const [streamHeader, setStreamHeader] = useState('HUITOTOO');
+    const [streamHeaderCountry, setStreamHeaderCountry] = useState('ID');
 
     let isYoutube = false;
     let youtubeId = '';
@@ -159,12 +162,30 @@ export default function StreamsPage() {
             }
         });
 
+        const titleRef = ref(db, 'settings/stream_title');
+        const unsubTitle = onValue(titleRef, (snapshot) => {
+            if (snapshot.exists()) setStreamTitle(snapshot.val());
+        });
+
+        const headerRef = ref(db, 'settings/stream_header');
+        const unsubHeader = onValue(headerRef, (snapshot) => {
+            if (snapshot.exists()) setStreamHeader(snapshot.val());
+        });
+
+        const headerCountryRef = ref(db, 'settings/stream_header_country');
+        const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => {
+            if (snapshot.exists()) setStreamHeaderCountry(snapshot.val());
+        });
+
         return () => {
             unsubUrl();
             unsubToken();
             unsubStartTime();
             unsubSync();
             unsubProxy();
+            unsubTitle();
+            unsubHeader();
+            unsubHeaderCountry();
         };
     }, []);
 
@@ -334,8 +355,8 @@ export default function StreamsPage() {
                         <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M21,6H3V5h18V6z M21,11H3v1h18V11z M21,17H3v1h18V17z" fill="currentColor"></path></svg>
                     </button>
                     <div className={styles.logoContainer}>
-                        <span className={styles.logoText}>HUITOTOO</span>
-                        <span className={styles.logoCountry}>ID</span>
+                        <span className={styles.logoText}>{streamHeader}</span>
+                        <span className={styles.logoCountry}>{streamHeaderCountry}</span>
                     </div>
                 </div>
 
@@ -380,7 +401,7 @@ export default function StreamsPage() {
                         )}
                     </div>
                     <div className={styles.metaData}>
-                        <h1 className={styles.title}>SELAMAT ULANG TAHUN</h1>
+                        <h1 className={styles.title}>{streamTitle}</h1>
                         <div className={styles.badgeLive}>• LIVE</div>
                     </div>
 
