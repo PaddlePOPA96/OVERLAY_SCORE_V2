@@ -23,6 +23,8 @@ export default function StreamsPage() {
     const [currentChannel, setCurrentChannel] = useState('');
     const [rawUrl, setRawUrl] = useState('');
     const [streamToken, setStreamToken] = useState('');
+    const [streamStartTime, setStreamStartTime] = useState(0);
+    const [streamSyncVod, setStreamSyncVod] = useState(false);
 
     let isYoutube = false;
     let youtubeId = '';
@@ -43,6 +45,16 @@ export default function StreamsPage() {
             youtubeId = currentChannel.split('youtube.com/embed/')[1]?.split('?')[0];
         }
     }
+
+    const youtubeSrc = React.useMemo(() => {
+        if (!isYoutube || !youtubeId) return '';
+        let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`;
+        if (streamSyncVod && streamStartTime > 0) {
+            const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
+            url += `&start=${offset}`;
+        }
+        return url;
+    }, [isYoutube, youtubeId, streamStartTime, streamSyncVod]);
 
     useEffect(() => {
         if (isYoutube) {
@@ -114,9 +126,29 @@ export default function StreamsPage() {
             }
         });
 
+        const startTimeRef = ref(db, 'settings/stream_start_time');
+        const unsubStartTime = onValue(startTimeRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setStreamStartTime(snapshot.val());
+            } else {
+                setStreamStartTime(Date.now());
+            }
+        });
+
+        const syncRef = ref(db, 'settings/stream_sync_vod');
+        const unsubSync = onValue(syncRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setStreamSyncVod(snapshot.val());
+            } else {
+                setStreamSyncVod(false);
+            }
+        });
+
         return () => {
             unsubUrl();
             unsubToken();
+            unsubStartTime();
+            unsubSync();
         };
     }, []);
 
@@ -312,8 +344,9 @@ export default function StreamsPage() {
                     <div className={styles.videoWrapper}>
                         {isYoutube && youtubeId ? (
                             <iframe
+                                key={`yt-${streamStartTime}-${youtubeId}`}
                                 className={styles.video}
-                                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`}
+                                src={youtubeSrc}
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen

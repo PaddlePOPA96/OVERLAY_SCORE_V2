@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase/db';
 import { ref, onValue, set, push, remove } from 'firebase/database';
-import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel } from '@mui/material';
 
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
@@ -13,6 +13,7 @@ export default function StreamUrlManager({ theme }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [newPresetTitle, setNewPresetTitle] = useState('');
   const [newPresetUrl, setNewPresetUrl] = useState('');
+  const [syncVod, setSyncVod] = useState(false);
   const isLight = theme === 'light';
 
   useEffect(() => {
@@ -44,10 +45,18 @@ export default function StreamUrlManager({ theme }) {
       }
     });
 
+    const syncRef = ref(db, 'settings/stream_sync_vod');
+    const unsubSync = onValue(syncRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setSyncVod(snapshot.val());
+      }
+    });
+
     return () => {
       unsubUrl();
       unsubToken();
       unsubPresets();
+      unsubSync();
     };
   }, []);
 
@@ -125,6 +134,7 @@ export default function StreamUrlManager({ theme }) {
     try {
       await set(ref(db, 'settings/stream_url'), pendingUrl.trim());
       await set(ref(db, 'settings/stream_token'), pendingToken.trim());
+      await set(ref(db, 'settings/stream_start_time'), Date.now());
       setInputValue('');
       setFeedback({ text: '✓ Pengaturan berhasil disimpan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
@@ -136,11 +146,17 @@ export default function StreamUrlManager({ theme }) {
     }
   };
 
+  const handleToggleSync = async (e) => {
+    const newValue = e.target.checked;
+    await set(ref(db, 'settings/stream_sync_vod'), newValue);
+  };
+
   const applyPreset = async (presetUrl) => {
     setSaving(true);
     try {
       await set(ref(db, 'settings/stream_url'), presetUrl);
       await set(ref(db, 'settings/stream_token'), '');
+      await set(ref(db, 'settings/stream_start_time'), Date.now());
       setInputValue('');
       setFeedback({ text: '✓ Preset berhasil diterapkan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
@@ -242,6 +258,22 @@ export default function StreamUrlManager({ theme }) {
             {saving ? 'Saving...' : 'Simpan Perubahan'}
           </Button>
         </Box>
+
+        <FormControlLabel
+          control={
+            <Switch 
+              checked={syncVod} 
+              onChange={handleToggleSync} 
+              color="primary"
+            />
+          }
+          label={
+            <Typography variant="body2" sx={{ color: isLight ? '#444' : '#ccc' }}>
+              Aktifkan Sinkronisasi Waktu (Hanya untuk Video Rekaman/VOD YouTube)
+            </Typography>
+          }
+          sx={{ mt: 0 }}
+        />
 
         {/* Real-time Feedback & Preview */}
         {inputValue.trim() && (
