@@ -389,4 +389,9 @@
         height: 380px;
         min-height: 380px;
     }
+
+    .title {
+        font-size: 16px;
+        line-height: 22px;
+    }
 }

@@ -23,6 +23,12 @@ export const metadata = {
   description: 'Live sports scoreboard control and OBS broadcast overlay system.'
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1
+}
+
 const RootLayout = ({ children }) => {
   // Vars
   const direction = 'ltr'
