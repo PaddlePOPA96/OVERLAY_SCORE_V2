@@ -65,8 +65,10 @@ export default function StreamsPage() {
         if (Hls.isSupported()) {
             const hls = new Hls({
                 enableWorker: true,
-                lowLatencyMode: true,
-                backBufferLength: 90
+                lowLatencyMode: false, // Dinonaktifkan untuk mencegah stream patah-patah
+                backBufferLength: 90,
+                liveSyncDurationCount: 3, // Menjaga jarak dari live edge (buffer lebih aman)
+                maxBufferLength: 30, // Menyimpan buffer ke depan yang lebih banyak
             });
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
