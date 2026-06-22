@@ -163,6 +163,7 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
             {activeLeagues.world_cup && (
               <NavItem currentParam={activeSection} href="/?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
             )}
+            <NavItem currentParam={activeSection} href="/streams" icon="ri-tv-line" isDirectPath={true}>Live Streams</NavItem>
 
           </NavSection>
 
