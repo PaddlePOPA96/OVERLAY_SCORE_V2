@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase/db';
 import { dbFirestore } from '@/lib/firebase/firestore';
-import { ref, onValue, remove } from 'firebase/database';
+import { ref, onValue, remove, set } from 'firebase/database';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '@/components/providers/AuthContext';
 import StreamUrlManager from './StreamUrlManager';
-import { Paper, Typography, Box, Chip, Switch, FormControlLabel, set } from '@mui/material';
+import { Paper, Typography, Box, Chip, Switch, FormControlLabel } from '@mui/material';
 
 export default function StreamsOperatorSection({ theme }) {
     const isLight = theme === 'light';
@@ -81,9 +81,12 @@ export default function StreamsOperatorSection({ theme }) {
     };
 
     const handleToggleChat = async (e) => {
-        import('firebase/database').then(({ set }) => {
-            set(ref(db, 'settings/stream_chat_disabled'), e.target.checked);
-        });
+        try {
+            await set(ref(db, 'settings/stream_chat_disabled'), e.target.checked);
+        } catch (err) {
+            console.error("Gagal toggle chat:", err);
+            alert("Gagal merubah status chat.");
+        }
     };
 
     return (
