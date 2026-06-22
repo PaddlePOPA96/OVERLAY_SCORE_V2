@@ -29,6 +29,7 @@ export default function StreamsPage() {
     const [streamTitle, setStreamTitle] = useState('SELAMAT ULANG TAHUN');
     const [streamHeader, setStreamHeader] = useState('HUITOTOO');
     const [streamHeaderCountry, setStreamHeaderCountry] = useState('ID');
+    const [isChatDisabled, setIsChatDisabled] = useState(false);
 
     let isYoutube = false;
     let youtubeId = '';
@@ -177,6 +178,11 @@ export default function StreamsPage() {
             if (snapshot.exists()) setStreamHeaderCountry(snapshot.val());
         });
 
+        const chatDisabledRef = ref(db, 'settings/stream_chat_disabled');
+        const unsubChatDisabled = onValue(chatDisabledRef, (snapshot) => {
+            setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
+        });
+
         return () => {
             unsubUrl();
             unsubToken();
@@ -186,6 +192,7 @@ export default function StreamsPage() {
             unsubTitle();
             unsubHeader();
             unsubHeaderCountry();
+            unsubChatDisabled();
         };
     }, []);
 
@@ -442,7 +449,11 @@ export default function StreamsPage() {
                     </div>
 
                     <div className={styles.chatInputArea}>
-                        {!isMounted ? (
+                        {isChatDisabled ? (
+                            <div style={{ padding: '16px', textAlign: 'center', color: '#ff6b6b', fontSize: '13px', background: 'rgba(255, 0, 0, 0.1)', borderRadius: '8px', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
+                                Fitur Live Chat sedang dinonaktifkan.
+                            </div>
+                        ) : !isMounted ? (
                             <div style={{ height: '50px' }}></div>
                         ) : !isNameSet ? (
                             <form onSubmit={handleSaveName} className={styles.chatForm}>

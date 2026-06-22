@@ -7,7 +7,7 @@ import { ref, onValue, remove } from 'firebase/database';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '@/components/providers/AuthContext';
 import StreamUrlManager from './StreamUrlManager';
-import { Paper, Typography, Box, Chip } from '@mui/material';
+import { Paper, Typography, Box, Chip, Switch, FormControlLabel, set } from '@mui/material';
 
 export default function StreamsOperatorSection({ theme }) {
     const isLight = theme === 'light';
@@ -15,6 +15,7 @@ export default function StreamsOperatorSection({ theme }) {
     const [isSuperAdmin, setIsSuperAdmin] = useState(false);
     const [chats, setChats] = useState([]);
     const [viewersCount, setViewersCount] = useState(0);
+    const [isChatDisabled, setIsChatDisabled] = useState(false);
 
     // Check role
     useEffect(() => {
@@ -27,17 +28,22 @@ export default function StreamsOperatorSection({ theme }) {
         return () => unsub();
     }, [user]);
 
-    // Listen to viewers count
+    // Listen to viewers count & chat disabled state
     useEffect(() => {
         const viewersRef = ref(db, 'stream_viewers');
-        const unsub = onValue(viewersRef, (snapshot) => {
-            if (snapshot.exists()) {
-                setViewersCount(snapshot.size);
-            } else {
-                setViewersCount(0);
-            }
+        const unsubViewers = onValue(viewersRef, (snapshot) => {
+            setViewersCount(snapshot.exists() ? snapshot.size : 0);
         });
-        return () => unsub();
+
+        const chatDisabledRef = ref(db, 'settings/stream_chat_disabled');
+        const unsubChatDisabled = onValue(chatDisabledRef, (snapshot) => {
+            setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
+        });
+
+        return () => {
+            unsubViewers();
+            unsubChatDisabled();
+        };
     }, []);
 
     // Listen to chats
@@ -74,6 +80,12 @@ export default function StreamsOperatorSection({ theme }) {
         }
     };
 
+    const handleToggleChat = async (e) => {
+        import('firebase/database').then(({ set }) => {
+            set(ref(db, 'settings/stream_chat_disabled'), e.target.checked);
+        });
+    };
+
     return (
         <Box display="flex" flexDirection="column" gap={4}>
             {/* 1. Global URL Config */}
@@ -95,13 +107,29 @@ export default function StreamsOperatorSection({ theme }) {
                     <Typography variant="h6" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>
                         Live Chat Moderation
                     </Typography>
-                    <Chip 
-                        label={`Live Viewers: ${viewersCount}`} 
-                        color="error" 
-                        variant="filled" 
-                        size="medium"
-                        sx={{ fontWeight: 'bold' }}
-                    />
+                    <Box display="flex" gap={2} alignItems="center">
+                        {isSuperAdmin && (
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={isChatDisabled}
+                                        onChange={handleToggleChat}
+                                        color="error"
+                                        size="small"
+                                    />
+                                }
+                                label={<Typography variant="body2" sx={{ color: isLight ? '#444' : '#ccc', fontWeight: 'bold' }}>Disable Chat</Typography>}
+                                sx={{ m: 0 }}
+                            />
+                        )}
+                        <Chip 
+                            label={`Live Viewers: ${viewersCount}`} 
+                            color="error" 
+                            variant="filled" 
+                            size="medium"
+                            sx={{ fontWeight: 'bold' }}
+                        />
+                    </Box>
                 </Box>
                 <Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa', mb: 3 }}>
                     {isSuperAdmin ? "Anda login sebagai Superadmin. Anda dapat memantau dan menghapus chat pengunjung." : "Anda dapat memantau chat secara realtime. Fitur hapus chat hanya untuk Superadmin."}
