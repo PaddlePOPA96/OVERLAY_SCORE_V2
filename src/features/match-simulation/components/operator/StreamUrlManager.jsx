@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase/db';
-import { ref, onValue, set } from 'firebase/database';
-import { Button, TextField, Box, Typography, Paper } from '@mui/material';
-import { CODE_CLOUD_BD } from '@/lib/streams';
+import { ref, onValue, set, push, remove } from 'firebase/database';
+import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
@@ -10,6 +9,10 @@ export default function StreamUrlManager({ theme }) {
   const [inputValue, setInputValue] = useState('');
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState({ text: '', isError: false });
+  const [presets, setPresets] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newPresetTitle, setNewPresetTitle] = useState('');
+  const [newPresetUrl, setNewPresetUrl] = useState('');
   const isLight = theme === 'light';
 
   useEffect(() => {
@@ -27,9 +30,24 @@ export default function StreamUrlManager({ theme }) {
       }
     });
 
+    const presetsRef = ref(db, 'settings/stream_presets');
+    const unsubPresets = onValue(presetsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const presetList = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }));
+        setPresets(presetList);
+      } else {
+        setPresets([]);
+      }
+    });
+
     return () => {
       unsubUrl();
       unsubToken();
+      unsubPresets();
     };
   }, []);
 
@@ -133,6 +151,36 @@ export default function StreamUrlManager({ theme }) {
     }
   };
 
+  const handleOpenModal = () => {
+    setNewPresetTitle('');
+    setNewPresetUrl(resolvedLiveUrl || '');
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleSavePresetModal = () => {
+    if (!newPresetTitle.trim() || !newPresetUrl.trim()) return;
+    
+    const newPresetRef = push(ref(db, 'settings/stream_presets'));
+    set(newPresetRef, { title: newPresetTitle.trim(), url: newPresetUrl.trim() }).then(() => {
+      setModalOpen(false);
+    }).catch(err => {
+      console.error("Failed to add preset:", err);
+      alert("Gagal menambahkan preset.");
+    });
+  };
+
+  const handleDeletePreset = (presetId) => {
+    if (!window.confirm("Yakin ingin menghapus preset ini?")) return;
+    remove(ref(db, `settings/stream_presets/${presetId}`)).catch(err => {
+      console.error("Failed to delete preset:", err);
+      alert("Gagal menghapus preset.");
+    });
+  };
+
   return (
     <Paper 
         elevation={0}
@@ -219,52 +267,67 @@ export default function StreamUrlManager({ theme }) {
         )}
         
         {/* Preset Links */}
-        <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+        <Box display="flex" gap={1} flexWrap="wrap" mt={1} alignItems="center">
           <Typography variant="caption" sx={{ color: isLight ? '#666' : '#aaa', display: 'flex', alignItems: 'center', mr: 1 }}>
             Quick Presets:
           </Typography>
-          <Button 
-            variant="outlined" 
-            size="small" 
-            color="inherit"
-            onClick={() => applyPreset('https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/Caze_TV.m3u8')}
-            sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
-          >
-            CazeTV (Brasil)
-          </Button>
-          <Button 
-            variant="outlined" 
-            size="small" 
-            color="inherit"
-            onClick={() => applyPreset('https://ott-balancer.tvri.go.id/live/eds/TVRIWorld/hls/TVRIWorld.m3u8')}
-            sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
-          >
-            TVRI World (1080p)
-          </Button>
-          <Button 
-            variant="outlined" 
-            size="small" 
-            color="inherit"
-            onClick={() => applyPreset('https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8')}
-            sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
-          >
-            TVRI Sport HD (720p)
-          </Button>
-
-          {CODE_CLOUD_BD.data.map((stream, idx) => (
-            <Button
-              key={`preset-codecloud-${idx}`}
-              variant="outlined" 
-              size="small" 
-              color="inherit"
-              onClick={() => applyPreset(stream.url)}
-              sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc' }}
-            >
-              {stream.title}
-            </Button>
+          
+          {presets.map(preset => (
+            <Chip 
+              key={preset.id}
+              label={preset.title}
+              onClick={() => applyPreset(preset.url)}
+              onDelete={() => handleDeletePreset(preset.id)}
+              color="primary"
+              variant="outlined"
+              size="small"
+              sx={{ color: isLight ? '#444' : '#ccc', borderColor: isLight ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)' }}
+            />
           ))}
+
+          <Button 
+            variant="outlined" 
+            size="small" 
+            color="inherit"
+            onClick={handleOpenModal}
+            sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#444' : '#ccc', borderRadius: '16px', py: 0.2 }}
+          >
+            + Tambah Preset
+          </Button>
         </Box>
       </Box>
+
+      {/* Add Preset Modal */}
+      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
+        <DialogTitle sx={{ color: isLight ? '#000' : '#fff', bgcolor: isLight ? '#fff' : '#1e293b' }}>
+          Tambah Preset Playlist
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: isLight ? '#fff' : '#1e293b' }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nama Preset Playlist"
+            fullWidth
+            variant="outlined"
+            value={newPresetTitle}
+            onChange={(e) => setNewPresetTitle(e.target.value)}
+            sx={{ mb: 2, mt: 1, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+          />
+          <TextField
+            margin="dense"
+            label="URL Stream (.m3u8)"
+            fullWidth
+            variant="outlined"
+            value={newPresetUrl}
+            onChange={(e) => setNewPresetUrl(e.target.value)}
+            sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: isLight ? '#fff' : '#1e293b', p: 2 }}>
+          <Button onClick={handleCloseModal} sx={{ color: isLight ? '#666' : '#aaa' }}>Batal</Button>
+          <Button onClick={handleSavePresetModal} variant="contained" color="primary" disabled={!newPresetTitle.trim() || !newPresetUrl.trim()}>Simpan</Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }

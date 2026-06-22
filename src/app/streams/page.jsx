@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import styles from './streams.module.css';
 import { db } from '@/lib/firebase/db';
-import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update } from 'firebase/database';
+import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set } from 'firebase/database';
 import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
@@ -180,6 +180,26 @@ export default function StreamsPage() {
 
         return () => unsubscribe();
     }, []);
+
+    // Presence tracking for Live Viewers count
+    useEffect(() => {
+        if (!uid) return;
+        const connectedRef = ref(db, '.info/connected');
+        const userStatusRef = ref(db, `stream_viewers/${uid}`);
+
+        const unsub = onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                onDisconnect(userStatusRef).remove().then(() => {
+                    set(userStatusRef, true);
+                });
+            }
+        });
+
+        return () => {
+            unsub();
+            set(userStatusRef, null);
+        };
+    }, [uid]);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });

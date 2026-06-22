@@ -16,7 +16,7 @@ import Logo from './Logo'
 
 const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
   const pathname = usePathname()
-  
+
   let isActive = false
   if (isDirectPath) {
     isActive = pathname === href
@@ -30,8 +30,8 @@ const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
     <Link
       href={href}
       className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${isActive
-          ? 'bg-violet-600 text-white font-semibold shadow-md'
-          : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+        ? 'bg-violet-600 text-white font-semibold shadow-md'
+        : 'text-zinc-400 hover:bg-white/5 hover:text-white'
         }`}
     >
       <i className={`${icon} text-lg`} />
@@ -163,6 +163,8 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
             {activeLeagues.world_cup && (
               <NavItem currentParam={activeSection} href="/?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
             )}
+            <NavItem currentParam={activeSection} href="/?s=streams-operator" icon="ri-tv-line">Live Streams Config</NavItem>
+
             <NavItem currentParam={activeSection} href="/streams" icon="ri-tv-line" isDirectPath={true}>Live Streams</NavItem>
 
           </NavSection>

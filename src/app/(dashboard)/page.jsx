@@ -27,7 +27,7 @@ const OperatorRoot = dynamic(() => import('@/app/(dashboard)/dashboard/operator/
   ssr: false
 })
 
-const StreamUrlManager = dynamic(() => import('@/features/match-simulation/components/operator/StreamUrlManager'), {
+const StreamsOperatorSection = dynamic(() => import('@/features/match-simulation/components/operator/StreamsOperatorSection'), {
   ssr: false
 })
 
@@ -138,8 +138,20 @@ function DashboardPageInner() {
             <p className='text-textSecondary text-sm'>Control the live scoreboard in real-time.</p>
           </header>
           <RequireLogin title='Scoreboard Operator'>
-            <StreamUrlManager theme={theme} />
             <OperatorRoot initialRoomId={roomId} requireAuth={false} theme={theme} />
+          </RequireLogin>
+        </div>
+      )}
+
+      {/* ── STREAMS OPERATOR ── */}
+      {activeSection === 'streams-operator' && (
+        <div>
+          <header className='mb-4'>
+            <h1 className='text-2xl font-bold text-textPrimary'>Live Streams Config</h1>
+            <p className='text-textSecondary text-sm'>Manage global stream URL, moderate chat, and monitor live viewers.</p>
+          </header>
+          <RequireLogin title='Live Streams Config'>
+            <StreamsOperatorSection theme={theme} />
           </RequireLogin>
         </div>
       )}
