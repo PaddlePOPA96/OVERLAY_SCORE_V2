@@ -6,7 +6,6 @@ import styles from './streams.module.css';
 import { db } from '@/lib/firebase/db';
 import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update } from 'firebase/database';
 import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
-import { CODE_CLOUD_BD } from '@/lib/streams';
 
 export default function StreamsPage() {
     const videoRef = useRef(null);
@@ -305,35 +304,6 @@ export default function StreamsPage() {
                         <div className={styles.badgeLive}>• LIVE</div>
                     </div>
 
-                    {/* CHANNEL PLAYLIST (CLIENT SIDE SELECTION) */}
-                    <div style={{ marginTop: '16px', padding: '16px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
-                        <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '12px', color: '#aaa' }}>Daftar Channel</h3>
-                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                            {CODE_CLOUD_BD.data.map((stream, idx) => (
-                                <button
-                                    key={`channel-${idx}`}
-                                    onClick={() => setCurrentChannel(stream.url)}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        background: currentChannel === stream.url ? 'rgba(62, 166, 255, 0.2)' : 'rgba(255,255,255,0.1)',
-                                        color: currentChannel === stream.url ? '#3ea6ff' : '#fff',
-                                        border: currentChannel === stream.url ? '1px solid rgba(62, 166, 255, 0.5)' : '1px solid transparent',
-                                        padding: '8px 12px',
-                                        borderRadius: '8px',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s',
-                                        fontSize: '13px',
-                                        fontWeight: '500'
-                                    }}
-                                >
-                                    <img src={stream.tvgLogo} alt={stream.title} style={{ width: '20px', height: '20px', objectFit: 'contain', borderRadius: '4px' }} />
-                                    {stream.title}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Bagian Kanan: Live Chat */}
