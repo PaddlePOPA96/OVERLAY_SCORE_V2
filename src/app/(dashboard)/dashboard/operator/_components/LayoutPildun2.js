@@ -340,7 +340,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   transform: 'translateX(-50%)',
                   width: '128px',
                   height: '170px',
-                  background: '#051B5E',
+                  background: data.useCustomFifaLogo ? '#051B5E' : '#ffb901',
                   borderRadius: '40px',
                   boxShadow: '0 4px 24px rgba(0,0,0,0.6)',
                   display: 'flex',
@@ -351,24 +351,15 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 }}
               >
                 <img
-                  src='https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png'
-                  alt='FIFA World Cup 2026'
+                  src={data.useCustomFifaLogo ? 'https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png' : '/logob2f.jpg'}
+                  alt='Center Logo'
                   style={{
-                    height: '96px',
+                    width: `${data.fifaLogoSize || 96}px`,
+                    height: `${data.fifaLogoSize || 96}px`,
                     objectFit: 'contain',
-                    filter: 'brightness(0) invert(1)',
+                    ...(data.useCustomFifaLogo && { filter: 'brightness(0) invert(1)' }),
                   }}
                 />
-                <span
-                  style={{
-                    color: '#ffffff',
-                    fontWeight: 700,
-                    fontSize: '14px',
-                    letterSpacing: '0.2em',
-                  }}
-                >
-                  FIFA
-                </span>
               </div>
             </div>
 

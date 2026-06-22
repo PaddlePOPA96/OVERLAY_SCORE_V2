@@ -187,8 +187,8 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
                     <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '12px' }} />
                     {isRunning ? 'Pause' : 'Start'}
                   </button>
-                  <button 
-                    className='op-timer-btn reset' 
+                  <button
+                    className='op-timer-btn reset'
                     onClick={() => actions.resetTimer()}
                     style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
                   >
@@ -453,12 +453,12 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         {/* HOME TEAM */}
         <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#60a5fa', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>🏠 Home Team (Left Side)</h3>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div onClick={() => openLogoPicker('home')} style={{ width: '48px', height: '48px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0 }} title='Pilih Logo'>
               {data.homeLogo ? <img src={data.homeLogo} alt='Home Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '10px', color: '#666' }}>Logo</span>}
             </div>
-            
+
             <div style={{ display: 'flex', gap: '6px', flex: 1, alignItems: 'center' }}>
               <input className='op-input' value={data.homeName || ''} onChange={e => actions.updateMatch({ homeName: e.target.value })} placeholder='Abbr' style={{ width: '55px', height: '32px', fontSize: '12px' }} />
               <input className='op-input' value={data.homeFullName || ''} onChange={e => actions.updateMatch({ homeFullName: e.target.value })} placeholder='Full Name' style={{ flex: 1, height: '32px', fontSize: '12px' }} />
@@ -483,12 +483,12 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         {/* AWAY TEAM */}
         <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#f87171', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>✈️ Away Team (Right Side)</h3>
-          
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <div onClick={() => openLogoPicker('away')} style={{ width: '48px', height: '48px', background: isLight ? '#f8fafc' : '#0d0d0d', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', overflow: 'hidden', flexShrink: 0 }} title='Pilih Logo'>
               {data.awayLogo ? <img src={data.awayLogo} alt='Away Logo' style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} /> : <span style={{ fontSize: '10px', color: '#666' }}>Logo</span>}
             </div>
-            
+
             <div style={{ display: 'flex', gap: '6px', flex: 1, alignItems: 'center' }}>
               <input className='op-input' value={data.awayName || ''} onChange={e => actions.updateMatch({ awayName: e.target.value })} placeholder='Abbr' style={{ width: '55px', height: '32px', fontSize: '12px' }} />
               <input className='op-input' value={data.awayFullName || ''} onChange={e => actions.updateMatch({ awayFullName: e.target.value })} placeholder='Full Name' style={{ flex: 1, height: '32px', fontSize: '12px' }} />
@@ -511,6 +511,56 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         </div>
       </div>
 
+      {/* ── FIFA / CENTER LOGO SETTINGS ── */}
+      <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#fbbf24', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>🏆 Logo Tengah (FIFA / Turnamen)</h3>
+
+        {/* Switch: Logo B2F vs Logo FIFA */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '600', color: !data.useCustomFifaLogo ? '#fbbf24' : labelColor, opacity: !data.useCustomFifaLogo ? 1 : 0.5 }}>Logo B2F</span>
+          <button
+            onClick={() => actions.updateMatch({ useCustomFifaLogo: !data.useCustomFifaLogo })}
+            style={{
+              width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer', position: 'relative',
+              background: data.useCustomFifaLogo ? '#3b82f6' : '#374151', transition: 'background 0.2s ease'
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: '2px', width: '20px', height: '20px', borderRadius: '50%', background: '#fff',
+              left: data.useCustomFifaLogo ? '22px' : '2px', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+            }} />
+          </button>
+          <span style={{ fontSize: '12px', fontWeight: '600', color: data.useCustomFifaLogo ? '#3b82f6' : labelColor, opacity: data.useCustomFifaLogo ? 1 : 0.5 }}>Logo FIFA</span>
+        </div>
+
+        {/* Preview */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: '56px', height: '56px', background: data.useCustomFifaLogo ? '#051B5E' : '#ffb901', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              src={data.useCustomFifaLogo ? 'https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png' : '/logob2f.jpg'}
+              alt='Center Logo'
+              style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', ...(data.useCustomFifaLogo && { filter: 'brightness(0) invert(1)' }) }}
+              onError={e => { e.target.style.display = 'none' }}
+            />
+          </div>
+          <span style={{ fontSize: '11px', color: '#9ca3af' }}>{data.useCustomFifaLogo ? 'Menggunakan logo FIFA World Cup 2026' : 'Menggunakan logo B2F (logob2f.jpg)'}</span>
+        </div>
+
+        {/* Size Slider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <label style={{ fontSize: '10px', fontWeight: '600', color: tinyColor, minWidth: '80px' }}>Ukuran (px)</label>
+          <input
+            type='range'
+            min={32}
+            max={256}
+            step={4}
+            value={data.fifaLogoSize || 96}
+            onChange={e => actions.updateMatch({ fifaLogoSize: Number(e.target.value) })}
+            style={{ flex: 1, accentColor: '#fbbf24', cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: '12px', fontWeight: '700', color: labelColor, minWidth: '40px', textAlign: 'right' }}>{data.fifaLogoSize || 96}px</span>
+        </div>
+      </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '10px', borderTop: `1px solid ${borderCol}`, marginTop: '14px', paddingTop: '14px' }}>
         <OverlayRoomControls showOverlay={data.showOverlay} toggleOverlay={actions.toggleOverlay} roomId={roomId} />
