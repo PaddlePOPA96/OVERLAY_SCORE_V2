@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import styles from './streams.module.css';
 import { db } from '@/lib/firebase/db';
-import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set } from 'firebase/database';
+import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
 import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
@@ -190,14 +190,16 @@ export default function StreamsPage() {
         const unsub = onValue(connectedRef, (snap) => {
             if (snap.val() === true) {
                 onDisconnect(userStatusRef).remove().then(() => {
-                    set(userStatusRef, true);
+                    set(userStatusRef, true).catch(err => {
+                        console.error("Firebase Presence Error: Kemungkinan Firebase Rules belum diizinkan untuk 'stream_viewers'. Error:", err);
+                    });
                 });
             }
         });
 
         return () => {
             unsub();
-            set(userStatusRef, null);
+            remove(userStatusRef).catch(console.error);
         };
     }, [uid]);
 
