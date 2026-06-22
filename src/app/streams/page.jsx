@@ -125,7 +125,7 @@ export default function StreamsPage() {
             let finalUrl = rawUrl;
             if (streamToken) {
                 finalUrl = rawUrl.replace(/{token}/gi, streamToken)
-                                 .replace(/\[token\]/gi, streamToken);
+                    .replace(/\[token\]/gi, streamToken);
             }
             setCurrentChannel(finalUrl);
         }
@@ -257,7 +257,7 @@ export default function StreamsPage() {
                         <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M21,6H3V5h18V6z M21,11H3v1h18V11z M21,17H3v1h18V17z" fill="currentColor"></path></svg>
                     </button>
                     <div className={styles.logoContainer}>
-                        <span className={styles.logoText}>SCOREBOSS</span>
+                        <span className={styles.logoText}>HUITOTOO</span>
                         <span className={styles.logoCountry}>ID</span>
                     </div>
                 </div>
