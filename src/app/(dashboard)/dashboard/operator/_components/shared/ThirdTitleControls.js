@@ -99,6 +99,8 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         theme={theme}
+        homeTeam={data?.homeFullName || data?.homeName}
+        awayTeam={data?.awayFullName || data?.awayName}
         onSelect={(p) => {
           setSelectedPlayer(p)
           setIsModalOpen(false)
