@@ -112,9 +112,10 @@ export default function ThirdTitleOverlay({ data }) {
           background: 'rgba(15, 23, 42, 0.95)',
           borderRadius: '16px',
           boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)',
-          transform: animateIn ? `translateY(0) scale(${overlayScale})` : `translateY(-20px) scale(${overlayScale * 0.95})`,
+          transform: animateIn ? `translate3d(0, 0, 0) scale(${overlayScale})` : `translate3d(0, -30px, 0) scale(${overlayScale * 0.95})`,
           opacity: animateIn ? 1 : 0,
-          transition: 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease',
+          transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease-out',
+          willChange: 'transform, opacity',
         }}
       >
         {/* EVENT ICON SECTION */}
