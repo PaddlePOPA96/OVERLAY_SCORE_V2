@@ -851,7 +851,7 @@ select.op-input {
 }
 
 .mob-op-statusbar-title {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: #d1d5db;
@@ -897,7 +897,7 @@ select.op-input {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 10px 14px 14px;
+  padding: 16px;
   gap: 6px;
 }
 
@@ -919,8 +919,8 @@ select.op-input {
 }
 
 .mob-op-logo-ring {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 2px solid currentColor;
   display: flex;
@@ -942,7 +942,7 @@ select.op-input {
 }
 
 .mob-op-team-name {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 800;
   color: #f9fafb;
   letter-spacing: 0.04em;
@@ -999,8 +999,8 @@ select.op-input {
 }
 
 .mob-op-score-btn {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -1036,9 +1036,8 @@ select.op-input {
 /* GOAL big button */
 .mob-op-goal-big {
   width: 100%;
-  max-width: 200px;
-  height: 76px;
-  border-radius: 16px;
+  height: 48px;
+  border-radius: 24px;
   border: none;
   cursor: pointer;
   display: flex;
@@ -1060,12 +1059,12 @@ select.op-input {
 }
 
 .mob-op-goal-icon {
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1;
 }
 
 .mob-op-goal-label {
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 800;
   color: #fff;
   letter-spacing: 0.06em;
@@ -1104,8 +1103,8 @@ select.op-input {
 .mob-op-period-row {
   background: #f0ece8;
   display: flex;
-  gap: 6px;
-  padding: 8px 16px 14px;
+  gap: 8px;
+  padding: 8px 16px 16px;
   justify-content: center;
 }
 
@@ -1250,12 +1249,13 @@ select.op-input {
 }
 
 .mob-op-action-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 0 16px;
+  height: 48px;
+  border-radius: 24px;
   border: 1px solid #d1d5db;
   background: #e9e5e0;
   color: #374151;
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.05em;
   cursor: pointer;
