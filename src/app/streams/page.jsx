@@ -95,7 +95,7 @@ export default function StreamsPage() {
 
     const youtubeSrc2 = React.useMemo(() => {
         if (!isYoutube2 || !youtubeId2) return '';
-        let url = `https://www.youtube.com/embed/${youtubeId2}?autoplay=1&controls=1&mute=1&playsinline=1&rel=0&showinfo=1`;
+        let url = `https://www.youtube.com/embed/${youtubeId2}?autoplay=1&controls=0&mute=1&playsinline=1&rel=0&showinfo=0`;
         if (streamSyncVod && streamStartTime > 0) {
             const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
             url += `&start=${offset}`;
@@ -105,7 +105,7 @@ export default function StreamsPage() {
 
     const youtubeSrc = React.useMemo(() => {
         if (!isYoutube || !youtubeId) return '';
-        let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`;
+        let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=0&mute=0&playsinline=1&rel=0&showinfo=0`;
         if (streamSyncVod && streamStartTime > 0) {
             const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
             url += `&start=${offset}`;
