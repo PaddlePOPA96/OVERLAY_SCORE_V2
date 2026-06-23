@@ -53,8 +53,8 @@ export default function StreamsPage() {
 
     if (currentChannel) {
         // Resolve proxy path if any to check for YouTube
-        const decodedChannel = currentChannel.includes('/api/stream.m3u8?u=') 
-            ? Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8') 
+        const decodedChannel = currentChannel.includes('/api/stream.m3u8?u=')
+            ? Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8')
             : currentChannel;
 
         if (decodedChannel.includes('youtube.com/watch')) {
@@ -77,13 +77,13 @@ export default function StreamsPage() {
     let youtubeId2 = '';
 
     if (currentChannel2) {
-        const decodedChannel2 = currentChannel2.includes('/api/stream.m3u8?u=') 
-            ? Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8') 
+        const decodedChannel2 = currentChannel2.includes('/api/stream.m3u8?u=')
+            ? Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8')
             : currentChannel2;
 
         if (decodedChannel2.includes('youtube.com/watch')) {
             isYoutube2 = true;
-            try { youtubeId2 = new URL(decodedChannel2).searchParams.get('v'); } catch (e) {}
+            try { youtubeId2 = new URL(decodedChannel2).searchParams.get('v'); } catch (e) { }
         } else if (decodedChannel2.includes('youtu.be/')) {
             isYoutube2 = true;
             youtubeId2 = decodedChannel2.split('youtu.be/')[1]?.split('?')[0];
@@ -161,7 +161,7 @@ export default function StreamsPage() {
             if (hlsInstance.liveSyncPosition > video.currentTime + 3) {
                 video.currentTime = hlsInstance.liveSyncPosition;
             }
-        } 
+        }
         // Fallback untuk native player (Safari iOS)
         else if (video.seekable && video.seekable.length > 0) {
             const liveEdge = video.seekable.end(video.seekable.length - 1);
@@ -223,7 +223,7 @@ export default function StreamsPage() {
         }
     }, [currentChannel, isYoutube]);
 
-    
+
     useEffect(() => {
         if (isYoutube2) {
             if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
@@ -305,7 +305,7 @@ export default function StreamsPage() {
         });
 
         const titleRef = ref(db, 'settings/stream_title');
-        
+
         const title2Ref = ref(db, 'settings/stream_title_2');
         const unsubTitle2 = onValue(title2Ref, (snapshot) => {
             if (snapshot.exists()) setStreamTitle2(snapshot.val());
@@ -534,8 +534,8 @@ export default function StreamsPage() {
     };
 
     return (
-        <div 
-            className={styles.wrapper} 
+        <div
+            className={styles.wrapper}
             style={isMinimal ? { padding: 0, minHeight: '100%', height: '100vh', overflow: 'hidden' } : {}}
         >
             {/* YOUTUBE STYLE NAVBAR */}
@@ -554,15 +554,15 @@ export default function StreamsPage() {
                     <div className={styles.navCenter}>
                         {multiMode ? (
                             <div style={{ display: 'flex', gap: '8px', background: '#121212', padding: '4px 8px', borderRadius: '20px', border: '1px solid #303030' }}>
-                                <button 
+                                <button
                                     onClick={() => setLeftWidth(75)}
                                     style={{ background: leftWidth > 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
                                 >Besar Kiri</button>
-                                <button 
+                                <button
                                     onClick={() => setLeftWidth(50)}
                                     style={{ background: leftWidth > 40 && leftWidth < 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 40 && leftWidth < 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
                                 >50 : 50</button>
-                                <button 
+                                <button
                                     onClick={() => setLeftWidth(25)}
                                     style={{ background: leftWidth < 40 ? '#3ea6ff' : 'transparent', color: leftWidth < 40 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
                                 >Besar Kanan</button>
@@ -590,12 +590,12 @@ export default function StreamsPage() {
             )}
 
             {/* MAIN LAYOUT */}
-            <div 
-                className={`${styles.layout} ${isDragging ? styles.dragging : ''}`} 
-                ref={containerRef} 
-                style={{ 
-                    ...(multiMode ? { gap: 0 } : {}), 
-                    ...(isMinimal ? { paddingTop: 0, paddingBottom: 0, height: '100vh', marginTop: 0, alignItems: 'stretch' } : {}) 
+            <div
+                className={`${styles.layout} ${isDragging ? styles.dragging : ''}`}
+                ref={containerRef}
+                style={{
+                    ...(multiMode ? { gap: 0 } : {}),
+                    ...(isMinimal ? { paddingTop: 0, paddingBottom: 0, height: '100vh', marginTop: 0, alignItems: 'stretch' } : {})
                 }}
             >
 
@@ -613,174 +613,162 @@ export default function StreamsPage() {
                                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
                         ) : (
-                            <video 
-                                ref={videoRef} 
-                                className={styles.video} 
-                                controls 
-                                autoPlay 
+                            <video
+                                ref={videoRef}
+                                className={styles.video}
+                                controls
+                                autoPlay
                                 playsInline
                                 onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
                             ></video>
                         )}
                     </div>
-                    {!isMinimal && (
-                        <div className={styles.metaData}>
-                            <h1 className={styles.title}>{streamTitle}</h1>
-                            <div className={styles.channelInfo}>
-                                <div className={styles.channelAvatar}>S</div>
-                                <div className={styles.channelText}>
-                                    <h2>Scorebos Live</h2>
-                                    <p>1.2M subscribers</p>
-                                </div>
-                                <button className={styles.subscribeBtn}>Subscribe</button>
-                            </div>
-                        </div>
-                    )}
+
                 </div>
-                
+
                 {multiMode && (
-                <div 
-                    className={styles.splitter} 
-                    onMouseDown={() => setIsDragging(true)}
-                    onTouchStart={() => setIsDragging(true)}
-                >
-                    <div className={styles.splitterHandle}></div>
-                </div>
+                    <div
+                        className={styles.splitter}
+                        onMouseDown={() => setIsDragging(true)}
+                        onTouchStart={() => setIsDragging(true)}
+                    >
+                        <div className={styles.splitterHandle}></div>
+                    </div>
                 )}
 
                 {multiMode && (
-                <div className={`${styles.videoSection} ${styles.resizableRight}`} style={{ flex: '1', paddingLeft: '12px', minWidth: 0 }}>
-                    <div className={styles.videoWrapper} style={isMinimal ? { paddingTop: 0, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' } : {}}>
-                        {isYoutube2 && youtubeId2 ? (
-                            <iframe
-                                key={`yt2-${streamStartTime}-${youtubeId2}`}
-                                className={styles.video}
-                                src={youtubeSrc2}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
-                            ></iframe>
-                        ) : (
-                            <video 
-                                ref={videoRef2} 
-                                className={styles.video} 
-                                controls 
-                                autoPlay 
-                                playsInline 
-                                muted
-                                onPlay={(e) => handleVideoPlay(e, hlsRef2.current)}
-                            ></video>
-                        )}
-                    </div>
-                    {!isMinimal && (
-                        <div className={styles.metaData}>
-                            <h1 className={styles.title}>{streamTitle2}</h1>
-                            <div className={styles.channelInfo}>
-                                <div className={styles.channelAvatar}>C</div>
-                                <div className={styles.channelText}>
-                                    <h2>Channel Dua</h2>
+                    <div className={`${styles.videoSection} ${styles.resizableRight}`} style={{ flex: '1', paddingLeft: '12px', minWidth: 0 }}>
+                        <div className={styles.videoWrapper} style={isMinimal ? { paddingTop: 0, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' } : {}}>
+                            {isYoutube2 && youtubeId2 ? (
+                                <iframe
+                                    key={`yt2-${streamStartTime}-${youtubeId2}`}
+                                    className={styles.video}
+                                    src={youtubeSrc2}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
+                                ></iframe>
+                            ) : (
+                                <video
+                                    ref={videoRef2}
+                                    className={styles.video}
+                                    controls
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    onPlay={(e) => handleVideoPlay(e, hlsRef2.current)}
+                                ></video>
+                            )}
+                        </div>
+                        {!isMinimal && (
+                            <div className={styles.metaData}>
+                                <h1 className={styles.title}>{streamTitle2}</h1>
+                                <div className={styles.channelInfo}>
+                                    <div className={styles.channelAvatar}>C</div>
+                                    <div className={styles.channelText}>
+                                        <h2>Channel Dua</h2>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </div>
+                        )}
+                    </div>
                 )}
 
                 {/* Bagian Kanan: Live Chat */}
                 {!multiMode && !isMinimal && (
-                <div className={styles.chatSection}>
-                    <div className={styles.chatHeader}>
-                        Top chat <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 14.5l-6-6h12z" fill="currentColor"></path></svg>
-                    </div>
+                    <div className={styles.chatSection}>
+                        <div className={styles.chatHeader}>
+                            Top chat <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 14.5l-6-6h12z" fill="currentColor"></path></svg>
+                        </div>
 
-                    <div className={styles.chatMessages}>
-                        {chats.length === 0 ? (
-                            <div className={styles.emptyChat}>
-                                Belum ada pesan. Mulai obrolan!
-                            </div>
-                        ) : (
-                            chats.map((chat) => {
-                                const isMe = chat.uid === uid;
-                                return (
-                                    <div
-                                        key={chat.id}
-                                        className={styles.chatMessage}
-                                        style={isMe ? { backgroundColor: 'rgba(62, 166, 255, 0.1)', padding: '6px 8px', borderRadius: '6px' } : {}}
-                                    >
-                                        <span
-                                            className={styles.chatName}
-                                            style={isMe ? { color: '#3ea6ff' } : {}}
+                        <div className={styles.chatMessages}>
+                            {chats.length === 0 ? (
+                                <div className={styles.emptyChat}>
+                                    Belum ada pesan. Mulai obrolan!
+                                </div>
+                            ) : (
+                                chats.map((chat) => {
+                                    const isMe = chat.uid === uid;
+                                    return (
+                                        <div
+                                            key={chat.id}
+                                            className={styles.chatMessage}
+                                            style={isMe ? { backgroundColor: 'rgba(62, 166, 255, 0.1)', padding: '6px 8px', borderRadius: '6px' } : {}}
                                         >
-                                            {chat.name}
-                                        </span>
-                                        <span className={styles.chatText}>{chat.message}</span>
-                                    </div>
-                                );
-                            })
-                        )}
-                        <div ref={chatEndRef} />
-                    </div>
+                                            <span
+                                                className={styles.chatName}
+                                                style={isMe ? { color: '#3ea6ff' } : {}}
+                                            >
+                                                {chat.name}
+                                            </span>
+                                            <span className={styles.chatText}>{chat.message}</span>
+                                        </div>
+                                    );
+                                })
+                            )}
+                            <div ref={chatEndRef} />
+                        </div>
 
-                    <div className={styles.chatInputArea}>
-                        {isChatDisabled ? (
-                            <div style={{ padding: '16px', textAlign: 'center', color: '#ff6b6b', fontSize: '13px', background: 'rgba(255, 0, 0, 0.1)', borderRadius: '8px', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
-                                Fitur Live Chat sedang dinonaktifkan.
-                            </div>
-                        ) : !isMounted ? (
-                            <div style={{ height: '50px' }}></div>
-                        ) : !isNameSet ? (
-                            <form onSubmit={handleSaveName} className={styles.chatForm}>
-                                <div style={{ fontSize: '13px', color: '#aaa', marginBottom: '4px' }}>Masukkan nama untuk mulai chat:</div>
-                                <div className={styles.inputRow}>
-                                    <input
-                                        type="text"
-                                        placeholder="Ketik nama kamu..."
-                                        className={styles.messageInput}
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        maxLength={20}
-                                        required
-                                        autoFocus
-                                    />
-                                    <button
-                                        type="submit"
-                                        className={styles.sendBtn}
-                                        disabled={!name.trim()}
-                                    >
-                                        Simpan
-                                    </button>
+                        <div className={styles.chatInputArea}>
+                            {isChatDisabled ? (
+                                <div style={{ padding: '16px', textAlign: 'center', color: '#ff6b6b', fontSize: '13px', background: 'rgba(255, 0, 0, 0.1)', borderRadius: '8px', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
+                                    Fitur Live Chat sedang dinonaktifkan.
                                 </div>
-                            </form>
-                        ) : (
-                            <form onSubmit={handleSendMessage} className={styles.chatForm}>
-                                <div style={{ fontSize: '12px', color: '#aaa', display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                    <span>Chat sebagai: <strong style={{ color: '#f1f1f1' }}>{name}</strong></span>
-                                    <span style={{ cursor: 'pointer', color: '#3ea6ff' }} onClick={() => setIsNameSet(false)}>Ubah</span>
-                                </div>
-                                <div className={styles.inputRow}>
-                                    <input
-                                        type="text"
-                                        placeholder="Ketik pesan di sini..."
-                                        className={styles.messageInput}
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        maxLength={200}
-                                        required
-                                        autoComplete="off"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className={styles.sendBtn}
-                                        disabled={isSending || cooldown > 0 || !message.trim()}
-                                    >
-                                        {cooldown > 0 ? `${cooldown}s` : 'Kirim'}
-                                    </button>
-                                </div>
-                            </form>
-                        )}
+                            ) : !isMounted ? (
+                                <div style={{ height: '50px' }}></div>
+                            ) : !isNameSet ? (
+                                <form onSubmit={handleSaveName} className={styles.chatForm}>
+                                    <div style={{ fontSize: '13px', color: '#aaa', marginBottom: '4px' }}>Masukkan nama untuk mulai chat:</div>
+                                    <div className={styles.inputRow}>
+                                        <input
+                                            type="text"
+                                            placeholder="Ketik nama kamu..."
+                                            className={styles.messageInput}
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            maxLength={20}
+                                            required
+                                            autoFocus
+                                        />
+                                        <button
+                                            type="submit"
+                                            className={styles.sendBtn}
+                                            disabled={!name.trim()}
+                                        >
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <form onSubmit={handleSendMessage} className={styles.chatForm}>
+                                    <div style={{ fontSize: '12px', color: '#aaa', display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                        <span>Chat sebagai: <strong style={{ color: '#f1f1f1' }}>{name}</strong></span>
+                                        <span style={{ cursor: 'pointer', color: '#3ea6ff' }} onClick={() => setIsNameSet(false)}>Ubah</span>
+                                    </div>
+                                    <div className={styles.inputRow}>
+                                        <input
+                                            type="text"
+                                            placeholder="Ketik pesan di sini..."
+                                            className={styles.messageInput}
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            maxLength={200}
+                                            required
+                                            autoComplete="off"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className={styles.sendBtn}
+                                            disabled={isSending || cooldown > 0 || !message.trim()}
+                                        >
+                                            {cooldown > 0 ? `${cooldown}s` : 'Kirim'}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
                     </div>
-                </div>
                 )}
 
             </div>
