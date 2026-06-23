@@ -1,33 +1,31 @@
 'use server'
 
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
-import { dbFirestore } from '@/services/firebase/firestore'
 import { unstable_cache } from 'next/cache'
+import playerData from '@/data/fix-player.json'
 
 export async function getClubs() {
   const fetchClubs = unstable_cache(
     async () => {
       try {
-        const clubsSnap = await getDocs(collection(dbFirestore, 'clubs'))
         const clubs = []
-        
-        clubsSnap.forEach(document => {
-          const data = document.data()
-          if (data.name) {
-            clubs.push({ id: document.id, name: data.name })
-          }
-        })
+        if (playerData && Array.isArray(playerData.players)) {
+          playerData.players.forEach(clubData => {
+            if (clubData.club) {
+              clubs.push({ id: clubData.club, name: clubData.club })
+            }
+          })
+        }
         
         // Sort alphabetically
         clubs.sort((a, b) => a.name.localeCompare(b.name))
         return clubs
       } catch (error) {
-        console.error("Failed to fetch clubs:", error)
+        console.error("Failed to fetch clubs from local JSON:", error)
         return []
       }
     },
-    ['all-clubs-list'],
-    { revalidate: 86400, tags: ['clubs'] } // Cache for 24 hours
+    ['all-clubs-list-json'],
+    { revalidate: false }
   )
 
   return fetchClubs()
@@ -39,23 +37,22 @@ export async function getPlayersByClub(clubId) {
   const fetchPlayers = unstable_cache(
     async (id) => {
       try {
-        const clubDoc = await getDoc(doc(dbFirestore, 'clubs', id))
-        if (!clubDoc.exists()) return []
+        if (!playerData || !Array.isArray(playerData.players)) return []
         
-        const players = clubDoc.data().players || []
-        const clubName = clubDoc.data().name
+        const clubData = playerData.players.find(c => c.club === id)
+        if (!clubData || !clubData.players) return []
         
-        return players.map(p => ({
+        return clubData.players.map(p => ({
           ...p,
-          club: clubName
+          club: clubData.club
         }))
       } catch (error) {
-        console.error(`Failed to fetch players for club ${id}:`, error)
+        console.error(`Failed to fetch players for club ${id} from JSON:`, error)
         return []
       }
     },
-    [`players-by-club-${clubId}`],
-    { revalidate: 86400, tags: [`club-${clubId}`] } // Cache for 24 hours
+    [`players-by-club-json-${clubId}`],
+    { revalidate: false }
   )
 
   return fetchPlayers(clubId)
@@ -67,35 +64,29 @@ export async function searchAllPlayers(query) {
   const fetchAllFlatPlayers = unstable_cache(
     async () => {
       try {
-        console.time("Firestore-FetchAllPlayers")
-        const clubsSnap = await getDocs(collection(dbFirestore, 'clubs'))
         const allPlayers = []
-        clubsSnap.forEach(document => {
-          const data = document.data()
-          if (data.players && Array.isArray(data.players)) {
-            data.players.forEach(p => {
-              if (p.name) {
-                allPlayers.push({ ...p, club: data.name })
-              }
-            })
-          }
-        })
-        console.timeEnd("Firestore-FetchAllPlayers")
-        console.log(`Cached ${allPlayers.length} players`)
+        if (playerData && Array.isArray(playerData.players)) {
+          playerData.players.forEach(clubData => {
+            if (clubData.players && Array.isArray(clubData.players)) {
+              clubData.players.forEach(p => {
+                if (p.name) {
+                  allPlayers.push({ ...p, club: clubData.club })
+                }
+              })
+            }
+          })
+        }
         return allPlayers
       } catch (error) {
-        console.error("Failed to fetch all flat players:", error)
+        console.error("Failed to fetch flat players from local json:", error)
         return []
       }
     },
-    ['all-flat-players-v2'],
-    { revalidate: 86400, tags: ['clubs', 'players'] }
+    ['all-flat-players-json-file'],
+    { revalidate: false }
   )
 
-  console.time("GetFlatPlayersCache")
   const flatPlayers = await fetchAllFlatPlayers()
-  console.timeEnd("GetFlatPlayersCache")
-
   const lowerQuery = query.toLowerCase().trim()
   
   const results = []
