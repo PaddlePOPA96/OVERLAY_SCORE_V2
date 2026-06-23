@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useTheme } from '@mui/material/styles'
 
 import OperatorRoot from '@/app/(dashboard)/dashboard/operator/_components/OperatorRoot'
-import { useAuth } from '@/components/providers/AuthContext'
+import { useAuth } from '@/shared/components/providers/AuthContext'
 
 export default function OperatorPage() {
   const { user, loading, roomId: authRoomId } = useAuth()

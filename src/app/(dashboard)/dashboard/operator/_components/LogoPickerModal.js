@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { LOGO_DATA, buildLogoSrc } from '@/lib/logoData'
+import { LOGO_DATA, buildLogoSrc } from '@/data/logoData'
 
 export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect }) {
   const [activeTab, setActiveTab] = useState('database')

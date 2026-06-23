@@ -1,6 +1,6 @@
 // Component Imports
-import Providers from '@components/Providers'
-import NotFound from '@views/NotFound'
+import Providers from '@/shared/components/Providers'
+import NotFound from '@/shared/views/NotFound'
 
 const NotFoundPage = () => {
   const direction = 'ltr'

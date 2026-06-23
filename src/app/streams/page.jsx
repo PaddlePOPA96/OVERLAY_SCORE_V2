@@ -3,9 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import styles from './streams.module.css';
-import { db } from '@/lib/firebase/db';
+import { db } from '@/services/firebase/db';
 import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
-import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
+import RunningTextOverlay from '@/shared/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
     const videoRef = useRef(null);
@@ -18,6 +18,13 @@ export default function StreamsPage() {
     const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [isMinimal, setIsMinimal] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.location.search.includes('minimal=true')) {
+            setIsMinimal(true);
+        }
+    }, []);
     const [cooldown, setCooldown] = useState(0);
     const [isNameSet, setIsNameSet] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
@@ -527,62 +534,74 @@ export default function StreamsPage() {
     };
 
     return (
-        <div className={styles.wrapper}>
+        <div 
+            className={styles.wrapper} 
+            style={isMinimal ? { padding: 0, minHeight: '100%', height: '100vh', overflow: 'hidden' } : {}}
+        >
             {/* YOUTUBE STYLE NAVBAR */}
-            <nav className={styles.navbar}>
-                <div className={styles.navLeft}>
-                    <button className={styles.menuBtn} aria-label="Menu">
-                        <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M21,6H3V5h18V6z M21,11H3v1h18V11z M21,17H3v1h18V17z" fill="currentColor"></path></svg>
-                    </button>
-                    <div className={styles.logoContainer}>
-                        <span className={styles.logoText}>{streamHeader}</span>
-                        <span className={styles.logoCountry}>{streamHeaderCountry}</span>
+            {!isMinimal && (
+                <nav className={styles.navbar}>
+                    <div className={styles.navLeft}>
+                        <button className={styles.menuBtn} aria-label="Menu">
+                            <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M21,6H3V5h18V6z M21,11H3v1h18V11z M21,17H3v1h18V17z" fill="currentColor"></path></svg>
+                        </button>
+                        <div className={styles.logoContainer}>
+                            <span className={styles.logoText}>{streamHeader}</span>
+                            <span className={styles.logoCountry}>{streamHeaderCountry}</span>
+                        </div>
                     </div>
-                </div>
 
-                <div className={styles.navCenter}>
-                    {multiMode ? (
-                        <div style={{ display: 'flex', gap: '8px', background: '#121212', padding: '4px 8px', borderRadius: '20px', border: '1px solid #303030' }}>
-                            <button 
-                                onClick={() => setLeftWidth(75)}
-                                style={{ background: leftWidth > 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
-                            >Besar Kiri</button>
-                            <button 
-                                onClick={() => setLeftWidth(50)}
-                                style={{ background: leftWidth > 40 && leftWidth < 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 40 && leftWidth < 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
-                            >50 : 50</button>
-                            <button 
-                                onClick={() => setLeftWidth(25)}
-                                style={{ background: leftWidth < 40 ? '#3ea6ff' : 'transparent', color: leftWidth < 40 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
-                            >Besar Kanan</button>
-                        </div>
-                    ) : (
-                        <div className={styles.searchContainer}>
-                            <input type="text" placeholder="Telusuri" className={styles.searchBar} disabled />
-                            <button className={styles.searchBtn} aria-label="Cari">
-                                <svg viewBox="0 0 24 24" className={styles.searchIcon}><path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7S3,6.13,3,10s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z" fill="currentColor"></path></svg>
-                            </button>
-                        </div>
-                    )}
-                </div>
+                    <div className={styles.navCenter}>
+                        {multiMode ? (
+                            <div style={{ display: 'flex', gap: '8px', background: '#121212', padding: '4px 8px', borderRadius: '20px', border: '1px solid #303030' }}>
+                                <button 
+                                    onClick={() => setLeftWidth(75)}
+                                    style={{ background: leftWidth > 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                >Besar Kiri</button>
+                                <button 
+                                    onClick={() => setLeftWidth(50)}
+                                    style={{ background: leftWidth > 40 && leftWidth < 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 40 && leftWidth < 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                >50 : 50</button>
+                                <button 
+                                    onClick={() => setLeftWidth(25)}
+                                    style={{ background: leftWidth < 40 ? '#3ea6ff' : 'transparent', color: leftWidth < 40 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                >Besar Kanan</button>
+                            </div>
+                        ) : (
+                            <div className={styles.searchContainer}>
+                                <input type="text" placeholder="Telusuri" className={styles.searchBar} disabled />
+                                <button className={styles.searchBtn} aria-label="Cari">
+                                    <svg viewBox="0 0 24 24" className={styles.searchIcon}><path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7S3,6.13,3,10s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z" fill="currentColor"></path></svg>
+                                </button>
+                            </div>
+                        )}
+                    </div>
 
-                <div className={styles.navRight}>
-                    <button className={styles.navActionBtn}>
-                        <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M14,13h-3v3H9v-3H6v-2h3V8h2v3h3V13z M17,6H3v12h14V6z M18,5v14H2V5H18z M22,8.5l-3,2.5v2l3,2.5V8.5z" fill="currentColor"></path></svg>
-                    </button>
-                    <button className={styles.navActionBtn}>
-                        <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M10,20h4c0,1.1-0.9,2-2,2S10,21.1,10,20z M20,17.35V19H4v-1.65l2-1.88V10.2c0-2.92,1.56-5.36,4.28-6.01C10.45,4.07,10.5,3.92,10.5,3.7c0-0.94,0.67-1.7,1.5-1.7s1.5,0.76,1.5,1.7c0,0.22,0.05,0.37,0.22,0.49C16.44,4.84,18,7.28,18,10.2v5.27L20,17.35z M17,10.5c0-2.76-1.92-5-4.5-5S8,7.74,8,10.5v5.7h9V10.5z" fill="currentColor"></path></svg>
-                    </button>
-                    <div className={styles.userAvatar}>S</div>
-                </div>
-            </nav>
+                    <div className={styles.navRight}>
+                        <button className={styles.navActionBtn}>
+                            <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M14,13h-3v3H9v-3H6v-2h3V8h2v3h3V13z M17,6H3v12h14V6z M18,5v14H2V5H18z M22,8.5l-3,2.5v2l3,2.5V8.5z" fill="currentColor"></path></svg>
+                        </button>
+                        <button className={styles.navActionBtn}>
+                            <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M10,20h4c0,1.1-0.9,2-2,2S10,21.1,10,20z M20,17.35V19H4v-1.65l2-1.88V10.2c0-2.92,1.56-5.36,4.28-6.01C10.45,4.07,10.5,3.92,10.5,3.7c0-0.94,0.67-1.7,1.5-1.7s1.5,0.76,1.5,1.7c0,0.22,0.05,0.37,0.22,0.49C16.44,4.84,18,7.28,18,10.2v5.27L20,17.35z M17,10.5c0-2.76-1.92-5-4.5-5S8,7.74,8,10.5v5.7h9V10.5z" fill="currentColor"></path></svg>
+                        </button>
+                        <div className={styles.userAvatar}>S</div>
+                    </div>
+                </nav>
+            )}
 
             {/* MAIN LAYOUT */}
-            <div className={`${styles.layout} ${isDragging ? styles.dragging : ''}`} ref={containerRef} style={multiMode ? { gap: 0 } : {}}>
+            <div 
+                className={`${styles.layout} ${isDragging ? styles.dragging : ''}`} 
+                ref={containerRef} 
+                style={{ 
+                    ...(multiMode ? { gap: 0 } : {}), 
+                    ...(isMinimal ? { paddingTop: 0, paddingBottom: 0, height: '100vh', marginTop: 0, alignItems: 'stretch' } : {}) 
+                }}
+            >
 
                 {/* Bagian Kiri: Video & Judul */}
                 <div className={`${styles.videoSection} ${multiMode ? styles.resizableLeft : ''}`} style={multiMode ? { flex: `0 0 ${leftWidth}%`, paddingRight: '12px' } : {}}>
-                    <div className={styles.videoWrapper}>
+                    <div className={styles.videoWrapper} style={isMinimal ? { paddingTop: 0, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' } : {}}>
                         {isYoutube && youtubeId ? (
                             <iframe
                                 key={`yt-${streamStartTime}-${youtubeId}`}
@@ -604,11 +623,19 @@ export default function StreamsPage() {
                             ></video>
                         )}
                     </div>
-                    <div className={styles.metaData}>
-                        <h1 className={styles.title}>{streamTitle}</h1>
-                        <div className={styles.badgeLive}>• LIVE</div>
-                    </div>
-
+                    {!isMinimal && (
+                        <div className={styles.metaData}>
+                            <h1 className={styles.title}>{streamTitle}</h1>
+                            <div className={styles.channelInfo}>
+                                <div className={styles.channelAvatar}>S</div>
+                                <div className={styles.channelText}>
+                                    <h2>Scorebos Live</h2>
+                                    <p>1.2M subscribers</p>
+                                </div>
+                                <button className={styles.subscribeBtn}>Subscribe</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 
                 {multiMode && (
@@ -623,7 +650,7 @@ export default function StreamsPage() {
 
                 {multiMode && (
                 <div className={`${styles.videoSection} ${styles.resizableRight}`} style={{ flex: '1', paddingLeft: '12px', minWidth: 0 }}>
-                    <div className={styles.videoWrapper}>
+                    <div className={styles.videoWrapper} style={isMinimal ? { paddingTop: 0, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#000' } : {}}>
                         {isYoutube2 && youtubeId2 ? (
                             <iframe
                                 key={`yt2-${streamStartTime}-${youtubeId2}`}
@@ -646,18 +673,25 @@ export default function StreamsPage() {
                             ></video>
                         )}
                     </div>
-                    <div className={styles.metaData}>
-                        <h1 className={styles.title}>{streamTitle2}</h1>
-                        <div className={styles.badgeLive}>• LIVE</div>
-                    </div>
+                    {!isMinimal && (
+                        <div className={styles.metaData}>
+                            <h1 className={styles.title}>{streamTitle2}</h1>
+                            <div className={styles.channelInfo}>
+                                <div className={styles.channelAvatar}>C</div>
+                                <div className={styles.channelText}>
+                                    <h2>Channel Dua</h2>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 )}
 
                 {/* Bagian Kanan: Live Chat */}
-                {!multiMode && (
+                {!multiMode && !isMinimal && (
                 <div className={styles.chatSection}>
                     <div className={styles.chatHeader}>
-                        <span>Live Chat</span>
+                        Top chat <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 14.5l-6-6h12z" fill="currentColor"></path></svg>
                     </div>
 
                     <div className={styles.chatMessages}>
@@ -751,7 +785,7 @@ export default function StreamsPage() {
 
             </div>
             {/* Running Text Ticker at the bottom */}
-            <RunningTextOverlay isPageMode={true} />
+            {!isMinimal && <RunningTextOverlay isPageMode={true} />}
         </div>
     );
 }

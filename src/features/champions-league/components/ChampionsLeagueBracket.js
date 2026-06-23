@@ -1,6 +1,6 @@
 'use client'
 
-import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from '@/lib/logoData'
+import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from '@/data/logoData'
 
 const TEAM_STOP_WORDS = new Set(['fc', 'afc', 'cf', 'sc', 'club', 'football', 'the'])
 

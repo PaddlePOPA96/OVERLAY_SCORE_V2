@@ -1,6 +1,6 @@
 'use client'
 
-import { audioOptions } from '@/lib/audioConfig'
+import { audioOptions } from '@/shared/configs/audioConfig'
 
 export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, previewGoalAudio, theme }) {
   const isLight = theme === 'light'

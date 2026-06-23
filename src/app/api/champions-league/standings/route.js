@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { ref, set } from 'firebase/database'
 
-import { db } from '@/lib/firebase/db'
+import { db } from '@/services/firebase/db'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'

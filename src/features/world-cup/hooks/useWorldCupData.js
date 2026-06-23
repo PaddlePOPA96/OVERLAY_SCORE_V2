@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { ref, onValue } from 'firebase/database'
 
-import { db } from '@/lib/firebase/db'
+import { db } from '@/services/firebase/db'
 
 export function useWorldCupMatches() {
   const [matches, setMatches] = useState([])
@@ -30,7 +30,7 @@ export function useWorldCupMatches() {
 
   const reloadWcMatches = async () => {
     try {
-      const token = await import('@/lib/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
+      const token = await import('@/services/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
@@ -91,7 +91,7 @@ export function useWorldCupStandings() {
 
   const reloadWcStandings = async () => {
     try {
-      const token = await import('@/lib/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
+      const token = await import('@/services/firebase/auth').then(m => m.auth.currentUser?.getIdToken())
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {}
 

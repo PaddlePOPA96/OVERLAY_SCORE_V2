@@ -1,5 +1,5 @@
 import LayoutA from './LayoutA'
-import { Card } from '@/components/ui/card'
+import { Card } from '@/shared/components/ui/card'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 import PreviewWrapper from './shared/PreviewWrapper'
 

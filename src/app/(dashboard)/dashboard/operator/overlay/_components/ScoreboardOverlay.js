@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 
-import { useScoreboard } from '@/hooks/useScoreboard'
+import { useScoreboard } from '@/shared/hooks/useScoreboard'
 import LayoutA from '../../_components/LayoutA'
 import LayoutB from '../../_components/LayoutB'
 import LayoutC from '../../_components/LayoutC'
@@ -10,7 +10,7 @@ import LayoutD from '../../_components/LayoutD'
 import LayoutE from '../../_components/LayoutE'
 import LayoutPildun from '../../_components/LayoutPildun'
 import LayoutPildun2 from '../../_components/LayoutPildun2'
-import { useLayoutSettings } from '@/hooks/useLayoutSettings'
+import { useLayoutSettings } from '@/shared/hooks/useLayoutSettings'
 import ThirdTitleOverlay from './ThirdTitleOverlay'
 
 export default function ScoreboardOverlay({ roomId = 'default' }) {

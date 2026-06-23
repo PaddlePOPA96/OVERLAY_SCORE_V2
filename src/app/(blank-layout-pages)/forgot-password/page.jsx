@@ -1,6 +1,6 @@
 // Component Imports
 
-import ForgotPassword from '@views/ForgotPassword'
+import ForgotPassword from '@/shared/views/ForgotPassword'
 
 // Server Action Imports
 

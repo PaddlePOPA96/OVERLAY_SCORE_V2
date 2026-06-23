@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 
 import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebase/index'
-import { audioOptions, getAudioLabel } from '@/lib/audioConfig'
+import { db } from '@/services/firebase/index'
+import { audioOptions, getAudioLabel } from '@/shared/configs/audioConfig'
 
 export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
   const isDark = theme === 'dark'

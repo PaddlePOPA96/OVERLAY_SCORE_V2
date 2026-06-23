@@ -1,6 +1,6 @@
 'use client'
 
-import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from '@/lib/logoData'
+import { LOGO_DATA, buildLogoSrc, buildOtherLogoSrc } from '@/data/logoData'
 
 export function PremierLeagueMain({
   matches,

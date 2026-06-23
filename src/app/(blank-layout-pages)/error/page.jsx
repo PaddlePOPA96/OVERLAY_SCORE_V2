@@ -1,6 +1,6 @@
 // Component Imports
 
-import NotFound from '@views/NotFound'
+import NotFound from '@/shared/views/NotFound'
 
 // Server Action Imports
 

@@ -15,7 +15,7 @@ import {
 } from '@/features/premier-league/hooks/usePremierLeagueData'
 import { PremierLeagueMain } from '@/features/premier-league/components/PremierLeagueSection'
 import { PremierLeagueRight } from '@/features/premier-league/components/PremierLeagueSidebar'
-import { useAuth } from '@/components/providers/AuthContext'
+import { useAuth } from '@/shared/components/providers/AuthContext'
 
 export default function PremierLeaguePage() {
   const { mode } = useColorScheme()

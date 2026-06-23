@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase/db';
-import { dbFirestore } from '@/lib/firebase/firestore';
+import { db } from '@/services/firebase/db';
+import { dbFirestore } from '@/services/firebase/firestore';
 import { ref, onValue, remove, set } from 'firebase/database';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { useAuth } from '@/components/providers/AuthContext';
+import { useAuth } from '@/shared/components/providers/AuthContext';
 import StreamUrlManager from './StreamUrlManager';
 import { Paper, Typography, Box, Chip, Switch, FormControlLabel } from '@mui/material';
 

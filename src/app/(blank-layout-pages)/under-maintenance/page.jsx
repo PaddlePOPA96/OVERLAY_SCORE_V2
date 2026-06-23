@@ -1,6 +1,6 @@
 // Component Imports
 
-import UnderMaintenance from '@views/pages/misc/UnderMaintenance'
+import UnderMaintenance from '@/shared/views/pages/misc/UnderMaintenance'
 
 // Server Action Imports
 

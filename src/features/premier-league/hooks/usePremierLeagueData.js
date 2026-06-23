@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { ref, onValue } from 'firebase/database'
 
-import { db } from '@/lib/firebase/db'
-import { auth } from '@/lib/firebase/auth'
+import { db } from '@/services/firebase/db'
+import { auth } from '@/services/firebase/auth'
 
 export function usePremierLeagueMatches() {
   const [matches, setMatches] = useState([])

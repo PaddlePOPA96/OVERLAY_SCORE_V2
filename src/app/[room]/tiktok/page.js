@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 
 import { ref, onValue, update } from 'firebase/database'
 
-import { db } from '@/lib/firebase/index'
+import { db } from '@/services/firebase/index'
 
 export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
   const params = useParams()

@@ -1,5 +1,5 @@
 import LayoutPildun2 from './LayoutPildun2'
-import { Card } from '@/components/ui/card'
+import { Card } from '@/shared/components/ui/card'
 import PreviewWrapper from './shared/PreviewWrapper'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 

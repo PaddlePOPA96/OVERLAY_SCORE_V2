@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/firebase/db';
+import { db } from '@/services/firebase/db';
 import { ref, onValue, set, push, remove } from 'firebase/database';
 import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel, Grid } from '@mui/material';
 

@@ -33,15 +33,6 @@
       ],
       "@assets/*": [
         "./src/assets/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@configs/*": [
-        "./src/configs/*"
-      ],
-      "@views/*": [
-        "./src/views/*"
       ]
     }
   },

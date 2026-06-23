@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 import { ref, set } from 'firebase/database'
 
-import { db } from '@/lib/firebase/db'
+import { db } from '@/services/firebase/db'
 
 export const dynamic = 'force-dynamic'
 

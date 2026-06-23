@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
-import { searchPlayers } from '@/actions/playerActions'
+import { searchPlayers } from '@/shared/actions/playerActions'
 
 export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = 'dark' }) {
   const [searchQuery, setSearchQuery] = useState('')

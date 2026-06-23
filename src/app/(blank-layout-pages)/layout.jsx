@@ -1,5 +1,5 @@
 // Component Imports
-import Providers from '@components/Providers'
+import Providers from '@/shared/components/Providers'
 
 const Layout = ({ children }) => {
   const direction = 'ltr'

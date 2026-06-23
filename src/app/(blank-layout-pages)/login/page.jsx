@@ -1,4 +1,4 @@
-import Login from '@views/Login'
+import Login from '@/shared/views/Login'
 
 const LoginPage = () => {
   return <Login />

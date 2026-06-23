@@ -4,9 +4,9 @@ import { ref, set, get } from 'firebase/database'
 
 import { doc, getDoc } from 'firebase/firestore'
 
-import { db } from '@/lib/firebase/db'
-import { verifyIdToken } from '@/lib/firebase/admin'
-import { dbFirestore } from '@/lib/firebase/firestore'
+import { db } from '@/services/firebase/db'
+import { verifyIdToken } from '@/services/firebase/admin'
+import { dbFirestore } from '@/services/firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'

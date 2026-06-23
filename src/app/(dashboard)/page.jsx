@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Grid from '@mui/material/Grid'
 
-import { useAuth } from '@/components/providers/AuthContext'
+import { useAuth } from '@/shared/components/providers/AuthContext'
 import {
   usePremierLeagueMatches,
   usePremierLeagueStandings,
@@ -31,7 +31,9 @@ const StreamsOperatorSection = dynamic(() => import('@/features/match-simulation
   ssr: false
 })
 
-
+const StreamsPreviewDashboard = dynamic(() => import('@/features/match-simulation/components/operator/StreamsPreviewDashboard'), {
+  ssr: false
+})
 
 const CountdownTimer = dynamic(() => import('@/features/countdown/components/CountdownTimer'), { ssr: false })
 
@@ -154,6 +156,13 @@ function DashboardPageInner() {
             <StreamsOperatorSection theme={theme} />
           </RequireLogin>
         </div>
+      )}
+
+      {/* ── LIVE STREAMS PREVIEW (DASHBOARD EMBED) ── */}
+      {activeSection === 'streams' && (
+        <RequireLogin title='Live Streams Preview'>
+          <StreamsPreviewDashboard roomId={roomId} theme={theme} />
+        </RequireLogin>
       )}
 
       {activeSection === 'countdown-timer' && (

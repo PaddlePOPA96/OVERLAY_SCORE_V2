@@ -1,4 +1,4 @@
-import Register from '@views/Register'
+import Register from '@/shared/views/Register'
 
 const RegisterPage = () => {
   return <Register />

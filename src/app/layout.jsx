@@ -11,7 +11,7 @@ import '@/app/globals.css'
 import '@assets/iconify-icons/generated-icons.css'
 
 // Component Imports
-import SecurityGuard from '@components/SecurityGuard'
+import SecurityGuard from '@/shared/components/SecurityGuard'
 
 const inter = Inter({
   subsets: ['latin'],

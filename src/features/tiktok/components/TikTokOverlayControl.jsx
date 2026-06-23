@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { ref, onValue, update, push, remove, get } from 'firebase/database'
 
-import { db } from '@/lib/firebase/index'
+import { db } from '@/services/firebase/index'
 
 export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default' }) {
   const isDark = theme === 'dark'

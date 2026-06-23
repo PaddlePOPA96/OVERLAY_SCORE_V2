@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react'
 
 import LogoPickerModal from '../LogoPickerModal'
-import { makeTeamAbbr } from '@/lib/logoData'
-import { Button } from '@/components/ui/button'
+import { makeTeamAbbr } from '@/data/logoData'
+import { Button } from '@/shared/components/ui/button'
 import LayoutSelector from './LayoutSelector'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
