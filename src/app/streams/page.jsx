@@ -10,6 +10,8 @@ import RunningTextOverlay from '@/components/ui/RunningTextOverlay';
 export default function StreamsPage() {
     const videoRef = useRef(null);
     const hlsRef = useRef(null);
+    const hlsRef2 = useRef(null);
+    const videoRef2 = useRef(null);
     const chatEndRef = useRef(null);
 
     const [chats, setChats] = useState([]);
@@ -22,11 +24,19 @@ export default function StreamsPage() {
     const [uid, setUid] = useState(null);
     const [currentChannel, setCurrentChannel] = useState('');
     const [rawUrl, setRawUrl] = useState('');
+    const [rawUrl2, setRawUrl2] = useState('');
+    const [streamToken2, setStreamToken2] = useState('');
+    const [currentChannel2, setCurrentChannel2] = useState('');
+    const [multiMode, setMultiMode] = useState(false);
+    const containerRef = useRef(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [leftWidth, setLeftWidth] = useState(50);
     const [streamToken, setStreamToken] = useState('');
     const [streamStartTime, setStreamStartTime] = useState(0);
     const [streamSyncVod, setStreamSyncVod] = useState(false);
     const [streamUseProxy, setStreamUseProxy] = useState(false);
     const [streamTitle, setStreamTitle] = useState('SELAMAT ULANG TAHUN');
+    const [streamTitle2, setStreamTitle2] = useState('SELAMAT ULANG TAHUN');
     const [streamHeader, setStreamHeader] = useState('HUITOTOO');
     const [streamHeaderCountry, setStreamHeaderCountry] = useState('ID');
     const [isChatDisabled, setIsChatDisabled] = useState(false);
@@ -56,6 +66,36 @@ export default function StreamsPage() {
         }
     }
 
+    let isYoutube2 = false;
+    let youtubeId2 = '';
+
+    if (currentChannel2) {
+        const decodedChannel2 = currentChannel2.includes('/api/stream.m3u8?u=') 
+            ? Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8') 
+            : currentChannel2;
+
+        if (decodedChannel2.includes('youtube.com/watch')) {
+            isYoutube2 = true;
+            try { youtubeId2 = new URL(decodedChannel2).searchParams.get('v'); } catch (e) {}
+        } else if (decodedChannel2.includes('youtu.be/')) {
+            isYoutube2 = true;
+            youtubeId2 = decodedChannel2.split('youtu.be/')[1]?.split('?')[0];
+        } else if (decodedChannel2.includes('youtube.com/embed/')) {
+            isYoutube2 = true;
+            youtubeId2 = decodedChannel2.split('youtube.com/embed/')[1]?.split('?')[0];
+        }
+    }
+
+    const youtubeSrc2 = React.useMemo(() => {
+        if (!isYoutube2 || !youtubeId2) return '';
+        let url = `https://www.youtube.com/embed/${youtubeId2}?autoplay=1&controls=1&mute=1&playsinline=1&rel=0&showinfo=1`;
+        if (streamSyncVod && streamStartTime > 0) {
+            const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
+            url += `&start=${offset}`;
+        }
+        return url;
+    }, [isYoutube2, youtubeId2, streamStartTime, streamSyncVod]);
+
     const youtubeSrc = React.useMemo(() => {
         if (!isYoutube || !youtubeId) return '';
         let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=0&playsinline=1&rel=0&showinfo=1`;
@@ -65,6 +105,64 @@ export default function StreamsPage() {
         }
         return url;
     }, [isYoutube, youtubeId, streamStartTime, streamSyncVod]);
+
+    useEffect(() => {
+        const onMouseMove = (e) => {
+            if (!isDragging || !containerRef.current) return;
+            const containerRect = containerRef.current.getBoundingClientRect();
+            if (window.innerWidth <= 1000) return;
+            let newLeft = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+            if (newLeft < 15) newLeft = 15;
+            if (newLeft > 85) newLeft = 85;
+            setLeftWidth(newLeft);
+        };
+        const onTouchMove = (e) => {
+            if (!isDragging || !containerRef.current) return;
+            const containerRect = containerRef.current.getBoundingClientRect();
+            if (window.innerWidth <= 1000) return;
+            let newLeft = ((e.touches[0].clientX - containerRect.left) / containerRect.width) * 100;
+            if (newLeft < 15) newLeft = 15;
+            if (newLeft > 85) newLeft = 85;
+            setLeftWidth(newLeft);
+        };
+        const onMouseUp = () => setIsDragging(false);
+
+        if (isDragging) {
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            document.addEventListener('touchmove', onTouchMove, { passive: false });
+            document.addEventListener('touchend', onMouseUp);
+            document.body.style.userSelect = 'none';
+        } else {
+            document.body.style.userSelect = '';
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            document.removeEventListener('touchmove', onTouchMove);
+            document.removeEventListener('touchend', onMouseUp);
+            document.body.style.userSelect = '';
+        };
+    }, [isDragging]);
+
+    // Pastikan video selalu lompat ke LIVE edge saat di-play (setelah di-pause)
+    const handleVideoPlay = (e, hlsInstance) => {
+        const video = e.target;
+        // Gunakan hls.liveSyncPosition jika ada (hls.js)
+        if (hlsInstance && hlsInstance.liveSyncPosition) {
+            if (hlsInstance.liveSyncPosition > video.currentTime + 3) {
+                video.currentTime = hlsInstance.liveSyncPosition;
+            }
+        } 
+        // Fallback untuk native player (Safari iOS)
+        else if (video.seekable && video.seekable.length > 0) {
+            const liveEdge = video.seekable.end(video.seekable.length - 1);
+            if (liveEdge > video.currentTime + 3) {
+                video.currentTime = liveEdge;
+            }
+        }
+    };
 
     useEffect(() => {
         if (isYoutube) {
@@ -90,6 +188,7 @@ export default function StreamsPage() {
                 lowLatencyMode: false, // Dinonaktifkan untuk mencegah stream patah-patah
                 backBufferLength: 90,
                 liveSyncDurationCount: 3, // Menjaga jarak dari live edge (buffer lebih aman)
+                liveMaxLatencyDurationCount: 6, // Jika telat 6 segmen, otomatis jump ke LIVE
                 maxBufferLength: 30, // Menyimpan buffer ke depan yang lebih banyak
             });
 
@@ -116,6 +215,41 @@ export default function StreamsPage() {
             }
         }
     }, [currentChannel, isYoutube]);
+
+    
+    useEffect(() => {
+        if (isYoutube2) {
+            if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
+            return;
+        }
+        const video = videoRef2.current;
+        if (!video) return;
+        if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
+
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: false,
+                backBufferLength: 90,
+                liveSyncDurationCount: 3,
+                liveMaxLatencyDurationCount: 6,
+                maxBufferLength: 30,
+            });
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                setTimeout(() => { video.play().catch((err) => console.log('Autoplay blocked:', err)); }, 500);
+            });
+            hls.attachMedia(video);
+            hlsRef2.current = hls;
+            if (currentChannel2) hls.loadSource(currentChannel2);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            if (currentChannel2) {
+                video.src = currentChannel2;
+                video.addEventListener('loadedmetadata', () => {
+                    setTimeout(() => { video.play().catch((err) => console.log('Autoplay blocked:', err)); }, 500);
+                });
+            }
+        }
+    }, [currentChannel2, isYoutube2]);
 
     useEffect(() => {
         const urlRef = ref(db, 'settings/stream_url');
@@ -164,6 +298,12 @@ export default function StreamsPage() {
         });
 
         const titleRef = ref(db, 'settings/stream_title');
+        
+        const title2Ref = ref(db, 'settings/stream_title_2');
+        const unsubTitle2 = onValue(title2Ref, (snapshot) => {
+            if (snapshot.exists()) setStreamTitle2(snapshot.val());
+        });
+
         const unsubTitle = onValue(titleRef, (snapshot) => {
             if (snapshot.exists()) setStreamTitle(snapshot.val());
         });
@@ -178,6 +318,15 @@ export default function StreamsPage() {
             if (snapshot.exists()) setStreamHeaderCountry(snapshot.val());
         });
 
+        const multiModeRef = ref(db, 'settings/stream_multi_mode');
+        const unsubMultiMode = onValue(multiModeRef, (snapshot) => { setMultiMode(snapshot.exists() ? snapshot.val() : false); });
+
+        const url2Ref = ref(db, 'settings/stream_url_2');
+        const unsubUrl2 = onValue(url2Ref, (snapshot) => { setRawUrl2(snapshot.exists() ? snapshot.val() : ''); });
+
+        const token2Ref = ref(db, 'settings/stream_token_2');
+        const unsubToken2 = onValue(token2Ref, (snapshot) => { setStreamToken2(snapshot.exists() ? snapshot.val() : ''); });
+
         const chatDisabledRef = ref(db, 'settings/stream_chat_disabled');
         const unsubChatDisabled = onValue(chatDisabledRef, (snapshot) => {
             setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
@@ -190,9 +339,13 @@ export default function StreamsPage() {
             unsubSync();
             unsubProxy();
             unsubTitle();
+            unsubTitle2();
             unsubHeader();
             unsubHeaderCountry();
             unsubChatDisabled();
+            unsubMultiMode();
+            unsubUrl2();
+            unsubToken2();
         };
     }, []);
 
@@ -214,12 +367,32 @@ export default function StreamsPage() {
         }
     }, [rawUrl, streamToken, streamUseProxy]);
 
+    useEffect(() => {
+        if (rawUrl2) {
+            let finalUrl = rawUrl2;
+            if (streamToken2) {
+                finalUrl = rawUrl2.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
+            }
+            if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be')) {
+                const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
+            }
+            setCurrentChannel2(finalUrl);
+        } else {
+            setCurrentChannel2('');
+        }
+    }, [rawUrl2, streamToken2, streamUseProxy]);
+
     // Cleanup HLS on unmount
     useEffect(() => {
         return () => {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
                 hlsRef.current = null;
+            }
+            if (hlsRef2.current) {
+                hlsRef2.current.destroy();
+                hlsRef2.current = null;
             }
         };
     }, []);
@@ -368,12 +541,29 @@ export default function StreamsPage() {
                 </div>
 
                 <div className={styles.navCenter}>
-                    <div className={styles.searchContainer}>
-                        <input type="text" placeholder="Telusuri" className={styles.searchBar} disabled />
-                        <button className={styles.searchBtn} aria-label="Cari">
-                            <svg viewBox="0 0 24 24" className={styles.searchIcon}><path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7S3,6.13,3,10s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z" fill="currentColor"></path></svg>
-                        </button>
-                    </div>
+                    {multiMode ? (
+                        <div style={{ display: 'flex', gap: '8px', background: '#121212', padding: '4px 8px', borderRadius: '20px', border: '1px solid #303030' }}>
+                            <button 
+                                onClick={() => setLeftWidth(75)}
+                                style={{ background: leftWidth > 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                            >Besar Kiri</button>
+                            <button 
+                                onClick={() => setLeftWidth(50)}
+                                style={{ background: leftWidth > 40 && leftWidth < 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 40 && leftWidth < 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                            >50 : 50</button>
+                            <button 
+                                onClick={() => setLeftWidth(25)}
+                                style={{ background: leftWidth < 40 ? '#3ea6ff' : 'transparent', color: leftWidth < 40 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                            >Besar Kanan</button>
+                        </div>
+                    ) : (
+                        <div className={styles.searchContainer}>
+                            <input type="text" placeholder="Telusuri" className={styles.searchBar} disabled />
+                            <button className={styles.searchBtn} aria-label="Cari">
+                                <svg viewBox="0 0 24 24" className={styles.searchIcon}><path d="M20.87,20.17l-5.59-5.59C16.35,13.35,17,11.75,17,10c0-3.87-3.13-7-7-7S3,6.13,3,10s3.13,7,7,7c1.75,0,3.35-0.65,4.58-1.71 l5.59,5.59L20.87,20.17z M10,16c-3.31,0-6-2.69-6-6s2.69-6,6-6s6,2.69,6,6S13.31,16,10,16z" fill="currentColor"></path></svg>
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.navRight}>
@@ -388,10 +578,10 @@ export default function StreamsPage() {
             </nav>
 
             {/* MAIN LAYOUT */}
-            <div className={styles.layout}>
+            <div className={`${styles.layout} ${isDragging ? styles.dragging : ''}`} ref={containerRef} style={multiMode ? { gap: 0 } : {}}>
 
                 {/* Bagian Kiri: Video & Judul */}
-                <div className={styles.videoSection}>
+                <div className={`${styles.videoSection} ${multiMode ? styles.resizableLeft : ''}`} style={multiMode ? { flex: `0 0 ${leftWidth}%`, paddingRight: '12px' } : {}}>
                     <div className={styles.videoWrapper}>
                         {isYoutube && youtubeId ? (
                             <iframe
@@ -404,7 +594,14 @@ export default function StreamsPage() {
                                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
                         ) : (
-                            <video ref={videoRef} className={styles.video} controls autoPlay playsInline></video>
+                            <video 
+                                ref={videoRef} 
+                                className={styles.video} 
+                                controls 
+                                autoPlay 
+                                playsInline
+                                onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
+                            ></video>
                         )}
                     </div>
                     <div className={styles.metaData}>
@@ -413,8 +610,51 @@ export default function StreamsPage() {
                     </div>
 
                 </div>
+                
+                {multiMode && (
+                <div 
+                    className={styles.splitter} 
+                    onMouseDown={() => setIsDragging(true)}
+                    onTouchStart={() => setIsDragging(true)}
+                >
+                    <div className={styles.splitterHandle}></div>
+                </div>
+                )}
+
+                {multiMode && (
+                <div className={`${styles.videoSection} ${styles.resizableRight}`} style={{ flex: '1', paddingLeft: '12px', minWidth: 0 }}>
+                    <div className={styles.videoWrapper}>
+                        {isYoutube2 && youtubeId2 ? (
+                            <iframe
+                                key={`yt2-${streamStartTime}-${youtubeId2}`}
+                                className={styles.video}
+                                src={youtubeSrc2}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
+                            ></iframe>
+                        ) : (
+                            <video 
+                                ref={videoRef2} 
+                                className={styles.video} 
+                                controls 
+                                autoPlay 
+                                playsInline 
+                                muted
+                                onPlay={(e) => handleVideoPlay(e, hlsRef2.current)}
+                            ></video>
+                        )}
+                    </div>
+                    <div className={styles.metaData}>
+                        <h1 className={styles.title}>{streamTitle2}</h1>
+                        <div className={styles.badgeLive}>• LIVE</div>
+                    </div>
+                </div>
+                )}
 
                 {/* Bagian Kanan: Live Chat */}
+                {!multiMode && (
                 <div className={styles.chatSection}>
                     <div className={styles.chatHeader}>
                         <span>Live Chat</span>
@@ -507,6 +747,7 @@ export default function StreamsPage() {
                         )}
                     </div>
                 </div>
+                )}
 
             </div>
             {/* Running Text Ticker at the bottom */}

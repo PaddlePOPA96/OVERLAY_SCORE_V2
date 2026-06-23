@@ -203,6 +203,13 @@
     object-fit: contain;
 }
 
+/* Hide the seek bar and time indicators in WebKit browsers */
+.video::-webkit-media-controls-timeline,
+.video::-webkit-media-controls-current-time-display,
+.video::-webkit-media-controls-time-remaining-display {
+    display: none !important;
+}
+
 .metaData {
     margin-top: 12px;
     display: flex;
@@ -395,3 +402,47 @@
         line-height: 22px;
     }
 }
+
+/* DRAGGABLE SPLITTER */
+.dragging {
+    cursor: col-resize !important;
+}
+
+.splitter {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: col-resize;
+    user-select: none;
+    transition: background-color 0.2s;
+    border-radius: 4px;
+    margin: 0 -4px;
+    z-index: 10;
+}
+.splitter:hover, .splitter:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.splitterHandle {
+    width: 4px;
+    height: 40px;
+    background-color: #3f3f3f;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+.splitter:hover .splitterHandle, .splitter:active .splitterHandle {
+    background-color: #3ea6ff;
+}
+
+/* On mobile, stack them and hide splitter */
+@media (max-width: 1000px) {
+    .splitter {
+        display: none;
+    }
+    .resizableLeft, .resizableRight {
+        flex: 1 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+}
+
