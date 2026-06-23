@@ -23,6 +23,8 @@ export const metadata = {
   description: 'Live sports scoreboard control and OBS broadcast overlay system.'
 }
 
+export const dynamic = 'force-dynamic';
+
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
