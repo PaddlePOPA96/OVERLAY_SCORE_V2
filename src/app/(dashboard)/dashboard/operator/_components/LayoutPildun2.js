@@ -140,11 +140,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             justifyContent: 'center',
             boxShadow: '-4px 0 24px rgba(0,0,0,0.2)',
             zIndex: 5,
-            transform: animateIn ? 'scaleX(1) scaleY(1)' : 'scaleX(0) scaleY(1)',
+            transform: animateIn ? 'scaleX(1) scaleY(1) translate3d(0,0,0)' : 'scaleX(0) scaleY(1) translate3d(0,0,0)',
             transformOrigin: 'right center',
             transition: animateIn
               ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.7s'
               : 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1) 0s',
+            willChange: 'transform',
           }}
         >
           <span
@@ -170,11 +171,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             top: 0,
             bottom: '9px',
             zIndex: 3,
-            transform: animateIn ? 'scaleX(1) scaleY(1)' : 'scaleX(0) scaleY(1)',
+            transform: animateIn ? 'scaleX(1) scaleY(1) translate3d(0,0,0)' : 'scaleX(0) scaleY(1) translate3d(0,0,0)',
             transformOrigin: 'center center',
             transition: animateIn
               ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s'
               : 'transform 0s ease 2s', // keep wrapper open during exit animations, unmount takes care of final removal
+            willChange: 'transform',
           }}
         >
           {/* LAPISAN 4 (Hitam - 100% Lebar) */}
@@ -231,11 +233,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 display: 'flex',
                 alignItems: 'stretch',
                 boxShadow: '-10px 0 20px rgba(0,0,0,0.3)',
-                transform: animateIn ? 'scaleX(1)' : 'scaleX(0)',
+                transform: animateIn ? 'scaleX(1) translate3d(0,0,0)' : 'scaleX(0) translate3d(0,0,0)',
                 transformOrigin: 'right center',
                 transition: animateIn
                   ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s'
                   : 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s',
+                willChange: 'transform',
               }}
             >
               {/* ── LEFT TEAM SECTION ── */}
@@ -325,11 +328,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 position: 'relative',
                 zIndex: 30,
                 overflow: 'visible',
-                transform: animateIn ? 'scale(1)' : 'scale(0)',
+                transform: animateIn ? 'scale(1) translate3d(0,0,0)' : 'scale(0) translate3d(0,0,0)',
                 transformOrigin: 'center center',
                 transition: animateIn
                   ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s'
                   : 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s',
+                willChange: 'transform',
               }}
             >
               <div
@@ -337,7 +341,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   position: 'absolute',
                   bottom: '-28px',
                   left: '50%',
-                  transform: 'translateX(-50%)',
+                  transform: 'translateX(-50%) translate3d(0,0,0)',
                   width: '128px',
                   height: '170px',
                   background: data.useCustomFifaLogo ? '#051B5E' : '#ffb901',
@@ -348,6 +352,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '4px',
+                  willChange: 'transform',
                 }}
               >
                 <img
@@ -372,11 +377,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 display: 'flex',
                 alignItems: 'stretch',
                 boxShadow: '10px 0 20px rgba(0,0,0,0.3)',
-                transform: animateIn ? 'scaleX(1)' : 'scaleX(0)',
+                transform: animateIn ? 'scaleX(1) translate3d(0,0,0)' : 'scaleX(0) translate3d(0,0,0)',
                 transformOrigin: 'left center',
                 transition: animateIn
                   ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s'
                   : 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s',
+                willChange: 'transform',
               }}
             >
               {/* ── RIGHT SCORE (Cyan) ── */}
@@ -470,11 +476,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             borderRadius: '26px 26px 32px 32px',
             zIndex: 5,
             boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
-            transform: animateIn ? 'scaleX(1)' : 'scaleX(0)',
+            transform: animateIn ? 'scaleX(1) translate3d(0,0,0)' : 'scaleX(0) translate3d(0,0,0)',
             transformOrigin: 'center center',
             transition: animateIn
               ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s'
               : 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s',
+            willChange: 'transform',
           }}
         />
 
