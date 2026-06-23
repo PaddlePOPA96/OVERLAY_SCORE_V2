@@ -20,7 +20,11 @@ const inter = Inter({
 
 export const metadata = {
   title: 'SCOREBOS - Scoreboard Dashboard & Overlay',
-  description: 'Live sports scoreboard control and OBS broadcast overlay system.'
+  description: 'Live sports scoreboard control and OBS broadcast overlay system.',
+  icons: {
+    icon: '/icon-512x512.png',
+    apple: '/icon-512x512.png'
+  }
 }
 
 export const dynamic = 'force-dynamic';

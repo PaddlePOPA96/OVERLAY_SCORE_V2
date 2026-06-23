@@ -26,7 +26,7 @@ const LogoText = styled.span`
 const Logo = ({ color }) => {
   return (
     <div className='flex items-center min-bs-[24px]'>
-      <MaterioLogo className='text-[22px] text-[var(--mui-palette-primary-main)]' />
+      <img src="/icon-512x512.png" alt="Scorebos Logo" className="w-[32px] h-[32px] object-contain rounded-md" />
       <LogoText color={color}>{themeConfig.templateName}</LogoText>
     </div>
   )
