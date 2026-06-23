@@ -203,12 +203,7 @@
     object-fit: contain;
 }
 
-/* Hide the seek bar and time indicators in WebKit browsers */
-.video::-webkit-media-controls-timeline,
-.video::-webkit-media-controls-current-time-display,
-.video::-webkit-media-controls-time-remaining-display {
-    display: none !important;
-}
+/* Video seek bar enabled */
 
 .metaData {
     margin-top: 12px;
