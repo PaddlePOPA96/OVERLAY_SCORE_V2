@@ -72,7 +72,7 @@ const ChampionsLeagueBracket = dynamic(
 )
 
 const RunningTextSetupContent = dynamic(
-  () => import('@/app/(dashboard)/running-text-setup/page').then(m => ({ default: m.RunningTextSetupContent })),
+  () => import('@/app/(dashboard)/running-text-setup/page'),
   { ssr: false }
 )
 
