@@ -20,10 +20,15 @@ const ThemeProvider = props => {
   const theme = useMemo(() => {
     return extendTheme({
       shape: {
-        borderRadius: 6
+        borderRadius: 0
       },
       typography: {
-        fontFamily: 'var(--font-inter), sans-serif'
+        fontFamily: 'var(--font-inter), sans-serif',
+        button: {
+          fontWeight: 800,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em'
+        }
       },
       components: {
         MuiButtonBase: {
@@ -34,10 +39,30 @@ const ThemeProvider = props => {
         MuiButton: {
           styleOverrides: {
             root: {
-              textTransform: 'none',
-              boxShadow: 'none',
+              border: '3px solid #000',
+              boxShadow: '4px 4px 0px 0px #000',
+              transition: 'all 0.1s ease',
               '&:hover': {
+                transform: 'translate(2px, 2px)',
+                boxShadow: '2px 2px 0px 0px #000'
+              },
+              '&:active': {
+                transform: 'translate(4px, 4px)',
                 boxShadow: 'none'
+              }
+            },
+            containedPrimary: {
+              backgroundColor: primaryColorConfig[0].main,
+              color: '#D9FF00', // Yellow text on blue button
+              '&:hover': {
+                backgroundColor: darken(primaryColorConfig[0].main, 0.1)
+              }
+            },
+            containedSecondary: {
+              backgroundColor: '#D9FF00',
+              color: '#000',
+              '&:hover': {
+                backgroundColor: '#c4e600'
               }
             }
           }
@@ -45,14 +70,27 @@ const ThemeProvider = props => {
         MuiPaper: {
           styleOverrides: {
             root: {
-              backgroundImage: 'none'
+              backgroundImage: 'none',
+              border: '3px solid #000',
+              boxShadow: '6px 6px 0px 0px #000',
+              borderRadius: 0
+            }
+          }
+        },
+        MuiCard: {
+          styleOverrides: {
+            root: {
+              border: '3px solid #000',
+              boxShadow: '6px 6px 0px 0px #000',
+              borderRadius: 0
             }
           }
         },
         MuiAppBar: {
           styleOverrides: {
             root: {
-              boxShadow: 'none',
+              boxShadow: '0px 4px 0px 0px #000',
+              borderBottom: '3px solid #000',
               backgroundImage: 'none'
             }
           }
@@ -66,9 +104,17 @@ const ThemeProvider = props => {
               light: lighten(primaryColorConfig[0].main, 0.2),
               dark: darken(primaryColorConfig[0].main, 0.1)
             },
+            secondary: {
+              main: '#D9FF00',
+              contrastText: '#000'
+            },
             background: {
-              default: '#f4f4f5',
+              default: '#F5F4F0',
               paper: '#ffffff'
+            },
+            text: {
+              primary: '#000000',
+              secondary: '#1f2937'
             }
           }
         },
@@ -79,9 +125,18 @@ const ThemeProvider = props => {
               light: lighten(primaryColorConfig[0].main, 0.2),
               dark: darken(primaryColorConfig[0].main, 0.1)
             },
+            secondary: {
+              main: '#D9FF00',
+              contrastText: '#000'
+            },
+            // Force Neo-brutalist bright colors even in dark mode
             background: {
-              default: '#000000',
-              paper: '#09090b'
+              default: '#F5F4F0',
+              paper: '#ffffff'
+            },
+            text: {
+              primary: '#000000',
+              secondary: '#1f2937'
             }
           }
         }
@@ -91,7 +146,7 @@ const ThemeProvider = props => {
 
   return (
     <AppRouterCacheProvider options={{ prepend: true }}>
-      <CssVarsProvider theme={theme} defaultMode='dark'>
+      <CssVarsProvider theme={theme} defaultMode='light'>
         <>
           <CssBaseline />
           <AuthProvider>{children}</AuthProvider>

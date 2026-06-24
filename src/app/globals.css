@@ -2390,3 +2390,146 @@ nextjs-portal {
 .ts-vertical-nav-root {
   z-index: 100 !important;
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* =========================================================
+   NEO-BRUTALISM GLOBAL OVERRIDES
+   ========================================================= */
+
+/* Main Panels */
+.operator-a-controls,
+.operator-b-controls,
+.theme-light .operator-a-controls,
+.theme-light .operator-b-controls {
+  background: #ffffff !important;
+  border: 4px solid #000 !important;
+  box-shadow: 6px 6px 0px 0px #000 !important;
+  border-radius: 0 !important;
+  color: #000 !important;
+}
+
+.theme-light .operator-a-controls *,
+.theme-light .operator-b-controls * {
+  color: #000;
+}
+
+/* Previews */
+.operator-a-preview-box,
+.operator-b-preview-box,
+.theme-light .operator-a-preview-box,
+.theme-light .operator-b-preview-box {
+  background: #1D34F0 !important;
+  border: 4px solid #000 !important;
+  box-shadow: 6px 6px 0px 0px #000 !important;
+  border-radius: 0 !important;
+  color: #fff !important;
+}
+
+.theme-light .operator-a-preview-box *,
+.theme-light .operator-b-preview-box * {
+  color: #fff !important;
+}
+
+/* Inputs */
+.op-input,
+.theme-light .op-input,
+.theme-light select.op-input {
+  background: #ffffff !important;
+  border: 3px solid #000 !important;
+  box-shadow: 2px 2px 0px 0px #000 !important;
+  border-radius: 0 !important;
+  color: #000 !important;
+  font-weight: bold !important;
+}
+
+/* Buttons */
+.op-btn,
+.theme-light .op-btn,
+.theme-light .op-btn-main,
+.theme-light .op-b-btn-main,
+.op-btn-active,
+.op-btn-danger {
+  border: 3px solid #000 !important;
+  box-shadow: 4px 4px 0px 0px #000 !important;
+  border-radius: 0 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  transition: all 0.1s ease !important;
+}
+
+.op-btn:hover,
+.theme-light .op-btn:hover,
+.theme-light .op-btn-main:hover,
+.theme-light .op-b-btn-main:hover,
+.op-btn-active:hover,
+.op-btn-danger:hover {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 2px 2px 0px 0px #000 !important;
+}
+
+.op-btn:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: none !important;
+}
+
+/* Specific Button Colors */
+.op-btn, .theme-light .op-btn {
+  background: #ffffff !important;
+  color: #000 !important;
+}
+.op-btn:hover, .theme-light .op-btn:hover {
+  background: #D9FF00 !important;
+}
+
+.op-btn-main, .theme-light .op-btn-main {
+  background: #1D34F0 !important;
+  color: #D9FF00 !important;
+}
+
+.op-b-btn-main, .theme-light .op-b-btn-main, .op-btn-danger {
+  background: #ff2a2a !important; /* Bright red */
+  color: #000 !important;
+}
+
+.op-btn-active {
+  background: #D9FF00 !important;
+  color: #000 !important;
+}
+
+/* Room Display */
+.op-room-display, .theme-light .op-room-display {
+  background: #1D34F0 !important;
+  border: 3px solid #000 !important;
+  color: #D9FF00 !important;
+  box-shadow: 4px 4px 0px 0px #000 !important;
+  border-radius: 0 !important;
+}
+.theme-light .op-room-display span,
+.theme-light .op-room-display-label,
+.op-room-display-label {
+  color: #D9FF00 !important;
+}
+
+/* Topbar in Operator */
+.op-topbar, .theme-light .op-topbar {
+  background: #D9FF00 !important;
+  border-bottom: 4px solid #000 !important;
+}
+
+/* Layout selector */
+.layout-selector {
+  background: #ffffff !important;
+  border: 4px solid #000 !important;
+  box-shadow: 4px 4px 0px 0px #000 !important;
+  border-radius: 0 !important;
+}
+
+/* Mobile shell */
+.mob-op-shell {
+  background: #F5F4F0 !important;
+}
+

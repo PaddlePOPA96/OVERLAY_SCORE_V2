@@ -23,15 +23,15 @@ const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
   } else {
     // Extract the 's' parameter from the href
     const targetParam = href.split('s=')[1]
-    isActive = pathname === '/' && (currentParam === targetParam || (!currentParam && targetParam === 'operator'))
+    isActive = pathname === '/dashboard' && (currentParam === targetParam || (!currentParam && targetParam === 'operator'))
   }
 
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${isActive
-        ? 'bg-violet-600 text-white font-semibold shadow-md'
-        : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+      className={`flex items-center gap-3 px-3 py-2 text-sm transition-all duration-100 ${isActive
+        ? 'bg-[#D9FF00] text-black font-black border-2 border-black shadow-[3px_3px_0px_#000] -translate-y-[1px]'
+        : 'text-white hover:bg-[#D9FF00] hover:text-black font-bold border-2 border-transparent hover:border-black hover:shadow-[3px_3px_0px_#000] hover:-translate-y-[1px]'
         }`}
     >
       <i className={`${icon} text-lg`} />
@@ -42,8 +42,8 @@ const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
 
 const NavSection = ({ title, children }) => (
   <div className="mb-6">
-    <h4 className="px-3 mb-2 text-xs font-semibold tracking-wider text-zinc-500 uppercase">{title}</h4>
-    <div className="flex flex-col space-y-1">
+    <h4 className="px-3 mb-2 text-xs font-black tracking-widest text-[#D9FF00] uppercase drop-shadow-[1px_1px_0px_#000]">{title}</h4>
+    <div className="flex flex-col space-y-2">
       {children}
     </div>
   </div>
@@ -130,16 +130,16 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
         />
       )}
 
-      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 h-[100dvh] flex flex-col border-r border-white/10 bg-zinc-950 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:hidden'
+      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 h-[100dvh] flex flex-col border-r-4 border-black bg-[#1D34F0] flex-shrink-0 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:hidden'
         }`}>
-        <div className="h-16 flex items-center justify-between px-6 border-b border-white/10">
+        <div className="h-16 flex items-center justify-between px-6 border-b-4 border-black bg-[#D9FF00]">
           <Link href="/" className="flex items-center gap-2">
-            <Logo className="w-8 h-8 text-white" />
+            <Logo className="w-8 h-8 text-black" />
             {/* <span className="font-bold text-lg text-white tracking-tight">SCOREBOS</span> */}
           </Link>
           <button
             onClick={() => setIsOpen(false)}
-            className="md:hidden text-zinc-400 hover:text-white"
+            className="md:hidden text-black hover:text-gray-800"
           >
             <i className="ri-close-line text-2xl"></i>
           </button>
@@ -147,33 +147,33 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
 
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
           <NavSection title="Scoreboard Control">
-            <NavItem currentParam={activeSection} href="/?s=operator" icon="ri-gamepad-line">Scoreboard Operator</NavItem>
-            <NavItem currentParam={activeSection} href="/?s=countdown-timer" icon="ri-time-line">Countdown Timer</NavItem>
-            <NavItem currentParam={activeSection} href="/?s=running-text" icon="ri-file-text-line">Running Text (OBS)</NavItem>
-            <NavItem currentParam={activeSection} href="/?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=operator" icon="ri-gamepad-line">Scoreboard Operator</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=countdown-timer" icon="ri-time-line">Countdown Timer</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=running-text" icon="ri-file-text-line">Running Text (OBS)</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
           </NavSection>
 
           <NavSection title="Sports Data">
             {activeLeagues.premier_league && (
-              <NavItem currentParam={activeSection} href="/?s=premier-league" icon="ri-football-line">Premier League</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=premier-league" icon="ri-football-line">Premier League</NavItem>
             )}
             {activeLeagues.ucl && (
-              <NavItem currentParam={activeSection} href="/?s=ucl-table" icon="ri-trophy-line">UCL Standings</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=ucl-table" icon="ri-trophy-line">UCL Standings</NavItem>
             )}
             {activeLeagues.world_cup && (
-              <NavItem currentParam={activeSection} href="/?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
             )}
-            <NavItem currentParam={activeSection} href="/?s=streams-operator" icon="ri-tv-line">Live Streams Config</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=streams-operator" icon="ri-tv-line">Live Streams Config</NavItem>
 
-            <NavItem currentParam={activeSection} href="/?s=streams" icon="ri-tv-line">Live Streams</NavItem>
+            <NavItem currentParam={activeSection} href="/dashboard?s=streams" icon="ri-tv-line">Live Streams</NavItem>
 
           </NavSection>
 
           {isSuperAdmin && (
             <NavSection title="Admin">
-              <NavItem currentParam={activeSection} href="/?s=create-user" icon="ri-user-add-line">Create New Account</NavItem>
-              <NavItem currentParam={activeSection} href="/?s=active-leagues" icon="ri-settings-4-line">Active Leagues Visibility</NavItem>
-              <NavItem currentParam={activeSection} href="/?s=manage-users" icon="ri-shield-user-line">
+              <NavItem currentParam={activeSection} href="/dashboard?s=create-user" icon="ri-user-add-line">Create New Account</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=active-leagues" icon="ri-settings-4-line">Active Leagues Visibility</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=manage-users" icon="ri-shield-user-line">
                 {`Registered Accounts${usersCount !== null ? ` (${usersCount})` : ''}`}
               </NavItem>
             </NavSection>

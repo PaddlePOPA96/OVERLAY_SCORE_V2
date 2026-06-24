@@ -89,10 +89,10 @@ const RequireLogin = ({ children, title }) => {
   if (loadingAuth) return <div className='p-6 text-textSecondary text-sm'>Loading {title}...</div>
   if (!user)
     return (
-      <div className='p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 mb-6 max-w-2xl'>
-        <h3 className='font-semibold mb-2 text-lg'>Access Restricted</h3>
-        <p className='text-sm mb-4'>You must be logged in to use the {title}.</p>
-        <Button variant='contained' href='/login' color='warning' className='normal-case shadow-none font-bold'>
+      <div className='p-6 bg-[#D9FF00] border-4 border-black shadow-[4px_4px_0px_#000] rounded-none text-black mb-6 max-w-2xl'>
+        <h3 className='font-black mb-2 text-xl uppercase'>Access Restricted</h3>
+        <p className='text-sm mb-4 font-bold'>You must be logged in to use the {title}.</p>
+        <Button variant='contained' href='/login' color='primary' className='normal-case font-black'>
           Go to Login Page
         </Button>
       </div>
@@ -127,8 +127,8 @@ function DashboardPageInner() {
   const [showUclSidebar, setShowUclSidebar] = useState(true)
   const [showWcSidebar, setShowWcSidebar] = useState(true)
 
-  const paperBg = { background: 'var(--mui-palette-background-paper)' }
-  const panelClass = 'border border-slate-700/10 rounded-xl p-4 md:p-6 w-full h-full'
+  const paperBg = { background: '#ffffff' }
+  const panelClass = 'border-4 border-black shadow-[6px_6px_0px_#000] rounded-none p-4 md:p-6 w-full h-full'
 
   return (
     <div className='p-4 w-full'>

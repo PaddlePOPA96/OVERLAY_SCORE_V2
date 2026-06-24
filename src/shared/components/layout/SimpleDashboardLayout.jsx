@@ -36,11 +36,11 @@ export default function SimpleDashboardLayout({ children }) {
 
   return (
     <DashboardAuthGuard>
-      <div className="flex h-[100dvh] w-full overflow-hidden">
+      <div className="flex h-[100dvh] w-full overflow-hidden bg-[#F5F4F0]">
         <SimpleSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className="flex flex-col flex-1 min-w-0">
           <SimpleTopbar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-          <main className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+          <main className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar text-black font-medium">
             {children}
           </main>
         </div>

@@ -29,6 +29,7 @@ import { loginWithEmailPassword, loginWithGooglePopup, sendResetPassword } from 
 import themeConfig from '@/shared/configs/themeConfig'
 import Illustrations from '@/shared/components/Illustrations'
 import Logo from '@/shared/components/layout/Logo'
+import { useAuth } from '@/shared/components/providers/AuthContext'
 
 const GOOGLE_LOGIN_DISABLED = false
 
@@ -40,6 +41,8 @@ const Login = ({ mode }) => {
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState({ type: '', message: '' })
   const [errorPopup, setErrorPopup] = useState({ open: false, title: '', message: '' })
+
+  const { user, loading: authLoading } = useAuth()
 
   const darkImg = '/images/pages/auth-v1-mask-dark.png'
   const lightImg = '/images/pages/auth-v1-mask-light.png'
@@ -62,6 +65,13 @@ const Login = ({ mode }) => {
     }
   }, [])
 
+  useEffect(() => {
+    // If the user is already authenticated, redirect them to the dashboard
+    if (!authLoading && user) {
+      router.replace('/dashboard')
+    }
+  }, [user, authLoading, router])
+
   const handleAuthSuccess = user => {
     if (!user) return
 
@@ -75,7 +85,7 @@ const Login = ({ mode }) => {
       }
     }
 
-    router.push('/')
+    router.push('/dashboard')
   }
 
   const handleSubmit = async e => {
