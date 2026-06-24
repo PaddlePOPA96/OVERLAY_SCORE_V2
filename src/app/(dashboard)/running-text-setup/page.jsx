@@ -17,7 +17,7 @@ import { usePremierLeagueMatches } from '@/features/premier-league/hooks/usePrem
 import { useChampionsLeagueMatches } from '@/features/champions-league/hooks/useChampionsLeagueData'
 import { useWorldCupMatches } from '@/features/world-cup/hooks/useWorldCupData'
 
-export function RunningTextSetupContent() {
+export default function RunningTextSetupContent() {
   const [copied, setCopied] = useState(false)
   const [origin, setOrigin] = useState('')
   const { settings, loading: loadingSettings, updateSettings } = useLayoutSettings()
@@ -186,6 +186,4 @@ return () => unsub()
   )
 }
 
-// Default export for the /running-text-setup route
-export default RunningTextSetupContent
 

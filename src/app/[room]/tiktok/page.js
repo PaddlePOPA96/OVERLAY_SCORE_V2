@@ -8,11 +8,12 @@ import { ref, onValue, update } from 'firebase/database'
 
 import { db } from '@/services/firebase/index'
 
-export default function TikTokOverlay({ roomId: roomIdProp } = {}) {
+export default function TikTokOverlay(props) {
   const params = useParams()
 
   // Pakai prop jika tersedia (ketika dipakai sebagai komponen embed),
   // fallback ke useParams ketika dirender sebagai standalone page /[room]/tiktok
+  const roomIdProp = props?.roomId
   const roomId = roomIdProp || params?.room
 
   // State values from Firebase
