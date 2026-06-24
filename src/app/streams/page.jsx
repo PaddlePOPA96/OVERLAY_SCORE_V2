@@ -50,6 +50,8 @@ export default function StreamsPage() {
 
     let isYoutube = false;
     let youtubeId = '';
+    let isGenericIframe = false;
+    let genericIframeUrl = '';
 
     if (currentChannel) {
         // Resolve proxy path if any to check for YouTube
@@ -70,11 +72,16 @@ export default function StreamsPage() {
         } else if (decodedChannel.includes('youtube.com/embed/')) {
             isYoutube = true;
             youtubeId = decodedChannel.split('youtube.com/embed/')[1]?.split('?')[0];
+        } else if (!decodedChannel.includes('.m3u8') && !decodedChannel.includes('.mp4') && !decodedChannel.includes('.ts')) {
+            isGenericIframe = true;
+            genericIframeUrl = decodedChannel;
         }
     }
 
     let isYoutube2 = false;
     let youtubeId2 = '';
+    let isGenericIframe2 = false;
+    let genericIframeUrl2 = '';
 
     if (currentChannel2) {
         const decodedChannel2 = currentChannel2.includes('/api/stream.m3u8?u=')
@@ -90,6 +97,9 @@ export default function StreamsPage() {
         } else if (decodedChannel2.includes('youtube.com/embed/')) {
             isYoutube2 = true;
             youtubeId2 = decodedChannel2.split('youtube.com/embed/')[1]?.split('?')[0];
+        } else if (!decodedChannel2.includes('.m3u8') && !decodedChannel2.includes('.mp4') && !decodedChannel2.includes('.ts')) {
+            isGenericIframe2 = true;
+            genericIframeUrl2 = decodedChannel2;
         }
     }
 
@@ -172,7 +182,7 @@ export default function StreamsPage() {
     };
 
     useEffect(() => {
-        if (isYoutube) {
+        if (isYoutube || isGenericIframe) {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
                 hlsRef.current = null;
@@ -225,7 +235,7 @@ export default function StreamsPage() {
 
 
     useEffect(() => {
-        if (isYoutube2) {
+        if (isYoutube2 || isGenericIframe2) {
             if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
             return;
         }
@@ -357,37 +367,66 @@ export default function StreamsPage() {
     }, []);
 
     useEffect(() => {
-        if (rawUrl) {
-            let finalUrl = rawUrl;
-            if (streamToken) {
-                finalUrl = rawUrl.replace(/{token}/gi, streamToken)
-                    .replace(/\[token\]/gi, streamToken);
-            }
+        const resolveUrl = async () => {
+            if (rawUrl) {
+                let finalUrl = rawUrl;
 
-            // Apply proxy if enabled and not a YouTube link
-            if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be')) {
-                const encodedUrl = Buffer.from(finalUrl).toString('base64');
-                finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
-            }
+                if (finalUrl.includes('falconstreams.net')) {
+                    try {
+                        const res = await fetch(`/api/resolve-stream?url=${encodeURIComponent(finalUrl)}`);
+                        const data = await res.json();
+                        if (data.url) finalUrl = data.url;
+                    } catch (e) {
+                        console.error('Failed to resolve falconstreams', e);
+                    }
+                }
 
-            setCurrentChannel(finalUrl);
-        }
+                if (streamToken) {
+                    finalUrl = finalUrl.replace(/{token}/gi, streamToken)
+                        .replace(/\[token\]/gi, streamToken);
+                }
+
+                // Apply proxy if enabled, but exclude known iframe domains to prevent CORS/proxy breakage
+                if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
+                }
+
+                setCurrentChannel(finalUrl);
+            }
+        };
+        resolveUrl();
     }, [rawUrl, streamToken, streamUseProxy]);
 
     useEffect(() => {
-        if (rawUrl2) {
-            let finalUrl = rawUrl2;
-            if (streamToken2) {
-                finalUrl = rawUrl2.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
+        const resolveUrl2 = async () => {
+            if (rawUrl2) {
+                let finalUrl = rawUrl2;
+
+                if (finalUrl.includes('falconstreams.net')) {
+                    try {
+                        const res = await fetch(`/api/resolve-stream?url=${encodeURIComponent(finalUrl)}`);
+                        const data = await res.json();
+                        if (data.url) finalUrl = data.url;
+                    } catch (e) {
+                        console.error('Failed to resolve falconstreams', e);
+                    }
+                }
+
+                if (streamToken2) {
+                    finalUrl = finalUrl.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
+                }
+                
+                if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
+                }
+                setCurrentChannel2(finalUrl);
+            } else {
+                setCurrentChannel2('');
             }
-            if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be')) {
-                const encodedUrl = Buffer.from(finalUrl).toString('base64');
-                finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
-            }
-            setCurrentChannel2(finalUrl);
-        } else {
-            setCurrentChannel2('');
-        }
+        };
+        resolveUrl2();
     }, [rawUrl2, streamToken2, streamUseProxy]);
 
     // Cleanup HLS on unmount
@@ -612,6 +651,16 @@ export default function StreamsPage() {
                                 allowFullScreen
                                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
+                        ) : isGenericIframe && genericIframeUrl ? (
+                            <iframe
+                                key={`iframe-${streamStartTime}`}
+                                className={styles.video}
+                                src={genericIframeUrl}
+                                frameBorder="0"
+                                allow="autoplay; encrypted-media; fullscreen"
+                                allowFullScreen
+                                style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
+                            ></iframe>
                         ) : (
                             <video
                                 ref={videoRef}
@@ -646,6 +695,16 @@ export default function StreamsPage() {
                                     src={youtubeSrc2}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
+                                ></iframe>
+                            ) : isGenericIframe2 && genericIframeUrl2 ? (
+                                <iframe
+                                    key={`iframe2-${streamStartTime}`}
+                                    className={styles.video}
+                                    src={genericIframeUrl2}
+                                    frameBorder="0"
+                                    allow="autoplay; encrypted-media; fullscreen"
                                     allowFullScreen
                                     style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                                 ></iframe>

@@ -1,27 +1,52 @@
 import { NextResponse } from 'next/server';
+import https from 'https';
 
-export const dynamic = 'force-dynamic'; // Prevent static caching
+export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
         const encodedUrl = searchParams.get('u');
+        const encodedReferer = searchParams.get('r');
 
         if (!encodedUrl) {
             return new NextResponse('Missing URL parameter', { status: 400 });
         }
 
-        // Decode base64 URL
         const decodedUrl = Buffer.from(encodedUrl, 'base64').toString('utf-8');
+        
+        let decodedReferer = '';
+        if (encodedReferer) {
+            decodedReferer = Buffer.from(encodedReferer, 'base64').toString('utf-8');
+        } else if (decodedUrl.includes('strmd.st')) {
+            decodedReferer = 'https://embedstreams.top/';
+        }
 
         if (!decodedUrl.startsWith('http://') && !decodedUrl.startsWith('https://')) {
             return new NextResponse('Invalid URL', { status: 400 });
         }
 
-        const response = await fetch(decodedUrl, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        const fetchHeaders = new Headers();
+        
+        // Forward ALL headers from the original browser request to perfectly spoof the client
+        request.headers.forEach((value, key) => {
+            const lowerKey = key.toLowerCase();
+            // Skip headers that should not be forwarded
+            if (!['host', 'referer', 'origin', 'connection', 'content-length', 'accept-encoding'].includes(lowerKey)) {
+                fetchHeaders.set(key, value);
             }
+        });
+
+        if (decodedReferer) {
+            fetchHeaders.set('Referer', decodedReferer);
+            try {
+                fetchHeaders.set('Origin', new URL(decodedReferer).origin);
+            } catch (e) {}
+        }
+
+        const response = await fetch(decodedUrl, {
+            headers: fetchHeaders,
+            cache: 'no-store'
         });
 
         if (!response.ok) {
@@ -29,7 +54,6 @@ export async function GET(request) {
         }
 
         const m3u8Text = await response.text();
-        const baseUrl = new URL('.', decodedUrl).href;
 
         // Rewrite relative URLs to absolute URLs
         const rewrittenLines = m3u8Text.split('\n').map(line => {
@@ -38,20 +62,20 @@ export async function GET(request) {
                 return line;
             }
 
-            // It's a URI line
             try {
                 const absoluteUrl = new URL(trimmedLine, decodedUrl).href;
                 
-                // If it's another m3u8 playlist (variant), proxy it as well
                 if (absoluteUrl.includes('.m3u8')) {
                     const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
-                    // Get the host from the original request to build the proxy URL
                     const host = request.headers.get('host');
                     const protocol = host.includes('localhost') ? 'http' : 'https';
-                    return `${protocol}://${host}/api/stream.m3u8?u=${encodedAbsoluteUrl}`;
+                    let proxyUrl = `${protocol}://${host}/api/stream.m3u8?u=${encodedAbsoluteUrl}`;
+                    if (decodedReferer) {
+                        proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
+                    }
+                    return proxyUrl;
                 }
 
-                // If it's a media segment (.ts), return absolute URL so client downloads directly
                 return absoluteUrl;
             } catch (e) {
                 return line;
@@ -68,6 +92,6 @@ export async function GET(request) {
 
     } catch (error) {
         console.error('M3U8 Proxy Error:', error);
-        return new NextResponse('Internal Server Error', { status: 500 });
+        return new NextResponse(error.message || 'Internal Server Error', { status: error.message?.includes('status: 403') ? 403 : 500 });
     }
 }
