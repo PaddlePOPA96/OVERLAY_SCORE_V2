@@ -19,7 +19,10 @@ export async function GET(request) {
         if (encodedReferer) {
             decodedReferer = Buffer.from(encodedReferer, 'base64').toString('utf-8');
         } else if (decodedUrl.includes('strmd.st')) {
-            decodedReferer = 'https://embedstreams.top/';
+            // Delta / Echo servers require trendy47 referer, Admin requires embedstreams
+            decodedReferer = decodedUrl.includes('/delta/') || decodedUrl.includes('/echo/') || decodedUrl.includes('/golf/') 
+                ? 'https://trendy47.club/' 
+                : 'https://embedstreams.top/';
         }
 
         if (!decodedUrl.startsWith('http://') && !decodedUrl.startsWith('https://')) {

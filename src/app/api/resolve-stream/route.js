@@ -22,18 +22,47 @@ export async function GET(request) {
         if (!response.ok) return NextResponse.json({ url: urlStr });
 
         const html = await response.text();
+        const serverIndex = searchParams.get('server'); // optional manual override
         
-        // Find iframeStreams array inside the Next.js page data
-        const match = html.match(/"iframeStreams":\[(.*?)\]/);
-        if (match) {
+        // Find iframeStreams array inside the Next.js page data. Quotes might be escaped.
+        let matchStr = null;
+        const startIndex = html.indexOf('iframeStreams');
+        if (startIndex !== -1) {
+            const arrayStart = html.indexOf('[', startIndex);
+            const arrayEnd = html.indexOf(']', arrayStart);
+            if (arrayStart !== -1 && arrayEnd !== -1) {
+                matchStr = html.substring(arrayStart + 1, arrayEnd);
+            }
+        }
+        
+        if (matchStr) {
             try {
+                // Unescape backslashes if present
+                const cleanStr = matchStr.replace(/\\"/g, '"');
                 // Add brackets back to make it valid JSON array
-                const streamsStr = `[${match[1]}]`;
+                const streamsStr = `[${cleanStr}]`;
                 const streams = JSON.parse(streamsStr);
                 
-                // Return the first valid src (usually the main admin stream like trendy47.club)
-                if (streams.length > 0 && streams[0].src) {
-                    return NextResponse.json({ url: streams[0].src });
+                if (streams.length > 0) {
+                    // If user manually requested a specific server index (1-based)
+                    if (serverIndex && !isNaN(serverIndex)) {
+                        const index = parseInt(serverIndex) - 1;
+                        if (index >= 0 && index < streams.length && streams[index].src) {
+                            return NextResponse.json({ url: streams[index].src });
+                        }
+                    }
+
+                    // Auto-select priority: echo > delta > anything else (to avoid overloaded admin servers)
+                    const echoServer = streams.find(s => s.name?.toLowerCase() === 'echo');
+                    if (echoServer && echoServer.src) return NextResponse.json({ url: echoServer.src });
+
+                    const deltaServer = streams.find(s => s.name?.toLowerCase() === 'delta');
+                    if (deltaServer && deltaServer.src) return NextResponse.json({ url: deltaServer.src });
+
+                    // Fallback to the very first one
+                    if (streams[0].src) {
+                        return NextResponse.json({ url: streams[0].src });
+                    }
                 }
             } catch (e) {
                 console.error("Parse error resolving falconstreams:", e);
