@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
-import { useSearchParams, usePathname } from 'next/navigation'
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, onSnapshot, collection } from 'firebase/firestore'
@@ -120,8 +121,40 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
     }
   }, [])
 
+  const router = useRouter()
+  const [isPreloading, setIsPreloading] = useState(false)
+
+  const handleHomeClick = (e) => {
+    e.preventDefault()
+    setIsPreloading(true)
+    setTimeout(() => {
+      router.push('/')
+    }, 1200)
+  }
+
   return (
     <>
+      {/* HOME PRELOADER TRANSITION */}
+      <AnimatePresence>
+        {isPreloading && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "100vh" }}
+            transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed top-0 left-0 w-full bg-black z-[9999] overflow-hidden pointer-events-auto"
+          >
+            <motion.div
+              initial={{ y: "80vh" }}
+              animate={{ y: "4vh" }}
+              transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+              className="absolute left-[5%] text-[#D9FF00] font-black text-[clamp(4rem,12vw,12rem)] leading-none uppercase tracking-tighter"
+            >
+              SCOREBOS
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Mobile Overlay */}
       {isOpen && (
         <div
@@ -133,10 +166,9 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
       <aside className={`fixed md:static inset-y-0 left-0 z-50 w-64 h-[100dvh] flex flex-col border-r-4 border-black bg-[#1D34F0] flex-shrink-0 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:hidden'
         }`}>
         <div className="h-16 flex items-center justify-between px-6 border-b-4 border-black bg-[#D9FF00]">
-          <Link href="/" className="flex items-center gap-2">
+          <a href="/" onClick={handleHomeClick} className="flex items-center gap-2 cursor-pointer">
             <Logo className="w-8 h-8 text-black" />
-            {/* <span className="font-bold text-lg text-white tracking-tight">SCOREBOS</span> */}
-          </Link>
+          </a>
           <button
             onClick={() => setIsOpen(false)}
             className="md:hidden text-black hover:text-gray-800"

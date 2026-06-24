@@ -1,9 +1,6 @@
 // Third-party Imports
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
-// Font Imports
-import { Inter } from 'next/font/google'
-
 // Style Imports
 import '@/app/globals.css'
 
@@ -12,11 +9,6 @@ import '@assets/iconify-icons/generated-icons.css'
 
 // Component Imports
 import SecurityGuard from '@/shared/components/SecurityGuard'
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter'
-})
 
 export const metadata = {
   title: 'SCOREBOS - Scoreboard Dashboard & Overlay',
@@ -41,7 +33,7 @@ const RootLayout = ({ children }) => {
   const direction = 'ltr'
 
   return (
-    <html id='__next' lang='en' dir={direction} className={inter.variable}>
+    <html id='__next' lang='en' dir={direction}>
       <head>
         {/* Preconnect to Firebase origins – saves ~560ms on first auth request (LCP) */}
         <link rel='preconnect' href='https://identitytoolkit.googleapis.com' />
@@ -50,8 +42,10 @@ const RootLayout = ({ children }) => {
         {/* Preconnect to Google Fonts CDN used by Next.js font optimisation */}
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+        {/* Standard Font Fetching to bypass Next.js build timeouts */}
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.className} flex is-full min-bs-full flex-auto flex-col`}>
+      <body className="flex is-full min-bs-full flex-auto flex-col" style={{ fontFamily: '"Inter", sans-serif' }}>
         <SecurityGuard />
         {children}
       </body>
