@@ -200,13 +200,13 @@ function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) 
             </button>
           </div>
         ) : (
-          <h4
+          <p
             className={`text-base font-bold line-clamp-1 transition-colors ${
               isLight ? 'text-slate-100 group-hover:text-violet-300' : 'text-white group-hover:text-violet-300'
             }`}
           >
             {displayName}
-          </h4>
+          </p>
         )}
 
         <div className='flex items-center justify-between text-[11px] text-slate-400 mt-1'>

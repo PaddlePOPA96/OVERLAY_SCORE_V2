@@ -70,7 +70,7 @@ export function HeroAgency() {
         <a
           href="/streams"
           onClick={handleStreamClick}
-          className="inline-block cursor-pointer bg-[#FF00FF] text-white font-black text-lg md:text-xl uppercase px-6 py-3 border-4 border-black shadow-[6px_6px_0px_0px_#000] -rotate-3 hover:-rotate-1 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_#000] transition-all active:translate-x-[6px] active:translate-y-[6px] active:shadow-none"
+          className="inline-block cursor-pointer bg-[#FF00FF] text-black font-black text-lg md:text-xl uppercase px-6 py-3 border-4 border-black shadow-[6px_6px_0px_0px_#000] -rotate-3 hover:-rotate-1 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_#000] transition-all active:translate-x-[6px] active:translate-y-[6px] active:shadow-none"
         >
           LIVE STREAM
         </a>
@@ -93,12 +93,12 @@ export function HeroAgency() {
       <div className="relative z-20 w-[100%] md:w-[100%] lg:w-[60%] aspect-[3/4] max-h-[90vh] flex items-end justify-center mt-auto pointer-events-none">
         <div className="absolute bottom-0 w-full h-[90%] bg-gradient-to-t from-black/40 to-transparent"></div>
         <Image
-          src="/totoprofile.png"
+          src="/totoprofile.webp"
           alt="Neo Tokyo Creative"
           width={800}
           height={1000}
           className="object-contain w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-          unoptimized
+          priority
         />
 
         {/* Japanese Text overlay on image */}

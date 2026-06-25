@@ -1,4 +1,5 @@
 // Third-party Imports
+import { Inter } from 'next/font/google'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // Style Imports
@@ -23,10 +24,14 @@ export const dynamic = 'force-dynamic';
 
 export const viewport = {
   width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false
+  initialScale: 1
 }
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  display: 'swap'
+})
 
 const RootLayout = ({ children }) => {
   // Vars
@@ -39,13 +44,8 @@ const RootLayout = ({ children }) => {
         <link rel='preconnect' href='https://identitytoolkit.googleapis.com' />
         <link rel='preconnect' href='https://firestore.googleapis.com' />
         <link rel='preconnect' href='https://securetoken.googleapis.com' />
-        {/* Preconnect to Google Fonts CDN used by Next.js font optimisation */}
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-        {/* Standard Font Fetching to bypass Next.js build timeouts */}
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="flex is-full min-bs-full flex-auto flex-col" style={{ fontFamily: '"Inter", sans-serif' }}>
+      <body className={`${inter.className} flex is-full min-bs-full flex-auto flex-col`}>
         <SecurityGuard />
         {children}
       </body>

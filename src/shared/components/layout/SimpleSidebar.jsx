@@ -196,6 +196,7 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
           <button
             onClick={() => setIsOpen(false)}
             className="md:hidden text-black hover:text-gray-800"
+            aria-label="Close sidebar"
           >
             <i className="ri-close-line text-2xl"></i>
           </button>
