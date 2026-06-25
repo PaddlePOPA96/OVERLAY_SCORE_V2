@@ -21,6 +21,16 @@ export function HeroAgency() {
     }, 1200);
   };
 
+  const handleStreamClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsPreloading(true);
+    
+    // Tunggu animasi preloader selesai (sekitar 1.2 detik) sebelum pindah halaman
+    setTimeout(() => {
+      router.push("/streams");
+    }, 1200);
+  };
+
   return (
     <section className="relative w-full min-h-[110vh] bg-[#1427c4] overflow-hidden flex flex-col justify-end items-center pt-24">
 
@@ -48,14 +58,21 @@ export function HeroAgency() {
         </div>
       </div>
 
-      {/* Dashboard Button */}
-      <div className="absolute top-6 right-6 md:top-10 md:right-10 z-50">
+      {/* Navigation Buttons */}
+      <div className="absolute top-6 right-6 md:top-10 md:right-10 z-50 flex flex-col items-end gap-4">
         <a
           href="/dashboard"
           onClick={handleDashboardClick}
           className="inline-block cursor-pointer bg-[#D9FF00] text-black font-black text-lg md:text-xl uppercase px-6 py-3 border-4 border-black shadow-[6px_6px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_#000] transition-all active:translate-x-[6px] active:translate-y-[6px] active:shadow-none"
         >
           DASHBOARD
+        </a>
+        <a
+          href="/streams"
+          onClick={handleStreamClick}
+          className="inline-block cursor-pointer bg-[#FF00FF] text-white font-black text-lg md:text-xl uppercase px-6 py-3 border-4 border-black shadow-[6px_6px_0px_0px_#000] -rotate-3 hover:-rotate-1 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_#000] transition-all active:translate-x-[6px] active:translate-y-[6px] active:shadow-none"
+        >
+          LIVE STREAM
         </a>
       </div>
 

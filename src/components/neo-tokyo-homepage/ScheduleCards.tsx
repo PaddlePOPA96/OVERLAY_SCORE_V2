@@ -91,58 +91,74 @@ export function ScheduleCards() {
         MATCH SCHEDULES
       </h2>
 
-      <div
-        className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {displayMatches.map((match: any, index: number) => {
-          const homeLogo = resolveNationalLogo(match.homeTeam)
-          const awayLogo = resolveNationalLogo(match.awayTeam)
-          const homeName = match.homeTeam?.shortName || match.homeTeam?.name || 'TBD'
-          const awayName = match.awayTeam?.shortName || match.awayTeam?.name || 'TBD'
+      {/* Auto-scrolling marquee container */}
+      <style>{`
+        @keyframes scheduleMarquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .schedule-marquee-track {
+          display: flex;
+          gap: 24px;
+          width: max-content;
+          animation: scheduleMarquee ${Math.max(displayMatches.length * 6, 20)}s linear infinite;
+        }
+        .schedule-marquee-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      <div className="w-full overflow-hidden pb-8">
+        <div className="schedule-marquee-track">
+          {/* Render cards twice for seamless loop */}
+          {[...displayMatches, ...displayMatches].map((match: any, index: number) => {
+            const homeLogo = resolveNationalLogo(match.homeTeam)
+            const awayLogo = resolveNationalLogo(match.awayTeam)
+            const homeName = match.homeTeam?.shortName || match.homeTeam?.name || 'TBD'
+            const awayName = match.awayTeam?.shortName || match.awayTeam?.name || 'TBD'
 
-          return (
-            <div
-              key={match.id || index}
-              className="snap-center shrink-0 w-[300px] md:w-[350px] bg-[#F5F4F0] border-[6px] border-black p-5 flex flex-col justify-between shadow-[8px_8px_0px_#000] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#000] transition-all"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-[10px] font-black uppercase px-2 py-1 border-2 border-black bg-black text-[#D9FF00]">
-                  {formatTime(match.utcDate)}
-                </span>
-                <span className="text-[10px] font-bold text-black uppercase border-b-2 border-black pb-0.5">
-                  {match.stage?.replace(/_/g, ' ') || 'GROUP'}
-                </span>
-              </div>
+            return (
+              <div
+                key={`${match.id || index}-${index}`}
+                className="shrink-0 w-[300px] md:w-[350px] bg-[#F5F4F0] border-[6px] border-black p-5 flex flex-col justify-between shadow-[8px_8px_0px_#000] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#000] transition-all"
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <span className="text-[10px] font-black uppercase px-2 py-1 border-2 border-black bg-black text-[#D9FF00]">
+                    {formatTime(match.utcDate)}
+                  </span>
+                  <span className="text-[10px] font-bold text-black uppercase border-b-2 border-black pb-0.5">
+                    {match.stage?.replace(/_/g, ' ') || 'GROUP'}
+                  </span>
+                </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex flex-col items-center gap-2 flex-1">
-                  <div className="w-16 h-16 rounded-full border-[3px] border-black overflow-hidden bg-white">
-                    <img src={homeLogo} alt={homeName} className="w-full h-full object-cover" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex flex-col items-center gap-2 flex-1">
+                    <div className="w-16 h-16 rounded-full border-[3px] border-black overflow-hidden bg-white">
+                      <img src={homeLogo} alt={homeName} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="font-bold text-black text-center uppercase leading-tight">{homeName}</span>
                   </div>
-                  <span className="font-bold text-black text-center uppercase leading-tight">{homeName}</span>
-                </div>
 
-                <div className="flex flex-col items-center justify-center px-4">
-                  <span className="text-black font-black text-2xl italic">VS</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-2 flex-1">
-                  <div className="w-16 h-16 rounded-full border-[3px] border-black overflow-hidden bg-white">
-                    <img src={awayLogo} alt={awayName} className="w-full h-full object-cover" />
+                  <div className="flex flex-col items-center justify-center px-4">
+                    <span className="text-black font-black text-2xl italic">VS</span>
                   </div>
-                  <span className="font-bold text-black text-center uppercase leading-tight">{awayName}</span>
-                </div>
-              </div>
 
-              {match.status === 'IN_PLAY' && (
-                <div className="mt-2 w-full text-center bg-[#D9FF00] border-2 border-black py-1.5 font-black text-xs uppercase animate-pulse">
-                  MATCH IS LIVE
+                  <div className="flex flex-col items-center gap-2 flex-1">
+                    <div className="w-16 h-16 rounded-full border-[3px] border-black overflow-hidden bg-white">
+                      <img src={awayLogo} alt={awayName} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="font-bold text-black text-center uppercase leading-tight">{awayName}</span>
+                  </div>
                 </div>
-              )}
-            </div>
-          )
-        })}
+
+                {match.status === 'IN_PLAY' && (
+                  <div className="mt-2 w-full text-center bg-[#D9FF00] border-2 border-black py-1.5 font-black text-xs uppercase animate-pulse">
+                    MATCH IS LIVE
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

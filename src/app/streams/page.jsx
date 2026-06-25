@@ -5,6 +5,8 @@ import Hls from 'hls.js';
 import styles from './streams.module.css';
 import { db } from '@/services/firebase/db';
 import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/services/firebase/auth';
 import RunningTextOverlay from '@/shared/components/ui/RunningTextOverlay';
 
 export default function StreamsPage() {
@@ -18,6 +20,12 @@ export default function StreamsPage() {
     const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [firebaseUser, setFirebaseUser] = useState(null);
+
+    useEffect(() => {
+        const unsub = onAuthStateChanged(auth, (user) => setFirebaseUser(user));
+        return () => unsub();
+    }, []);
     const [isMinimal, setIsMinimal] = useState(false);
 
     useEffect(() => {
@@ -584,26 +592,26 @@ export default function StreamsPage() {
                         <button className={styles.menuBtn} aria-label="Menu">
                             <svg viewBox="0 0 24 24" className={styles.navIcon}><path d="M21,6H3V5h18V6z M21,11H3v1h18V11z M21,17H3v1h18V17z" fill="currentColor"></path></svg>
                         </button>
-                        <div className={styles.logoContainer}>
+                        <a href={firebaseUser ? '/dashboard' : '/'} className={styles.logoContainer} style={{ textDecoration: 'none' }}>
                             <span className={styles.logoText}>{streamHeader}</span>
                             <span className={styles.logoCountry}>{streamHeaderCountry}</span>
-                        </div>
+                        </a>
                     </div>
 
                     <div className={styles.navCenter}>
                         {multiMode ? (
-                            <div style={{ display: 'flex', gap: '8px', background: '#121212', padding: '4px 8px', borderRadius: '20px', border: '1px solid #303030' }}>
+                            <div style={{ display: 'flex', gap: '8px', background: '#fff', padding: '4px 8px', borderRadius: '0', border: '4px solid #000', boxShadow: '4px 4px 0px #000' }}>
                                 <button
                                     onClick={() => setLeftWidth(75)}
-                                    style={{ background: leftWidth > 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                    style={{ background: leftWidth > 60 ? '#D9FF00' : '#F5F4F0', color: '#000', border: leftWidth > 60 ? '2px solid #000' : '2px solid transparent', borderRadius: '0', padding: '6px 16px', fontSize: '13px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer', transition: '0.2s' }}
                                 >Besar Kiri</button>
                                 <button
                                     onClick={() => setLeftWidth(50)}
-                                    style={{ background: leftWidth > 40 && leftWidth < 60 ? '#3ea6ff' : 'transparent', color: leftWidth > 40 && leftWidth < 60 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                    style={{ background: leftWidth > 40 && leftWidth < 60 ? '#D9FF00' : '#F5F4F0', color: '#000', border: leftWidth > 40 && leftWidth < 60 ? '2px solid #000' : '2px solid transparent', borderRadius: '0', padding: '6px 16px', fontSize: '13px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer', transition: '0.2s' }}
                                 >50 : 50</button>
                                 <button
                                     onClick={() => setLeftWidth(25)}
-                                    style={{ background: leftWidth < 40 ? '#3ea6ff' : 'transparent', color: leftWidth < 40 ? '#0f0f0f' : '#f1f1f1', border: 'none', borderRadius: '16px', padding: '6px 16px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer', transition: '0.2s' }}
+                                    style={{ background: leftWidth < 40 ? '#D9FF00' : '#F5F4F0', color: '#000', border: leftWidth < 40 ? '2px solid #000' : '2px solid transparent', borderRadius: '0', padding: '6px 16px', fontSize: '13px', fontWeight: '900', textTransform: 'uppercase', cursor: 'pointer', transition: '0.2s' }}
                                 >Besar Kanan</button>
                             </div>
                         ) : (
