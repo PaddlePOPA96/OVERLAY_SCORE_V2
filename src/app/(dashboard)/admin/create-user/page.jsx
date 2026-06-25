@@ -27,10 +27,13 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
+import Switch from '@mui/material/Switch'
+import Collapse from '@mui/material/Collapse'
+import Box from '@mui/material/Box'
 
 import { ref, set, onValue } from 'firebase/database'
 
-import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore } from '@/services/auth/service'
+import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore, updateRolePermissions } from '@/services/auth/service'
 import { useAllUsers } from '@/features/iam/hooks/useAllUsers'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
 import { auth } from '@/services/firebase/auth'
@@ -175,6 +178,10 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
     'manage-users': {
       title: 'Registered Operator Accounts',
       subtitle: 'Manage role privileges, view synchronizations, and delete operator accounts'
+    },
+    'role-permissions': {
+      title: 'Role Permissions Settings',
+      subtitle: 'Configure feature permissions for Operator (User) and Admin roles'
     }
   }
 
@@ -386,10 +393,41 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
             </Card>
           </Grid>
         )}
+
+        {/* Role Permissions Configuration */}
+        {activeTab === 'role-permissions' && (
+          <Grid item xs={12}>
+            <RolePermissionsConfig />
+          </Grid>
+        )}
       </Grid>
     </div>
   )
 }
+
+const DEFAULT_PERMISSIONS = {
+  operator: true,
+  countdown_timer: true,
+  running_text: true,
+  tiktok_overlay: true,
+  premier_league: true,
+  ucl: true,
+  world_cup: true,
+  streams_operator: true,
+  streams: true
+}
+
+const PERMISSION_ITEMS = [
+  { key: 'operator', label: 'Scoreboard Operator', desc: 'Real-time control interface' },
+  { key: 'countdown_timer', label: 'Countdown Timer', desc: 'Countdown overlay controls' },
+  { key: 'running_text', label: 'Running Text (OBS)', desc: 'Configure broadcast ticker' },
+  { key: 'tiktok_overlay', label: 'Tiktok & IG Overlay', desc: 'Social media overlay controls' },
+  { key: 'premier_league', label: 'Premier League', desc: 'Schedules, standings, news' },
+  { key: 'ucl', label: 'UCL Standings', desc: 'UEFA Champions League standings' },
+  { key: 'world_cup', label: 'World Cup 2026', desc: 'FIFA World Cup 2026 matches' },
+  { key: 'streams_operator', label: 'Live Streams Config', desc: 'Manage streaming URLs' },
+  { key: 'streams', label: 'Live Streams Preview', desc: 'View current active live streams' }
+]
 
 function UserRowItem({ row, isMe }) {
   const [role, setRole] = useState(row.role || 'user')
@@ -478,5 +516,132 @@ function UserRowItem({ row, isMe }) {
         )}
       </TableCell>
     </TableRow>
+  )
+}
+
+function RolePermissionsConfig() {
+  const [selectedRole, setSelectedRole] = useState('user')
+  const [permissions, setPermissions] = useState({
+    user: { ...DEFAULT_PERMISSIONS },
+    admin: { ...DEFAULT_PERMISSIONS }
+  })
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const permsRef = ref(db, 'ucl_data/settings/roles_permissions')
+    const unsubscribe = onValue(permsRef, snapshot => {
+      const val = snapshot.val()
+      if (val) {
+        setPermissions({
+          user: { ...DEFAULT_PERMISSIONS, ...(val.user || {}) },
+          admin: { ...DEFAULT_PERMISSIONS, ...(val.admin || {}) }
+        })
+      }
+      setLoading(false)
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const handleToggle = async (key) => {
+    const currentRolePerms = permissions[selectedRole]
+    const updatedRolePerms = {
+      ...currentRolePerms,
+      [key]: !currentRolePerms[key]
+    }
+    
+    // Update local state first
+    setPermissions(prev => ({
+      ...prev,
+      [selectedRole]: updatedRolePerms
+    }))
+
+    try {
+      await updateRolePermissions(selectedRole, updatedRolePerms)
+    } catch (err) {
+      console.error('Failed to update role permissions:', err)
+      alert('Error: ' + err.message)
+    }
+  }
+
+  if (loading) {
+    return <div className='text-center py-6 text-slate-400 text-sm'>Loading role configurations...</div>
+  }
+
+  return (
+    <div className='border-4 border-black shadow-[8px_8px_0px_#000] rounded-none p-6 md:p-8 bg-white dark:bg-slate-950 text-black dark:text-white mb-6 w-full'>
+      <div className='mb-6 border-b-4 border-black pb-4'>
+        <h2 className='text-2xl font-black uppercase tracking-tight text-black dark:text-white'>
+          Configure Permissions by Role
+        </h2>
+        <p className='text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-1'>
+          Changes apply immediately to all users assigned to the selected role
+        </p>
+      </div>
+
+      <div className='flex flex-wrap gap-4 mb-8'>
+        <button 
+          onClick={() => setSelectedRole('user')}
+          className={`px-5 py-3 border-3 border-black text-xs font-black uppercase tracking-wider transition-all duration-100 ${
+            selectedRole === 'user'
+              ? 'bg-[#D9FF00] text-black shadow-[3px_3px_0px_#000] -translate-y-[1px]'
+              : 'bg-white dark:bg-slate-900 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 shadow-[3px_3px_0px_#000] hover:shadow-[5px_5px_0px_#000] hover:-translate-y-[2px] active:translate-y-0 active:shadow-[3px_3px_0px_#000]'
+          }`}
+        >
+          User (Operator) Role
+        </button>
+        <button 
+          onClick={() => setSelectedRole('admin')}
+          className={`px-5 py-3 border-3 border-black text-xs font-black uppercase tracking-wider transition-all duration-100 ${
+            selectedRole === 'admin'
+              ? 'bg-[#D9FF00] text-black shadow-[3px_3px_0px_#000] -translate-y-[1px]'
+              : 'bg-white dark:bg-slate-900 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 shadow-[3px_3px_0px_#000] hover:shadow-[5px_5px_0px_#000] hover:-translate-y-[2px] active:translate-y-0 active:shadow-[3px_3px_0px_#000]'
+          }`}
+        >
+          Admin Role
+        </button>
+      </div>
+
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
+        {PERMISSION_ITEMS.map(item => (
+          <div 
+            key={item.key} 
+            className='flex items-center justify-between p-4 border-3 border-black rounded-none bg-slate-50 dark:bg-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] hover:-translate-y-[2px] transition-all duration-150'
+          >
+            <div className='flex flex-col pr-4'>
+              <span className='text-xs font-black uppercase tracking-tight text-black dark:text-white'>{item.label}</span>
+              <span className='text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1 leading-normal'>{item.desc}</span>
+            </div>
+            <Switch
+              size="small"
+              checked={!!permissions[selectedRole]?.[item.key]}
+              onChange={() => handleToggle(item.key)}
+              sx={{
+                '& .MuiSwitch-switchBase.Mui-checked': {
+                  color: '#000000',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                  },
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  backgroundColor: '#D9FF00',
+                  opacity: 1,
+                },
+                '& .MuiSwitch-track': {
+                  border: '2px solid #000',
+                  borderRadius: '999px',
+                  backgroundColor: '#e2e8f0',
+                  opacity: 1,
+                },
+                '& .MuiSwitch-thumb': {
+                  border: '2px solid #000',
+                  boxShadow: 'none',
+                  backgroundColor: '#fff',
+                }
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }

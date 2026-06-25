@@ -151,3 +151,16 @@ export async function deleteUserFromDb(uid) {
     console.error('Failed to delete user from Realtime Database:', err)
   }
 }
+
+export async function updateRolePermissions(roleName, newPermissions) {
+  // Update di Firestore settings/roles_permissions document
+  const settingsRef = doc(dbFirestore, 'settings', 'roles_permissions')
+  await setDoc(settingsRef, { [roleName]: newPermissions }, { merge: true })
+
+  // Update di Realtime Database
+  try {
+    await set(ref(db, `ucl_data/settings/roles_permissions/${roleName}`), newPermissions)
+  } catch (err) {
+    console.error('Failed to update role permissions in Realtime Database:', err)
+  }
+}

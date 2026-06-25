@@ -55,6 +55,8 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
   const activeSection = searchParams.get('s')
 
   const [isSuperAdmin, setIsSuperAdmin] = useState(false)
+  const [userRole, setUserRole] = useState('user')
+  const [rolePermissions, setRolePermissions] = useState({})
   const [usersCount, setUsersCount] = useState(null)
 
   const [activeLeagues, setActiveLeagues] = useState({
@@ -73,6 +75,7 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
 
       if (!currentUser) {
         setIsSuperAdmin(false)
+        setUserRole('user')
         setUsersCount(null)
 
         return
@@ -81,10 +84,12 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
       const userRef = doc(dbFirestore, 'users', currentUser.uid)
 
       roleUnsub = onSnapshot(userRef, snap => {
-        const role = snap.exists() ? snap.data().role : 'user'
+        const data = snap.exists() ? snap.data() : {}
+        const role = data.role || 'user'
         const superAdmin = role === 'superadmin'
 
         setIsSuperAdmin(superAdmin)
+        setUserRole(role)
 
         if (superAdmin) {
           const usersRef = collection(dbFirestore, 'users')
@@ -113,13 +118,32 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
       }
     })
 
+    const permsRef = dbRef(db, 'ucl_data/settings/roles_permissions')
+
+    const permsUnsub = onDbValue(permsRef, snapshot => {
+      const val = snapshot.val()
+
+      if (val) {
+        setRolePermissions(val)
+      }
+    })
+
     return () => {
       authUnsub()
       roleUnsub()
       usersUnsub()
       leaguesUnsub()
+      permsUnsub()
     }
   }, [])
+
+  const hasPermission = (permissionKey) => {
+    if (userRole === 'superadmin') return true
+    if (!rolePermissions || Object.keys(rolePermissions).length === 0) return true
+    const roleConfig = rolePermissions[userRole]
+    if (!roleConfig) return true
+    return !!roleConfig[permissionKey]
+  }
 
   const router = useRouter()
   const [isPreloading, setIsPreloading] = useState(false)
@@ -179,31 +203,42 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
 
         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
           <NavSection title="Scoreboard Control">
-            <NavItem currentParam={activeSection} href="/dashboard?s=operator" icon="ri-gamepad-line">Scoreboard Operator</NavItem>
-            <NavItem currentParam={activeSection} href="/dashboard?s=countdown-timer" icon="ri-time-line">Countdown Timer</NavItem>
-            <NavItem currentParam={activeSection} href="/dashboard?s=running-text" icon="ri-file-text-line">Running Text (OBS)</NavItem>
-            <NavItem currentParam={activeSection} href="/dashboard?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
+            {hasPermission('operator') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=operator" icon="ri-gamepad-line">Scoreboard Operator</NavItem>
+            )}
+            {hasPermission('countdown_timer') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=countdown-timer" icon="ri-time-line">Countdown Timer</NavItem>
+            )}
+            {hasPermission('running_text') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=running-text" icon="ri-file-text-line">Running Text (OBS)</NavItem>
+            )}
+            {hasPermission('tiktok_overlay') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
+            )}
           </NavSection>
 
           <NavSection title="Sports Data">
-            {activeLeagues.premier_league && (
+            {activeLeagues.premier_league && hasPermission('premier_league') && (
               <NavItem currentParam={activeSection} href="/dashboard?s=premier-league" icon="ri-football-line">Premier League</NavItem>
             )}
-            {activeLeagues.ucl && (
+            {activeLeagues.ucl && hasPermission('ucl') && (
               <NavItem currentParam={activeSection} href="/dashboard?s=ucl-table" icon="ri-trophy-line">UCL Standings</NavItem>
             )}
-            {activeLeagues.world_cup && (
+            {activeLeagues.world_cup && hasPermission('world_cup') && (
               <NavItem currentParam={activeSection} href="/dashboard?s=world-cup" icon="ri-global-line">World Cup 2026</NavItem>
             )}
-            <NavItem currentParam={activeSection} href="/dashboard?s=streams-operator" icon="ri-tv-line">Live Streams Config</NavItem>
-
-            <NavItem currentParam={activeSection} href="/dashboard?s=streams" icon="ri-tv-line">Live Streams</NavItem>
-
+            {hasPermission('streams_operator') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=streams-operator" icon="ri-tv-line">Live Streams Config</NavItem>
+            )}
+            {hasPermission('streams') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=streams" icon="ri-tv-line">Live Streams</NavItem>
+            )}
           </NavSection>
 
           {isSuperAdmin && (
             <NavSection title="Admin">
               <NavItem currentParam={activeSection} href="/dashboard?s=create-user" icon="ri-user-add-line">Create New Account</NavItem>
+              <NavItem currentParam={activeSection} href="/dashboard?s=role-permissions" icon="ri-key-2-line">Role Permissions</NavItem>
               <NavItem currentParam={activeSection} href="/dashboard?s=active-leagues" icon="ri-settings-4-line">Active Leagues Visibility</NavItem>
               <NavItem currentParam={activeSection} href="/dashboard?s=manage-users" icon="ri-shield-user-line">
                 {`Registered Accounts${usersCount !== null ? ` (${usersCount})` : ''}`}
