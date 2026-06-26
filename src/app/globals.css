@@ -2430,8 +2430,8 @@ nextjs-portal {
   color: #fff !important;
 }
 
-.theme-light .operator-a-preview-box *,
-.theme-light .operator-b-preview-box * {
+.theme-light .operator-a-preview-box,
+.theme-light .operator-b-preview-box {
   color: #fff !important;
 }
 
