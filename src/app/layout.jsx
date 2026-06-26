@@ -12,12 +12,58 @@ import '@assets/iconify-icons/generated-icons.css'
 import SecurityGuard from '@/shared/components/SecurityGuard'
 
 export const metadata = {
-  title: 'SCOREBOS - Scoreboard Dashboard & Overlay',
-  description: 'Live sports scoreboard control and OBS broadcast overlay system.',
+  title: {
+    default: 'SCOREBOS - Scoreboard Dashboard & Overlay',
+    template: '%s | SCOREBOS'
+  },
+  description: 'Sistem control live sports scoreboard dan broadcast overlay untuk OBS.',
+  keywords: ['scoreboard', 'overlay', 'OBS', 'live sports', 'sports dashboard', 'broadcast', 'score control', 'scorebos'],
+  authors: [{ name: 'SCOREBOS' }],
+  creator: 'SCOREBOS',
+  publisher: 'SCOREBOS',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'SCOREBOS - Live Sports Scoreboard & OBS Overlay',
+    description: 'Sistem control live sports scoreboard dan broadcast overlay untuk OBS.',
+    url: 'https://scorebos.com', // Replace with your actual domain
+    siteName: 'SCOREBOS',
+    images: [
+      {
+        url: '/icon-512x512.png',
+        width: 512,
+        height: 512,
+        alt: 'SCOREBOS Logo',
+      },
+    ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SCOREBOS - Live Sports Scoreboard & OBS Overlay',
+    description: 'Sistem control live sports scoreboard dan broadcast overlay untuk OBS.',
+    images: ['/icon-512x512.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   icons: {
     icon: '/icon-512x512.png',
     apple: '/icon-512x512.png'
-  }
+  },
+  manifest: '/manifest.json' // If you have a manifest file
 }
 
 export const dynamic = 'force-dynamic';
