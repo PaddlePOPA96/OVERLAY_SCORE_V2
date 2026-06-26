@@ -9,29 +9,31 @@ export default function middleware(request) {
     // Daftar domain dasar yang diizinkan
     const allowedDomains = [
       'http://localhost:3000',
-      'https://overlay-score-v2.vercel.app'
+      'https://overlay-score-v2.vercel.app',
+      'https://www.scoreboss.my.id',
+      'https://scoreboss.my.id'
     ]
 
     // Helper untuk memvalidasi domain
     const isAllowed = (url) => {
       if (!url) return false
-      
+
       // Izinkan localhost (port apapun) untuk kemudahan development lokal
       if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) {
         return true
       }
-      
+
       // Izinkan domain resmi
       const isOfficialDomain = allowedDomains.some(domain => url.startsWith(domain))
 
       if (isOfficialDomain) return true
-      
+
       // Izinkan deployment preview dari Vercel (*.vercel.app)
       try {
         const parsedUrl = new URL(url)
 
-        
-return parsedUrl.hostname.endsWith('.vercel.app')
+
+        return parsedUrl.hostname.endsWith('.vercel.app')
       } catch (e) {
         return false
       }
@@ -48,8 +50,8 @@ return parsedUrl.hostname.endsWith('.vercel.app')
         return new NextResponse('Forbidden: Invalid Origin', { status: 403 })
       }
 
-      
-return NextResponse.next()
+
+      return NextResponse.next()
     }
 
     // 2. Jika Origin kosong, Cek Referer (Navigasi halaman / Same-origin fetch)
@@ -58,8 +60,8 @@ return NextResponse.next()
         return new NextResponse('Forbidden: Invalid Referer', { status: 403 })
       }
 
-      
-return NextResponse.next()
+
+      return NextResponse.next()
     }
 
     // 3. Jika Origin & Referer kosong (Direct access via URL bar / curl / Postman)
