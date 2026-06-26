@@ -69,19 +69,7 @@ const nextConfig = {
   },
 
   async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'overlay-score-v2.vercel.app',
-          },
-        ],
-        destination: 'https://scoreboss.my.id/:path*',
-        permanent: true,
-      },
-    ]
+    return []
   },
 }
 

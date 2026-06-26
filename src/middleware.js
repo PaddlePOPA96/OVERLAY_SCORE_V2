@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server'
 
 export default function middleware(request) {
-  // Hanya jalankan logic ini untuk route /api/
+  const host = request.headers.get('host')
+
+  // 1. Redirect domain lama ke domain baru secara permanen (SEO friendly)
+  if (host === 'overlay-score-v2.vercel.app') {
+    const url = request.nextUrl.clone()
+    return NextResponse.redirect(
+      `https://scoreboss.my.id${url.pathname}${url.search}`,
+      308
+    )
+  }
+
+  // 2. Hanya jalankan logic CORS ini untuk route /api/
   if (request.nextUrl.pathname.startsWith('/api/')) {
     const origin = request.headers.get('origin')
     const referer = request.headers.get('referer')
@@ -9,7 +20,6 @@ export default function middleware(request) {
     // Daftar domain dasar yang diizinkan
     const allowedDomains = [
       'http://localhost:3000',
-      'https://overlay-score-v2.vercel.app',
       'https://www.scoreboss.my.id',
       'https://scoreboss.my.id'
     ]
@@ -31,8 +41,6 @@ export default function middleware(request) {
       // Izinkan deployment preview dari Vercel (*.vercel.app)
       try {
         const parsedUrl = new URL(url)
-
-
         return parsedUrl.hostname.endsWith('.vercel.app')
       } catch (e) {
         return false
@@ -49,8 +57,6 @@ export default function middleware(request) {
       if (!isAllowed(origin)) {
         return new NextResponse('Forbidden: Invalid Origin', { status: 403 })
       }
-
-
       return NextResponse.next()
     }
 
@@ -59,8 +65,6 @@ export default function middleware(request) {
       if (!isAllowed(referer)) {
         return new NextResponse('Forbidden: Invalid Referer', { status: 403 })
       }
-
-
       return NextResponse.next()
     }
 
@@ -71,7 +75,9 @@ export default function middleware(request) {
   return NextResponse.next()
 }
 
-// Konfigurasi Matcher: hanya jalankan middleware untuk folder /api
+// Konfigurasi Matcher: jalankan middleware untuk semua path (agar redirect domain bekerja)
 export const config = {
-  matcher: '/api/:path*'
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
 }
