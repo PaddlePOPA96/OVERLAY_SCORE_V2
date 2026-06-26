@@ -1,16 +1,14 @@
 import { initializeApp, getApps } from 'firebase/app'
+import { clientEnv } from '@/shared/configs/envConfig'
 
-// CATATAN: Next.js hanya bisa membaca NEXT_PUBLIC_* secara static (literal).
-// Tidak bisa pakai shared/firebaseConfig.js karena ia akses process.env secara dynamic
-// (process.env[key]) yang tidak di-inline oleh webpack bundler Next.js.
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+  apiKey: clientEnv.FIREBASE_API_KEY,
+  authDomain: clientEnv.FIREBASE_AUTH_DOMAIN,
+  projectId: clientEnv.FIREBASE_PROJECT_ID,
+  storageBucket: clientEnv.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: clientEnv.FIREBASE_MESSAGING_SENDER_ID,
+  appId: clientEnv.FIREBASE_APP_ID,
+  databaseURL: clientEnv.FIREBASE_DATABASE_URL
 }
 
 if (!firebaseConfig.apiKey || !firebaseConfig.databaseURL) {

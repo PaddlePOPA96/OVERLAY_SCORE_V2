@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_DOMAINS = [
+    'falconstreams.net',
+    'trendy47.club',
+    'embedstreams.top',
+    'strmd.st',
+    'lola30es.mpipzni2naturally32kistomach.ru'
+];
+
 export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const url = searchParams.get('url');
@@ -13,6 +21,13 @@ export async function GET(request) {
 
     try {
         const parsedUrl = new URL(url);
+
+        // VALIDASI SSRF: Cek apakah domain ada di allowlist
+        const isAllowed = ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.endsWith(domain));
+        
+        if (!isAllowed) {
+            return NextResponse.json({ error: 'Domain not allowed' }, { status: 403 });
+        }
         
         // Use custom referer if provided, fallback to the one required by the CDN, or origin
         const referer = customReferer || 'https://lola30es.mpipzni2naturally32kistomach.ru/';

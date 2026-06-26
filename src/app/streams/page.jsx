@@ -2,17 +2,20 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
+// mpegts.js (fork of flv.js) di-import dynamic di useEffect karena butuh browser APIs
 import styles from './streams.module.css';
 import { db } from '@/services/firebase/db';
 import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/services/firebase/auth';
-import RunningTextOverlay from '@/shared/components/ui/RunningTextOverlay';
+import RunningTextOverlay from '@/features/overlay/components/RunningTextOverlay';
 
 export default function StreamsPage() {
     const videoRef = useRef(null);
     const hlsRef = useRef(null);
+    const flvRef = useRef(null);
     const hlsRef2 = useRef(null);
+    const flvRef2 = useRef(null);
     const videoRef2 = useRef(null);
     const chatEndRef = useRef(null);
 
@@ -60,12 +63,16 @@ export default function StreamsPage() {
     let youtubeId = '';
     let isGenericIframe = false;
     let genericIframeUrl = '';
+    let isFlv = false;
 
     if (currentChannel) {
-        // Resolve proxy path if any to check for YouTube
-        const decodedChannel = currentChannel.includes('/api/stream.m3u8?u=')
-            ? Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8')
-            : currentChannel;
+        // Resolve proxy path if any to check for YouTube or FLV
+        let decodedChannel = currentChannel;
+        if (currentChannel.includes('/api/stream.m3u8?u=')) {
+            decodedChannel = Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8');
+        } else if (currentChannel.includes('/api/flv-proxy?u=')) {
+            decodedChannel = Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8');
+        }
 
         if (decodedChannel.includes('youtube.com/watch')) {
             isYoutube = true;
@@ -80,6 +87,8 @@ export default function StreamsPage() {
         } else if (decodedChannel.includes('youtube.com/embed/')) {
             isYoutube = true;
             youtubeId = decodedChannel.split('youtube.com/embed/')[1]?.split('?')[0];
+        } else if (decodedChannel.includes('.flv') || currentChannel.includes('/api/flv-proxy')) {
+            isFlv = true;
         } else if (!decodedChannel.includes('.m3u8') && !decodedChannel.includes('.mp4') && !decodedChannel.includes('.ts')) {
             isGenericIframe = true;
             genericIframeUrl = decodedChannel;
@@ -90,11 +99,15 @@ export default function StreamsPage() {
     let youtubeId2 = '';
     let isGenericIframe2 = false;
     let genericIframeUrl2 = '';
+    let isFlv2 = false;
 
     if (currentChannel2) {
-        const decodedChannel2 = currentChannel2.includes('/api/stream.m3u8?u=')
-            ? Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8')
-            : currentChannel2;
+        let decodedChannel2 = currentChannel2;
+        if (currentChannel2.includes('/api/stream.m3u8?u=')) {
+            decodedChannel2 = Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8');
+        } else if (currentChannel2.includes('/api/flv-proxy?u=')) {
+            decodedChannel2 = Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8');
+        }
 
         if (decodedChannel2.includes('youtube.com/watch')) {
             isYoutube2 = true;
@@ -105,6 +118,8 @@ export default function StreamsPage() {
         } else if (decodedChannel2.includes('youtube.com/embed/')) {
             isYoutube2 = true;
             youtubeId2 = decodedChannel2.split('youtube.com/embed/')[1]?.split('?')[0];
+        } else if (decodedChannel2.includes('.flv') || currentChannel2.includes('/api/flv-proxy')) {
+            isFlv2 = true;
         } else if (!decodedChannel2.includes('.m3u8') && !decodedChannel2.includes('.mp4') && !decodedChannel2.includes('.ts')) {
             isGenericIframe2 = true;
             genericIframeUrl2 = decodedChannel2;
@@ -189,8 +204,73 @@ export default function StreamsPage() {
         }
     };
 
+    // FLV Player untuk stream 1
     useEffect(() => {
-        if (isYoutube || isGenericIframe) {
+        if (!isFlv || !currentChannel) {
+            if (flvRef.current) {
+                flvRef.current.pause();
+                flvRef.current.unload();
+                flvRef.current.detachMediaElement();
+                flvRef.current.destroy();
+                flvRef.current = null;
+            }
+            return;
+        }
+
+        const video = videoRef.current;
+        if (!video) return;
+
+        let cancelled = false;
+
+        import('mpegts.js/dist/mpegts.js').then((mpegtsModule) => {
+            const mpegts = mpegtsModule.default || mpegtsModule;
+            if (cancelled) return;
+            if (!mpegts.isSupported()) { console.warn('mpegts.js is not supported in this browser'); return; }
+
+            // Bersihkan HLS jika ada
+            if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+            // Bersihkan FLV lama
+            if (flvRef.current) {
+                flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
+            }
+
+            const flvPlayer = mpegts.createPlayer({
+                type: 'flv',
+                url: currentChannel,
+                isLive: true,
+                hasAudio: true,
+                hasVideo: true,
+                cors: true,
+            }, {
+                enableWorker: false,
+                enableStashBuffer: false,
+                stashInitialSize: 128,
+                lazyLoad: false,
+                lazyLoadMaxDuration: 3 * 60,
+                autoCleanupSourceBuffer: true,
+                autoCleanupMaxBackwardDuration: 3 * 60,
+                autoCleanupMinBackwardDuration: 2 * 60,
+            });
+
+            flvPlayer.attachMediaElement(video);
+            flvPlayer.load();
+            setTimeout(() => {
+                video.play().catch((err) => console.log('FLV Autoplay blocked:', err));
+            }, 500);
+
+            flvPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+                console.error('FLV Error:', errorType, errorDetail, errorInfo);
+            });
+
+            flvRef.current = flvPlayer;
+        }).catch((err) => console.error('Failed to load mpegts.js:', err));
+
+        return () => { cancelled = true; };
+    }, [currentChannel, isFlv]);
+
+    // HLS Player untuk stream 1
+    useEffect(() => {
+        if (isYoutube || isGenericIframe || isFlv) {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
                 hlsRef.current = null;
@@ -201,6 +281,10 @@ export default function StreamsPage() {
         const video = videoRef.current;
         if (!video) return;
 
+        // Bersihkan FLV jika ada
+        if (flvRef.current) {
+            flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
+        }
         // Selalu bersihkan instance lama karena tag <video> mungkin baru saja dimount ulang
         if (hlsRef.current) {
             hlsRef.current.destroy();
@@ -239,16 +323,73 @@ export default function StreamsPage() {
                 });
             }
         }
-    }, [currentChannel, isYoutube]);
+    }, [currentChannel, isYoutube, isFlv]);
 
 
+    // FLV Player untuk stream 2
     useEffect(() => {
-        if (isYoutube2 || isGenericIframe2) {
+        if (!isFlv2 || !currentChannel2) {
+            if (flvRef2.current) {
+                flvRef2.current.pause(); flvRef2.current.unload(); flvRef2.current.detachMediaElement(); flvRef2.current.destroy(); flvRef2.current = null;
+            }
+            return;
+        }
+        const video = videoRef2.current;
+        if (!video) return;
+
+        let cancelled = false;
+
+        import('mpegts.js/dist/mpegts.js').then((mpegtsModule) => {
+            const mpegts = mpegtsModule.default || mpegtsModule;
+            if (cancelled) return;
+            if (!mpegts.isSupported()) return;
+
+            if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
+            if (flvRef2.current) {
+                flvRef2.current.pause(); flvRef2.current.unload(); flvRef2.current.detachMediaElement(); flvRef2.current.destroy(); flvRef2.current = null;
+            }
+
+            const flvPlayer = mpegts.createPlayer({
+                type: 'flv',
+                url: currentChannel2,
+                isLive: true,
+                hasAudio: true,
+                hasVideo: true,
+                cors: true,
+            }, {
+                enableWorker: false,
+                enableStashBuffer: false,
+                stashInitialSize: 128,
+                lazyLoad: false,
+                autoCleanupSourceBuffer: true,
+                autoCleanupMaxBackwardDuration: 3 * 60,
+                autoCleanupMinBackwardDuration: 2 * 60,
+            });
+
+            flvPlayer.attachMediaElement(video);
+            flvPlayer.load();
+            setTimeout(() => { video.play().catch((err) => console.log('FLV2 Autoplay blocked:', err)); }, 500);
+            flvPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+                console.error('FLV2 Error:', errorType, errorDetail, errorInfo);
+            });
+            flvRef2.current = flvPlayer;
+        }).catch((err) => console.error('Failed to load mpegts.js:', err));
+
+        return () => { cancelled = true; };
+    }, [currentChannel2, isFlv2]);
+
+    // HLS Player untuk stream 2
+    useEffect(() => {
+        if (isYoutube2 || isGenericIframe2 || isFlv2) {
             if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
             return;
         }
         const video = videoRef2.current;
         if (!video) return;
+
+        if (flvRef2.current) {
+            flvRef2.current.pause(); flvRef2.current.unload(); flvRef2.current.detachMediaElement(); flvRef2.current.destroy(); flvRef2.current = null;
+        }
         if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
 
         if (Hls.isSupported()) {
@@ -274,7 +415,7 @@ export default function StreamsPage() {
                 });
             }
         }
-    }, [currentChannel2, isYoutube2]);
+    }, [currentChannel2, isYoutube2, isFlv2]);
 
     useEffect(() => {
         const urlRef = ref(db, 'settings/stream_url');
@@ -394,8 +535,13 @@ export default function StreamsPage() {
                         .replace(/\[token\]/gi, streamToken);
                 }
 
+                // FLV streams: always proxy to set correct Referer/Origin headers
+                if (finalUrl.includes('.flv')) {
+                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
+                }
                 // Apply proxy if enabled, but exclude known iframe domains to prevent CORS/proxy breakage
-                if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = Buffer.from(finalUrl).toString('base64');
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
@@ -425,7 +571,12 @@ export default function StreamsPage() {
                     finalUrl = finalUrl.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
                 }
                 
-                if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                // FLV streams: always proxy to set correct Referer/Origin headers
+                if (finalUrl.includes('.flv')) {
+                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
+                }
+                else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = Buffer.from(finalUrl).toString('base64');
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
@@ -437,7 +588,7 @@ export default function StreamsPage() {
         resolveUrl2();
     }, [rawUrl2, streamToken2, streamUseProxy]);
 
-    // Cleanup HLS on unmount
+    // Cleanup HLS & FLV on unmount
     useEffect(() => {
         return () => {
             if (hlsRef.current) {
@@ -447,6 +598,14 @@ export default function StreamsPage() {
             if (hlsRef2.current) {
                 hlsRef2.current.destroy();
                 hlsRef2.current = null;
+            }
+            if (flvRef.current) {
+                flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy();
+                flvRef.current = null;
+            }
+            if (flvRef2.current) {
+                flvRef2.current.pause(); flvRef2.current.unload(); flvRef2.current.detachMediaElement(); flvRef2.current.destroy();
+                flvRef2.current = null;
             }
         };
     }, []);

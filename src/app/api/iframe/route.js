@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_DOMAINS = [
+    'falconstreams.net',
+    'trendy47.club',
+    'embedstreams.top',
+    'strmd.st',
+    'lola30es.mpipzni2naturally32kistomach.ru'
+];
+
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -9,6 +17,13 @@ export async function GET(request) {
 
         if (!urlStr) {
             return new NextResponse('Missing URL parameter', { status: 400 });
+        }
+
+        const parsedUrl = new URL(urlStr);
+        const isAllowed = ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.endsWith(domain));
+        
+        if (!isAllowed) {
+            return new NextResponse('Domain not allowed', { status: 403 });
         }
 
         const fetchHeaders = new Headers();

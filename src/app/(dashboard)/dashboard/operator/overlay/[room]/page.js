@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation'
 
 import ScoreboardOverlay from '../_components/ScoreboardOverlay'
-import TikTokOverlay from '@/app/[room]/tiktok/page'
+import TikTokOverlay from '@/app/(overlay)/[room]/tiktok/page'
 
 export default function OverlayRoomPage() {
   const params = useParams()

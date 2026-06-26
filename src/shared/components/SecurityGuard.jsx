@@ -53,33 +53,7 @@ return false
 
     document.addEventListener('keydown', handleKeyDown)
 
-    // 3. Deteksi DevTools dan Debugger Loop
-    // Jika DevTools terbuka, statement `debugger` akan dipicu dan mem-pause halaman browser.
-    let intervalId
-
-    const startDebuggerLoop = () => {
-      const check = () => {
-        const startTime = performance.now()
-        
-        // Memicu breakpoint debugger
-        debugger
-        
-        const endTime = performance.now()
-        
-        // Jika terdapat selisih waktu yang signifikan (> 100ms), 
-        // berarti eksekusi sempat terhenti karena debugger terbuka di DevTools.
-        if (endTime - startTime > 100) {
-          try {
-            // Bersihkan console secara terus-menerus
-            console.clear()
-          } catch (e) {}
-        }
-      }
-      
-      intervalId = setInterval(check, 500)
-    }
-
-    startDebuggerLoop()
+    // 3. Deteksi DevTools dan Debugger Loop (Dihapus)
 
     // 4. Overwrite Console Logs (Fallback tambahan)
     const noop = () => {}
@@ -100,7 +74,6 @@ return false
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu)
       document.removeEventListener('keydown', handleKeyDown)
-      if (intervalId) clearInterval(intervalId)
       
       // Kembalikan console ke semula saat unmount
       console.log = originalConsole.log

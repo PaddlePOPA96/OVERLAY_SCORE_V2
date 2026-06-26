@@ -1,31 +1,22 @@
 import 'server-only'
 import admin from 'firebase-admin'
+import { getParsedServiceAccount, clientEnv, serverEnv } from '@/shared/configs/envConfig'
 
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-  ? (() => {
-      try {
-        return JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-      } catch (e) {
-        console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY:', e.message)
-
-        return null
-      }
-    })()
-  : null
+const serviceAccount = getParsedServiceAccount()
 
 if (!admin.apps.length) {
   try {
     if (serviceAccount) {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+        databaseURL: clientEnv.FIREBASE_DATABASE_URL
       })
       console.log('✅ Firebase Admin initialized with Service Account')
     } else {
       // console.warn("⚠️ initializing Firebase Admin without Service Account (limited capabilities)");
       admin.initializeApp({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
+        projectId: clientEnv.FIREBASE_PROJECT_ID,
+        databaseURL: clientEnv.FIREBASE_DATABASE_URL
       })
     }
   } catch (e) {
@@ -42,7 +33,7 @@ export async function verifyIdToken(token) {
     return { success: true, ...decodedToken }
   } catch (error) {
     // BYPASS IF NO SERVICE ACCOUNT (Local Dev only)
-    if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY && process.env.NODE_ENV === 'development') {
+    if (!serverEnv.FIREBASE_SERVICE_ACCOUNT_KEY && serverEnv.NODE_ENV === 'development') {
       // eslint-disable-next-line no-console
       console.warn('⚠️ [Dev Mode] Skipping ID Token verification because FIREBASE_SERVICE_ACCOUNT_KEY is missing.')
 

@@ -3,6 +3,14 @@ import https from 'https';
 
 export const dynamic = 'force-dynamic';
 
+const ALLOWED_DOMAINS = [
+    'falconstreams.net',
+    'trendy47.club',
+    'embedstreams.top',
+    'strmd.st',
+    'lola30es.mpipzni2naturally32kistomach.ru'
+];
+
 export async function GET(request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -27,6 +35,13 @@ export async function GET(request) {
 
         if (!decodedUrl.startsWith('http://') && !decodedUrl.startsWith('https://')) {
             return new NextResponse('Invalid URL', { status: 400 });
+        }
+
+        const parsedUrl = new URL(decodedUrl);
+        const isAllowed = ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.endsWith(domain));
+        
+        if (!isAllowed) {
+            return new NextResponse('Domain not allowed', { status: 403 });
         }
 
         const fetchHeaders = new Headers();
