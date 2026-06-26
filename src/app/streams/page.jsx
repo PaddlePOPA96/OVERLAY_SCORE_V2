@@ -69,9 +69,9 @@ export default function StreamsPage() {
         // Resolve proxy path if any to check for YouTube or FLV
         let decodedChannel = currentChannel;
         if (currentChannel.includes('/api/stream.m3u8?u=')) {
-            decodedChannel = Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8');
+            decodedChannel = atob(new URLSearchParams(currentChannel.split('?')[1]).get('u'));
         } else if (currentChannel.includes('/api/flv-proxy?u=')) {
-            decodedChannel = Buffer.from(new URLSearchParams(currentChannel.split('?')[1]).get('u'), 'base64').toString('utf-8');
+            decodedChannel = atob(new URLSearchParams(currentChannel.split('?')[1]).get('u'));
         }
 
         if (decodedChannel.includes('youtube.com/watch')) {
@@ -104,9 +104,9 @@ export default function StreamsPage() {
     if (currentChannel2) {
         let decodedChannel2 = currentChannel2;
         if (currentChannel2.includes('/api/stream.m3u8?u=')) {
-            decodedChannel2 = Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8');
+            decodedChannel2 = atob(new URLSearchParams(currentChannel2.split('?')[1]).get('u'));
         } else if (currentChannel2.includes('/api/flv-proxy?u=')) {
-            decodedChannel2 = Buffer.from(new URLSearchParams(currentChannel2.split('?')[1]).get('u'), 'base64').toString('utf-8');
+            decodedChannel2 = atob(new URLSearchParams(currentChannel2.split('?')[1]).get('u'));
         }
 
         if (decodedChannel2.includes('youtube.com/watch')) {
@@ -537,12 +537,12 @@ export default function StreamsPage() {
 
                 // FLV streams: always proxy to set correct Referer/Origin headers
                 if (finalUrl.includes('.flv')) {
-                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
                 // Apply proxy if enabled, but exclude known iframe domains to prevent CORS/proxy breakage
                 else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
-                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
 
@@ -573,11 +573,11 @@ export default function StreamsPage() {
                 
                 // FLV streams: always proxy to set correct Referer/Origin headers
                 if (finalUrl.includes('.flv')) {
-                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
                 else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
-                    const encodedUrl = Buffer.from(finalUrl).toString('base64');
+                    const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
                 setCurrentChannel2(finalUrl);
