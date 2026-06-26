@@ -63,7 +63,10 @@ export const metadata = {
     icon: '/icon-512x512.png',
     apple: '/icon-512x512.png'
   },
-  manifest: '/manifest.json' // If you have a manifest file
+  manifest: '/manifest.json', // If you have a manifest file
+  verification: {
+    google: 'b_DUy-S_BM9FbaR1Vc2ixJ-atveODiDy6T4k5t-Uq1g',
+  }
 }
 
 export const dynamic = 'force-dynamic';
