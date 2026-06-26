@@ -535,13 +535,13 @@ export default function StreamsPage() {
                         .replace(/\[token\]/gi, streamToken);
                 }
 
-                // FLV streams: always proxy to set correct Referer/Origin headers
-                if (finalUrl.includes('.flv')) {
+                // FLV streams: proxy only if streamUseProxy is enabled
+                if (finalUrl.includes('.flv') && streamUseProxy) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
                 // Apply proxy if enabled, but exclude known iframe domains to prevent CORS/proxy breakage
-                else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
@@ -571,12 +571,12 @@ export default function StreamsPage() {
                     finalUrl = finalUrl.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
                 }
                 
-                // FLV streams: always proxy to set correct Referer/Origin headers
-                if (finalUrl.includes('.flv')) {
+                // FLV streams: proxy only if streamUseProxy is enabled
+                if (finalUrl.includes('.flv') && streamUseProxy) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
-                else if (streamUseProxy && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
