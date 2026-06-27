@@ -64,6 +64,8 @@ export default function StreamsPage() {
     let isGenericIframe = false;
     let genericIframeUrl = '';
     let isFlv = false;
+    let isMp4 = false;
+    let mp4Url = '';
 
     if (currentChannel) {
         // Resolve proxy path if any to check for YouTube or FLV
@@ -89,6 +91,9 @@ export default function StreamsPage() {
             youtubeId = decodedChannel.split('youtube.com/embed/')[1]?.split('?')[0];
         } else if (decodedChannel.includes('.flv') || currentChannel.includes('/api/flv-proxy')) {
             isFlv = true;
+        } else if (decodedChannel.toLowerCase().includes('.mp4')) {
+            isMp4 = true;
+            mp4Url = decodedChannel;
         } else if (!decodedChannel.includes('.m3u8') && !decodedChannel.includes('.mp4') && !decodedChannel.includes('.ts')) {
             isGenericIframe = true;
             genericIframeUrl = decodedChannel;
@@ -100,6 +105,8 @@ export default function StreamsPage() {
     let isGenericIframe2 = false;
     let genericIframeUrl2 = '';
     let isFlv2 = false;
+    let isMp42 = false;
+    let mp4Url2 = '';
 
     if (currentChannel2) {
         let decodedChannel2 = currentChannel2;
@@ -120,6 +127,9 @@ export default function StreamsPage() {
             youtubeId2 = decodedChannel2.split('youtube.com/embed/')[1]?.split('?')[0];
         } else if (decodedChannel2.includes('.flv') || currentChannel2.includes('/api/flv-proxy')) {
             isFlv2 = true;
+        } else if (decodedChannel2.toLowerCase().includes('.mp4')) {
+            isMp42 = true;
+            mp4Url2 = decodedChannel2;
         } else if (!decodedChannel2.includes('.m3u8') && !decodedChannel2.includes('.mp4') && !decodedChannel2.includes('.ts')) {
             isGenericIframe2 = true;
             genericIframeUrl2 = decodedChannel2;
@@ -270,7 +280,7 @@ export default function StreamsPage() {
 
     // HLS Player untuk stream 1
     useEffect(() => {
-        if (isYoutube || isGenericIframe || isFlv) {
+        if (isYoutube || isGenericIframe || isFlv || isMp4) {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
                 hlsRef.current = null;
@@ -380,7 +390,7 @@ export default function StreamsPage() {
 
     // HLS Player untuk stream 2
     useEffect(() => {
-        if (isYoutube2 || isGenericIframe2 || isFlv2) {
+        if (isYoutube2 || isGenericIframe2 || isFlv2 || isMp42) {
             if (hlsRef2.current) { hlsRef2.current.destroy(); hlsRef2.current = null; }
             return;
         }
@@ -541,7 +551,7 @@ export default function StreamsPage() {
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
                 // Apply proxy if enabled, but exclude known iframe domains to prevent CORS/proxy breakage
-                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
@@ -576,7 +586,7 @@ export default function StreamsPage() {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 }
-                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
@@ -828,6 +838,16 @@ export default function StreamsPage() {
                                 allowFullScreen
                                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                             ></iframe>
+                        ) : isMp4 ? (
+                            <video
+                                key={`mp4-${streamStartTime}-${mp4Url}`}
+                                className={styles.video}
+                                src={mp4Url}
+                                controls
+                                autoPlay
+                                playsInline
+                                muted
+                            ></video>
                         ) : (
                             <video
                                 ref={videoRef}
@@ -876,6 +896,16 @@ export default function StreamsPage() {
                                     allowFullScreen
                                     style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
                                 ></iframe>
+                            ) : isMp42 ? (
+                                <video
+                                    key={`mp42-${streamStartTime}-${mp4Url2}`}
+                                    className={styles.video}
+                                    src={mp4Url2}
+                                    controls
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                ></video>
                             ) : (
                                 <video
                                     ref={videoRef2}
