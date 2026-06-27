@@ -835,6 +835,7 @@ export default function StreamsPage() {
                                 controls
                                 autoPlay
                                 playsInline
+                                muted
                                 onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
                             ></video>
                         )}
