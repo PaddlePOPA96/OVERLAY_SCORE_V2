@@ -86,14 +86,14 @@ function MatchItem({ match, activeSource }) {
   let awayLogo = ''
 
   if (activeSource === 'premier-league') {
-    homeLogo = resolveClubLogo('England - Premier League', match.homeTeam.name)
-    awayLogo = resolveClubLogo('England - Premier League', match.awayTeam.name)
+    homeLogo = match.homeTeam?.name ? resolveClubLogo('England - Premier League', match.homeTeam.name) : ''
+    awayLogo = match.awayTeam?.name ? resolveClubLogo('England - Premier League', match.awayTeam.name) : ''
   } else if (activeSource === 'champions-league') {
-    homeLogo = resolveAnyClubLogo(match.homeTeam.name)
-    awayLogo = resolveAnyClubLogo(match.awayTeam.name)
+    homeLogo = match.homeTeam?.name ? resolveAnyClubLogo(match.homeTeam.name) : ''
+    awayLogo = match.awayTeam?.name ? resolveAnyClubLogo(match.awayTeam.name) : ''
   } else if (activeSource === 'world-cup') {
-    homeLogo = resolveNationalLogo(match.homeTeam)
-    awayLogo = resolveNationalLogo(match.awayTeam)
+    homeLogo = match.homeTeam ? resolveNationalLogo(match.homeTeam) : ''
+    awayLogo = match.awayTeam ? resolveNationalLogo(match.awayTeam) : ''
   }
 
   let timeText = 'VS'
@@ -104,8 +104,8 @@ function MatchItem({ match, activeSource }) {
     timeText = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
   }
 
-  const homeName = match.homeTeam.tla || match.homeTeam.shortName || match.homeTeam.name
-  const awayName = match.awayTeam.tla || match.awayTeam.shortName || match.awayTeam.name
+  const homeName = match.homeTeam?.tla || match.homeTeam?.shortName || match.homeTeam?.name || 'TBA'
+  const awayName = match.awayTeam?.tla || match.awayTeam?.shortName || match.awayTeam?.name || 'TBA'
 
   return (
     <div className='inline-flex items-center gap-4 px-8 border-r border-white/10 h-10'>
