@@ -1,5 +1,5 @@
-import { signInWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, getAdditionalUserInfo, deleteUser } from 'firebase/auth'
-import { doc, setDoc, updateDoc, getDoc, deleteDoc } from 'firebase/firestore'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail, getAdditionalUserInfo, deleteUser, sendEmailVerification } from 'firebase/auth'
+import { doc, setDoc, updateDoc, getDoc, deleteDoc, collection, addDoc } from 'firebase/firestore'
 
 import { ref, set, get, child } from 'firebase/database'
 
@@ -9,12 +9,50 @@ import { db } from '../index' // Realtime Database
 
 export async function loginWithEmailPassword(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password)
-
+  await logLoginEvent(cred.user, 'email_password')
   return cred.user
 }
 
+export function validatePasswordStrength(password) {
+  const minLength = 8
+  const hasUpperCase = /[A-Z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+  if (password.length < minLength) return 'Kata sandi minimal 8 karakter.'
+  if (!hasUpperCase) return 'Kata sandi harus mengandung minimal 1 huruf besar.'
+  if (!hasNumber) return 'Kata sandi harus mengandung minimal 1 angka.'
+  if (!hasSpecialChar) return 'Kata sandi harus mengandung minimal 1 karakter spesial (!@#$ dsb).'
+  
+  return null
+}
+
 export async function registerWithEmailPassword(email, password) {
-  const cred = await createUserWithEmailAndPassword(auth, email, password)
+  const emailLower = email.toLowerCase()
+  if (emailLower.includes('+')) {
+    throw new Error('Email aliases (menggunakan tanda +) tidak diizinkan.')
+  }
+  
+  const domain = emailLower.split('@')[1]
+  const allowedDomains = ['gmail.com', 'yahoo.com', 'yahoo.co.id', 'outlook.com', 'hotmail.com', 'icloud.com']
+  
+  if (!allowedDomains.includes(domain)) {
+    throw new Error('Pendaftaran hanya diizinkan menggunakan email standar (seperti Gmail, Yahoo, Outlook). Custom domain tidak diizinkan.')
+  }
+
+  const passwordError = validatePasswordStrength(password)
+  if (passwordError) {
+    throw new Error(passwordError)
+  }
+
+  const cred = await createUserWithEmailAndPassword(auth, emailLower, password)
+
+  // Send Email Verification
+  try {
+    await sendEmailVerification(cred.user)
+  } catch (err) {
+    console.error('Failed to send email verification', err)
+  }
 
   return cred.user
 }
@@ -29,7 +67,23 @@ export async function loginWithGooglePopup() {
     throw new Error('Akses ditolak: Akun Google ini belum terdaftar oleh Admin. Silakan hubungi Admin untuk mendaftarkan email Anda terlebih dahulu.')
   }
 
+  await logLoginEvent(cred.user, 'google_popup')
   return cred.user
+}
+
+async function logLoginEvent(user, method) {
+  if (!user) return
+  try {
+    const logsRef = collection(dbFirestore, 'login_logs')
+    await addDoc(logsRef, {
+      uid: user.uid,
+      email: user.email,
+      method: method,
+      timestamp: new Date().toISOString()
+    })
+  } catch (err) {
+    console.error('Failed to log login event:', err)
+  }
 }
 
 export async function sendResetPassword(email) {
@@ -139,12 +193,30 @@ export async function syncUserToFirestore(user) {
 }
 
 export async function deleteUserFromDb(uid) {
-  // 1. Hapus dari Firestore
-  const userRef = doc(dbFirestore, 'users', uid)
+  // 1. Hapus dari Firebase Auth via API
+  const currentUser = auth.currentUser
+  if (currentUser) {
+    const token = await currentUser.getIdToken()
+    const res = await fetch('/api/auth/delete-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ targetUid: uid })
+    })
 
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw new Error(`Failed to delete user from Auth: ${errorData.error}`)
+    }
+  }
+
+  // 2. Hapus dari Firestore
+  const userRef = doc(dbFirestore, 'users', uid)
   await deleteDoc(userRef)
 
-  // 2. Hapus dari Realtime Database
+  // 3. Hapus dari Realtime Database
   try {
     await set(ref(db, `users/${uid}`), null)
   } catch (err) {

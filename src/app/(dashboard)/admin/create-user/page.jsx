@@ -33,7 +33,7 @@ import Box from '@mui/material/Box'
 
 import { ref, set, onValue } from 'firebase/database'
 
-import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore, updateRolePermissions } from '@/services/auth/service'
+import { createUserWithRole, updateUserRole, deleteUserFromDb, syncUserToFirestore, updateRolePermissions, validatePasswordStrength } from '@/services/auth/service'
 import { useAllUsers } from '@/features/iam/hooks/useAllUsers'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
 import { auth } from '@/services/firebase/auth'
@@ -125,6 +125,15 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
         message: 'Passwords do not match.'
       })
 
+      return
+    }
+
+    const passwordError = validatePasswordStrength(password)
+    if (passwordError) {
+      setCreateStatus({
+        type: 'error',
+        message: passwordError
+      })
       return
     }
 
