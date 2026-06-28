@@ -297,7 +297,7 @@
       "players": [
         {
           "name": "Cristiano Ronaldo",
-          "img_url": "https://img.fminside.net/facesfm26/735216.png"
+          "img_url": "/images/players/CR7.png"
         },
         {
           "name": "Jo\u00e3o F\u00e9lix",
@@ -3261,7 +3261,7 @@
         },
         {
           "name": "Lamine Yamal",
-          "img_url": "https://img.fminside.net/facesfm26/2000256231.png"
+          "img_url": "/images/players/yamal.png"
         },
         {
           "name": "Landry Farr\u00e9",
@@ -3847,7 +3847,7 @@
         },
         {
           "name": "Harry Kane",
-          "img_url": "https://img.fminside.net/facesfm26/28049320.png"
+          "img_url": "/images/players/HarryKane.png"
         },
         {
           "name": "Hiroki Ito",
@@ -8454,7 +8454,7 @@
         },
         {
           "name": "N'Golo Kant\u00e9",
-          "img_url": "https://img.fminside.net/facesfm26/85081880.png"
+          "img_url": "/images/players/kante.png"
         }
       ]
     },
@@ -9452,7 +9452,7 @@
         },
         {
           "name": "Lionel Messi",
-          "img_url": "https://img.fminside.net/facesfm26/7458500.png"
+          "img_url": "/images/players/Messi.png"
         },
         {
           "name": "Rodrigo De Paul",
@@ -12132,7 +12132,7 @@
         },
         {
           "name": "Virgil van Dijk",
-          "img_url": "https://img.fminside.net/facesfm26/37024025.png"
+          "img_url": "/images/players/VirgilvanDijk.png"
         },
         {
           "name": "V\u00edt\u011bzslav Jaro\u0161",
@@ -12760,7 +12760,7 @@
         },
         {
           "name": "Erling Haaland",
-          "img_url": "https://img.fminside.net/facesfm26/29179241.png"
+          "img_url": "/images/players/halland.png"
         },
         {
           "name": "Ezra Carrington",
@@ -13277,7 +13277,7 @@
         },
         {
           "name": "Matheus Cunha",
-          "img_url": "https://img.fminside.net/facesfm26/19334410.png"
+          "img_url": "/images/players/cunha.png"
         },
         {
           "name": "Matthijs de Ligt",
@@ -17235,7 +17235,7 @@
         },
         {
           "name": "Ousmane Demb\u00e9l\u00e9",
-          "img_url": "https://img.fminside.net/facesfm26/85140178.png"
+          "img_url": "/images/players/dembELE.png"
         },
         {
           "name": "Paul Bourdin",
@@ -19034,11 +19034,11 @@
         },
         {
           "name": "Jude Bellingham",
-          "img_url": "https://img.fminside.net/facesfm26/29232937.png"
+          "img_url": "/images/players/judebel.png"
         },
         {
           "name": "Kylian Mbapp\u00e9",
-          "img_url": "https://img.fminside.net/facesfm26/85139014.png"
+          "img_url": "/images/players/mbape.png"
         },
         {
           "name": "Lamini Fati",
@@ -19153,8 +19153,8 @@
           "img_url": "https://img.fminside.net/facesfm26/28104124.png"
         },
         {
-          "name": "Vin\u00edcius J\u00fanior",
-          "img_url": "https://img.fminside.net/facesfm26/19302146.png"
+          "name": "Vinicius Junior",
+          "img_url": "/images/players/vinijr.png"
         },
         {
           "name": "V\u00edctor Valdepe\u00f1as",
