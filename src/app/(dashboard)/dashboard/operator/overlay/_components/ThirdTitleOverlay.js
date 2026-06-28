@@ -84,7 +84,7 @@ export default function ThirdTitleOverlay({ data }) {
     <div
       style={{
         position: 'absolute',
-        top: 600,
+        top: 500,
         left: 750,
         width: '100%',
         height: '100%',
