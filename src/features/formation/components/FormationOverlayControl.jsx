@@ -202,11 +202,23 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
 
         if (snapshot.exists()) {
 
+          
           const data = snapshot.val();
+          
+          // Perbarui link_foto dari JSON lokal agar jika ada perubahan dari .jpg ke .webp otomatis terupdate
+          const localTeamData = playerData.find(t => t.negara === selectedTeam);
+          const updatePhoto = (player) => {
+            if (!localTeamData || !player) return player;
+            const freshPlayer = localTeamData.pemain.find(p => p.nama_pemain === player.nama_pemain);
+            return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
+          };
 
-          setPlayers(data.players || []);
+          const updatedPlayers = (data.players || []).map(updatePhoto);
+          const updatedSubstitutes = (data.substitutes || []).map(updatePhoto);
 
-          setSubstitutes(data.substitutes || []);
+          setPlayers(updatedPlayers);
+          setSubstitutes(updatedSubstitutes);
+
 
           if (data.formation) {
 
