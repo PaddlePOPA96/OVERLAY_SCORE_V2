@@ -155,8 +155,6 @@ export default function FormationOverlay({ params }) {
             height: 100%;
             object-fit: cover;
             object-position: top center;
-            transform: scale(1.75); 
-            transform-origin: top center; 
         }
         .player-name-tag {
             background-color: #1a1a1a;

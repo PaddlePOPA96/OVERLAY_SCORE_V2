@@ -749,10 +749,6 @@ object-fit: cover;
 
 object-position: top center;
 
-transform: scale(1.75);
-
-transform-origin: top center;
-
 }
 
 .op-player-name-tag {
