@@ -230,7 +230,7 @@ export default function FormationOverlay({ params }) {
 
             <div 
               id="pitch" 
-              className="pitch-container w-full h-[810px] shadow-inner"
+              className="pitch-container w-full h-[680px] shadow-inner"
             >
               <div className="corner-bl"></div>
               <div className="corner-br"></div>
@@ -255,7 +255,9 @@ export default function FormationOverlay({ params }) {
                     <img 
                       src={player.link_foto} 
                       alt={player.nama_pemain} 
-                      className="player-image drop-shadow-lg" 
+                      className="player-image" 
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => { e.target.src = 'https://via.placeholder.com/90x100?text=Player' }} 
                     />
                   </div>

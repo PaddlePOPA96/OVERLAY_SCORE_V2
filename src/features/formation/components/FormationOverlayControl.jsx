@@ -531,7 +531,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
                 ) : (
                   <>
                     <div className="op-player-image-container">
-                      <img src={player.link_foto} alt={player.nama_pemain} className="op-player-image" onError={(e) => { e.target.src = 'https://via.placeholder.com/50' }} />
+                      <img src={player.link_foto} alt={player.nama_pemain} className="op-player-image" loading="lazy" decoding="async" onError={(e) => { e.target.src = 'https://via.placeholder.com/50' }} />
                     </div>
                     <div className="op-player-name-tag">
                       {player.nama_pemain}
@@ -570,7 +570,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, sub.id, 'sub')}
                   >
-                    <img src={sub.link_foto} alt={sub.nama_pemain} className="w-10 h-10 rounded-full object-cover border border-gray-500 pointer-events-none" onError={(e) => { e.target.src = 'https://via.placeholder.com/40' }} />
+                    <img src={sub.link_foto} alt={sub.nama_pemain} className="w-10 h-10 rounded-full object-cover border border-gray-500 pointer-events-none" loading="lazy" decoding="async" onError={(e) => { e.target.src = 'https://via.placeholder.com/40' }} />
                     <div className="flex-1 pointer-events-none">
                       <div className="font-bold text-sm truncate">{sub.nama_pemain}</div>
                       <div className="text-xs text-gray-400">{sub.posisi}</div>
