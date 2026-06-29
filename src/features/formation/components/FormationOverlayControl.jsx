@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ref, onValue, update } from 'firebase/database'
+import { ref, onValue, update, get } from 'firebase/database'
 import { db } from '@/services/firebase/index'
 
 import Button from '@mui/material/Button'
@@ -29,6 +29,13 @@ const formationPositions = {
     { top: '60%', left: '54%' }, { top: '60%', left: '76%' }, { top: '40%', left: '25%' },
     { top: '40%', left: '43%' }, { top: '40%', left: '62%' }, { top: '17%', left: '15%' },
     { top: '10%', left: '43%' }, { top: '17%', left: '71%' }
+  ],
+  "4-1-2-3": [
+    { top: '80%', left: '43%' },
+    { top: '63%', left: '10%' }, { top: '63%', left: '32%' }, { top: '63%', left: '54%' }, { top: '63%', left: '76%' },
+    { top: '48%', left: '43%' },
+    { top: '33%', left: '26%' }, { top: '33%', left: '60%' },
+    { top: '17%', left: '15%' }, { top: '10%', left: '43%' }, { top: '17%', left: '71%' }
   ],
   "4-2-3-1": [
     { top: '80%', left: '43%' }, { top: '63%', left: '10%' }, { top: '63%', left: '32%' },
@@ -106,7 +113,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
     if (!team) team = playerData[0];
 
     try {
-      const snapshot = await import('firebase/database').then(m => m.get(ref(db, `match_live/global_formation_presets/${teamName}`)));
+      const snapshot = await get(ref(db, `match_live/global_formation_presets/${teamName}`));
       if (snapshot.exists()) {
         const data = snapshot.val();
         

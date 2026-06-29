@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { db } from '@/services/firebase/index';
 
@@ -11,6 +11,12 @@ export default function FormationOverlay({ params }) {
 
   // Animation states
   const [showState, setShowState] = useState('hidden'); // hidden, entering, visible, exiting
+
+  // Keep track of the latest showState in a ref to avoid resubscribing to Firebase on every animation state change
+  const showStateRef = useRef(showState);
+  useEffect(() => {
+    showStateRef.current = showState;
+  }, [showState]);
 
   useEffect(() => {
     if (!roomId) return;
@@ -24,7 +30,7 @@ export default function FormationOverlay({ params }) {
         setShowState('entering');
       } else {
         // If data is hidden but we are currently showing, trigger exit
-        if (showState !== 'hidden') {
+        if (showStateRef.current !== 'hidden') {
           setShowState('exiting');
           setTimeout(() => {
             setShowState('hidden');
@@ -35,7 +41,7 @@ export default function FormationOverlay({ params }) {
     });
 
     return () => unsubscribe();
-  }, [roomId, showState]);
+  }, [roomId]);
 
   if (showState === 'hidden' || !overlayData) {
     return null;
