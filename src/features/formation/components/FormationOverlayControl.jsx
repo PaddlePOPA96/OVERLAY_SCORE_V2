@@ -83,6 +83,9 @@ const formationPositions = {
 
 const availableFormations = Object.keys(formationPositions);
 
+// Helper to remove any undefined properties from object payloads before sending to Firebase
+const cleanPayload = (obj) => JSON.parse(JSON.stringify(obj));
+
 export default function FormationOverlayControl({ theme = 'dark', roomId = 'default' }) {
   const isDark = theme === 'dark';
   const overlayPath = `match_live/${roomId}/formation_overlay`;
@@ -280,7 +283,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
 
   // Firebase update controls
   const handleShowHome = () => {
-    update(ref(db, overlayPath), {
+    update(ref(db, overlayPath), cleanPayload({
       isVisible: true,
       mode: 'home',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
@@ -289,11 +292,11 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       teamInfo: homeTeamInfo,
       players: homePlayers,
       substitutes: homeSubstitutes
-    }).catch(console.error);
+    })).catch(console.error);
   };
 
   const handleShowAway = () => {
-    update(ref(db, overlayPath), {
+    update(ref(db, overlayPath), cleanPayload({
       isVisible: true,
       mode: 'away',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
@@ -302,16 +305,16 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       teamInfo: awayTeamInfo,
       players: awayPlayers,
       substitutes: awaySubstitutes
-    }).catch(console.error);
+    })).catch(console.error);
   };
 
   const handleShowVS = () => {
-    update(ref(db, overlayPath), {
+    update(ref(db, overlayPath), cleanPayload({
       isVisible: true,
       mode: 'vs',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes }
-    }).catch(console.error);
+    })).catch(console.error);
   };
 
   const handleUpdateOverlay = () => {
@@ -331,7 +334,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       payload.players = awayPlayers;
       payload.substitutes = awaySubstitutes;
     }
-    update(ref(db, overlayPath), payload).catch(console.error);
+    update(ref(db, overlayPath), cleanPayload(payload)).catch(console.error);
   };
 
   const handleHideOverlay = () => {
@@ -339,11 +342,11 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   };
 
   const handleSavePreset = () => {
-    update(ref(db, `match_live/global_formation_presets/${selectedTeam}`), {
+    update(ref(db, `match_live/global_formation_presets/${selectedTeam}`), cleanPayload({
       formation: selectedFormation,
       players,
       substitutes
-    }).then(() => alert(`Formation for ${selectedTeam} Saved Globally!`))
+    })).then(() => alert(`Formation for ${selectedTeam} Saved Globally!`))
       .catch(error => {
         console.error(error);
         alert('Gagal menyimpan: ' + error.message);
@@ -393,7 +396,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       payload.substitutes = activeTab === 'away' ? updatedSubstitutes : awaySubstitutes;
     }
 
-    update(ref(db, overlayPath), payload).catch(console.error);
+    update(ref(db, overlayPath), cleanPayload(payload)).catch(console.error);
   };
 
   const handleDrop = (e, targetPlayerId, targetType) => {
