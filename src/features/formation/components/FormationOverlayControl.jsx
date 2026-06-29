@@ -720,35 +720,23 @@ z-index: 50;
 }
 
 .op-player-image-container {
-
 width: 90px;
-
 height: 100px;
-
 overflow: hidden;
-
 background-color: transparent;
-
-display: flex;
-
-justify-content: center;
-
-align-items: flex-end;
-
+position: relative;
 pointer-events: none;
-
 }
 
 .op-player-image {
-
-width: 100%;
-
-height: 100%;
-
+width: 175%;
+height: 175%;
 object-fit: cover;
-
 object-position: top center;
-
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
 }
 
 .op-player-name-tag {

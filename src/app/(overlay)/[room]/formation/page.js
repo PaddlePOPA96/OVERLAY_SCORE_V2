@@ -53,15 +53,15 @@ export default function FormationOverlay({ params }) {
   };
 
   return (
-    <div className="bg-transparent min-h-screen p-4 flex justify-center items-center font-sans text-black overflow-hidden perspective-1000">
+    <div className="bg-transparent min-h-screen p-4 flex justify-center items-center font-sans text-black overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes boardEnter {
-          0% { transform: translateY(120%) scale(0.9) rotateX(10deg); opacity: 0; }
-          100% { transform: translateY(0) scale(1) rotateX(0deg); opacity: 1; }
+          0% { transform: translateY(100px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
         }
         @keyframes boardExit {
-          0% { transform: translateY(0) scale(1); opacity: 1; }
-          100% { transform: translateY(120%) scale(0.9); opacity: 0; }
+          0% { transform: translateY(0); opacity: 1; }
+          100% { transform: translateY(100px); opacity: 0; }
         }
         @keyframes playerPopIn {
           0% { transform: scale(0) translateY(20px); opacity: 0; }
@@ -146,19 +146,17 @@ export default function FormationOverlay({ params }) {
             height: 125px;
             overflow: hidden;
             background-color: transparent; 
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
+            position: relative;
         }
         .player-image {
-            width: 100%;
-            height: 100%;
+            width: 175%;
+            height: 175%;
             object-fit: cover;
             object-position: top center;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: high-quality;
-            transform: translateZ(0);
-            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
         .player-name-tag {
             background-color: #1a1a1a;
