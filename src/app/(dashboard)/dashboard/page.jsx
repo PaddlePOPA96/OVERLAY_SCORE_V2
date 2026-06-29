@@ -45,6 +45,10 @@ const TikTokOverlayControl = dynamic(() => import('@/features/tiktok/components/
   ssr: false
 })
 
+const FormationOverlayControl = dynamic(() => import('@/features/formation/components/FormationOverlayControl'), {
+  ssr: false
+})
+
 const PremierLeagueMain = dynamic(
   () =>
     import('@/features/premier-league/components/PremierLeagueSection').then(m => ({ default: m.PremierLeagueMain })),
@@ -210,6 +214,21 @@ function DashboardPageInner() {
             <CountdownTimer theme={theme} roomId={roomId} />
           ) : renderRestricted('Countdown Timer')}
         </RequireLogin>
+      )}
+
+      {/* ── FORMATION OVERLAY ── */}
+      {activeSection === 'formation' && (
+        <div>
+          <header className='mb-4'>
+            <h1 className='text-2xl font-bold text-textPrimary'>Team Formation Overlay</h1>
+            <p className='text-textSecondary text-sm'>Configure and set team formation for the OBS overlay.</p>
+          </header>
+          <RequireLogin title='Team Formation Overlay'>
+            {hasPermission('tiktok_overlay') ? (
+              <FormationOverlayControl theme={theme} roomId={roomId} />
+            ) : renderRestricted('Team Formation Overlay')}
+          </RequireLogin>
+        </div>
       )}
 
       {/* ── TIKTOK & IG OVERLAY ── */}

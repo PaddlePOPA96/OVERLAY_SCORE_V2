@@ -216,6 +216,7 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
             {hasPermission('tiktok_overlay') && (
               <NavItem currentParam={activeSection} href="/dashboard?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
             )}
+            <NavItem currentParam={activeSection} href="/dashboard?s=formation" icon="ri-group-line">Team Formation</NavItem>
           </NavSection>
 
           <NavSection title="Sports Data">

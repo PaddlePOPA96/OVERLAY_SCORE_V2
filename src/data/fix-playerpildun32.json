@@ -1,0 +1,4418 @@
+[
+    {
+        "negara": "AS",
+        "pemain": [
+            {
+                "nama_pemain": "Matt TURNER",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Matt%20TURNER.jpg"
+            },
+            {
+                "nama_pemain": "Sergino DEST",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Sergino%20DEST.jpg"
+            },
+            {
+                "nama_pemain": "Chris RICHARDS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Chris%20RICHARDS.jpg"
+            },
+            {
+                "nama_pemain": "Tyler ADAMS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Tyler%20ADAMS.jpg"
+            },
+            {
+                "nama_pemain": "Antonee ROBINSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Antonee%20ROBINSON.jpg"
+            },
+            {
+                "nama_pemain": "Auston TRUSTY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Auston%20TRUSTY.jpg"
+            },
+            {
+                "nama_pemain": "Giovanni REYNA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Giovanni%20REYNA.jpg"
+            },
+            {
+                "nama_pemain": "Weston McKENNIE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Weston%20McKENNIE.jpg"
+            },
+            {
+                "nama_pemain": "Ricardo PEPI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Ricardo%20PEPI.jpg"
+            },
+            {
+                "nama_pemain": "Christian PULISIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Christian%20PULISIC.jpg"
+            },
+            {
+                "nama_pemain": "Brenden AARONSON",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Brenden%20AARONSON.jpg"
+            },
+            {
+                "nama_pemain": "Miles ROBINSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Miles%20ROBINSON.jpg"
+            },
+            {
+                "nama_pemain": "Tim REAM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Tim%20REAM.jpg"
+            },
+            {
+                "nama_pemain": "Sebastian BERHALTER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Sebastian%20BERHALTER.jpg"
+            },
+            {
+                "nama_pemain": "Cristian ROLDAN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Cristian%20ROLDAN.jpg"
+            },
+            {
+                "nama_pemain": "Alex FREEMAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Alex%20FREEMAN.jpg"
+            },
+            {
+                "nama_pemain": "Malik TILLMAN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Malik%20TILLMAN.jpg"
+            },
+            {
+                "nama_pemain": "Max ARFSTEN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Max%20ARFSTEN.jpg"
+            },
+            {
+                "nama_pemain": "Haji WRIGHT",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Haji%20WRIGHT.jpg"
+            },
+            {
+                "nama_pemain": "Folarin BALOGUN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Folarin%20BALOGUN.jpg"
+            },
+            {
+                "nama_pemain": "Timothy WEAH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Timothy%20WEAH.jpg"
+            },
+            {
+                "nama_pemain": "Mark McKENZIE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Mark%20McKENZIE.jpg"
+            },
+            {
+                "nama_pemain": "Joe SCALLY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Joe%20SCALLY.jpg"
+            },
+            {
+                "nama_pemain": "Matt FREESE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Matt%20FREESE.jpg"
+            },
+            {
+                "nama_pemain": "Chris BRADY",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Chris%20BRADY.jpg"
+            },
+            {
+                "nama_pemain": "Alex ZENDEJAS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Amerika%20Serikat/Alex%20ZENDEJAS.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1280px-Flag_of_the_United_States.svg.png",
+        "pelatih": "Mauricio POCHETTINO",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/e2f2629a-987f-459a-a461-89e1d38d8884/POCHETTINO-Mauricio_3075"
+    },
+    {
+        "negara": "Kanada",
+        "pemain": [
+            {
+                "nama_pemain": "Dayne ST. CLAIR",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Dayne%20ST.%20CLAIR.jpg"
+            },
+            {
+                "nama_pemain": "Alistair JOHNSTON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Alistair%20JOHNSTON.jpg"
+            },
+            {
+                "nama_pemain": "Alfie JONES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Alfie%20JONES.jpg"
+            },
+            {
+                "nama_pemain": "Luc DE FOUGEROLLES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Luc%20DE%20FOUGEROLLES.jpg"
+            },
+            {
+                "nama_pemain": "Joel WATERMAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Joel%20WATERMAN.jpg"
+            },
+            {
+                "nama_pemain": "Mathieu CHOINIERE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Mathieu%20CHOINIERE.jpg"
+            },
+            {
+                "nama_pemain": "Stephen EUSTAQUIO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Stephen%20EUSTAQUIO.jpg"
+            },
+            {
+                "nama_pemain": "Ismael KONE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Ismael%20KONE.jpg"
+            },
+            {
+                "nama_pemain": "Cyle LARIN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Cyle%20LARIN.jpg"
+            },
+            {
+                "nama_pemain": "Jonathan DAVID",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Jonathan%20DAVID.jpg"
+            },
+            {
+                "nama_pemain": "Liam MILLAR",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Liam%20MILLAR.jpg"
+            },
+            {
+                "nama_pemain": "Tani OLUWASEYI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Tani%20OLUWASEYI.jpg"
+            },
+            {
+                "nama_pemain": "Derek CORNELIUS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Derek%20CORNELIUS.jpg"
+            },
+            {
+                "nama_pemain": "Jacob SHAFFELBURG",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Jacob%20SHAFFELBURG.jpg"
+            },
+            {
+                "nama_pemain": "Moise BOMBITO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Moise%20BOMBITO.jpg"
+            },
+            {
+                "nama_pemain": "Maxime CREPEAU",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Maxime%20CREPEAU.jpg"
+            },
+            {
+                "nama_pemain": "Tajon BUCHANAN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Tajon%20BUCHANAN.jpg"
+            },
+            {
+                "nama_pemain": "Owen GOODMAN",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Owen%20GOODMAN.jpg"
+            },
+            {
+                "nama_pemain": "Alphonso DAVIES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Alphonso%20DAVIES.jpg"
+            },
+            {
+                "nama_pemain": "Ali AHMED",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Ali%20AHMED.jpg"
+            },
+            {
+                "nama_pemain": "Jonathan OSORIO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Jonathan%20OSORIO.jpg"
+            },
+            {
+                "nama_pemain": "Richie LARYEA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Richie%20LARYEA.jpg"
+            },
+            {
+                "nama_pemain": "Niko SIGUR",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Niko%20SIGUR.jpg"
+            },
+            {
+                "nama_pemain": "Promise DAVID",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Promise%20DAVID.jpg"
+            },
+            {
+                "nama_pemain": "Nathan SALIBA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Nathan%20SALIBA.jpg"
+            },
+            {
+                "nama_pemain": "Jayden Nelson",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kanada/Jayden%20Nelson.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Flag_of_Canada.svg/1280px-Flag_of_Canada.svg.png",
+        "pelatih": "Jesse Alan Marsch",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/55544e4a-412e-4625-9e7d-325c84601102/MARSCH-Jesse_187150"
+    },
+    {
+        "negara": "Meksiko",
+        "pemain": [
+            {
+                "nama_pemain": "Raul RANGEL",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Raul%20RANGEL.jpg"
+            },
+            {
+                "nama_pemain": "Jorge SANCHEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Jorge%20SANCHEZ.jpg"
+            },
+            {
+                "nama_pemain": "Cesar MONTES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Cesar%20MONTES.jpg"
+            },
+            {
+                "nama_pemain": "Edson ALVAREZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Edson%20ALVAREZ.jpg"
+            },
+            {
+                "nama_pemain": "Johan VASQUEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Johan%20VASQUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Erik LIRA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Erik%20LIRA.jpg"
+            },
+            {
+                "nama_pemain": "Luis ROMO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Luis%20ROMO.jpg"
+            },
+            {
+                "nama_pemain": "Alvaro FIDALGO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Alvaro%20FIDALGO.jpg"
+            },
+            {
+                "nama_pemain": "Raul JIMENEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Raul%20JIMENEZ.jpg"
+            },
+            {
+                "nama_pemain": "Alexis VEGA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Alexis%20VEGA.jpg"
+            },
+            {
+                "nama_pemain": "Santiago GIMENEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Santiago%20GIMENEZ.jpg"
+            },
+            {
+                "nama_pemain": "Carlos ACEVEDO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Carlos%20ACEVEDO.jpg"
+            },
+            {
+                "nama_pemain": "Guillermo OCHOA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Guillermo%20OCHOA.jpg"
+            },
+            {
+                "nama_pemain": "Armando GONZALEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Armando%20GONZALEZ.jpg"
+            },
+            {
+                "nama_pemain": "Israel REYES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Israel%20REYES.jpg"
+            },
+            {
+                "nama_pemain": "Julian QUINONES",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Julian%20QUINONES.jpg"
+            },
+            {
+                "nama_pemain": "Orbelin PINEDA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Orbelin%20PINEDA.jpg"
+            },
+            {
+                "nama_pemain": "Obed VARGAS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Obed%20VARGAS.jpg"
+            },
+            {
+                "nama_pemain": "Gilberto MORA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Gilberto%20MORA.jpg"
+            },
+            {
+                "nama_pemain": "Mateo CHAVEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Mateo%20CHAVEZ.jpg"
+            },
+            {
+                "nama_pemain": "Cesar HUERTA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Cesar%20HUERTA.jpg"
+            },
+            {
+                "nama_pemain": "Guillermo MARTINEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Guillermo%20MARTINEZ.jpg"
+            },
+            {
+                "nama_pemain": "Jesus GALLARDO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Jesus%20GALLARDO.jpg"
+            },
+            {
+                "nama_pemain": "Luis CHAVEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Luis%20CHAVEZ.jpg"
+            },
+            {
+                "nama_pemain": "Roberto ALVARADO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Roberto%20ALVARADO.jpg"
+            },
+            {
+                "nama_pemain": "Brian GUTIERREZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Meksiko/Brian%20GUTIERREZ.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/1280px-Flag_of_Mexico.svg.png",
+        "pelatih": "Javier Aguirre Onaindía",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/b36d8467-71b2-45e2-a681-dfb7e80a9ada/AGUIRRE-Javier_45078"
+    },
+    {
+        "negara": "Afrika Selatan",
+        "pemain": [
+            {
+                "nama_pemain": "Ronwen WILLIAMS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Ronwen%20WILLIAMS.jpg"
+            },
+            {
+                "nama_pemain": "Thabang MATULUDI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Thabang%20MATULUDI.jpg"
+            },
+            {
+                "nama_pemain": "Khulumani NDAMANE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Khulumani%20NDAMANE.jpg"
+            },
+            {
+                "nama_pemain": "Teboho MOKOENA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Teboho%20MOKOENA.jpg"
+            },
+            {
+                "nama_pemain": "Thalente MBATHA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Thalente%20MBATHA.jpg"
+            },
+            {
+                "nama_pemain": "Aubrey MODIBA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Aubrey%20MODIBA.jpg"
+            },
+            {
+                "nama_pemain": "Oswin APPOLLIS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Oswin%20APPOLLIS.jpg"
+            },
+            {
+                "nama_pemain": "Tshepang MOREMI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Tshepang%20MOREMI.jpg"
+            },
+            {
+                "nama_pemain": "Lyle FOSTER",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Lyle%20FOSTER.jpg"
+            },
+            {
+                "nama_pemain": "Relebohile MOFOKENG",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Relebohile%20MOFOKENG.jpg"
+            },
+            {
+                "nama_pemain": "Themba ZWANE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Themba%20ZWANE.jpg"
+            },
+            {
+                "nama_pemain": "Thapelo MASEKO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Thapelo%20MASEKO.jpg"
+            },
+            {
+                "nama_pemain": "Sphephelo SITHOLE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Sphephelo%20SITHOLE.jpg"
+            },
+            {
+                "nama_pemain": "Mbekezeli MBOKAZI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Mbekezeli%20MBOKAZI.jpg"
+            },
+            {
+                "nama_pemain": "Iqraam RAYNERS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Iqraam%20RAYNERS.jpg"
+            },
+            {
+                "nama_pemain": "Sipho CHAINE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Sipho%20CHAINE.jpg"
+            },
+            {
+                "nama_pemain": "Evidence MAKGOPA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Evidence%20MAKGOPA.jpg"
+            },
+            {
+                "nama_pemain": "Samukele KABINI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Samukele%20KABINI.jpg"
+            },
+            {
+                "nama_pemain": "Nkosinathi SIBISI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Nkosinathi%20SIBISI.jpg"
+            },
+            {
+                "nama_pemain": "Khuliso MUDAU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Khuliso%20MUDAU.jpg"
+            },
+            {
+                "nama_pemain": "Ime OKON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Ime%20OKON.jpg"
+            },
+            {
+                "nama_pemain": "Ricardo GOSS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Ricardo%20GOSS.jpg"
+            },
+            {
+                "nama_pemain": "Jayden ADAMS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Jayden%20ADAMS.jpg"
+            },
+            {
+                "nama_pemain": "Olwethu MAKHANYA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Olwethu%20MAKHANYA.jpg"
+            },
+            {
+                "nama_pemain": "Kamogelo SEBELEBELE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Kamogelo%20SEBELEBELE.jpg"
+            },
+            {
+                "nama_pemain": "Bradley Cross",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Afrika%20Selatan/Bradley%20Cross.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/1280px-Flag_of_South_Africa.svg.png",
+        "pelatih": "Hugo Henri Broos",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/a3a1f2de-d006-4e46-b144-f5b88b685891/BROOS-Hugo_46980"
+    },
+    {
+        "negara": "Aljazair",
+        "pemain": [
+            {
+                "nama_pemain": "Melvin MASTIL",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Melvin%20MASTIL.jpg"
+            },
+            {
+                "nama_pemain": "Aissa MANDI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Aissa%20MANDI.jpg"
+            },
+            {
+                "nama_pemain": "Achref ABADA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Achref%20ABADA.jpg"
+            },
+            {
+                "nama_pemain": "Mohamed Amine TOUGAI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Mohamed%20Amine%20TOUGAI.jpg"
+            },
+            {
+                "nama_pemain": "Zineddine BELAID",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Zineddine%20BELAID.jpg"
+            },
+            {
+                "nama_pemain": "Ramiz ZERROUKI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Ramiz%20ZERROUKI.jpg"
+            },
+            {
+                "nama_pemain": "Riyad Mahrez",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Riyad%20Mahrez.jpg"
+            },
+            {
+                "nama_pemain": "Houssem Aouar",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Houssem%20Aouar.jpg"
+            },
+            {
+                "nama_pemain": "Amine GOUIRI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Amine%20GOUIRI.jpg"
+            },
+            {
+                "nama_pemain": "Fares CHAIBI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Fares%20CHAIBI.jpg"
+            },
+            {
+                "nama_pemain": "Anis HADJ MOUSSA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Anis%20HADJ%20MOUSSA.jpg"
+            },
+            {
+                "nama_pemain": "Nadhir BENBOUALI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Nadhir%20BENBOUALI.jpg"
+            },
+            {
+                "nama_pemain": "Jaouen HADJAM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Jaouen%20HADJAM.jpg"
+            },
+            {
+                "nama_pemain": "Hicham BOUDAOUI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Hicham%20BOUDAOUI.jpg"
+            },
+            {
+                "nama_pemain": "Rayan AIT-NOURI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Rayan%20AIT-NOURI.jpg"
+            },
+            {
+                "nama_pemain": "Oussama BENBOT",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Oussama%20BENBOT.jpg"
+            },
+            {
+                "nama_pemain": "Rafik BELGHALI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Rafik%20BELGHALI.jpg"
+            },
+            {
+                "nama_pemain": "Mohamed AMOURA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Mohamed%20AMOURA.jpg"
+            },
+            {
+                "nama_pemain": "Nabil Bentaleb",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Nabil%20Bentaleb.jpg"
+            },
+            {
+                "nama_pemain": "Adil BOULBINA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Adil%20BOULBINA.jpg"
+            },
+            {
+                "nama_pemain": "Ramy BENSEBAINI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Ramy%20BENSEBAINI.jpg"
+            },
+            {
+                "nama_pemain": "Ibrahim MAZA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Ibrahim%20MAZA.jpg"
+            },
+            {
+                "nama_pemain": "Luca ZIDANE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Luca%20ZIDANE.jpg"
+            },
+            {
+                "nama_pemain": "Yassine TITRAOUI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Yassine%20TITRAOUI.jpg"
+            },
+            {
+                "nama_pemain": "Fares GHEDJEMIS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Fares%20GHEDJEMIS.jpg"
+            },
+            {
+                "nama_pemain": "Samir CHERGUI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Aljazair/Samir%20CHERGUI.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Flag_of_Algeria.svg/1280px-Flag_of_Algeria.svg.png",
+        "pelatih": "Vladimir PETKOVIC",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/c9398a63-4014-4ade-8074-b7a713bce872/PETKOVIC-Vladimir_377066"
+    },
+    {
+        "negara": "Argentina",
+        "pemain": [
+            {
+                "nama_pemain": "Juan MUSSO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Juan%20MUSSO.jpg"
+            },
+            {
+                "nama_pemain": "Marcos SENESI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Marcos%20SENESI.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas TAGLIAFICO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Nicolas%20TAGLIAFICO.jpg"
+            },
+            {
+                "nama_pemain": "Gonzalo MONTIEL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Gonzalo%20MONTIEL.jpg"
+            },
+            {
+                "nama_pemain": "Leandro PAREDES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Leandro%20PAREDES.jpg"
+            },
+            {
+                "nama_pemain": "Lisandro MARTINEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Lisandro%20MARTINEZ.jpg"
+            },
+            {
+                "nama_pemain": "Rodrigo DE PAUL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Rodrigo%20DE%20PAUL.jpg"
+            },
+            {
+                "nama_pemain": "Valentin BARCO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Valentin%20BARCO.jpg"
+            },
+            {
+                "nama_pemain": "Julian ALVAREZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Julian%20ALVAREZ.jpg"
+            },
+            {
+                "nama_pemain": "Lionel MESSI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Lionel%20MESSI.jpg"
+            },
+            {
+                "nama_pemain": "Giovani Lo Celso",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Giovani%20Lo%20Celso.jpg"
+            },
+            {
+                "nama_pemain": "Geronimo RULLI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Geronimo%20RULLI.jpg"
+            },
+            {
+                "nama_pemain": "Cristian ROMERO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Cristian%20ROMERO.jpg"
+            },
+            {
+                "nama_pemain": "Exequiel PALACIOS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Exequiel%20PALACIOS.jpg"
+            },
+            {
+                "nama_pemain": "Nico GONZALEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Nico%20GONZALEZ.jpg"
+            },
+            {
+                "nama_pemain": "Thiago ALMADA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Thiago%20ALMADA.jpg"
+            },
+            {
+                "nama_pemain": "Giuliano SIMEONE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Giuliano%20SIMEONE.jpg"
+            },
+            {
+                "nama_pemain": "Nico PAZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Nico%20PAZ.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas OTAMENDI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Nicolas%20OTAMENDI.jpg"
+            },
+            {
+                "nama_pemain": "Alexis MAC ALLISTER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Alexis%20MAC%20ALLISTER.jpg"
+            },
+            {
+                "nama_pemain": "Jose Manuel LOPEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Jose%20Manuel%20LOPEZ.jpg"
+            },
+            {
+                "nama_pemain": "Lautaro MARTINEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Lautaro%20MARTINEZ.jpg"
+            },
+            {
+                "nama_pemain": "Emiliano MARTINEZ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Emiliano%20MARTINEZ.jpg"
+            },
+            {
+                "nama_pemain": "Enzo FERNANDEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Enzo%20FERNANDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Facundo MEDINA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Facundo%20MEDINA.jpg"
+            },
+            {
+                "nama_pemain": "Nahuel MOLINA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Argentina/Nahuel%20MOLINA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/1280px-Flag_of_Argentina.svg.png",
+        "pelatih": "Lionel SCALONI",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d58ec767-2484-47d4-8b29-8fa845eb75f8/SCALONI-Lionel_183380"
+    },
+    {
+        "negara": "Australia",
+        "pemain": [
+            {
+                "nama_pemain": "Mathew RYAN",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Mathew%20RYAN.jpg"
+            },
+            {
+                "nama_pemain": "Milos DEGENEK",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Milos%20DEGENEK.jpg"
+            },
+            {
+                "nama_pemain": "Alessandro CIRCATI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Alessandro%20CIRCATI.jpg"
+            },
+            {
+                "nama_pemain": "Jacob ITALIANO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Jacob%20ITALIANO.jpg"
+            },
+            {
+                "nama_pemain": "Jordan BOS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Jordan%20BOS.jpg"
+            },
+            {
+                "nama_pemain": "Jason GERIA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Jason%20GERIA.jpg"
+            },
+            {
+                "nama_pemain": "Mathew LECKIE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Mathew%20LECKIE.jpg"
+            },
+            {
+                "nama_pemain": "Connor METCALFE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Connor%20METCALFE.jpg"
+            },
+            {
+                "nama_pemain": "Mohamed TOURE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Mohamed%20TOURE.jpg"
+            },
+            {
+                "nama_pemain": "Ajdin HRUSTIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Ajdin%20HRUSTIC.jpg"
+            },
+            {
+                "nama_pemain": "Awer MABIL",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Awer%20MABIL.jpg"
+            },
+            {
+                "nama_pemain": "Paul Izzo",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Paul%20Izzo.jpg"
+            },
+            {
+                "nama_pemain": "Aiden ONEILL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Aiden%20ONEILL.jpg"
+            },
+            {
+                "nama_pemain": "Cameron DEVLIN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Cameron%20DEVLIN.jpg"
+            },
+            {
+                "nama_pemain": "Kai TREWIN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Kai%20TREWIN.jpg"
+            },
+            {
+                "nama_pemain": "Aziz BEHICH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Aziz%20BEHICH.jpg"
+            },
+            {
+                "nama_pemain": "Nestory IRANKUNDA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Nestory%20IRANKUNDA.jpg"
+            },
+            {
+                "nama_pemain": "Patrick BEACH",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Patrick%20BEACH.jpg"
+            },
+            {
+                "nama_pemain": "Harry SOUTTAR",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Harry%20SOUTTAR.jpg"
+            },
+            {
+                "nama_pemain": "Cristian VOLPATO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Cristian%20VOLPATO.jpg"
+            },
+            {
+                "nama_pemain": "Cameron BURGESS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Cameron%20BURGESS.jpg"
+            },
+            {
+                "nama_pemain": "Jackson IRVINE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Jackson%20IRVINE.jpg"
+            },
+            {
+                "nama_pemain": "Nishan VELUPILLAY",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Nishan%20VELUPILLAY.jpg"
+            },
+            {
+                "nama_pemain": "Paul OKON-ENGSTLER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Paul%20OKON-ENGSTLER.jpg"
+            },
+            {
+                "nama_pemain": "Lucas HERRINGTON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Lucas%20HERRINGTON.jpg"
+            },
+            {
+                "nama_pemain": "Tete YENGI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Australia/Tete%20YENGI.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/b/b9/Flag_of_Australia.svg/1280px-Flag_of_Australia.svg.png",
+        "pelatih": "Tony Popović",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/186370fc-5a39-49f3-b7cd-709e763838d9/POPOVIC-Tony_154065"
+    },
+    {
+        "negara": "Austria",
+        "pemain": [
+            {
+                "nama_pemain": "Alexander SCHLAGER",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Alexander%20SCHLAGER.jpg"
+            },
+            {
+                "nama_pemain": "David AFFENGRUBER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/David%20AFFENGRUBER.jpg"
+            },
+            {
+                "nama_pemain": "Kevin Danso",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Kevin%20Danso.jpg"
+            },
+            {
+                "nama_pemain": "Xaver Schlager",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Xaver%20Schlager.jpg"
+            },
+            {
+                "nama_pemain": "Stefan POSCH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Stefan%20POSCH.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas SEIWALD",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Nicolas%20SEIWALD.jpg"
+            },
+            {
+                "nama_pemain": "Marko ARNAUTOVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Marko%20ARNAUTOVIC.jpg"
+            },
+            {
+                "nama_pemain": "David ALABA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/David%20ALABA.jpg"
+            },
+            {
+                "nama_pemain": "Marcel SABITZER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Marcel%20SABITZER.jpg"
+            },
+            {
+                "nama_pemain": "Florian GRILLITSCH",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Florian%20GRILLITSCH.jpg"
+            },
+            {
+                "nama_pemain": "Michael Gregoritsch",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Michael%20Gregoritsch.jpg"
+            },
+            {
+                "nama_pemain": "Florian WIEGELE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Florian%20WIEGELE.jpg"
+            },
+            {
+                "nama_pemain": "Patrick PENTZ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Patrick%20PENTZ.jpg"
+            },
+            {
+                "nama_pemain": "Sasa KALAJDZIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Sasa%20KALAJDZIC.jpg"
+            },
+            {
+                "nama_pemain": "Philipp Lienhart",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Philipp%20Lienhart.jpg"
+            },
+            {
+                "nama_pemain": "Phillip MWENE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Phillip%20MWENE.jpg"
+            },
+            {
+                "nama_pemain": "Carney CHUKWUEMEKA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Carney%20CHUKWUEMEKA.jpg"
+            },
+            {
+                "nama_pemain": "Romano SCHMID",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Romano%20SCHMID.jpg"
+            },
+            {
+                "nama_pemain": "Dejan LJUBICIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Dejan%20LJUBICIC.jpg"
+            },
+            {
+                "nama_pemain": "Konrad LAIMER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Konrad%20LAIMER.jpg"
+            },
+            {
+                "nama_pemain": "Patrick WIMMER",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Patrick%20WIMMER.jpg"
+            },
+            {
+                "nama_pemain": "Alexander PRASS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Alexander%20PRASS.jpg"
+            },
+            {
+                "nama_pemain": "Marco FRIEDL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Marco%20FRIEDL.jpg"
+            },
+            {
+                "nama_pemain": "Paul WANNER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Paul%20WANNER.jpg"
+            },
+            {
+                "nama_pemain": "Michael SVOBODA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Michael%20SVOBODA.jpg"
+            },
+            {
+                "nama_pemain": "Alessandro SCHOEPF",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Austria/Alessandro%20SCHOEPF.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/1280px-Flag_of_Austria.svg.png",
+        "pelatih": "Ralf RANGNICK",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/329483e5-377d-49b4-a583-4ab882c7de2c/RANGNICK-Ralf_442093"
+    },
+    {
+        "negara": "Belanda",
+        "pemain": [
+            {
+                "nama_pemain": "Bart Verbruggen",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Bart%20Verbruggen.jpg"
+            },
+            {
+                "nama_pemain": "Lutsharel GEERTRUIDA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Lutsharel%20GEERTRUIDA.jpg"
+            },
+            {
+                "nama_pemain": "Marten DE ROON",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Marten%20DE%20ROON.jpg"
+            },
+            {
+                "nama_pemain": "Virgil VAN DIJK",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Virgil%20VAN%20DIJK.jpg"
+            },
+            {
+                "nama_pemain": "Nathan AKE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Nathan%20AKE.jpg"
+            },
+            {
+                "nama_pemain": "Jan Paul VAN HECKE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Jan%20Paul%20VAN%20HECKE.jpg"
+            },
+            {
+                "nama_pemain": "Justin KLUIVERT",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Justin%20KLUIVERT.jpg"
+            },
+            {
+                "nama_pemain": "Ryan GRAVENBERCH",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Ryan%20GRAVENBERCH.jpg"
+            },
+            {
+                "nama_pemain": "Wout WEGHORST",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Wout%20WEGHORST.jpg"
+            },
+            {
+                "nama_pemain": "Memphis DEPAY",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Memphis%20DEPAY.jpg"
+            },
+            {
+                "nama_pemain": "Cody GAKPO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Cody%20GAKPO.jpg"
+            },
+            {
+                "nama_pemain": "Mats WIEFFER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Mats%20WIEFFER.jpg"
+            },
+            {
+                "nama_pemain": "Robin ROEFS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Robin%20ROEFS.jpg"
+            },
+            {
+                "nama_pemain": "Tijjani REIJNDERS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Tijjani%20REIJNDERS.jpg"
+            },
+            {
+                "nama_pemain": "Micky VAN DE VEN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Micky%20VAN%20DE%20VEN.jpg"
+            },
+            {
+                "nama_pemain": "Guus TIL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Guus%20TIL.jpg"
+            },
+            {
+                "nama_pemain": "Noa LANG",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Noa%20LANG.jpg"
+            },
+            {
+                "nama_pemain": "Donyell Malen",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Donyell%20Malen.jpg"
+            },
+            {
+                "nama_pemain": "Brian BROBBEY",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Brian%20BROBBEY.jpg"
+            },
+            {
+                "nama_pemain": "Teun KOOPMEINERS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Teun%20KOOPMEINERS.jpg"
+            },
+            {
+                "nama_pemain": "Frenkie DE JONG",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Frenkie%20DE%20JONG.jpg"
+            },
+            {
+                "nama_pemain": "Denzel DUMFRIES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Denzel%20DUMFRIES.jpg"
+            },
+            {
+                "nama_pemain": "Mark FLEKKEN",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Mark%20FLEKKEN.jpg"
+            },
+            {
+                "nama_pemain": "Crysencio SUMMERVILLE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Crysencio%20SUMMERVILLE.jpg"
+            },
+            {
+                "nama_pemain": "Jorrel HATO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Jorrel%20HATO.jpg"
+            },
+            {
+                "nama_pemain": "Quinten TIMBER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belanda/Quinten%20TIMBER.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/1280px-Flag_of_the_Netherlands.svg.png",
+        "pelatih": "Ronald KOEMAN",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/967ef7df-1538-4d8a-b3b7-d050c0d0a565/KOEMAN-Ronald_174671"
+    },
+    {
+        "negara": "Belgia",
+        "pemain": [
+            {
+                "nama_pemain": "Thibaut COURTOIS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Thibaut%20COURTOIS.jpg"
+            },
+            {
+                "nama_pemain": "Zeno DEBAST",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Zeno%20DEBAST.jpg"
+            },
+            {
+                "nama_pemain": "Arthur THEATE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Arthur%20THEATE.jpg"
+            },
+            {
+                "nama_pemain": "Brandon MECHELE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Brandon%20MECHELE.jpg"
+            },
+            {
+                "nama_pemain": "Maxim DE CUYPER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Maxim%20DE%20CUYPER.jpg"
+            },
+            {
+                "nama_pemain": "Axel WITSEL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Axel%20WITSEL.jpg"
+            },
+            {
+                "nama_pemain": "Kevin DE BRUYNE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Kevin%20DE%20BRUYNE.jpg"
+            },
+            {
+                "nama_pemain": "Youri TIELEMANS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Youri%20TIELEMANS.jpg"
+            },
+            {
+                "nama_pemain": "Romelu LUKAKU",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Romelu%20LUKAKU.jpg"
+            },
+            {
+                "nama_pemain": "Leandro TROSSARD",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Leandro%20TROSSARD.jpg"
+            },
+            {
+                "nama_pemain": "Jeremy DOKU",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Jeremy%20DOKU.jpg"
+            },
+            {
+                "nama_pemain": "Senne LAMMENS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Senne%20LAMMENS.jpg"
+            },
+            {
+                "nama_pemain": "Mike PENDERS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Mike%20PENDERS.jpg"
+            },
+            {
+                "nama_pemain": "Dodi LUKEBAKIO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Dodi%20LUKEBAKIO.jpg"
+            },
+            {
+                "nama_pemain": "Thomas MEUNIER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Thomas%20MEUNIER.jpg"
+            },
+            {
+                "nama_pemain": "Koni DE WINTER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Koni%20DE%20WINTER.jpg"
+            },
+            {
+                "nama_pemain": "Charles DE KETELAERE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Charles%20DE%20KETELAERE.jpg"
+            },
+            {
+                "nama_pemain": "Joaquin SEYS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Joaquin%20SEYS.jpg"
+            },
+            {
+                "nama_pemain": "Diego MOREIRA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Diego%20MOREIRA.jpg"
+            },
+            {
+                "nama_pemain": "Hans VANAKEN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Hans%20VANAKEN.jpg"
+            },
+            {
+                "nama_pemain": "Timothy CASTAGNE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Timothy%20CASTAGNE.jpg"
+            },
+            {
+                "nama_pemain": "Alexis SAELEMAEKERS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Alexis%20SAELEMAEKERS.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas RASKIN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Nicolas%20RASKIN.jpg"
+            },
+            {
+                "nama_pemain": "Amadou ONANA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Amadou%20ONANA.jpg"
+            },
+            {
+                "nama_pemain": "Nathan NGOY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Nathan%20NGOY.jpg"
+            },
+            {
+                "nama_pemain": "Matias FERNANDEZ-PARDO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Belgia/Matias%20FERNANDEZ-PARDO.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Belgium.svg/1280px-Flag_of_Belgium.svg.png",
+        "pelatih": "Rudi Garcia",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/e398c483-fb03-440a-bf59-d785e9bda878/GARCIA-Rudi_344378"
+    },
+    {
+        "negara": "Bosnia dan Herzegovina",
+        "pemain": [
+            {
+                "nama_pemain": "Nikola VASILJ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Nikola%20VASILJ.jpg"
+            },
+            {
+                "nama_pemain": "Nihad MUJAKIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Nihad%20MUJAKIC.jpg"
+            },
+            {
+                "nama_pemain": "Dennis HADZIKADUNIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Dennis%20HADZIKADUNIC.jpg"
+            },
+            {
+                "nama_pemain": "Tarik MUHAREMOVIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Tarik%20MUHAREMOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Sead KOLASINAC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Sead%20KOLASINAC.jpg"
+            },
+            {
+                "nama_pemain": "Benjamin TAHIROVIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Benjamin%20TAHIROVIC.jpg"
+            },
+            {
+                "nama_pemain": "Amar DEDIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Amar%20DEDIC.jpg"
+            },
+            {
+                "nama_pemain": "Armin GIGOVIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Armin%20GIGOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Samed BAZDAR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Samed%20BAZDAR.jpg"
+            },
+            {
+                "nama_pemain": "Ermedin DEMIROVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Ermedin%20DEMIROVIC.jpg"
+            },
+            {
+                "nama_pemain": "Edin DZEKO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Edin%20DZEKO.jpg"
+            },
+            {
+                "nama_pemain": "Mladen JURKAS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Mladen%20JURKAS.jpg"
+            },
+            {
+                "nama_pemain": "Ivan BASIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Ivan%20BASIC.jpg"
+            },
+            {
+                "nama_pemain": "Ivan SUNJIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Ivan%20SUNJIC.jpg"
+            },
+            {
+                "nama_pemain": "Amar MEMIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Amar%20MEMIC.jpg"
+            },
+            {
+                "nama_pemain": "Amir HADZIAHMETOVIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Amir%20HADZIAHMETOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Dzenis BURNIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Dzenis%20BURNIC.jpg"
+            },
+            {
+                "nama_pemain": "Nikola KATIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Nikola%20KATIC.jpg"
+            },
+            {
+                "nama_pemain": "Kerim ALAJBEGOVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Kerim%20ALAJBEGOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Esmir BAJRAKTAREVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Esmir%20BAJRAKTAREVIC.jpg"
+            },
+            {
+                "nama_pemain": "Stjepan RADELJIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Stjepan%20RADELJIC.jpg"
+            },
+            {
+                "nama_pemain": "Martin ZLOMISLIC",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Martin%20ZLOMISLIC.jpg"
+            },
+            {
+                "nama_pemain": "Haris TABAKOVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Haris%20TABAKOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Arjan MALIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Arjan%20MALIC.jpg"
+            },
+            {
+                "nama_pemain": "Jovo LUKIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Jovo%20LUKIC.jpg"
+            },
+            {
+                "nama_pemain": "Ermin MAHMIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Bosnia%20dan%20Herzegovina/Ermin%20MAHMIC.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/1280px-Flag_of_Bosnia_and_Herzegovina.svg.png",
+        "pelatih": "Sergej BARBAREZ",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/7ad9e6c5-c158-4dff-bbe4-63d002ab2767/BARBAREZ-Sergej_179063"
+    },
+    {
+        "negara": "Brasil",
+        "pemain": [
+            {
+                "nama_pemain": "ALISSON",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/ALISSON.jpg"
+            },
+            {
+                "nama_pemain": "EDERSON SILVA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/EDERSON%20SILVA.jpg"
+            },
+            {
+                "nama_pemain": "GABRIEL MAGALHAES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/GABRIEL%20MAGALHAES.jpg"
+            },
+            {
+                "nama_pemain": "MARQUINHOS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/MARQUINHOS.jpg"
+            },
+            {
+                "nama_pemain": "CASEMIRO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/CASEMIRO.jpg"
+            },
+            {
+                "nama_pemain": "ALEX SANDRO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/ALEX%20SANDRO.jpg"
+            },
+            {
+                "nama_pemain": "VINICIUS JUNIOR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/VINICIUS%20JUNIOR.jpg"
+            },
+            {
+                "nama_pemain": "BRUNO GUIMARAES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/BRUNO%20GUIMARAES.jpg"
+            },
+            {
+                "nama_pemain": "MATHEUS CUNHA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/MATHEUS%20CUNHA.jpg"
+            },
+            {
+                "nama_pemain": "NEYMAR JR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/NEYMAR%20JR.jpg"
+            },
+            {
+                "nama_pemain": "RAPHINHA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/RAPHINHA.jpg"
+            },
+            {
+                "nama_pemain": "WEVERTON",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/WEVERTON.jpg"
+            },
+            {
+                "nama_pemain": "DANILO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/DANILO.jpg"
+            },
+            {
+                "nama_pemain": "BREMER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/BREMER.jpg"
+            },
+            {
+                "nama_pemain": "LEO PEREIRA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/LEO%20PEREIRA.jpg"
+            },
+            {
+                "nama_pemain": "DOUGLAS SANTOS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/DOUGLAS%20SANTOS.jpg"
+            },
+            {
+                "nama_pemain": "FABINHO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/FABINHO.jpg"
+            },
+            {
+                "nama_pemain": "DANILO SANTOS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/DANILO%20SANTOS.jpg"
+            },
+            {
+                "nama_pemain": "ENDRICK",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/ENDRICK.jpg"
+            },
+            {
+                "nama_pemain": "LUCAS PAQUETA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/LUCAS%20PAQUETA.jpg"
+            },
+            {
+                "nama_pemain": "LUIZ HENRIQUE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/LUIZ%20HENRIQUE.jpg"
+            },
+            {
+                "nama_pemain": "GABRIEL MARTINELLI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/GABRIEL%20MARTINELLI.jpg"
+            },
+            {
+                "nama_pemain": "EDERSON",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/EDERSON.jpg"
+            },
+            {
+                "nama_pemain": "ROGER IBANEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/ROGER%20IBANEZ.jpg"
+            },
+            {
+                "nama_pemain": "IGOR THIAGO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/IGOR%20THIAGO.jpg"
+            },
+            {
+                "nama_pemain": "RAYAN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Brasil/RAYAN.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/1280px-Flag_of_Brazil.svg.png",
+        "pelatih": "Carlo Ancelotti",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/a342a34b-9c43-43c3-beca-ad52d167e5c2/ANCELOTTI-Carlo_174348"
+    },
+    {
+        "negara": "Ekuador",
+        "pemain": [
+            {
+                "nama_pemain": "Hernan GALINDEZ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Hernan%20GALINDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Felix TORRES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Felix%20TORRES.jpg"
+            },
+            {
+                "nama_pemain": "Piero HINCAPIE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Piero%20HINCAPIE.jpg"
+            },
+            {
+                "nama_pemain": "Joel ORDONEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Joel%20ORDONEZ.jpg"
+            },
+            {
+                "nama_pemain": "Jordy ALCIVAR",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Jordy%20ALCIVAR.jpg"
+            },
+            {
+                "nama_pemain": "Willian PACHO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Willian%20PACHO.jpg"
+            },
+            {
+                "nama_pemain": "Pervis ESTUPINAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Pervis%20ESTUPINAN.jpg"
+            },
+            {
+                "nama_pemain": "Anthony VALENCIA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Anthony%20VALENCIA.jpg"
+            },
+            {
+                "nama_pemain": "John YEBOAH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/John%20YEBOAH.jpg"
+            },
+            {
+                "nama_pemain": "Kendry PAEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Kendry%20PAEZ.jpg"
+            },
+            {
+                "nama_pemain": "Kevin RODRIGUEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Kevin%20RODRIGUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Moises RAMIREZ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Moises%20RAMIREZ.jpg"
+            },
+            {
+                "nama_pemain": "Enner VALENCIA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Enner%20VALENCIA.jpg"
+            },
+            {
+                "nama_pemain": "Alan MINDA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Alan%20MINDA.jpg"
+            },
+            {
+                "nama_pemain": "Pedro VITE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Pedro%20VITE.jpg"
+            },
+            {
+                "nama_pemain": "Jordy CAICEDO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Jordy%20CAICEDO.jpg"
+            },
+            {
+                "nama_pemain": "Angelo PRECIADO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Angelo%20PRECIADO.jpg"
+            },
+            {
+                "nama_pemain": "Denil CASTILLO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Denil%20CASTILLO.jpg"
+            },
+            {
+                "nama_pemain": "Gonzalo PLATA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Gonzalo%20PLATA.jpg"
+            },
+            {
+                "nama_pemain": "Nilson ANGULO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Nilson%20ANGULO.jpg"
+            },
+            {
+                "nama_pemain": "Alan FRANCO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Alan%20FRANCO.jpg"
+            },
+            {
+                "nama_pemain": "Gonzalo VALLE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Gonzalo%20VALLE.jpg"
+            },
+            {
+                "nama_pemain": "Moises CAICEDO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Moises%20CAICEDO.jpg"
+            },
+            {
+                "nama_pemain": "Jeremy AREVALO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Jeremy%20AREVALO.jpg"
+            },
+            {
+                "nama_pemain": "Jackson POROZO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Jackson%20POROZO.jpg"
+            },
+            {
+                "nama_pemain": "Yaimar MEDINA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ekuador/Yaimar%20MEDINA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/1280px-Flag_of_Ecuador.svg.png",
+        "pelatih": "Sebastián Andrés Beccacece",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d840ced2-6ca5-4e5a-93f1-8c0141e80e4f/BECCACECE-Sebastian_376388"
+    },
+    {
+        "negara": "Ghana",
+        "pemain": [
+            {
+                "nama_pemain": "Lawrence Ati ZIGI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Lawrence%20Ati%20ZIGI.jpg"
+            },
+            {
+                "nama_pemain": "Alidu SEIDU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Alidu%20SEIDU.jpg"
+            },
+            {
+                "nama_pemain": "Caleb YIRENKYI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Caleb%20YIRENKYI.jpg"
+            },
+            {
+                "nama_pemain": "Jonas ADJETEY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Jonas%20ADJETEY.jpg"
+            },
+            {
+                "nama_pemain": "Thomas PARTEY",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Thomas%20PARTEY.jpg"
+            },
+            {
+                "nama_pemain": "Abdul MUMIN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Abdul%20MUMIN.jpg"
+            },
+            {
+                "nama_pemain": "Abdul FATAWU",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Abdul%20FATAWU.jpg"
+            },
+            {
+                "nama_pemain": "Kwasi SIBO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Kwasi%20SIBO.jpg"
+            },
+            {
+                "nama_pemain": "Jordan AYEW",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Jordan%20AYEW.jpg"
+            },
+            {
+                "nama_pemain": "Brandon THOMAS-ASANTE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Brandon%20THOMAS-ASANTE.jpg"
+            },
+            {
+                "nama_pemain": "Antoine SEMENYO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Antoine%20SEMENYO.jpg"
+            },
+            {
+                "nama_pemain": "Joseph ANANG",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Joseph%20ANANG.jpg"
+            },
+            {
+                "nama_pemain": "Christopher Bonsu BAAH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Christopher%20Bonsu%20BAAH.jpg"
+            },
+            {
+                "nama_pemain": "Gideon MENSAH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Gideon%20MENSAH.jpg"
+            },
+            {
+                "nama_pemain": "Elisha OWUSU",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Elisha%20OWUSU.jpg"
+            },
+            {
+                "nama_pemain": "Benjamin ASARE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Benjamin%20ASARE.jpg"
+            },
+            {
+                "nama_pemain": "Baba RAHMAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Baba%20RAHMAN.jpg"
+            },
+            {
+                "nama_pemain": "Jerome OPOKU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Jerome%20OPOKU.jpg"
+            },
+            {
+                "nama_pemain": "Inaki WILLIAMS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Inaki%20WILLIAMS.jpg"
+            },
+            {
+                "nama_pemain": "Augustine BOAKYE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Augustine%20BOAKYE.jpg"
+            },
+            {
+                "nama_pemain": "Kojo Peprah OPPONG",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Kojo%20Peprah%20OPPONG.jpg"
+            },
+            {
+                "nama_pemain": "Kamaldeen SULEMANA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Kamaldeen%20SULEMANA.jpg"
+            },
+            {
+                "nama_pemain": "Derrick LUCKASSEN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Derrick%20LUCKASSEN.jpg"
+            },
+            {
+                "nama_pemain": "Ernest NUAMAH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Ernest%20NUAMAH.jpg"
+            },
+            {
+                "nama_pemain": "Prince ADU",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Prince%20ADU.jpg"
+            },
+            {
+                "nama_pemain": "Marvin SENAYA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Ghana/Marvin%20SENAYA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/1280px-Flag_of_Ghana.svg.png",
+        "pelatih": "Carlos QUEIROZ",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/f2a29c34-bb84-4946-a768-ff4e7370301c/CARLOS-QUEIROZ_34969"
+    },
+    {
+        "negara": "Inggris",
+        "pemain": [
+            {
+                "nama_pemain": "Jordan PICKFORD",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Jordan%20PICKFORD.jpg"
+            },
+            {
+                "nama_pemain": "Ezri KONSA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Ezri%20KONSA.jpg"
+            },
+            {
+                "nama_pemain": "Nico OREILLY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Nico%20OREILLY.jpg"
+            },
+            {
+                "nama_pemain": "Declan RICE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Declan%20RICE.jpg"
+            },
+            {
+                "nama_pemain": "John STONES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/John%20STONES.jpg"
+            },
+            {
+                "nama_pemain": "Marc GUEHI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Marc%20GUEHI.jpg"
+            },
+            {
+                "nama_pemain": "Bukayo SAKA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Bukayo%20SAKA.jpg"
+            },
+            {
+                "nama_pemain": "Elliot ANDERSON",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Elliot%20ANDERSON.jpg"
+            },
+            {
+                "nama_pemain": "Harry KANE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Harry%20KANE.jpg"
+            },
+            {
+                "nama_pemain": "Jude BELLINGHAM",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Jude%20BELLINGHAM.jpg"
+            },
+            {
+                "nama_pemain": "Marcus RASHFORD",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Marcus%20RASHFORD.jpg"
+            },
+            {
+                "nama_pemain": "Trevoh CHALOBAH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Trevoh%20CHALOBAH.jpg"
+            },
+            {
+                "nama_pemain": "Dean Henderson",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Dean%20Henderson.jpg"
+            },
+            {
+                "nama_pemain": "Jordan HENDERSON",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Jordan%20HENDERSON.jpg"
+            },
+            {
+                "nama_pemain": "Dan BURN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Dan%20BURN.jpg"
+            },
+            {
+                "nama_pemain": "Kobbie MAINOO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Kobbie%20MAINOO.jpg"
+            },
+            {
+                "nama_pemain": "Morgan ROGERS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Morgan%20ROGERS.jpg"
+            },
+            {
+                "nama_pemain": "Anthony GORDON",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Anthony%20GORDON.jpg"
+            },
+            {
+                "nama_pemain": "Ollie WATKINS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Ollie%20WATKINS.jpg"
+            },
+            {
+                "nama_pemain": "Noni MADUEKE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Noni%20MADUEKE.jpg"
+            },
+            {
+                "nama_pemain": "Eberechi EZE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Eberechi%20EZE.jpg"
+            },
+            {
+                "nama_pemain": "Ivan TONEY",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Ivan%20TONEY.jpg"
+            },
+            {
+                "nama_pemain": "James TRAFFORD",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/James%20TRAFFORD.jpg"
+            },
+            {
+                "nama_pemain": "Reece JAMES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Reece%20JAMES.jpg"
+            },
+            {
+                "nama_pemain": "Djed SPENCE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Djed%20SPENCE.jpg"
+            },
+            {
+                "nama_pemain": "Jarell QUANSAH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Inggris/Jarell%20QUANSAH.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/1280px-Flag_of_England.svg.png",
+        "pelatih": "Thomas Tuchel",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/fc649bf3-486d-4ca8-aa84-d30c87cea7e5/TUCHEL-Thomas_165190"
+    },
+    {
+        "negara": "Jepang",
+        "pemain": [
+            {
+                "nama_pemain": "Zion Suzuki",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Zion%20Suzuki.jpg"
+            },
+            {
+                "nama_pemain": "Yukinari Sugawara",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Yukinari%20Sugawara.jpg"
+            },
+            {
+                "nama_pemain": "Shogo TANIGUCHI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Shogo%20TANIGUCHI.jpg"
+            },
+            {
+                "nama_pemain": "Kou ITAKURA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Kou%20ITAKURA.jpg"
+            },
+            {
+                "nama_pemain": "Yuto NAGATOMO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Yuto%20NAGATOMO.jpg"
+            },
+            {
+                "nama_pemain": "Shuto MACHINO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Shuto%20MACHINO.jpg"
+            },
+            {
+                "nama_pemain": "Ao TANAKA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Ao%20TANAKA.jpg"
+            },
+            {
+                "nama_pemain": "Takefusa KUBO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Takefusa%20KUBO.jpg"
+            },
+            {
+                "nama_pemain": "Keisuke GOTO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Keisuke%20GOTO.jpg"
+            },
+            {
+                "nama_pemain": "Ritsu DOAN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Ritsu%20DOAN.jpg"
+            },
+            {
+                "nama_pemain": "Daizen MAEDA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Daizen%20MAEDA.jpg"
+            },
+            {
+                "nama_pemain": "Keisuke OSAKO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Keisuke%20OSAKO.jpg"
+            },
+            {
+                "nama_pemain": "Keito Nakamura",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Keito%20Nakamura.jpg"
+            },
+            {
+                "nama_pemain": "Junya ITO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Junya%20ITO.jpg"
+            },
+            {
+                "nama_pemain": "Daichi KAMADA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Daichi%20KAMADA.jpg"
+            },
+            {
+                "nama_pemain": "Tsuyoshi Watanabe",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Tsuyoshi%20Watanabe.jpg"
+            },
+            {
+                "nama_pemain": "Yuito SUZUKI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Yuito%20SUZUKI.jpg"
+            },
+            {
+                "nama_pemain": "Ayase UEDA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Ayase%20UEDA.jpg"
+            },
+            {
+                "nama_pemain": "Koki OGAWA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Koki%20OGAWA.jpg"
+            },
+            {
+                "nama_pemain": "Ayumu SEKO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Ayumu%20SEKO.jpg"
+            },
+            {
+                "nama_pemain": "Hiroki ITO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Hiroki%20ITO.jpg"
+            },
+            {
+                "nama_pemain": "Takehiro TOMIYASU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Takehiro%20TOMIYASU.jpg"
+            },
+            {
+                "nama_pemain": "Tomoki HAYAKAWA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Tomoki%20HAYAKAWA.jpg"
+            },
+            {
+                "nama_pemain": "Kaishu SANO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Kaishu%20SANO.jpg"
+            },
+            {
+                "nama_pemain": "Junnosuke SUZUKI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Junnosuke%20SUZUKI.jpg"
+            },
+            {
+                "nama_pemain": "Kento SHIOGAI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jepang/Kento%20SHIOGAI.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/9/9e/Flag_of_Japan.svg/1280px-Flag_of_Japan.svg.png",
+        "pelatih": "Hajime Moriyasu",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/119d3d32-610e-4365-ac77-e711ea712971/MORIYASU-Hajime_94396"
+    },
+    {
+        "negara": "Jerman",
+        "pemain": [
+            {
+                "nama_pemain": "Manuel NEUER",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Manuel%20NEUER.jpg"
+            },
+            {
+                "nama_pemain": "Antonio RUEDIGER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Antonio%20RUEDIGER.jpg"
+            },
+            {
+                "nama_pemain": "Waldemar ANTON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Waldemar%20ANTON.jpg"
+            },
+            {
+                "nama_pemain": "Jonathan TAH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Jonathan%20TAH.jpg"
+            },
+            {
+                "nama_pemain": "Aleksandar PAVLOVIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Aleksandar%20PAVLOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Joshua KIMMICH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Joshua%20KIMMICH.jpg"
+            },
+            {
+                "nama_pemain": "Kai HAVERTZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Kai%20HAVERTZ.jpg"
+            },
+            {
+                "nama_pemain": "Leon GORETZKA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Leon%20GORETZKA.jpg"
+            },
+            {
+                "nama_pemain": "Jamie LEWELING",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Jamie%20LEWELING.jpg"
+            },
+            {
+                "nama_pemain": "Jamal MUSIALA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Jamal%20MUSIALA.jpg"
+            },
+            {
+                "nama_pemain": "Nick WOLTEMADE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Nick%20WOLTEMADE.jpg"
+            },
+            {
+                "nama_pemain": "Oliver Baumann",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Oliver%20Baumann.jpg"
+            },
+            {
+                "nama_pemain": "Pascal GROSS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Pascal%20GROSS.jpg"
+            },
+            {
+                "nama_pemain": "Maximilian BEIER",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Maximilian%20BEIER.jpg"
+            },
+            {
+                "nama_pemain": "Nico SCHLOTTERBECK",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Nico%20SCHLOTTERBECK.jpg"
+            },
+            {
+                "nama_pemain": "Angelo Stiller",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Angelo%20Stiller.jpg"
+            },
+            {
+                "nama_pemain": "Florian WIRTZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Florian%20WIRTZ.jpg"
+            },
+            {
+                "nama_pemain": "Nathaniel BROWN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Nathaniel%20BROWN.jpg"
+            },
+            {
+                "nama_pemain": "Leroy SANE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Leroy%20SANE.jpg"
+            },
+            {
+                "nama_pemain": "Nadiem Amiri",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Nadiem%20Amiri.jpg"
+            },
+            {
+                "nama_pemain": "Alexander NUEBEL",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Alexander%20NUEBEL.jpg"
+            },
+            {
+                "nama_pemain": "David RAUM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/David%20RAUM.jpg"
+            },
+            {
+                "nama_pemain": "Felix NMECHA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Felix%20NMECHA.jpg"
+            },
+            {
+                "nama_pemain": "Malick THIAW",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Malick%20THIAW.jpg"
+            },
+            {
+                "nama_pemain": "Assan OUEDRAOGO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Assan%20OUEDRAOGO.jpg"
+            },
+            {
+                "nama_pemain": "Deniz UNDAV",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Jerman/Deniz%20UNDAV.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Flag_of_Germany.svg/1280px-Flag_of_Germany.svg.png",
+        "pelatih": "Julian NAGELSMANN",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/92f092b8-6e7d-4081-b73c-b1dade148650/NAGELSMANN-Julian_474269"
+    },
+    {
+        "negara": "Kolombia",
+        "pemain": [
+            {
+                "nama_pemain": "David OSPINA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/David%20OSPINA.jpg"
+            },
+            {
+                "nama_pemain": "Daniel MUNOZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Daniel%20MUNOZ.jpg"
+            },
+            {
+                "nama_pemain": "Jhon LUCUMI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jhon%20LUCUMI.jpg"
+            },
+            {
+                "nama_pemain": "Santiago ARIAS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Santiago%20ARIAS.jpg"
+            },
+            {
+                "nama_pemain": "Kevin CASTANO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Kevin%20CASTANO.jpg"
+            },
+            {
+                "nama_pemain": "Richard RIOS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Richard%20RIOS.jpg"
+            },
+            {
+                "nama_pemain": "Luis DIAZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Luis%20DIAZ.jpg"
+            },
+            {
+                "nama_pemain": "Jorge CARRASCAL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jorge%20CARRASCAL.jpg"
+            },
+            {
+                "nama_pemain": "Jhon CORDOBA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jhon%20CORDOBA.jpg"
+            },
+            {
+                "nama_pemain": "James RODRIGUEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/James%20RODRIGUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Jhon ARIAS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jhon%20ARIAS.jpg"
+            },
+            {
+                "nama_pemain": "Camilo VARGAS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Camilo%20VARGAS.jpg"
+            },
+            {
+                "nama_pemain": "Yerry MINA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Yerry%20MINA.jpg"
+            },
+            {
+                "nama_pemain": "Gustavo PUERTA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Gustavo%20PUERTA.jpg"
+            },
+            {
+                "nama_pemain": "Juan PORTILLA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Juan%20PORTILLA.jpg"
+            },
+            {
+                "nama_pemain": "Jefferson LERMA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jefferson%20LERMA.jpg"
+            },
+            {
+                "nama_pemain": "Johan MOJICA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Johan%20MOJICA.jpg"
+            },
+            {
+                "nama_pemain": "Willer DITTA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Willer%20DITTA.jpg"
+            },
+            {
+                "nama_pemain": "Cucho HERNANDEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Cucho%20HERNANDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Juan QUINTERO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Juan%20QUINTERO.jpg"
+            },
+            {
+                "nama_pemain": "Jaminton CAMPAZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Jaminton%20CAMPAZ.jpg"
+            },
+            {
+                "nama_pemain": "Deiver MACHADO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Deiver%20MACHADO.jpg"
+            },
+            {
+                "nama_pemain": "Davinson SANCHEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Davinson%20SANCHEZ.jpg"
+            },
+            {
+                "nama_pemain": "Alvaro MONTERO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Alvaro%20MONTERO.jpg"
+            },
+            {
+                "nama_pemain": "Luis SUAREZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Luis%20SUAREZ.jpg"
+            },
+            {
+                "nama_pemain": "Andres GOMEZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kolombia/Andres%20GOMEZ.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/1280px-Flag_of_Colombia.svg.png",
+        "pelatih": "Néstor Gabriel Lorenzo",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d4fcd1b1-2d31-424e-a0ca-d4f7537fcda9/LORENZO-Nestor_44325"
+    },
+    {
+        "negara": "Kroasia",
+        "pemain": [
+            {
+                "nama_pemain": "Dominik LIVAKOVIC",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Dominik%20LIVAKOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Josip STANISIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Josip%20STANISIC.jpg"
+            },
+            {
+                "nama_pemain": "Marin PONGRACIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Marin%20PONGRACIC.jpg"
+            },
+            {
+                "nama_pemain": "Josko GVARDIOL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Josko%20GVARDIOL.jpg"
+            },
+            {
+                "nama_pemain": "Duje CALETA-CAR",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Duje%20CALETA-CAR.jpg"
+            },
+            {
+                "nama_pemain": "Josip SUTALO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Josip%20SUTALO.jpg"
+            },
+            {
+                "nama_pemain": "Nikola Moro",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Nikola%20Moro.jpg"
+            },
+            {
+                "nama_pemain": "Mateo KOVACIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Mateo%20KOVACIC.jpg"
+            },
+            {
+                "nama_pemain": "Andrej KRAMARIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Andrej%20KRAMARIC.jpg"
+            },
+            {
+                "nama_pemain": "Luka MODRIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Luka%20MODRIC.jpg"
+            },
+            {
+                "nama_pemain": "Ante BUDIMIR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Ante%20BUDIMIR.jpg"
+            },
+            {
+                "nama_pemain": "Ivor PANDUR",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Ivor%20PANDUR.jpg"
+            },
+            {
+                "nama_pemain": "Nikola VLASIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Nikola%20VLASIC.jpg"
+            },
+            {
+                "nama_pemain": "Ivan PERISIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Ivan%20PERISIC.jpg"
+            },
+            {
+                "nama_pemain": "Mario PASALIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Mario%20PASALIC.jpg"
+            },
+            {
+                "nama_pemain": "Martin BATURINA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Martin%20BATURINA.jpg"
+            },
+            {
+                "nama_pemain": "Petar SUCIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Petar%20SUCIC.jpg"
+            },
+            {
+                "nama_pemain": "Kristijan JAKIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Kristijan%20JAKIC.jpg"
+            },
+            {
+                "nama_pemain": "Toni FRUK",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Toni%20FRUK.jpg"
+            },
+            {
+                "nama_pemain": "Igor MATANOVIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Igor%20MATANOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Luka SUCIC",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Luka%20SUCIC.jpg"
+            },
+            {
+                "nama_pemain": "Luka VUSKOVIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Luka%20VUSKOVIC.jpg"
+            },
+            {
+                "nama_pemain": "Dominik KOTARSKI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Dominik%20KOTARSKI.jpg"
+            },
+            {
+                "nama_pemain": "Marco PASALIC",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Marco%20PASALIC.jpg"
+            },
+            {
+                "nama_pemain": "Martin ERLIC",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Martin%20ERLIC.jpg"
+            },
+            {
+                "nama_pemain": "Petar Musa",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Kroasia/Petar%20Musa.jpg"
+            }
+        ],
+        "link_bendera": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAT4AAACfCAMAAABX0UX9AAAB0VBMVEX/AAAXF5b///8AAIwAk93/paX/6Oj/lJT/ODj/3Nz/mJj/n5//oaH/fn7/enr/j4//QUH/7u7/9/cAj9z/rKz/wsIAF5kAAJIAl+AAjd0Ak+EAAAAREZUACpkAidoAAJXo4uz/q6X/opwAkuT/Ly//WFL/h4H/u7W8DFFUs+zLrQAXULD/09LTuxQZRKnlAADdxBXf7PgAAKLkygTI5/vl+f9Ytexrve+EyPPzwcf/Yl3/KiIwpueVAFSrAEu/K114iscYJ5ynt93/bWc9SqkmNKDK0uqs4P1ebbhVY7P/UEvq8PmHk8lDFYt4EnidEGXVCT3rBSWxRnRMkK6ypzwsjsVekJq24/22yumSEGvJRmlwi3xkioo4iLLXACDaOFOamlCinEMaFYl7n5J+jWgNh8mLklxzamBrEmj71wDGvEnIC0mrDl1XHojCriJ5k3yBc13iswBybEuxBSOkkQ+PaZ5JgpqklEFwDVgTbMJnXGuRpX8oJYqMfVRaUXFIgMR4da+bkzhLQ3i7gqZpmb+lYI48OHmWhUmdAAC9x8+TVY8WXLc4NIWBEnXLAABrAABJAADbYBcxSkpTbGyLq8WDWVllKCjbwtNdAHLsRFLgVmpKY4+AAAAIgElEQVR4nO2dC1cbxxWAtcsiEBgJabxPr94gGSxAsMQoIFEeAREcYRzepKQFlyaqY/fl2MWp09alTdKkdtqmtcmv7exKSKM4MqiTagbrfodztDOzu8x+vjNzd4BjlwsAAAAAAAAAAAAAAAAAAAAAAAAAgNeOZJJ1Dy4UvR01Rc/1656aCl9vM3tz4YjMuPsrhb5IFqFspK9S0e+eiTDo1IXBPauG51JTpcL8KJIwaHy+VJ5KzYXVWTe73vGO5y1VENSFxahdiOVDkkMoH7PL0cUFu/Utz6vv0Vq0e6vH8hL2Iwhm29uRhCuVKdvD/jIpVyLydptpt6pLcvUKb3vze8wTk/mJ0eRy6Tj6jmNPUZRgeObGgC7FDUOSDCMu6dkb77QFhRLqTLR0/nJydCI/ya7vHBDRka7lIzE83SXmVGxOKazcvLp6y/WusRZa39hExubGemjNuKYKFdrmEngijEXyWXxxhPUTsCQ6YK8OSB/YSsW21bs7V2+dtuwaG4NDg+8h9GP8saddMwXC33YstTWg60YcoYEoy/6zpW9cL09vujHxfk3TT+I/TQ+l0yiUxh/7xrAZVJQDQSn7mzB0ydjbu307ro/31bn564+nZM6wP4zaps74z4pY3+HhUHqo+HNjIfzBhyMjI7nCgeNPsy9YK1q/2ENSy67EiQweuvH9jc1DbEPbPa1+/85HOyt3jfeKaese0u9Z6eIvjdnwr6xf/6bw2w8PcACaw7Y+tG/dL+7rKJNg+QwMGcWpCVqzipaTonyM14M7N1fslddefLXQ+lB60zAeDFn3QpoZXrcejilC7nd3sb4jW9/hJ5ZVxFeGRlk/BxvkLJKMw3T6vnU7buvYObC9nS4POC7XNuzE5fABdtRmqmnr0Vh4LBg0hbbSjBlfv/3JBv4HyMpnf6/XEDv4JGMTz2Cb9vqrEWurooRRKeUrJX9INX9vWVb68WeffvooKJTXGxSPO1l1a4ZfbMDRt7nvBJ9USk6cALy7sjP9B2d87q/bASaF1OAHtr5i0SoehJcyWghJFQZirJ+EDU7aYsTjh44F7QjnJjj1Wy01/hE3bfxpcPD+niFpoTbzwEpb9teTYPjPfvGNfDaESgr1cbZPwYykVg0h6VBC06tE48dY34Pi4L3iJh68R20CXjvS2J71xFRuuUYSqZJBfGG2VXdUO/N6xZ5xbGg1jX/BdXtFvLiu4eg7MsOP//pw7OFn69aYcOD6/MqIy+XFBjMI6flORt1nTsqo6NO/0I3dasvUrb9peNEdTKcH8fKrfWkKHz3+6tHjsYemqfzd9fTZla+f4rN8bnErm2LWfdZM4ry5NPGh41Hdzvxw0nx150UB533XNDv87g/i4HNWFSVn5sL/eBIUgu/isz6/8s9/YYUjy7LYwnsuEd34RkJ4BG6Ix9jk6k5BKed+pTcLQ9ftANWG8aKs4FW5EMQZ4Q3R3b7sGvn3f648ffa1q3WDD4++CYQi28fHi+IXeBrUZpVK5mcuaLZXB0lbIDZcZo1sZlQMXO51uZ7hGbDj7O/y+oKHLNoOiDe+CVUyP1O1CS8MXJ+YyGAmJq4PLISdSqf5moajVcIG/R14/mvZDQOHKH5xQ3pIL6VwR7aj4Zm57edvytGOnvnJfszkfE9HNPnm88W5mWG7/ag0Wepa5g1R9l5m/QRs2armLniYLs09l6PzdXbw+uaj8vO5JVROlyUUuj4uNre33CGXU2ekZzOLycTUWedPJZKRTLYcrUhqzd2CKr155LjLR2LnTn87Y568YxDlW/6XDjw4N8k4PytqhKlYJCPpqLUXDpv5fF7uP/u0l+mXt/LzP3RvLh5dTC79oRAZs+zrIPBVOU91L+veM9fXI3qq+IkGotpDVPvJam+ze/td2OvzE0Ohm2ggFpM+opocsAHQV6OvnWgg8hhyjF4CfSSgjwrQRwXoowL0UQH6qAB9VIA+KkAfFaCPirr6iC37TqIa9NXQE/B1Vei+XKWLgKi+VK31wZaB2EMWuonQInZf6gUo6DuXPjfoqwfoowL0UQH6qAB9VIA+KkAfFaCPCtBHBeijAl7aqOgJeHsqXJKrVGt7EkR1d7XaC/pgw4oO2C6lAvRRAfqoAH1UgD4qQB8VoI8K0EcFlb6e796t2TDX5w387/rgpQ0bqKOvzq+Gg74avKK7gr+7s/eUzlS1PkVUX/JX60Gf6AsQhUb3+xJN6mRdmOtLpohCg/o8yWb1sh7M9blJHw3qa3c3q5f1YK6vZv5qUB/zqY8DfWTuBvoaRparx43pSxFXMoK9PjKGGtPHPvh40EekLo3pY562cKHP31E5bEhfF/nXv4zgQB8xCBvSx8HY5UKf33d61Ii+Dg6Cjwt9YuzUBKmPeJn7vj2tQFeze/l9uNo4QJ0s76+ce8elT5xXWffaxiVwgPIiKb6k75X7fWLyhXL2ff//cKFPUKb9nkb0efzTXNjjRJ8QXBXl8+uTxdXg2fdsBpzoE4InYvK8+mTxJMy6v2V40SeoJzj+zqGv27annn2/5sCNPtuf5xz62j0c2eNInxC8U7P7WUef6L7Dybxnw5E+wcxFz9YXzXFkjyt9glI4cb9an/+kwEfGUoYrfXgA5xKBV+jzcRV6Anf6BEWd9pXegF96afP7plWuQk/gTx8WGN75NolDMNXt7e/s6+vs93anRDGQ/PYmd/J41IcFBs3crk+uTINu2bebM4P8yeNTn2AbDBdWctM/wkznVgphLt0J3OqzURTFxFT/9ywO4VjfRQD0UQH6qAB9VIA+KkAfFaCPCtBHBeijAvRRAfqoAH1UgD4qQB8VoI8K0EcF6KMC9FEB+qgAfVSAPipAHxWgjwrQRwXoowL0UQH6qAB9VIA+KkAfFaCPCtBHBeijAvRRAfqoAH1UgD4q/guKgdABNH30MgAAAABJRU5ErkJggg==",
+        "pelatih": "Zlatko Dalić",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d052f546-f7a5-4870-9617-5758b6a8c50c/DALIC-Zlatko_400769"
+    },
+    {
+        "negara": "Maroko",
+        "pemain": [
+            {
+                "nama_pemain": "Yassine BOUNOU",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Yassine%20BOUNOU.jpg"
+            },
+            {
+                "nama_pemain": "Achraf HAKIMI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Achraf%20HAKIMI.jpg"
+            },
+            {
+                "nama_pemain": "Noussair MAZRAOUI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Noussair%20MAZRAOUI.jpg"
+            },
+            {
+                "nama_pemain": "Sofyan AMRABAT",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Sofyan%20AMRABAT.jpg"
+            },
+            {
+                "nama_pemain": "Marwane SAADANE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Marwane%20SAADANE.jpg"
+            },
+            {
+                "nama_pemain": "Ayyoub BOUADDI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Ayyoub%20BOUADDI.jpg"
+            },
+            {
+                "nama_pemain": "Chemsdine TALBI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Chemsdine%20TALBI.jpg"
+            },
+            {
+                "nama_pemain": "Azzedine OUNAHI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Azzedine%20OUNAHI.jpg"
+            },
+            {
+                "nama_pemain": "Soufiane RAHIMI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Soufiane%20RAHIMI.jpg"
+            },
+            {
+                "nama_pemain": "Brahim DIAZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Brahim%20DIAZ.jpg"
+            },
+            {
+                "nama_pemain": "Ismael SAIBARI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Ismael%20SAIBARI.jpg"
+            },
+            {
+                "nama_pemain": "Munir EL KAJOUI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Munir%20EL%20KAJOUI.jpg"
+            },
+            {
+                "nama_pemain": "Zakaria EL OUAHDI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Zakaria%20EL%20OUAHDI.jpg"
+            },
+            {
+                "nama_pemain": "Issa Diop",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Issa%20Diop.jpg"
+            },
+            {
+                "nama_pemain": "Samir EL MOURABET",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Samir%20EL%20MOURABET.jpg"
+            },
+            {
+                "nama_pemain": "Gessime YASSINE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Gessime%20YASSINE.jpg"
+            },
+            {
+                "nama_pemain": "Amine SBAI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Amine%20SBAI.jpg"
+            },
+            {
+                "nama_pemain": "Chadi RIAD",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Chadi%20RIAD.jpg"
+            },
+            {
+                "nama_pemain": "Youssef BELAMMARI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Youssef%20BELAMMARI.jpg"
+            },
+            {
+                "nama_pemain": "Ayoub El Kaabi",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Ayoub%20El%20Kaabi.jpg"
+            },
+            {
+                "nama_pemain": "Ayoube AMAIMOUNI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Ayoube%20AMAIMOUNI.jpg"
+            },
+            {
+                "nama_pemain": "Ahmed Reda TAGNAOUTI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Ahmed%20Reda%20TAGNAOUTI.jpg"
+            },
+            {
+                "nama_pemain": "Bilal EL KHANNOUSS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Bilal%20EL%20KHANNOUSS.jpg"
+            },
+            {
+                "nama_pemain": "Neil EL AYNAOUI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Neil%20EL%20AYNAOUI.jpg"
+            },
+            {
+                "nama_pemain": "Redouane HALHAL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Redouane%20HALHAL.jpg"
+            },
+            {
+                "nama_pemain": "Anass SALAH EDDINE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Maroko/Anass%20SALAH%20EDDINE.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/1280px-Flag_of_Morocco.svg.png",
+        "pelatih": "Mohamed OUAHBI",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/188d1519-4897-4692-8417-f59a682d6255/OUAHBI-Mohamed_496329"
+    },
+    {
+        "negara": "Mesir",
+        "pemain": [
+            {
+                "nama_pemain": "MOHAMED ELSHENAWY",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHAMED%20ELSHENAWY.jpg"
+            },
+            {
+                "nama_pemain": "YASSER IBRAHIM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/YASSER%20IBRAHIM.jpg"
+            },
+            {
+                "nama_pemain": "MOHAMED HANY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHAMED%20HANY.jpg"
+            },
+            {
+                "nama_pemain": "HOSSAM ABDELMAGUID",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/HOSSAM%20ABDELMAGUID.jpg"
+            },
+            {
+                "nama_pemain": "RAMY RABIA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/RAMY%20RABIA.jpg"
+            },
+            {
+                "nama_pemain": "MOHAMED ABDELMONEIM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHAMED%20ABDELMONEIM.jpg"
+            },
+            {
+                "nama_pemain": "TREZEGUET",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/TREZEGUET.jpg"
+            },
+            {
+                "nama_pemain": "EMAM ASHOUR",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/EMAM%20ASHOUR.jpg"
+            },
+            {
+                "nama_pemain": "HAMZA ABDELKARIM",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/HAMZA%20ABDELKARIM.jpg"
+            },
+            {
+                "nama_pemain": "MOHAMED SALAH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHAMED%20SALAH.jpg"
+            },
+            {
+                "nama_pemain": "MOSTAFA ZICO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOSTAFA%20ZICO.jpg"
+            },
+            {
+                "nama_pemain": "Haissem HASSAN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/Haissem%20HASSAN.jpg"
+            },
+            {
+                "nama_pemain": "AHMED FATOUH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/AHMED%20FATOUH.jpg"
+            },
+            {
+                "nama_pemain": "HAMDY FATHY",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/HAMDY%20FATHY.jpg"
+            },
+            {
+                "nama_pemain": "KARIM HAFEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/KARIM%20HAFEZ.jpg"
+            },
+            {
+                "nama_pemain": "MAHDY SOLIMAN",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MAHDY%20SOLIMAN.jpg"
+            },
+            {
+                "nama_pemain": "MOHANAD LASHIN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHANAD%20LASHIN.jpg"
+            },
+            {
+                "nama_pemain": "NABIL DONGA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/NABIL%20DONGA.jpg"
+            },
+            {
+                "nama_pemain": "MARAWAN ATTIA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MARAWAN%20ATTIA.jpg"
+            },
+            {
+                "nama_pemain": "IBRAHIM ADEL",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/IBRAHIM%20ADEL.jpg"
+            },
+            {
+                "nama_pemain": "MAHMOUD SABER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MAHMOUD%20SABER.jpg"
+            },
+            {
+                "nama_pemain": "OMAR MARMOUSH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/OMAR%20MARMOUSH.jpg"
+            },
+            {
+                "nama_pemain": "MOSTAFA SHOUBIR",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOSTAFA%20SHOUBIR.jpg"
+            },
+            {
+                "nama_pemain": "TAREK ALAA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/TAREK%20ALAA.jpg"
+            },
+            {
+                "nama_pemain": "ZIZO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/ZIZO.jpg"
+            },
+            {
+                "nama_pemain": "MOHAMED ALAA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Mesir/MOHAMED%20ALAA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Egypt.svg/1280px-Flag_of_Egypt.svg.png",
+        "pelatih": "Hossam Hassan Hussein",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/95af748d-2976-473b-938f-055fa4d71916/HOSSAM-HASSAN_174595"
+    },
+    {
+        "negara": "Norwegia",
+        "pemain": [
+            {
+                "nama_pemain": "Orjan NYLAND",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Orjan%20NYLAND.jpg"
+            },
+            {
+                "nama_pemain": "Morten Thorsby",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Morten%20Thorsby.jpg"
+            },
+            {
+                "nama_pemain": "Kristoffer AJER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Kristoffer%20AJER.jpg"
+            },
+            {
+                "nama_pemain": "Leo OSTIGARD",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Leo%20OSTIGARD.jpg"
+            },
+            {
+                "nama_pemain": "David MOLLER WOLFE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/David%20MOLLER%20WOLFE.jpg"
+            },
+            {
+                "nama_pemain": "Patrick BERG",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Patrick%20BERG.jpg"
+            },
+            {
+                "nama_pemain": "Alexander SORLOTH",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Alexander%20SORLOTH.jpg"
+            },
+            {
+                "nama_pemain": "Sander BERGE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Sander%20BERGE.jpg"
+            },
+            {
+                "nama_pemain": "Erling HAALAND",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Erling%20HAALAND.jpg"
+            },
+            {
+                "nama_pemain": "Martin ODEGAARD",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Martin%20ODEGAARD.jpg"
+            },
+            {
+                "nama_pemain": "Jorgen STRAND LARSEN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Jorgen%20STRAND%20LARSEN.jpg"
+            },
+            {
+                "nama_pemain": "Sander TANGVIK",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Sander%20TANGVIK.jpg"
+            },
+            {
+                "nama_pemain": "Egil SELVIK",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Egil%20SELVIK.jpg"
+            },
+            {
+                "nama_pemain": "Fredrik AURSNES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Fredrik%20AURSNES.jpg"
+            },
+            {
+                "nama_pemain": "Fredrik Andre BJORKAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Fredrik%20Andre%20BJORKAN.jpg"
+            },
+            {
+                "nama_pemain": "Marcus HOLMGREN PEDERSEN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Marcus%20HOLMGREN%20PEDERSEN.jpg"
+            },
+            {
+                "nama_pemain": "Torbjorn HEGGEM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Torbjorn%20HEGGEM.jpg"
+            },
+            {
+                "nama_pemain": "Kristian Thorstvedt",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Kristian%20Thorstvedt.jpg"
+            },
+            {
+                "nama_pemain": "Thelo AASGAARD",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Thelo%20AASGAARD.jpg"
+            },
+            {
+                "nama_pemain": "Antonio NUSA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Antonio%20NUSA.jpg"
+            },
+            {
+                "nama_pemain": "Andreas SCHJELDERUP",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Andreas%20SCHJELDERUP.jpg"
+            },
+            {
+                "nama_pemain": "Oscar BOBB",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Oscar%20BOBB.jpg"
+            },
+            {
+                "nama_pemain": "Jens Petter HAUGE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Jens%20Petter%20HAUGE.jpg"
+            },
+            {
+                "nama_pemain": "Sondre LANGAS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Sondre%20LANGAS.jpg"
+            },
+            {
+                "nama_pemain": "Henrik FALCHENER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Henrik%20FALCHENER.jpg"
+            },
+            {
+                "nama_pemain": "Julian RYERSON",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Norwegia/Julian%20RYERSON.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/1280px-Flag_of_Norway.svg.png",
+        "pelatih": "Ståle Solbakken",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/8d00c35f-86f6-42e8-9b11-74b94609fd11/SOLBAKKEN-Stale_157000"
+    },
+    {
+        "negara": "Pantai Gading",
+        "pemain": [
+            {
+                "nama_pemain": "Yahia Fofana",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Yahia%20Fofana.jpg"
+            },
+            {
+                "nama_pemain": "Ousmane DIOMANDE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Ousmane%20DIOMANDE.jpg"
+            },
+            {
+                "nama_pemain": "Ghislain KONAN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Ghislain%20KONAN.jpg"
+            },
+            {
+                "nama_pemain": "Jean Michael SERI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Jean%20Michael%20SERI.jpg"
+            },
+            {
+                "nama_pemain": "Wilfried SINGO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Wilfried%20SINGO.jpg"
+            },
+            {
+                "nama_pemain": "Seko Fofana",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Seko%20Fofana.jpg"
+            },
+            {
+                "nama_pemain": "Odilon KOSSOUNOU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Odilon%20KOSSOUNOU.jpg"
+            },
+            {
+                "nama_pemain": "Franck KESSIE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Franck%20KESSIE.jpg"
+            },
+            {
+                "nama_pemain": "Ange-Yoan BONNY",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Ange-Yoan%20BONNY.jpg"
+            },
+            {
+                "nama_pemain": "Simon ADINGRA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Simon%20ADINGRA.jpg"
+            },
+            {
+                "nama_pemain": "Yan DIOMANDE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Yan%20DIOMANDE.jpg"
+            },
+            {
+                "nama_pemain": "Elye WAHI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Elye%20WAHI.jpg"
+            },
+            {
+                "nama_pemain": "Christopher OPERI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Christopher%20OPERI.jpg"
+            },
+            {
+                "nama_pemain": "Oumar DIAKITE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Oumar%20DIAKITE.jpg"
+            },
+            {
+                "nama_pemain": "Amad DIALLO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Amad%20DIALLO.jpg"
+            },
+            {
+                "nama_pemain": "Mohamed KONE",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Mohamed%20KONE.jpg"
+            },
+            {
+                "nama_pemain": "Guela DOUE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Guela%20DOUE.jpg"
+            },
+            {
+                "nama_pemain": "Ibrahim SANGARE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Ibrahim%20SANGARE.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas PEPE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Nicolas%20PEPE.jpg"
+            },
+            {
+                "nama_pemain": "Emmanuel AGBADOU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Emmanuel%20AGBADOU.jpg"
+            },
+            {
+                "nama_pemain": "Evan NDICKA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Evan%20NDICKA.jpg"
+            },
+            {
+                "nama_pemain": "Evann GUESSAND",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Evann%20GUESSAND.jpg"
+            },
+            {
+                "nama_pemain": "Alban Lafont",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Alban%20Lafont.jpg"
+            },
+            {
+                "nama_pemain": "Bazoumana TOURE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Bazoumana%20TOURE.jpg"
+            },
+            {
+                "nama_pemain": "Parfait GUIAGON",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Parfait%20GUIAGON.jpg"
+            },
+            {
+                "nama_pemain": "Christ Inao OULAI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Pantai%20Gading/Christ%20Inao%20OULAI.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/1280px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png",
+        "pelatih": "Emerse FAE",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/c1651222-08e5-4c29-b181-6e999ff538d7/FAE-Emerse_183878"
+    },
+    {
+        "negara": "Paraguay",
+        "pemain": [
+            {
+                "nama_pemain": "Gatito FERNANDEZ",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gatito%20FERNANDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Gustavo VELAZQUEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gustavo%20VELAZQUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Omar ALDERETE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Omar%20ALDERETE.jpg"
+            },
+            {
+                "nama_pemain": "Juan Jose CACERES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Juan%20Jose%20CACERES.jpg"
+            },
+            {
+                "nama_pemain": "Fabian BALBUENA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Fabian%20BALBUENA.jpg"
+            },
+            {
+                "nama_pemain": "Junior ALONSO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Junior%20ALONSO.jpg"
+            },
+            {
+                "nama_pemain": "Ramon SOSA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Ramon%20SOSA.jpg"
+            },
+            {
+                "nama_pemain": "Diego GOMEZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Diego%20GOMEZ.jpg"
+            },
+            {
+                "nama_pemain": "Antonio SANABRIA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Antonio%20SANABRIA.jpg"
+            },
+            {
+                "nama_pemain": "Miguel ALMIRON",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Miguel%20ALMIRON.jpg"
+            },
+            {
+                "nama_pemain": "MAURICIO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/MAURICIO.jpg"
+            },
+            {
+                "nama_pemain": "Orlando GILL",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Orlando%20GILL.jpg"
+            },
+            {
+                "nama_pemain": "Jose CANALE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Jose%20CANALE.jpg"
+            },
+            {
+                "nama_pemain": "Andres CUBAS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Andres%20CUBAS.jpg"
+            },
+            {
+                "nama_pemain": "Gustavo GOMEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gustavo%20GOMEZ.jpg"
+            },
+            {
+                "nama_pemain": "Damian BOBADILLA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Damian%20BOBADILLA.jpg"
+            },
+            {
+                "nama_pemain": "Alejandro ROMERO GAMARRA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Alejandro%20ROMERO%20GAMARRA.jpg"
+            },
+            {
+                "nama_pemain": "Alex ARCE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Alex%20ARCE.jpg"
+            },
+            {
+                "nama_pemain": "Julio ENCISO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Julio%20ENCISO.jpg"
+            },
+            {
+                "nama_pemain": "Braian OJEDA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Braian%20OJEDA.jpg"
+            },
+            {
+                "nama_pemain": "Gabriel AVALOS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gabriel%20AVALOS.jpg"
+            },
+            {
+                "nama_pemain": "Gaston OLVEIRA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gaston%20OLVEIRA.jpg"
+            },
+            {
+                "nama_pemain": "Matias GALARZA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Matias%20GALARZA.jpg"
+            },
+            {
+                "nama_pemain": "Gustavo CABALLERO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Gustavo%20CABALLERO.jpg"
+            },
+            {
+                "nama_pemain": "Isidro PITTA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Isidro%20PITTA.jpg"
+            },
+            {
+                "nama_pemain": "Alexandro MAIDANA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Paraguay/Alexandro%20MAIDANA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/1280px-Flag_of_Paraguay.svg.png",
+        "pelatih": "Gustavo ALFARO",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/381ae0a7-c8c8-4d29-b437-c26dca406898/ALFARO-Gustavo_428890"
+    },
+    {
+        "negara": "Portugal",
+        "pemain": [
+            {
+                "nama_pemain": "DIOGO COSTA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/DIOGO%20COSTA.jpg"
+            },
+            {
+                "nama_pemain": "NELSON SEMEDO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/NELSON%20SEMEDO.jpg"
+            },
+            {
+                "nama_pemain": "RUBEN DIAS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/RUBEN%20DIAS.jpg"
+            },
+            {
+                "nama_pemain": "TOMAS ARAUJO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/TOMAS%20ARAUJO.jpg"
+            },
+            {
+                "nama_pemain": "DIOGO DALOT",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/DIOGO%20DALOT.jpg"
+            },
+            {
+                "nama_pemain": "MATHEUS NUNES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/MATHEUS%20NUNES.jpg"
+            },
+            {
+                "nama_pemain": "CRISTIANO RONALDO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/CRISTIANO%20RONALDO.jpg"
+            },
+            {
+                "nama_pemain": "BRUNO FERNANDES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/BRUNO%20FERNANDES.jpg"
+            },
+            {
+                "nama_pemain": "GONCALO RAMOS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/GONCALO%20RAMOS.jpg"
+            },
+            {
+                "nama_pemain": "BERNARDO SILVA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/BERNARDO%20SILVA.jpg"
+            },
+            {
+                "nama_pemain": "JOAO FELIX",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/JOAO%20FELIX.jpg"
+            },
+            {
+                "nama_pemain": "JOSE SA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/JOSE%20SA.jpg"
+            },
+            {
+                "nama_pemain": "RENATO VEIGA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/RENATO%20VEIGA.jpg"
+            },
+            {
+                "nama_pemain": "GONCALO INACIO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/GONCALO%20INACIO.jpg"
+            },
+            {
+                "nama_pemain": "JOAO NEVES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/JOAO%20NEVES.jpg"
+            },
+            {
+                "nama_pemain": "FRANCISCO TRINCAO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/FRANCISCO%20TRINCAO.jpg"
+            },
+            {
+                "nama_pemain": "RAFAEL LEAO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/RAFAEL%20LEAO.jpg"
+            },
+            {
+                "nama_pemain": "PEDRO NETO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/PEDRO%20NETO.jpg"
+            },
+            {
+                "nama_pemain": "GONCALO GUEDES",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/GONCALO%20GUEDES.jpg"
+            },
+            {
+                "nama_pemain": "JOAO CANCELO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/JOAO%20CANCELO.jpg"
+            },
+            {
+                "nama_pemain": "RUBEN NEVES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/RUBEN%20NEVES.jpg"
+            },
+            {
+                "nama_pemain": "RUI SILVA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/RUI%20SILVA.jpg"
+            },
+            {
+                "nama_pemain": "VITINHA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/VITINHA.jpg"
+            },
+            {
+                "nama_pemain": "SAMU COSTA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/SAMU%20COSTA.jpg"
+            },
+            {
+                "nama_pemain": "NUNO MENDES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/NUNO%20MENDES.jpg"
+            },
+            {
+                "nama_pemain": "FRANCISCO CONCEICAO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Portugal/FRANCISCO%20CONCEICAO.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/1280px-Flag_of_Portugal.svg.png",
+        "pelatih": "Roberto Martínez Montoliú",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/ad958803-85c4-42dd-9edd-6d92a62bce14/MARTINEZ-Roberto_396423"
+    },
+    {
+        "negara": "Prancis",
+        "pemain": [
+            {
+                "nama_pemain": "Brice SAMBA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Brice%20SAMBA.jpg"
+            },
+            {
+                "nama_pemain": "Malo GUSTO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Malo%20GUSTO.jpg"
+            },
+            {
+                "nama_pemain": "Lucas Digne",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Lucas%20Digne.jpg"
+            },
+            {
+                "nama_pemain": "Dayot UPAMECANO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Dayot%20UPAMECANO.jpg"
+            },
+            {
+                "nama_pemain": "Jules KOUNDE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Jules%20KOUNDE.jpg"
+            },
+            {
+                "nama_pemain": "Manu KONE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Manu%20KONE.jpg"
+            },
+            {
+                "nama_pemain": "Ousmane DEMBELE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Ousmane%20DEMBELE.jpg"
+            },
+            {
+                "nama_pemain": "Aurelien TCHOUAMENI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Aurelien%20TCHOUAMENI.jpg"
+            },
+            {
+                "nama_pemain": "Marcus THURAM",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Marcus%20THURAM.jpg"
+            },
+            {
+                "nama_pemain": "Kylian MBAPPE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Kylian%20MBAPPE.jpg"
+            },
+            {
+                "nama_pemain": "Michael OLISE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Michael%20OLISE.jpg"
+            },
+            {
+                "nama_pemain": "Bradley BARCOLA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Bradley%20BARCOLA.jpg"
+            },
+            {
+                "nama_pemain": "Ngolo KANTE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Ngolo%20KANTE.jpg"
+            },
+            {
+                "nama_pemain": "Adrien RABIOT",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Adrien%20RABIOT.jpg"
+            },
+            {
+                "nama_pemain": "Ibrahima KONATE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Ibrahima%20KONATE.jpg"
+            },
+            {
+                "nama_pemain": "Mike MAIGNAN",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Mike%20MAIGNAN.jpg"
+            },
+            {
+                "nama_pemain": "William SALIBA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/William%20SALIBA.jpg"
+            },
+            {
+                "nama_pemain": "Warren ZAIRE-EMERY",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Warren%20ZAIRE-EMERY.jpg"
+            },
+            {
+                "nama_pemain": "Theo HERNANDEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Theo%20HERNANDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Desire DOUE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Desire%20DOUE.jpg"
+            },
+            {
+                "nama_pemain": "Lucas HERNANDEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Lucas%20HERNANDEZ.jpg"
+            },
+            {
+                "nama_pemain": "Jean-Philippe MATETA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Jean-Philippe%20MATETA.jpg"
+            },
+            {
+                "nama_pemain": "Robin RISSER",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Robin%20RISSER.jpg"
+            },
+            {
+                "nama_pemain": "Rayan CHERKI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Rayan%20CHERKI.jpg"
+            },
+            {
+                "nama_pemain": "Maghnes AKLIOUCHE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Maghnes%20AKLIOUCHE.jpg"
+            },
+            {
+                "nama_pemain": "Maxence Lacroix",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Prancis/Maxence%20Lacroix.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/1280px-Flag_of_France.svg.png",
+        "pelatih": "Didier Deschamps",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/38ce0161-6896-4b2a-ac42-700d51e5acac/DESCHAMPS-Didier_48455"
+    },
+    {
+        "negara": "RD Kongo",
+        "pemain": [
+            {
+                "nama_pemain": "Lionel MPASI",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Lionel%20MPASI.jpg"
+            },
+            {
+                "nama_pemain": "Aaron WAN-BISSAKA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Aaron%20WAN-BISSAKA.jpg"
+            },
+            {
+                "nama_pemain": "Steve KAPUADI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Steve%20KAPUADI.jpg"
+            },
+            {
+                "nama_pemain": "Axel Tuanzebe",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Axel%20Tuanzebe.jpg"
+            },
+            {
+                "nama_pemain": "Dylan BATUBINSIKA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Dylan%20BATUBINSIKA.jpg"
+            },
+            {
+                "nama_pemain": "Ngalayel MUKAU",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Ngalayel%20MUKAU.jpg"
+            },
+            {
+                "nama_pemain": "Nathanael MBUKU",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Nathanael%20MBUKU.jpg"
+            },
+            {
+                "nama_pemain": "Samuel Moutoussamy",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Samuel%20Moutoussamy.jpg"
+            },
+            {
+                "nama_pemain": "Brian CIPENGA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Brian%20CIPENGA.jpg"
+            },
+            {
+                "nama_pemain": "Theo BONGONDA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Theo%20BONGONDA.jpg"
+            },
+            {
+                "nama_pemain": "Gael KAKUTA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Gael%20KAKUTA.jpg"
+            },
+            {
+                "nama_pemain": "Joris KAYEMBE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Joris%20KAYEMBE.jpg"
+            },
+            {
+                "nama_pemain": "Meschack ELIA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Meschack%20ELIA.jpg"
+            },
+            {
+                "nama_pemain": "Noah SADIKI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Noah%20SADIKI.jpg"
+            },
+            {
+                "nama_pemain": "Aaron TSHIBOLA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Aaron%20TSHIBOLA.jpg"
+            },
+            {
+                "nama_pemain": "Timothy FAYULU",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Timothy%20FAYULU.jpg"
+            },
+            {
+                "nama_pemain": "Cedric BAKAMBU",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Cedric%20BAKAMBU.jpg"
+            },
+            {
+                "nama_pemain": "Charles PICKEL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Charles%20PICKEL.jpg"
+            },
+            {
+                "nama_pemain": "Fiston MAYELE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Fiston%20MAYELE.jpg"
+            },
+            {
+                "nama_pemain": "Yoane WISSA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Yoane%20WISSA.jpg"
+            },
+            {
+                "nama_pemain": "Matthieu EPOLO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Matthieu%20EPOLO.jpg"
+            },
+            {
+                "nama_pemain": "Chancel MBEMBA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Chancel%20MBEMBA.jpg"
+            },
+            {
+                "nama_pemain": "Simon BANZA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Simon%20BANZA.jpg"
+            },
+            {
+                "nama_pemain": "Gedeon KALULU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Gedeon%20KALULU.jpg"
+            },
+            {
+                "nama_pemain": "Edo Kayembe",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Edo%20Kayembe.jpg"
+            },
+            {
+                "nama_pemain": "Arthur MASUAKU",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/RD%20Kongo/Arthur%20MASUAKU.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/1280px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png",
+        "pelatih": "Sébastien Desabre",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/0c46969b-9f7e-4f5b-aaf0-17acc2cba291/DESABRE-Sebastien_414225"
+    },
+    {
+        "negara": "Senegal",
+        "pemain": [
+            {
+                "nama_pemain": "Yehvann DIOUF",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Yehvann%20DIOUF.jpg"
+            },
+            {
+                "nama_pemain": "Mamadou SARR",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Mamadou%20SARR.jpg"
+            },
+            {
+                "nama_pemain": "Kalidou KOULIBALY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Kalidou%20KOULIBALY.jpg"
+            },
+            {
+                "nama_pemain": "Abdoulaye Seck",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Abdoulaye%20Seck.jpg"
+            },
+            {
+                "nama_pemain": "Idrissa Gana GUEYE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Idrissa%20Gana%20GUEYE.jpg"
+            },
+            {
+                "nama_pemain": "Pathe CISS",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Pathe%20CISS.jpg"
+            },
+            {
+                "nama_pemain": "Assane DIAO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Assane%20DIAO.jpg"
+            },
+            {
+                "nama_pemain": "Lamine CAMARA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Lamine%20CAMARA.jpg"
+            },
+            {
+                "nama_pemain": "Bamba DIENG",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Bamba%20DIENG.jpg"
+            },
+            {
+                "nama_pemain": "Sadio MANE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Sadio%20MANE.jpg"
+            },
+            {
+                "nama_pemain": "Nicolas JACKSON",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Nicolas%20JACKSON.jpg"
+            },
+            {
+                "nama_pemain": "Cherif NDIAYE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Cherif%20NDIAYE.jpg"
+            },
+            {
+                "nama_pemain": "Iliman NDIAYE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Iliman%20NDIAYE.jpg"
+            },
+            {
+                "nama_pemain": "Ismail JAKOBS",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Ismail%20JAKOBS.jpg"
+            },
+            {
+                "nama_pemain": "Krepin DIATTA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Krepin%20DIATTA.jpg"
+            },
+            {
+                "nama_pemain": "Edouard MENDY",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Edouard%20MENDY.jpg"
+            },
+            {
+                "nama_pemain": "Pape Matar SARR",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Pape%20Matar%20SARR.jpg"
+            },
+            {
+                "nama_pemain": "Ismaila SARR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Ismaila%20SARR.jpg"
+            },
+            {
+                "nama_pemain": "Moussa Niakhate",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Moussa%20Niakhate.jpg"
+            },
+            {
+                "nama_pemain": "Ibrahim MBAYE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Ibrahim%20MBAYE.jpg"
+            },
+            {
+                "nama_pemain": "Habib DIARRA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Habib%20DIARRA.jpg"
+            },
+            {
+                "nama_pemain": "Bara Sapoko NDIAYE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Bara%20Sapoko%20NDIAYE.jpg"
+            },
+            {
+                "nama_pemain": "Mory DIAW",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Mory%20DIAW.jpg"
+            },
+            {
+                "nama_pemain": "Antoine MENDY",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Antoine%20MENDY.jpg"
+            },
+            {
+                "nama_pemain": "El Hadji Malick DIOUF",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/El%20Hadji%20Malick%20DIOUF.jpg"
+            },
+            {
+                "nama_pemain": "Pape GUEYE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Senegal/Pape%20GUEYE.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Flag_of_Senegal.svg/1280px-Flag_of_Senegal.svg.png",
+        "pelatih": "Pape THIAW",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/645eef32-064a-47f6-a2b7-6711e29c1679/THIAW-Pape_182160"
+    },
+    {
+        "negara": "Spanyol",
+        "pemain": [
+            {
+                "nama_pemain": "David RAYA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/David%20RAYA.jpg"
+            },
+            {
+                "nama_pemain": "Marc PUBILL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Marc%20PUBILL.jpg"
+            },
+            {
+                "nama_pemain": "Alex GRIMALDO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Alex%20GRIMALDO.jpg"
+            },
+            {
+                "nama_pemain": "Eric GARCIA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Eric%20GARCIA.jpg"
+            },
+            {
+                "nama_pemain": "Marcos LLORENTE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Marcos%20LLORENTE.jpg"
+            },
+            {
+                "nama_pemain": "Mikel MERINO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Mikel%20MERINO.jpg"
+            },
+            {
+                "nama_pemain": "Ferran TORRES",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Ferran%20TORRES.jpg"
+            },
+            {
+                "nama_pemain": "Fabian RUIZ",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Fabian%20RUIZ.jpg"
+            },
+            {
+                "nama_pemain": "GAVI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/GAVI.jpg"
+            },
+            {
+                "nama_pemain": "Dani OLMO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Dani%20OLMO.jpg"
+            },
+            {
+                "nama_pemain": "Yeremy PINO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Yeremy%20PINO.jpg"
+            },
+            {
+                "nama_pemain": "Pedro PORRO",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Pedro%20PORRO.jpg"
+            },
+            {
+                "nama_pemain": "Joan GARCIA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Joan%20GARCIA.jpg"
+            },
+            {
+                "nama_pemain": "Aymeric LAPORTE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Aymeric%20LAPORTE.jpg"
+            },
+            {
+                "nama_pemain": "Alex BAENA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Alex%20BAENA.jpg"
+            },
+            {
+                "nama_pemain": "RODRI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/RODRI.jpg"
+            },
+            {
+                "nama_pemain": "Nico WILLIAMS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Nico%20WILLIAMS.jpg"
+            },
+            {
+                "nama_pemain": "Martin ZUBIMENDI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Martin%20ZUBIMENDI.jpg"
+            },
+            {
+                "nama_pemain": "Lamine YAMAL",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Lamine%20YAMAL.jpg"
+            },
+            {
+                "nama_pemain": "PEDRI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/PEDRI.jpg"
+            },
+            {
+                "nama_pemain": "Mikel OYARZABAL",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Mikel%20OYARZABAL.jpg"
+            },
+            {
+                "nama_pemain": "Pau CUBARSI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Pau%20CUBARSI.jpg"
+            },
+            {
+                "nama_pemain": "Unai SIMON",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Unai%20SIMON.jpg"
+            },
+            {
+                "nama_pemain": "Marc CUCURELLA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Marc%20CUCURELLA.jpg"
+            },
+            {
+                "nama_pemain": "Victor MUNOZ",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Victor%20MUNOZ.jpg"
+            },
+            {
+                "nama_pemain": "Borja IGLESIAS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Spanyol/Borja%20IGLESIAS.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/1280px-Flag_of_Spain.svg.png",
+        "pelatih": "Luis de la Fuente Castillo",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d91efb8f-281e-466c-beb0-a543a3a8c9ec/DE-LA-FUENTE-Luis_430724"
+    },
+    {
+        "negara": "Swedia",
+        "pemain": [
+            {
+                "nama_pemain": "Jacob WIDELL ZETTERSTROM",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Jacob%20WIDELL%20ZETTERSTROM.jpg"
+            },
+            {
+                "nama_pemain": "Gustaf LAGERBIELKE",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Gustaf%20LAGERBIELKE.jpg"
+            },
+            {
+                "nama_pemain": "Victor LINDELOF",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Victor%20LINDELOF.jpg"
+            },
+            {
+                "nama_pemain": "Isak HIEN",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Isak%20HIEN.jpg"
+            },
+            {
+                "nama_pemain": "Gabriel GUDMUNDSSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Gabriel%20GUDMUNDSSON.jpg"
+            },
+            {
+                "nama_pemain": "Herman JOHANSSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Herman%20JOHANSSON.jpg"
+            },
+            {
+                "nama_pemain": "Lucas BERGVALL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Lucas%20BERGVALL.jpg"
+            },
+            {
+                "nama_pemain": "Daniel SVENSSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Daniel%20SVENSSON.jpg"
+            },
+            {
+                "nama_pemain": "Alexander Isak",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Alexander%20Isak.jpg"
+            },
+            {
+                "nama_pemain": "Benjamin NYGREN",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Benjamin%20NYGREN.jpg"
+            },
+            {
+                "nama_pemain": "Anthony ELANGA",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Anthony%20ELANGA.jpg"
+            },
+            {
+                "nama_pemain": "Viktor JOHANSSON",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Viktor%20JOHANSSON.jpg"
+            },
+            {
+                "nama_pemain": "Ken SEMA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Ken%20SEMA.jpg"
+            },
+            {
+                "nama_pemain": "Hjalmar EKDAL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Hjalmar%20EKDAL.jpg"
+            },
+            {
+                "nama_pemain": "Carl STARFELT",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Carl%20STARFELT.jpg"
+            },
+            {
+                "nama_pemain": "Jesper KARLSTROM",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Jesper%20KARLSTROM.jpg"
+            },
+            {
+                "nama_pemain": "Viktor GYOKERES",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Viktor%20GYOKERES.jpg"
+            },
+            {
+                "nama_pemain": "Yasin AYARI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Yasin%20AYARI.jpg"
+            },
+            {
+                "nama_pemain": "Mattias SVANBERG",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Mattias%20SVANBERG.jpg"
+            },
+            {
+                "nama_pemain": "Eric SMITH",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Eric%20SMITH.jpg"
+            },
+            {
+                "nama_pemain": "Alexander BERNHARDSSON",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Alexander%20BERNHARDSSON.jpg"
+            },
+            {
+                "nama_pemain": "Besfort ZENELI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Besfort%20ZENELI.jpg"
+            },
+            {
+                "nama_pemain": "Kristoffer NORDFELDT",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Kristoffer%20NORDFELDT.jpg"
+            },
+            {
+                "nama_pemain": "Elliot STROUD",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Elliot%20STROUD.jpg"
+            },
+            {
+                "nama_pemain": "Gustaf NILSSON",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Gustaf%20NILSSON.jpg"
+            },
+            {
+                "nama_pemain": "Taha ALI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swedia/Taha%20ALI.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/1280px-Flag_of_Sweden.svg.png",
+        "pelatih": "Graham POTTER",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/d1a2b34e-b091-483b-a7fc-22ce9e0cf6e2/POTTER-Graham_277650"
+    },
+    {
+        "negara": "Swiss",
+        "pemain": [
+            {
+                "nama_pemain": "Gregor KOBEL",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Gregor%20KOBEL.jpg"
+            },
+            {
+                "nama_pemain": "Miro MUHEIM",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Miro%20MUHEIM.jpg"
+            },
+            {
+                "nama_pemain": "Silvan WIDMER",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Silvan%20WIDMER.jpg"
+            },
+            {
+                "nama_pemain": "Nico ELVEDI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Nico%20ELVEDI.jpg"
+            },
+            {
+                "nama_pemain": "Manuel AKANJI",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Manuel%20AKANJI.jpg"
+            },
+            {
+                "nama_pemain": "Denis ZAKARIA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Denis%20ZAKARIA.jpg"
+            },
+            {
+                "nama_pemain": "Breel EMBOLO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Breel%20EMBOLO.jpg"
+            },
+            {
+                "nama_pemain": "Remo FREULER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Remo%20FREULER.jpg"
+            },
+            {
+                "nama_pemain": "Johan MANZAMBI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Johan%20MANZAMBI.jpg"
+            },
+            {
+                "nama_pemain": "Granit XHAKA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Granit%20XHAKA.jpg"
+            },
+            {
+                "nama_pemain": "Dan NDOYE",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Dan%20NDOYE.jpg"
+            },
+            {
+                "nama_pemain": "Yvon MVOGO",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Yvon%20MVOGO.jpg"
+            },
+            {
+                "nama_pemain": "Ricardo RODRIGUEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Ricardo%20RODRIGUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Ardon JASHARI",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Ardon%20JASHARI.jpg"
+            },
+            {
+                "nama_pemain": "Djibril SOW",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Djibril%20SOW.jpg"
+            },
+            {
+                "nama_pemain": "Christian FASSNACHT",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Christian%20FASSNACHT.jpg"
+            },
+            {
+                "nama_pemain": "Ruben VARGAS",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Ruben%20VARGAS.jpg"
+            },
+            {
+                "nama_pemain": "Eray COEMERT",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Eray%20COEMERT.jpg"
+            },
+            {
+                "nama_pemain": "Noah OKAFOR",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Noah%20OKAFOR.jpg"
+            },
+            {
+                "nama_pemain": "Michel AEBISCHER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Michel%20AEBISCHER.jpg"
+            },
+            {
+                "nama_pemain": "Marvin KELLER",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Marvin%20KELLER.jpg"
+            },
+            {
+                "nama_pemain": "Fabian RIEDER",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Fabian%20RIEDER.jpg"
+            },
+            {
+                "nama_pemain": "Zeki AMDOUNI",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Zeki%20AMDOUNI.jpg"
+            },
+            {
+                "nama_pemain": "Aurele AMENDA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Aurele%20AMENDA.jpg"
+            },
+            {
+                "nama_pemain": "Luca JAQUEZ",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Luca%20JAQUEZ.jpg"
+            },
+            {
+                "nama_pemain": "Cedric ITTEN",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Swiss/Cedric%20ITTEN.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Switzerland.svg/1280px-Flag_of_Switzerland.svg.png",
+        "pelatih": "Murat Yakin",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/0951d425-6260-40aa-8905-0e79111bdf42/YAKIN-Murat_157842"
+    },
+    {
+        "negara": "Tanjung Verde",
+        "pemain": [
+            {
+                "nama_pemain": "VOZINHA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/VOZINHA.jpg"
+            },
+            {
+                "nama_pemain": "STOPIRA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/STOPIRA.jpg"
+            },
+            {
+                "nama_pemain": "DINEY BORGES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/DINEY%20BORGES.jpg"
+            },
+            {
+                "nama_pemain": "PICO LOPES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/PICO%20LOPES.jpg"
+            },
+            {
+                "nama_pemain": "LOGAN COSTA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/LOGAN%20COSTA.jpg"
+            },
+            {
+                "nama_pemain": "KEVIN PINA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/KEVIN%20PINA.jpg"
+            },
+            {
+                "nama_pemain": "JOVANE CABRAL",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/JOVANE%20CABRAL.jpg"
+            },
+            {
+                "nama_pemain": "JOAO PAULO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/JOAO%20PAULO.jpg"
+            },
+            {
+                "nama_pemain": "GILSON BENCHIMOL",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/GILSON%20BENCHIMOL.jpg"
+            },
+            {
+                "nama_pemain": "JAMIRO MONTEIRO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/JAMIRO%20MONTEIRO.jpg"
+            },
+            {
+                "nama_pemain": "GARRY RODRIGUES",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/GARRY%20RODRIGUES.jpg"
+            },
+            {
+                "nama_pemain": "MARCIO ROSA",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/MARCIO%20ROSA.jpg"
+            },
+            {
+                "nama_pemain": "SIDNY LOPES CABRAL",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/SIDNY%20LOPES%20CABRAL.jpg"
+            },
+            {
+                "nama_pemain": "DEROY DUARTE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/DEROY%20DUARTE.jpg"
+            },
+            {
+                "nama_pemain": "LAROS DUARTE",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/LAROS%20DUARTE.jpg"
+            },
+            {
+                "nama_pemain": "YANNICK SEMEDO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/YANNICK%20SEMEDO.jpg"
+            },
+            {
+                "nama_pemain": "WILLY SEMEDO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/WILLY%20SEMEDO.jpg"
+            },
+            {
+                "nama_pemain": "TELMO ARCANJO",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/TELMO%20ARCANJO.jpg"
+            },
+            {
+                "nama_pemain": "DAILON LIVRAMENTO",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/DAILON%20LIVRAMENTO.jpg"
+            },
+            {
+                "nama_pemain": "RYAN MENDES",
+                "posisi": "Pemain Depan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/RYAN%20MENDES.jpg"
+            },
+            {
+                "nama_pemain": "NUNO DA COSTA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/NUNO%20DA%20COSTA.jpg"
+            },
+            {
+                "nama_pemain": "STEVEN MOREIRA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/STEVEN%20MOREIRA.jpg"
+            },
+            {
+                "nama_pemain": "CJ DOS SANTOS",
+                "posisi": "Penjaga Gawang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/CJ%20DOS%20SANTOS.jpg"
+            },
+            {
+                "nama_pemain": "WAGNER PINA",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/WAGNER%20PINA.jpg"
+            },
+            {
+                "nama_pemain": "KELVIN PIRES",
+                "posisi": "Pemain Bertahan",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/KELVIN%20PIRES.jpg"
+            },
+            {
+                "nama_pemain": "HELIO VARELA",
+                "posisi": "Gelandang",
+                "link_foto": "https://cdn.ferihui.my.id/Cape%20Verde/HELIO%20VARELA.jpg"
+            }
+        ],
+        "link_bendera": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Flag_of_Cape_Verde.svg/1280px-Flag_of_Cape_Verde.svg.png",
+        "pelatih": "Pedro Leitão Brito",
+        "link_foto_pelatih": "https://digitalhub.fifa.com/transform/a07d23c4-385e-4fee-8659-6209001b857d/BUBISTA_214785"
+    }
+]
