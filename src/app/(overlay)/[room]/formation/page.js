@@ -258,7 +258,7 @@ export default function FormationOverlay({ params }) {
                       className="player-image" 
                       loading="lazy"
                       decoding="async"
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/90x100?text=Player' }} 
+                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/90x100?text=Player' }} 
                     />
                   </div>
                   <div className="player-name-tag">
