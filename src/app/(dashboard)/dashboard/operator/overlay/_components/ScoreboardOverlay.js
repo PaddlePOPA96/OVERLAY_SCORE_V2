@@ -12,6 +12,7 @@ import LayoutPildun from '../../_components/LayoutPildun'
 import LayoutPildun2 from '../../_components/LayoutPildun2'
 import { useLayoutSettings } from '@/shared/hooks/useLayoutSettings'
 import ThirdTitleOverlay from './ThirdTitleOverlay'
+import PenaltyOverlay from './PenaltyOverlay'
 
 export default function ScoreboardOverlay({ roomId = 'default' }) {
   const { data, isLoaded, displayTime, formatTime } = useScoreboard(roomId)
@@ -206,6 +207,11 @@ return
 
       {/* Third Title Overlay Layer */}
       <ThirdTitleOverlay data={data} />
+
+      {/* Penalty Shootout Overlay Layer */}
+      {data.isPenaltyMode && data.showOverlay && (
+        <PenaltyOverlay data={data} />
+      )}
     </div>
   )
 }

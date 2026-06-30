@@ -95,6 +95,124 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
   const cardBg = isLight ? 'rgba(15, 23, 42, 0.02)' : 'rgba(255, 255, 255, 0.02)'
   const cardBorder = isLight ? '1px solid #cbd5e1' : '1px solid #2e2e2e'
 
+  // Penalty shootout state and handlers
+  const isPenaltyMode = data.isPenaltyMode || false
+  const homePenalties = data.homePenalties || '2,2,2,2,2'
+  const awayPenalties = data.awayPenalties || '2,2,2,2,2'
+
+  const homePenList = homePenalties.split(',')
+  const awayPenList = awayPenalties.split(',')
+
+  const homePenScore = homePenList.filter(x => x === '1').length
+  const awayPenScore = awayPenList.filter(x => x === '1').length
+
+  const getActiveIndex = (homeList, awayList) => {
+    let homeLast = -1
+
+    for (let i = homeList.length - 1; i >= 0; i--) {
+      if (homeList[i] !== '2') {
+        homeLast = i
+        break
+      }
+    }
+    
+    let awayLast = -1
+
+    for (let i = awayList.length - 1; i >= 0; i--) {
+      if (awayList[i] !== '2') {
+        awayLast = i
+        break
+      }
+    }
+    
+    const maxLast = Math.max(homeLast, awayLast)
+
+    
+return maxLast + 1
+  }
+
+  const activeIdx = getActiveIndex(homePenList, awayPenList)
+  const startIndex = Math.floor(activeIdx / 5) * 5
+
+  const getVisiblePenalties = (penList) => {
+    const sliced = penList.slice(startIndex, startIndex + 5)
+
+    while (sliced.length < 5) {
+      sliced.push('2')
+    }
+
+    
+return sliced
+  }
+
+  const visibleHomePens = getVisiblePenalties(homePenList)
+  const visibleAwayPens = getVisiblePenalties(awayPenList)
+
+  const handleRecordPenalty = (team, val) => {
+    const listStr = team === 'home' ? homePenalties : awayPenalties
+    const list = listStr.split(',')
+    const activeIndex = list.indexOf('2')
+
+    if (activeIndex !== -1) {
+      list[activeIndex] = String(val)
+
+      if (activeIndex === list.length - 1) {
+        list.push('2')
+      }
+
+      actions.updateMatch({
+        [team === 'home' ? 'homePenalties' : 'awayPenalties']: list.join(',')
+      })
+    } else {
+      list.push(String(val))
+      list.push('2')
+      actions.updateMatch({
+        [team === 'home' ? 'homePenalties' : 'awayPenalties']: list.join(',')
+      })
+    }
+  }
+
+  const handleUndoPenalty = (team) => {
+    const listStr = team === 'home' ? homePenalties : awayPenalties
+    const list = listStr.split(',')
+    let activeIndex = list.indexOf('2')
+
+    if (activeIndex === -1) {
+      activeIndex = list.length
+    }
+
+    const undoIndex = activeIndex - 1
+
+    if (undoIndex >= 0) {
+      list[undoIndex] = '2'
+
+      while (list.length > 5 && list[list.length - 1] === '2' && list[list.length - 2] === '2') {
+        list.pop()
+      }
+
+      actions.updateMatch({
+        [team === 'home' ? 'homePenalties' : 'awayPenalties']: list.join(',')
+      })
+    }
+  }
+
+  const handleResetPenalty = () => {
+    actions.updateMatch({
+      homePenalties: '2,2,2,2,2',
+      awayPenalties: '2,2,2,2,2'
+    })
+  }
+
+  const handleTogglePenaltyMode = () => {
+    const nextMode = !isPenaltyMode
+
+    actions.updateMatch({
+      isPenaltyMode: nextMode,
+      homePenalties: data.homePenalties || '2,2,2,2,2',
+      awayPenalties: data.awayPenalties || '2,2,2,2,2'
+    })
+  }
+
   const homeScore = data.homeScore ?? 0
   const awayScore = data.awayScore ?? 0
   const homeName = data.homeName || 'HOME'
@@ -172,7 +290,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
             <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '8px', textTransform: 'uppercase' }}>
               ⏱️ Timer & Period Controls
             </h3>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'space-between' }}>
               {/* Time Display Header Card (Vibrant high-contrast dark block) */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: '#000000', border: '3px solid #000', borderRadius: '10px' }}>
@@ -237,7 +355,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
                   >
                     🔄 Switch Sides
                   </button>
-                  
+
                   <button
                     className="neo-btn-lg neo-btn-danger"
                     onClick={() => {
@@ -257,105 +375,288 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
 
           {/* CARD 2: SCORES & GOAL TRIGGERS */}
           <div className="neo-card" style={{ marginBottom: '0', display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '14px', textTransform: 'uppercase' }}>
-              📊 Scores & Goal Triggers
-            </h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1, alignItems: 'center' }}>
-              {/* HOME Team Box */}
-              <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
-                    {data.homeLogo ? (
-                      <img src={data.homeLogo} alt={homeName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
-                    ) : (
-                      <span style={{ fontSize: '13px', fontWeight: '900', color: data.homeColor || '#3b82f6' }}>
-                        {homeName.charAt(0)}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={homeName}>{homeName}</div>
-                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Home</div>
-                  </div>
-                </div>
-
-                {/* Score display (High Contrast Black Block) */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
-                  <button
-                    className='neo-btn-lg neo-btn-outline'
-                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
-                    onClick={() => actions.updateMatch({ homeScore: Math.max(0, homeScore - 1) })}
-                  >
-                    −
-                  </button>
-                  <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{homeScore}</span>
-                  <button
-                    className='neo-btn-lg neo-btn-outline'
-                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
-                    onClick={() => actions.updateMatch({ homeScore: Math.min(20, homeScore + 1) })}
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* GOAL Button */}
-                <button
-                  className='neo-btn-lg'
-                  onClick={() => actions.triggerGoal('home')}
-                  style={{ background: '#00E676', color: '#000000', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
-                >
-                  ⚽ GOAL HOME
-                </button>
-              </div>
-
-              {/* AWAY Team Box */}
-              <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
-                    {data.awayLogo ? (
-                      <img src={data.awayLogo} alt={awayName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
-                    ) : (
-                      <span style={{ fontSize: '13px', fontWeight: '900', color: data.awayColor || '#ef4444' }}>
-                        {awayName.charAt(0)}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={awayName}>{awayName}</div>
-                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Away</div>
-                  </div>
-                </div>
-
-                {/* Score display (High Contrast Black Block) */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
-                  <button
-                    className='neo-btn-lg neo-btn-outline'
-                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
-                    onClick={() => actions.updateMatch({ awayScore: Math.max(0, awayScore - 1) })}
-                  >
-                    −
-                  </button>
-                  <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{awayScore}</span>
-                  <button
-                    className='neo-btn-lg neo-btn-outline'
-                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
-                    onClick={() => actions.updateMatch({ awayScore: Math.min(20, awayScore + 1) })}
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* GOAL Button */}
-                <button
-                  className='neo-btn-lg'
-                  onClick={() => actions.triggerGoal('away')}
-                  style={{ background: '#FF1744', color: '#ffffff', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
-                >
-                  ⚽ GOAL AWAY
-                </button>
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '14px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: '950', textTransform: 'uppercase', margin: 0 }}>
+                {isPenaltyMode ? '🎯 Penalty Shootout Controls' : '📊 Scores & Goal Triggers'}
+              </h3>
+              <button
+                type="button"
+                className={`neo-btn-lg ${isPenaltyMode ? 'neo-btn-danger' : 'neo-btn-outline'}`}
+                style={{ padding: '4px 10px', fontSize: '10px', height: '28px' }}
+                onClick={handleTogglePenaltyMode}
+              >
+                {isPenaltyMode ? '⏹ Exit Penalty' : '🎯 Go to Penalty'}
+              </button>
             </div>
+
+            {isPenaltyMode ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+
+                {/* Shootout Columns (Home & Away side-by-side) */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1 }}>
+
+                  {/* HOME Penalty Shootout Box */}
+                  <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', borderRadius: '10px', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '30px', height: '30px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                        {data.homeLogo ? (
+                          <img src={data.homeLogo} alt={homeName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                        ) : (
+                          <span style={{ fontSize: '11px', fontWeight: '900', color: data.homeColor || '#3b82f6' }}>
+                            {homeName.charAt(0)}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '13px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80px' }} title={homeName}>{homeName}</div>
+                      </div>
+                    </div>
+
+                    {/* Circles Row */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', minHeight: '26px', alignItems: 'center' }}>
+                      {visibleHomePens.map((val, idx) => (
+                        <div
+                          key={`home-pen-${idx}`}
+                          style={{
+                            display: 'inline-flex',
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            border: '2px solid #000',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: '900',
+                            fontSize: '9px',
+                            background: val === '1' ? '#00E676' : val === '0' ? '#FF1744' : '#e2e8f0',
+                            color: val === '0' ? '#ffffff' : '#000000'
+                          }}
+                        >
+                          {val === '1' ? '✓' : val === '0' ? '✗' : ''}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Total Penalty Score Display */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#000000', padding: '6px 12px', border: '2.5px solid #000', borderRadius: '6px' }}>
+                      <span style={{ color: '#9ca3af', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase' }}>Goals</span>
+                      <span className="neon-score-text font-mono" style={{ fontSize: '22px', fontWeight: '950', color: '#FFE600' }}>{homePenScore}</span>
+                    </div>
+
+                    {/* Record Trigger Buttons */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                      <button
+                        type="button"
+                        className="neo-btn-lg"
+                        style={{ background: '#00E676', color: '#000000', border: '2px solid #000', fontSize: '10px', padding: '6px 0', height: '32px' }}
+                        onClick={() => handleRecordPenalty('home', 1)}
+                      >
+                        ✓ Goal
+                      </button>
+                      <button
+                        type="button"
+                        className="neo-btn-lg"
+                        style={{ background: '#FF1744', color: '#ffffff', border: '2px solid #000', fontSize: '10px', padding: '6px 0', height: '32px' }}
+                        onClick={() => handleRecordPenalty('home', 0)}
+                      >
+                        ✗ Miss
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="neo-btn-lg neo-btn-outline"
+                      style={{ width: '100%', fontSize: '10px', padding: '4px 0', height: '28px' }}
+                      onClick={() => handleUndoPenalty('home')}
+                    >
+                      ↩ Undo
+                    </button>
+                  </div>
+
+                  {/* AWAY Penalty Shootout Box */}
+                  <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', borderRadius: '10px', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '30px', height: '30px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                        {data.awayLogo ? (
+                          <img src={data.awayLogo} alt={awayName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                        ) : (
+                          <span style={{ fontSize: '11px', fontWeight: '900', color: data.awayColor || '#ef4444' }}>
+                            {awayName.charAt(0)}
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '13px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80px' }} title={awayName}>{awayName}</div>
+                      </div>
+                    </div>
+
+                    {/* Circles Row */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', minHeight: '26px', alignItems: 'center' }}>
+                      {visibleAwayPens.map((val, idx) => (
+                        <div
+                          key={`away-pen-${idx}`}
+                          style={{
+                            display: 'inline-flex',
+                            width: '20px',
+                            height: '20px',
+                            borderRadius: '50%',
+                            border: '2px solid #000',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: '900',
+                            fontSize: '9px',
+                            background: val === '1' ? '#00E676' : val === '0' ? '#FF1744' : '#e2e8f0',
+                            color: val === '0' ? '#ffffff' : '#000000'
+                          }}
+                        >
+                          {val === '1' ? '✓' : val === '0' ? '✗' : ''}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Total Penalty Score Display */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#000000', padding: '6px 12px', border: '2.5px solid #000', borderRadius: '6px' }}>
+                      <span style={{ color: '#9ca3af', fontSize: '9px', fontWeight: 'bold', textTransform: 'uppercase' }}>Goals</span>
+                      <span className="neon-score-text font-mono" style={{ fontSize: '22px', fontWeight: '950', color: '#FFE600' }}>{awayPenScore}</span>
+                    </div>
+
+                    {/* Record Trigger Buttons */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                      <button
+                        type="button"
+                        className="neo-btn-lg"
+                        style={{ background: '#00E676', color: '#000000', border: '2px solid #000', fontSize: '10px', padding: '6px 0', height: '32px' }}
+                        onClick={() => handleRecordPenalty('away', 1)}
+                      >
+                        ✓ Goal
+                      </button>
+                      <button
+                        type="button"
+                        className="neo-btn-lg"
+                        style={{ background: '#FF1744', color: '#ffffff', border: '2px solid #000', fontSize: '10px', padding: '6px 0', height: '32px' }}
+                        onClick={() => handleRecordPenalty('away', 0)}
+                      >
+                        ✗ Miss
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="neo-btn-lg neo-btn-outline"
+                      style={{ width: '100%', fontSize: '10px', padding: '4px 0', height: '28px' }}
+                      onClick={() => handleUndoPenalty('away')}
+                    >
+                      ↩ Undo
+                    </button>
+                  </div>
+                </div>
+
+                {/* Reset Penalties Button */}
+                <button
+                  type="button"
+                  className="neo-btn-lg neo-btn-danger"
+                  style={{ width: '100%', fontSize: '11px', height: '32px', marginTop: '4px' }}
+                  onClick={handleResetPenalty}
+                >
+                  🔄 Reset Penalties
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1, alignItems: 'center' }}>
+                {/* HOME Team Box */}
+                <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                      {data.homeLogo ? (
+                        <img src={data.homeLogo} alt={homeName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                      ) : (
+                        <span style={{ fontSize: '13px', fontWeight: '900', color: data.homeColor || '#3b82f6' }}>
+                          {homeName.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={homeName}>{homeName}</div>
+                      <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Home</div>
+                    </div>
+                  </div>
+
+                  {/* Score display (High Contrast Black Block) */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
+                    <button
+                      className='neo-btn-lg neo-btn-outline'
+                      style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                      onClick={() => actions.updateMatch({ homeScore: Math.max(0, homeScore - 1) })}
+                    >
+                      −
+                    </button>
+                    <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{homeScore}</span>
+                    <button
+                      className='neo-btn-lg neo-btn-outline'
+                      style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                      onClick={() => actions.updateMatch({ homeScore: Math.min(20, homeScore + 1) })}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* GOAL Button */}
+                  <button
+                    className='neo-btn-lg'
+                    onClick={() => actions.triggerGoal('home')}
+                    style={{ background: '#00E676', color: '#000000', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
+                  >
+                    ⚽ GOAL HOME
+                  </button>
+                </div>
+
+                {/* AWAY Team Box */}
+                <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                      {data.awayLogo ? (
+                        <img src={data.awayLogo} alt={awayName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                      ) : (
+                        <span style={{ fontSize: '13px', fontWeight: '900', color: data.awayColor || '#ef4444' }}>
+                          {awayName.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={awayName}>{awayName}</div>
+                      <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Away</div>
+                    </div>
+                  </div>
+
+                  {/* Score display (High Contrast Black Block) */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
+                    <button
+                      className='neo-btn-lg neo-btn-outline'
+                      style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                      onClick={() => actions.updateMatch({ awayScore: Math.max(0, awayScore - 1) })}
+                    >
+                      −
+                    </button>
+                    <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{awayScore}</span>
+                    <button
+                      className='neo-btn-lg neo-btn-outline'
+                      style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                      onClick={() => actions.updateMatch({ awayScore: Math.min(20, awayScore + 1) })}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* GOAL Button */}
+                  <button
+                    className='neo-btn-lg'
+                    onClick={() => actions.triggerGoal('away')}
+                    style={{ background: '#FF1744', color: '#ffffff', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
+                  >
+                    ⚽ GOAL AWAY
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* CARD 3: GOAL AUDIO SETTINGS */}
