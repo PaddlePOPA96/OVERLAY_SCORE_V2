@@ -36,6 +36,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
   const [logoTarget, setLogoTarget] = useState('home')
   const [manualM, setManualM] = useState(0)
   const [manualS, setManualS] = useState(0)
+  const [isTimeModalOpen, setIsTimeModalOpen] = useState(false)
 
   // Collapsible accordion states
   const [timerOpen, setTimerOpen] = useState(true)
@@ -877,6 +878,49 @@ return sliced
         {renderScoreboardTab()}
         {renderSettingsTab()}
       </div>
+
+      {isTimeModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ background: theme === 'light' ? '#fff' : '#1e293b', padding: '24px', borderRadius: '12px', width: '300px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', color: theme === 'light' ? '#000' : '#fff' }}>Set Manual Time</h3>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ fontSize: '12px', color: theme === 'light' ? '#000' : '#fff' }}>Menit</label>
+                <input
+                  type='number'
+                  className='op-input'
+                  value={manualM}
+                  onChange={e => setManualM(e.target.value)}
+                  style={{ width: '100%', marginTop: '4px', background: theme === 'light' ? '#f1f5f9' : '#0f172a', border: '1px solid #334155', color: theme === 'light' ? '#000' : '#fff', padding: '8px', borderRadius: '6px' }}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ fontSize: '12px', color: theme === 'light' ? '#000' : '#fff' }}>Detik</label>
+                <input
+                  type='number'
+                  className='op-input'
+                  value={manualS}
+                  onChange={e => setManualS(e.target.value)}
+                  style={{ width: '100%', marginTop: '4px', background: theme === 'light' ? '#f1f5f9' : '#0f172a', border: '1px solid #334155', color: theme === 'light' ? '#000' : '#fff', padding: '8px', borderRadius: '6px' }}
+                />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+              <button className='neo-btn-lg neo-btn-outline' onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 16px', fontSize: '12px' }}>Batal</button>
+              <button
+                className='neo-btn-lg neo-btn-primary'
+                onClick={() => {
+                  handleSetTime()
+                  setIsTimeModalOpen(false)
+                }}
+                style={{ padding: '8px 16px', fontSize: '12px' }}
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
