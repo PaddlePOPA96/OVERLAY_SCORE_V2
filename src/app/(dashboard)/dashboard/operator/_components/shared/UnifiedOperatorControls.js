@@ -880,38 +880,42 @@ return sliced
       </div>
 
       {isTimeModalOpen && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-          <div className="neo-card" style={{ padding: '24px', width: '320px', margin: 0 }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '900', marginBottom: '16px', textTransform: 'uppercase', borderBottom: '3px solid #000', paddingBottom: '8px', color: '#000' }}>Set Manual Time</h3>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: '#ffffff', border: '4px solid #000000', padding: '24px', width: '320px', borderRadius: '12px', boxShadow: '8px 8px 0px rgba(0,0,0,1)', color: '#000000' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '16px', textTransform: 'uppercase', borderBottom: '4px solid #000', paddingBottom: '8px', color: '#000000', textAlign: 'center' }}>Set Manual Time</h3>
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '12px', fontWeight: '900', color: '#000' }}>Menit</label>
+                <label style={{ fontSize: '13px', fontWeight: '900', color: '#000000' }}>Menit</label>
                 <input
                   type='number'
                   value={manualM}
                   onChange={e => setManualM(e.target.value)}
-                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#fff', border: '3px solid #000', color: '#000', padding: '10px', borderRadius: '6px', outline: 'none', fontWeight: 'bold', fontSize: '16px', boxShadow: '3px 3px 0px rgba(0,0,0,1)' }}
+                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#ffffff', border: '3px solid #000000', color: '#000000', padding: '10px', borderRadius: '8px', outline: 'none', fontWeight: '900', fontSize: '18px', boxShadow: '4px 4px 0px rgba(0,0,0,1)', textAlign: 'center' }}
                 />
               </div>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '12px', fontWeight: '900', color: '#000' }}>Detik</label>
+                <label style={{ fontSize: '13px', fontWeight: '900', color: '#000000' }}>Detik</label>
                 <input
                   type='number'
                   value={manualS}
                   onChange={e => setManualS(e.target.value)}
-                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#fff', border: '3px solid #000', color: '#000', padding: '10px', borderRadius: '6px', outline: 'none', fontWeight: 'bold', fontSize: '16px', boxShadow: '3px 3px 0px rgba(0,0,0,1)' }}
+                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#ffffff', border: '3px solid #000000', color: '#000000', padding: '10px', borderRadius: '8px', outline: 'none', fontWeight: '900', fontSize: '18px', boxShadow: '4px 4px 0px rgba(0,0,0,1)', textAlign: 'center' }}
                 />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-              <button className='neo-btn-lg neo-btn-outline' onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 16px', fontSize: '12px', height: '40px' }}>BATAL</button>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'space-between' }}>
+              <button 
+                onClick={() => setIsTimeModalOpen(false)} 
+                style={{ flex: 1, padding: '10px 16px', fontSize: '14px', fontWeight: '900', backgroundColor: '#f87171', color: '#000', border: '3px solid #000', borderRadius: '8px', boxShadow: '4px 4px 0px rgba(0,0,0,1)', cursor: 'pointer' }}
+              >
+                BATAL
+              </button>
               <button
-                className='neo-btn-lg neo-btn-primary'
                 onClick={() => {
                   handleSetTime()
                   setIsTimeModalOpen(false)
                 }}
-                style={{ padding: '8px 16px', fontSize: '12px', height: '40px' }}
+                style={{ flex: 1, padding: '10px 16px', fontSize: '14px', fontWeight: '900', backgroundColor: '#fbbf24', color: '#000', border: '3px solid #000', borderRadius: '8px', boxShadow: '4px 4px 0px rgba(0,0,0,1)', cursor: 'pointer' }}
               >
                 SIMPAN
               </button>
