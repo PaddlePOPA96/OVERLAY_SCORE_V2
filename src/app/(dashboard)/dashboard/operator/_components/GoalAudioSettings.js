@@ -6,7 +6,7 @@ import { audioOptions, getAudioLabel } from '@/shared/configs/audioConfig'
 
 export default function GoalAudioSettings({ data, updateMatch, stopGoalAudio, previewGoalAudio, theme }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const isLight = theme === 'light'
+  const isLight = true
   const audioVolume = data.goalAudioVolume !== undefined ? data.goalAudioVolume : 1
   const audioSource = data.goalAudioSource || '/sounds/goal.mp3'
 

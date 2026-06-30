@@ -4,7 +4,7 @@ import PreviewWrapper from './shared/PreviewWrapper'
 import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 
 export default function OperatorPildun2({ data, actions, displayTime, formatTime, roomId, theme }) {
-  const isLight = theme === 'light'
+  const isLight = true
 
   return (
     <div className={`operator-b-container ${isLight ? 'theme-light' : ''}`}>

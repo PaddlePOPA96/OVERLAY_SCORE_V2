@@ -4,7 +4,7 @@ import UnifiedOperatorControls from './shared/UnifiedOperatorControls'
 import PreviewWrapper from './shared/PreviewWrapper'
 
 export default function OperatorC({ data, actions, displayTime, formatTime, roomId, theme }) {
-  const isLight = theme === 'light'
+  const isLight = true
 
   return (
     <div className={`operator-c-container ${isLight ? 'theme-light' : ''}`}>

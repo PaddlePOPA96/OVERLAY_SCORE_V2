@@ -172,7 +172,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   const homeTeam = data?.homeFullName || data?.homeName
   const awayTeam = data?.awayFullName || data?.awayName
 
-  const isLight = theme === 'light'
+  const isLight = true
   const modalBg = isLight ? '#ffffff' : '#020617'
   const modalText = isLight ? '#0f172a' : '#e5e7eb'
   const modalBorder = isLight ? '#cbd5e1' : '#1f2937'

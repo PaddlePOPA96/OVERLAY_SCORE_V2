@@ -36,7 +36,7 @@ export default function SimpleDashboardLayout({ children }) {
 
   return (
     <DashboardAuthGuard>
-      <div className="flex h-[100dvh] w-full overflow-hidden bg-[#F5F4F0]">
+      <div className="flex h-[100dvh] w-full overflow-hidden bg-white text-black">
         <SimpleSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className="flex flex-col flex-1 min-w-0">
           <SimpleTopbar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />

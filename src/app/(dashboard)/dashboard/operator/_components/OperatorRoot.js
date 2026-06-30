@@ -30,7 +30,7 @@ function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) 
   const { data, updateMatch } = useScoreboard(slotRoomId)
   const [isEditingName, setIsEditingName] = useState(false)
   const [nameInput, setNameInput] = useState('')
-  const isLight = theme === 'light'
+  const isLight = true
 
   useEffect(() => {
     if (data?.scoreboardName) {
@@ -224,7 +224,7 @@ function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) 
 function ScoreboardSlotSelector({ userId, onSelect, theme }) {
   const [slots, setSlots] = useState([])
   const [loading, setLoading] = useState(true)
-  const isLight = theme === 'light'
+  const isLight = true
 
   useEffect(() => {
     if (!userId) return
@@ -486,7 +486,7 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
 export default function OperatorRoot({ initialRoomId, requireAuth = true, theme: parentTheme }) {
   const { user } = useAuth()
   const [isAuthReady, setIsAuthReady] = useState(!requireAuth)
-  const [theme, setTheme] = useState(parentTheme || 'dark')
+  const theme = 'light'
   const [activeRoomId, setActiveRoomId] = useState(null)
 
   useEffect(() => {
@@ -504,24 +504,6 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
 
     return () => unsub()
   }, [requireAuth])
-
-  // Synchronize state when parent theme prop changes
-  useEffect(() => {
-    if (parentTheme) {
-      setTheme(parentTheme)
-    }
-  }, [parentTheme])
-
-  // Load theme from local storage only if no parent theme prop is provided
-  useEffect(() => {
-    if (!parentTheme && typeof window !== 'undefined') {
-      const stored = window.localStorage.getItem('scoreboard-theme')
-
-      if (stored) {
-        setTheme(stored)
-      }
-    }
-  }, [parentTheme])
 
   // Initialize activeRoomId based on whether it is a custom query room or user's default room
   useEffect(() => {
@@ -543,15 +525,7 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
     }
   }, [initialRoomId, isAuthReady, user?.uid])
 
-  const toggleTheme = () => {
-    const nextTheme = theme === 'dark' ? 'light' : 'dark'
-
-    setTheme(nextTheme)
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('scoreboard-theme', nextTheme)
-    }
-  }
+  const toggleTheme = () => {}
 
   const handleLogout = async () => {
     try {

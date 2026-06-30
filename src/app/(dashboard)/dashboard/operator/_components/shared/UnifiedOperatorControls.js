@@ -89,7 +89,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
     })
   }
 
-  const isLight = theme === 'light'
+  const isLight = true
   const labelColor = isLight ? '#000000' : '#ffffff'
   const tinyColor = isLight ? '#000000' : '#ffffff'
   const borderCol = isLight ? '#cbd5e1' : '#333'

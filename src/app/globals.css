@@ -489,7 +489,7 @@ body {
 
 .op-input { 
   background: var(--mui-palette-action-hover, #2a2a2a); 
-  color: var(--mui-palette-text-primary, #fff); 
+  color: #000000; 
   border: 1px solid var(--mui-palette-divider, #444); 
   padding: 4px 8px; 
   border-radius: 6px; 

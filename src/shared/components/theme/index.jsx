@@ -109,7 +109,7 @@ const ThemeProvider = props => {
               contrastText: '#000'
             },
             background: {
-              default: '#F5F4F0',
+              default: '#ffffff',
               paper: '#ffffff'
             },
             text: {
@@ -132,7 +132,7 @@ const ThemeProvider = props => {
 
             // Force Neo-brutalist bright colors even in dark mode
             background: {
-              default: '#F5F4F0',
+              default: '#ffffff',
               paper: '#ffffff'
             },
             text: {

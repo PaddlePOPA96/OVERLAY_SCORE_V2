@@ -94,7 +94,7 @@ return () => clearTimeout(delayDebounceFn)
 
   if (!isOpen) return null
 
-  const isLight = theme === 'light'
+  const isLight = true
   
   const bgColor = isLight ? '#ffffff' : '#020617'
   const textColor = isLight ? '#334155' : '#e5e7eb'
