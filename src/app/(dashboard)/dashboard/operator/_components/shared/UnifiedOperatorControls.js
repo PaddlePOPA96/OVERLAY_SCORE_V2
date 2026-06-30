@@ -881,41 +881,39 @@ return sliced
 
       {isTimeModalOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-          <div style={{ backgroundColor: theme === 'light' ? '#ffffff' : '#0f172a', border: theme === 'light' ? '2px solid #cbd5e1' : '2px solid #334155', padding: '24px', borderRadius: '12px', width: '300px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '16px', color: theme === 'light' ? '#000000' : '#ffffff' }}>Set Manual Time</h3>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+          <div className="neo-card" style={{ padding: '24px', width: '320px', margin: 0 }}>
+            <h3 style={{ fontSize: '16px', fontWeight: '900', marginBottom: '16px', textTransform: 'uppercase', borderBottom: '3px solid #000', paddingBottom: '8px', color: '#000' }}>Set Manual Time</h3>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '12px', color: theme === 'light' ? '#000000' : '#ffffff', fontWeight: 'bold' }}>Menit</label>
+                <label style={{ fontSize: '12px', fontWeight: '900', color: '#000' }}>Menit</label>
                 <input
                   type='number'
-                  className='op-input'
                   value={manualM}
                   onChange={e => setManualM(e.target.value)}
-                  style={{ width: '100%', marginTop: '4px', backgroundColor: theme === 'light' ? '#f8fafc' : '#1e293b', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid #475569', color: theme === 'light' ? '#000000' : '#ffffff', padding: '10px', borderRadius: '6px', outline: 'none' }}
+                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#fff', border: '3px solid #000', color: '#000', padding: '10px', borderRadius: '6px', outline: 'none', fontWeight: 'bold', fontSize: '16px', boxShadow: '3px 3px 0px rgba(0,0,0,1)' }}
                 />
               </div>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '12px', color: theme === 'light' ? '#000000' : '#ffffff', fontWeight: 'bold' }}>Detik</label>
+                <label style={{ fontSize: '12px', fontWeight: '900', color: '#000' }}>Detik</label>
                 <input
                   type='number'
-                  className='op-input'
                   value={manualS}
                   onChange={e => setManualS(e.target.value)}
-                  style={{ width: '100%', marginTop: '4px', backgroundColor: theme === 'light' ? '#f8fafc' : '#1e293b', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid #475569', color: theme === 'light' ? '#000000' : '#ffffff', padding: '10px', borderRadius: '6px', outline: 'none' }}
+                  style={{ width: '100%', marginTop: '6px', backgroundColor: '#fff', border: '3px solid #000', color: '#000', padding: '10px', borderRadius: '6px', outline: 'none', fontWeight: 'bold', fontSize: '16px', boxShadow: '3px 3px 0px rgba(0,0,0,1)' }}
                 />
               </div>
             </div>
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-              <button className='neo-btn-lg neo-btn-outline' onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 16px', fontSize: '12px', backgroundColor: theme === 'light' ? '#e2e8f0' : '#334155', border: 'none', color: theme === 'light' ? '#000' : '#fff' }}>Batal</button>
+              <button className='neo-btn-lg neo-btn-outline' onClick={() => setIsTimeModalOpen(false)} style={{ padding: '8px 16px', fontSize: '12px', height: '40px' }}>BATAL</button>
               <button
                 className='neo-btn-lg neo-btn-primary'
                 onClick={() => {
                   handleSetTime()
                   setIsTimeModalOpen(false)
                 }}
-                style={{ padding: '8px 16px', fontSize: '12px' }}
+                style={{ padding: '8px 16px', fontSize: '12px', height: '40px' }}
               >
-                Simpan
+                SIMPAN
               </button>
             </div>
           </div>
