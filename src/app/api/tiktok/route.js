@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from 'next/server'
+
 import { resolveInstagram, resolveTiktok } from '@/services/streams/tiktokResolver'
 
 export async function POST(request) {
@@ -18,20 +19,26 @@ export async function POST(request) {
 
     if (isInstagram) {
       const igResult = await resolveInstagram(targetUrl)
-      return NextResponse.json(igResult)
+
+      
+return NextResponse.json(igResult)
     }
 
     try {
       const tiktokResult = await resolveTiktok(targetUrl)
-      return NextResponse.json(tiktokResult)
+
+      
+return NextResponse.json(tiktokResult)
     } catch (e) {
       if (e.message.includes('Could not extract')) {
         return NextResponse.json({ error: e.message }, { status: 400 })
       }
+
       throw e
     }
   } catch (error) {
     console.error('TikTok API error:', error)
-    return NextResponse.json({ error: error.message || 'Server error resolving TikTok URL' }, { status: 500 })
+    
+return NextResponse.json({ error: error.message || 'Server error resolving TikTok URL' }, { status: 500 })
   }
 }

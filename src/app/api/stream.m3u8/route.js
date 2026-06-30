@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
 import https from 'https';
+
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export async function GET(request) {
         const decodedUrl = Buffer.from(encodedUrl, 'base64').toString('utf-8');
         
         let decodedReferer = '';
+
         if (encodedReferer) {
             decodedReferer = Buffer.from(encodedReferer, 'base64').toString('utf-8');
         } else if (decodedUrl.includes('strmd.st')) {
@@ -49,6 +51,8 @@ export async function GET(request) {
         // Forward ALL headers from the original browser request to perfectly spoof the client
         request.headers.forEach((value, key) => {
             const lowerKey = key.toLowerCase();
+
+
             // Skip headers that should not be forwarded
             if (!['host', 'referer', 'origin', 'connection', 'content-length', 'accept-encoding'].includes(lowerKey)) {
                 fetchHeaders.set(key, value);
@@ -57,6 +61,7 @@ export async function GET(request) {
 
         if (decodedReferer) {
             fetchHeaders.set('Referer', decodedReferer);
+
             try {
                 fetchHeaders.set('Origin', new URL(decodedReferer).origin);
             } catch (e) {}
@@ -76,6 +81,7 @@ export async function GET(request) {
         // Rewrite relative URLs to absolute URLs
         const rewrittenLines = m3u8Text.split('\n').map(line => {
             const trimmedLine = line.trim();
+
             if (!trimmedLine || trimmedLine.startsWith('#')) {
                 return line;
             }
@@ -88,10 +94,13 @@ export async function GET(request) {
                     const host = request.headers.get('host');
                     const protocol = host.includes('localhost') ? 'http' : 'https';
                     let proxyUrl = `${protocol}://${host}/api/stream.m3u8?u=${encodedAbsoluteUrl}`;
+
                     if (decodedReferer) {
                         proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
                     }
-                    return proxyUrl;
+
+                    
+return proxyUrl;
                 }
 
                 return absoluteUrl;
@@ -110,6 +119,7 @@ export async function GET(request) {
 
     } catch (error) {
         console.error('M3U8 Proxy Error:', error);
-        return new NextResponse(error.message || 'Internal Server Error', { status: error.message?.includes('status: 403') ? 403 : 500 });
+        
+return new NextResponse(error.message || 'Internal Server Error', { status: error.message?.includes('status: 403') ? 403 : 500 });
     }
 }

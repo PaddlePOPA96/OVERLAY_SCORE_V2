@@ -47,6 +47,7 @@ export async function GET(request) {
 
         // Stream the FLV response body directly to the client
         const { readable, writable } = new TransformStream();
+
         response.body.pipeTo(writable).catch(() => {});
 
         return new NextResponse(readable, {
@@ -60,6 +61,7 @@ export async function GET(request) {
 
     } catch (error) {
         console.error('FLV Proxy Error:', error);
-        return new NextResponse(error.message || 'Internal Server Error', { status: 500 });
+        
+return new NextResponse(error.message || 'Internal Server Error', { status: 500 });
     }
 }

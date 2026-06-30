@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/services/firebase/db';
+
 import { ref, onValue } from 'firebase/database';
+
+import { db } from '@/services/firebase/db';
 
 export function useStreamSettings() {
     const [rawUrl, setRawUrl] = useState('');
@@ -22,6 +24,7 @@ export function useStreamSettings() {
 
     useEffect(() => {
         const urlRef = ref(db, 'settings/stream_url');
+
         const unsubUrl = onValue(urlRef, (snapshot) => {
             if (snapshot.exists()) {
                 setRawUrl(snapshot.val());
@@ -31,61 +34,73 @@ export function useStreamSettings() {
         });
 
         const tokenRef = ref(db, 'settings/stream_token');
+
         const unsubToken = onValue(tokenRef, (snapshot) => {
             setStreamToken(snapshot.exists() ? snapshot.val() : '');
         });
 
         const startTimeRef = ref(db, 'settings/stream_start_time');
+
         const unsubStartTime = onValue(startTimeRef, (snapshot) => {
             setStreamStartTime(snapshot.exists() ? snapshot.val() : Date.now());
         });
 
         const syncRef = ref(db, 'settings/stream_sync_vod');
+
         const unsubSync = onValue(syncRef, (snapshot) => {
             setStreamSyncVod(snapshot.exists() ? snapshot.val() : false);
         });
 
         const proxyRef = ref(db, 'settings/stream_use_proxy');
+
         const unsubProxy = onValue(proxyRef, (snapshot) => {
             setStreamUseProxy(snapshot.exists() ? snapshot.val() : false);
         });
 
         const titleRef = ref(db, 'settings/stream_title');
+
         const unsubTitle = onValue(titleRef, (snapshot) => {
             if (snapshot.exists()) setStreamTitle(snapshot.val());
         });
 
         const title2Ref = ref(db, 'settings/stream_title_2');
+
         const unsubTitle2 = onValue(title2Ref, (snapshot) => {
             if (snapshot.exists()) setStreamTitle2(snapshot.val());
         });
 
         const headerRef = ref(db, 'settings/stream_header');
+
         const unsubHeader = onValue(headerRef, (snapshot) => {
             if (snapshot.exists()) setStreamHeader(snapshot.val());
         });
 
         const headerCountryRef = ref(db, 'settings/stream_header_country');
+
         const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => {
             if (snapshot.exists()) setStreamHeaderCountry(snapshot.val());
         });
 
         const multiModeRef = ref(db, 'settings/stream_multi_mode');
+
         const unsubMultiMode = onValue(multiModeRef, (snapshot) => {
             setMultiMode(snapshot.exists() ? snapshot.val() : false);
         });
 
         const url2Ref = ref(db, 'settings/stream_url_2');
+
         const unsubUrl2 = onValue(url2Ref, (snapshot) => {
             setRawUrl2(snapshot.exists() ? snapshot.val() : '');
         });
 
         const token2Ref = ref(db, 'settings/stream_token_2');
+
         const unsubToken2 = onValue(token2Ref, (snapshot) => {
             setStreamToken2(snapshot.exists() ? snapshot.val() : '');
         });
 
         const chatDisabledRef = ref(db, 'settings/stream_chat_disabled');
+
         const unsubChatDisabled = onValue(chatDisabledRef, (snapshot) => {
             setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
         });
@@ -116,6 +131,7 @@ export function useStreamSettings() {
                     try {
                         const res = await fetch(`/api/resolve-stream?url=${encodeURIComponent(finalUrl)}`);
                         const data = await res.json();
+
                         if (data.url) finalUrl = data.url;
                     } catch (e) {
                         console.error('Failed to resolve falconstreams', e);
@@ -128,15 +144,18 @@ export function useStreamSettings() {
 
                 if (finalUrl.includes('.flv') && streamUseProxy) {
                     const encodedUrl = btoa(finalUrl);
+
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
+
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
 
                 setCurrentChannel(finalUrl);
             }
         };
+
         resolveUrl();
     }, [rawUrl, streamToken, streamUseProxy]);
 
@@ -149,6 +168,7 @@ export function useStreamSettings() {
                     try {
                         const res = await fetch(`/api/resolve-stream?url=${encodeURIComponent(finalUrl)}`);
                         const data = await res.json();
+
                         if (data.url) finalUrl = data.url;
                     } catch (e) {
                         console.error('Failed to resolve falconstreams', e);
@@ -161,16 +181,20 @@ export function useStreamSettings() {
                 
                 if (finalUrl.includes('.flv') && streamUseProxy) {
                     const encodedUrl = btoa(finalUrl);
+
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
                 } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
+
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
                 }
+
                 setCurrentChannel2(finalUrl);
             } else {
                 setCurrentChannel2('');
             }
         };
+
         resolveUrl2();
     }, [rawUrl2, streamToken2, streamUseProxy]);
 

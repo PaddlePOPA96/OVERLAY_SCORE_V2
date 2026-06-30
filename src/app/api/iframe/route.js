@@ -27,8 +27,11 @@ export async function GET(request) {
         }
 
         const fetchHeaders = new Headers();
+
         request.headers.forEach((value, key) => {
             const lowerKey = key.toLowerCase();
+
+
             // Do not forward headers that break the request
             if (!['host', 'referer', 'origin', 'connection'].includes(lowerKey)) {
                 fetchHeaders.set(key, value);
@@ -54,16 +57,19 @@ export async function GET(request) {
         if (!contentType.includes('text/html')) {
             const bodyBuffer = await response.arrayBuffer();
             const resHeaders = new Headers(response.headers);
+
             resHeaders.delete('x-frame-options');
             resHeaders.delete('content-security-policy');
             resHeaders.set('access-control-allow-origin', '*');
-            return new NextResponse(bodyBuffer, { headers: resHeaders });
+            
+return new NextResponse(bodyBuffer, { headers: resHeaders });
         }
 
         let htmlText = await response.text();
 
         // Inject <base> tag to ensure relative links (CSS, JS, images, fetch) resolve correctly
         const baseTag = `<base href="${upstreamUrl.origin}/">`;
+
         if (htmlText.includes('<head>')) {
             htmlText = htmlText.replace('<head>', `<head>\n${baseTag}`);
         } else if (htmlText.includes('<head ')) {
@@ -74,6 +80,7 @@ export async function GET(request) {
 
         // We build clean headers, INTENTIONALLY dropping X-Frame-Options and CSP
         const resHeaders = new Headers();
+
         resHeaders.set('Content-Type', contentType);
         resHeaders.set('Access-Control-Allow-Origin', '*');
         
@@ -81,6 +88,7 @@ export async function GET(request) {
 
     } catch (error) {
         console.error('Iframe Proxy Error:', error);
-        return new NextResponse(error.message || 'Internal Server Error', { status: 500 });
+        
+return new NextResponse(error.message || 'Internal Server Error', { status: 500 });
     }
 }

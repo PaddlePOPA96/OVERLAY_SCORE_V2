@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { db } from '@/services/firebase/db';
+
 import { ref, onValue, set, push, remove } from 'firebase/database';
 import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel, Grid } from '@mui/material';
+
+import { db } from '@/services/firebase/db';
 
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
@@ -27,6 +29,7 @@ export default function StreamUrlManager({ theme }) {
 
   useEffect(() => {
     const urlRef = ref(db, 'settings/stream_url');
+
     const unsubUrl = onValue(urlRef, (snapshot) => {
       if (snapshot.exists()) {
         setUrl(snapshot.val());
@@ -34,6 +37,7 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const tokenRef = ref(db, 'settings/stream_token');
+
     const unsubToken = onValue(tokenRef, (snapshot) => {
       if (snapshot.exists()) {
         setToken(snapshot.val());
@@ -41,31 +45,37 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const multiModeRef = ref(db, 'settings/stream_multi_mode');
+
     const unsubMultiMode = onValue(multiModeRef, (snapshot) => {
       if (snapshot.exists()) setMultiMode(snapshot.val());
       else setMultiMode(false);
     });
 
     const url2Ref = ref(db, 'settings/stream_url_2');
+
     const unsubUrl2 = onValue(url2Ref, (snapshot) => {
       if (snapshot.exists()) setUrl2(snapshot.val());
       else setUrl2('');
     });
 
     const token2Ref = ref(db, 'settings/stream_token_2');
+
     const unsubToken2 = onValue(token2Ref, (snapshot) => {
       if (snapshot.exists()) setToken2(snapshot.val());
       else setToken2('');
     });
 
     const presetsRef = ref(db, 'settings/stream_presets');
+
     const unsubPresets = onValue(presetsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
+
         const presetList = Object.keys(data).map(key => ({
           id: key,
           ...data[key]
         }));
+
         setPresets(presetList);
       } else {
         setPresets([]);
@@ -73,6 +83,7 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const syncRef = ref(db, 'settings/stream_sync_vod');
+
     const unsubSync = onValue(syncRef, (snapshot) => {
       if (snapshot.exists()) {
         setSyncVod(snapshot.val());
@@ -80,6 +91,7 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const proxyRef = ref(db, 'settings/stream_use_proxy');
+
     const unsubProxy = onValue(proxyRef, (snapshot) => {
       if (snapshot.exists()) {
         setUseProxy(snapshot.val());
@@ -89,6 +101,7 @@ export default function StreamUrlManager({ theme }) {
     const titleRef = ref(db, 'settings/stream_title');
 
     const title2Ref = ref(db, 'settings/stream_title_2');
+
     const unsubTitle2 = onValue(title2Ref, (snapshot) => {
       if (snapshot.exists()) setTitle2(snapshot.val());
       else setTitle2('SELAMAT ULANG TAHUN');
@@ -100,12 +113,14 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const headerRef = ref(db, 'settings/stream_header');
+
     const unsubHeader = onValue(headerRef, (snapshot) => {
       if (snapshot.exists()) setHeader(snapshot.val());
       else setHeader('HUITOTOO');
     });
 
     const headerCountryRef = ref(db, 'settings/stream_header_country');
+
     const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => {
       if (snapshot.exists()) setHeaderCountry(snapshot.val());
       else setHeaderCountry('ID');
@@ -133,16 +148,20 @@ export default function StreamUrlManager({ theme }) {
 
     const pathTokenRegex = /\/token-([a-zA-Z0-9%_\-\.\+=]+)/i;
     const pathMatch = rawUrl.match(pathTokenRegex);
+
     if (pathMatch) {
       extractedToken = pathMatch[1];
       templatedUrl = rawUrl.replace(pathTokenRegex, '/token-{token}');
-      return { token: extractedToken, templatedUrl };
+      
+return { token: extractedToken, templatedUrl };
     }
 
     const queryParams = ['token', 'auth', 'key', 'token_id', 'pass', 'hash'];
+
     try {
       const hasHttp = rawUrl.startsWith('http://') || rawUrl.startsWith('https://');
       const urlObj = new URL(hasHttp ? rawUrl : `http://dummy.com/${rawUrl}`);
+
       for (const param of queryParams) {
         if (urlObj.searchParams.has(param)) {
           extractedToken = urlObj.searchParams.get(param);
@@ -150,17 +169,20 @@ export default function StreamUrlManager({ theme }) {
           templatedUrl = hasHttp
             ? urlObj.toString()
             : urlObj.toString().replace('http://dummy.com/', '');
-          return { token: extractedToken, templatedUrl };
+          
+return { token: extractedToken, templatedUrl };
         }
       }
     } catch (e) {
       for (const param of queryParams) {
         const regex = new RegExp(`([\?&])${param}=([^&]+)`, 'i');
         const match = rawUrl.match(regex);
+
         if (match) {
           extractedToken = match[2];
           templatedUrl = rawUrl.replace(regex, `$1${param}={token}`);
-          return { token: extractedToken, templatedUrl };
+          
+return { token: extractedToken, templatedUrl };
         }
       }
     }
@@ -170,15 +192,19 @@ export default function StreamUrlManager({ theme }) {
 
   const isUrl = (str) => {
     const trimmed = str.trim();
-    return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trimmed.includes('.mpd');
+
+    
+return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trimmed.includes('.mpd');
   };
 
   const getPendingValues = (input) => {
     const trimmed = input.trim();
+
     if (!trimmed) return { pendingUrl: url, pendingToken: token, type: '' };
 
     if (isUrl(trimmed)) {
       const result = extractAndTemplateToken(trimmed);
+
       if (result.token) {
         return { pendingUrl: result.templatedUrl, pendingToken: result.token, type: 'url_with_token' };
       } else {
@@ -195,9 +221,12 @@ export default function StreamUrlManager({ theme }) {
 
   const getPendingValues2 = (input) => {
     const trimmed = input.trim();
+
     if (!trimmed) return { pendingUrl2: url2, pendingToken2: token2, type2: '' };
+
     if (isUrl(trimmed)) {
       const result = extractAndTemplateToken(trimmed);
+
       if (result.token) return { pendingUrl2: result.templatedUrl, pendingToken2: result.token, type2: 'url_with_token' };
       else return { pendingUrl2: trimmed, pendingToken2: '', type2: 'url_only' };
     } else {
@@ -212,6 +241,7 @@ export default function StreamUrlManager({ theme }) {
   const handleSave = async () => {
     if (!inputValue.trim()) return;
     setSaving(true);
+
     try {
       await set(ref(db, 'settings/stream_url'), pendingUrl.trim());
       await set(ref(db, 'settings/stream_token'), pendingToken.trim());
@@ -231,6 +261,7 @@ export default function StreamUrlManager({ theme }) {
   const handleSave2 = async () => {
     if (!inputValue2.trim()) return;
     setSaving(true);
+
     try {
       await set(ref(db, 'settings/stream_url_2'), pendingUrl2.trim());
       await set(ref(db, 'settings/stream_token_2'), pendingToken2.trim());
@@ -249,31 +280,37 @@ export default function StreamUrlManager({ theme }) {
 
   const handleToggleSync = async (e) => {
     const newValue = e.target.checked;
+
     await set(ref(db, 'settings/stream_sync_vod'), newValue);
   };
 
   const handleToggleProxy = async (e) => {
     const newValue = e.target.checked;
+
     await set(ref(db, 'settings/stream_use_proxy'), newValue);
   };
 
   const handleToggleMultiMode = async (e) => {
     const newValue = e.target.checked;
+
     await set(ref(db, 'settings/stream_multi_mode'), newValue);
   };
 
   const saveToHistory = (url) => {
     if (!url || !url.trim()) return;
     const isExist = presets.some(p => p.url === url.trim());
+
     if (!isExist) {
       const title = "History " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const newPresetRef = push(ref(db, 'settings/stream_presets'));
+
       set(newPresetRef, { title, url: url.trim() }).catch(console.error);
     }
   };
 
   const applyPreset = async (presetUrl, target = 'left') => {
     setSaving(true);
+
     try {
       if (target === 'left') {
         await set(ref(db, 'settings/stream_url'), presetUrl);
@@ -288,6 +325,7 @@ export default function StreamUrlManager({ theme }) {
         setInputValue2('');
         setFeedback({ text: '✓ Preset Kanan berhasil diterapkan!', isError: false });
       }
+
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
       console.error("Failed to save preset:", err);
@@ -310,6 +348,7 @@ export default function StreamUrlManager({ theme }) {
     if (!newPresetTitle.trim() || !newPresetUrl.trim()) return;
 
     const newPresetRef = push(ref(db, 'settings/stream_presets'));
+
     set(newPresetRef, { title: newPresetTitle.trim(), url: newPresetUrl.trim() }).then(() => {
       setModalOpen(false);
     }).catch(err => {

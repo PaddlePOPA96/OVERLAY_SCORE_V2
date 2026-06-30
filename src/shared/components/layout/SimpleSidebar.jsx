@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
+
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { onAuthStateChanged } from 'firebase/auth'
@@ -19,11 +20,13 @@ const NavItem = ({ href, icon, children, currentParam, isDirectPath }) => {
   const pathname = usePathname()
 
   let isActive = false
+
   if (isDirectPath) {
     isActive = pathname === href
   } else {
     // Extract the 's' parameter from the href
     const targetParam = href.split('s=')[1]
+
     isActive = pathname === '/dashboard' && (currentParam === targetParam || (!currentParam && targetParam === 'operator'))
   }
 
@@ -141,8 +144,10 @@ export default function SimpleSidebar({ isOpen, setIsOpen }) {
     if (userRole === 'superadmin') return true
     if (!rolePermissions || Object.keys(rolePermissions).length === 0) return true
     const roleConfig = rolePermissions[userRole]
+
     if (!roleConfig) return true
-    return !!roleConfig[permissionKey]
+    
+return !!roleConfig[permissionKey]
   }
 
   const router = useRouter()

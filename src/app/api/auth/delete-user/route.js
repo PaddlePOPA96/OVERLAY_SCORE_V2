@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server'
+
 import admin from 'firebase-admin'
+
 import { verifyIdToken } from '@/services/firebase/admin'
 
 export async function POST(req) {
   try {
     const authHeader = req.headers.get('Authorization')
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -33,6 +36,7 @@ export async function POST(req) {
     return NextResponse.json({ success: true, message: 'User deleted successfully from Auth' })
   } catch (error) {
     console.error('Error deleting user:', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    
+return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
   }
 }

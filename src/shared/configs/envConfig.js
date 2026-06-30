@@ -20,10 +20,12 @@ export const serverEnv = {
 
 export const getParsedServiceAccount = () => {
     if (!serverEnv.FIREBASE_SERVICE_ACCOUNT_KEY) return null;
+
     try {
         return JSON.parse(serverEnv.FIREBASE_SERVICE_ACCOUNT_KEY);
     } catch (e) {
         console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_KEY:', e.message);
-        return null;
+        
+return null;
     }
 };

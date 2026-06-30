@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 
 import { LOGO_DATA, buildLogoSrc } from '@/data/logoData'
+import pildunData from '@/data/fix-playerpildun32.json'
 
-export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect }) {
+export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('database')
   const [league, setLeague] = useState(Object.keys(LOGO_DATA)[0] || '')
 
@@ -28,7 +29,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
   if (!isOpen) return null
 
-  const clubs = LOGO_DATA[league] || []
+  const clubs = league === 'FIFA World Cup'
+    ? pildunData.map(d => d.negara)
+    : (LOGO_DATA[league] || [])
 
   // Canvas Image Compression Helper
   const processAndCompressFile = file => {
@@ -172,6 +175,13 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
     onSelect(logoInfo)
   }
 
+  const isLight = theme === 'light'
+  const modalBg = isLight ? '#ffffff' : '#020617'
+  const modalText = isLight ? '#0f172a' : '#e5e7eb'
+  const modalBorder = isLight ? '#cbd5e1' : '#1f2937'
+  const inputBg = isLight ? '#ffffff' : '#090d16'
+  const itemBg = isLight ? '#ffffff' : '#090d16'
+
   return (
     <div
       className='fixed inset-0 z-50 flex items-center justify-center'
@@ -179,8 +189,8 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
     >
       <div
         style={{
-          background: '#020617',
-          color: '#e5e7eb',
+          background: modalBg,
+          color: modalText,
           padding: '20px',
           borderRadius: '16px',
           width: '94%',
@@ -189,8 +199,8 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
-          border: '1px solid #1f2937',
-          boxShadow: '0 25px 60px rgba(0,0,0,0.8)'
+          border: `1px solid ${modalBorder}`,
+          boxShadow: isLight ? '0 10px 40px rgba(0,0,0,0.15)' : '0 25px 60px rgba(0,0,0,0.8)'
         }}
       >
         {/* Header Modal */}
@@ -199,23 +209,23 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            borderBottom: '1px solid #1f2937',
+            borderBottom: `1px solid ${modalBorder}`,
             paddingBottom: '12px'
           }}
         >
-          <span style={{ fontWeight: 700, fontSize: 16, color: '#60a5fa' }}>Pengaturan Logo Tim Scoreboard</span>
+          <span style={{ fontWeight: 700, fontSize: 16, color: '#3b82f6' }}>Pengaturan Logo Tim Scoreboard</span>
           <button
             type='button'
             className='op-btn'
             onClick={handleClose}
             style={{
               padding: '5px 12px',
-              background: '#1f2937',
-              border: '1px solid #374151',
+              background: isLight ? '#f1f5f9' : '#1f2937',
+              border: `1px solid ${modalBorder}`,
               borderRadius: '6px',
               cursor: 'pointer',
               fontSize: '12px',
-              color: '#e5e7eb',
+              color: modalText,
               transition: 'all 0.15s ease'
             }}
           >
@@ -228,7 +238,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
           style={{
             display: 'flex',
             gap: '8px',
-            borderBottom: '1px solid #1f2937',
+            borderBottom: `1px solid ${modalBorder}`,
             paddingBottom: '8px',
             marginBottom: '4px'
           }}
@@ -240,7 +250,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
               padding: '8px 16px',
               borderRadius: '8px',
               background: activeTab === 'database' ? '#1d4ed8' : 'transparent',
-              color: activeTab === 'database' ? '#fff' : '#9ca3af',
+              color: activeTab === 'database' ? '#fff' : (isLight ? '#64748b' : '#9ca3af'),
               border: activeTab === 'database' ? '1px solid #3b82f6' : '1px solid transparent',
               cursor: 'pointer',
               fontWeight: 600,
@@ -257,7 +267,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
               padding: '8px 16px',
               borderRadius: '8px',
               background: activeTab === 'custom' ? '#1d4ed8' : 'transparent',
-              color: activeTab === 'custom' ? '#fff' : '#9ca3af',
+              color: activeTab === 'custom' ? '#fff' : (isLight ? '#64748b' : '#9ca3af'),
               border: activeTab === 'custom' ? '1px solid #3b82f6' : '1px solid transparent',
               cursor: 'pointer',
               fontWeight: 600,
@@ -278,7 +288,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
               <div
                 style={{
                   width: '30%',
-                  borderRight: '1px solid #1f2937',
+                  borderRight: `1px solid ${modalBorder}`,
                   paddingRight: 10,
                   overflowY: 'auto',
                   maxHeight: '58vh'
@@ -293,9 +303,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                       borderRadius: 8,
                       cursor: 'pointer',
                       marginBottom: 5,
-                      background: lg === league ? '#1d4ed8' : '#0f172a',
-                      border: lg === league ? '1px solid #60a5fa' : '1px solid #1f2937',
-                      color: lg === league ? '#f9fafb' : '#9ca3af',
+                      background: lg === league ? '#1d4ed8' : (isLight ? '#f1f5f9' : '#0f172a'),
+                      border: lg === league ? '1px solid #60a5fa' : `1px solid ${modalBorder}`,
+                      color: lg === league ? '#f9fafb' : (isLight ? '#475569' : '#9ca3af'),
                       fontWeight: lg === league ? 'bold' : 'normal',
                       fontSize: '12px',
                       transition: 'all 0.15s ease'
@@ -319,7 +329,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                 }}
               >
                 {clubs.map(club => {
-                  const src = buildLogoSrc(league, club)
+                  const src = league === 'FIFA World Cup'
+                    ? (pildunData.find(d => d.negara === club)?.link_bendera || '')
+                    : buildLogoSrc(league, club)
 
                   return (
                     <button
@@ -327,9 +339,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                       type='button'
                       onClick={(e) => handleSelectClub(e, { src, club, league })}
                       style={{
-                        background: '#090d16',
+                        background: itemBg,
                         borderRadius: 12,
-                        border: '1px solid #1f2937',
+                        border: `1px solid ${modalBorder}`,
                         padding: 12,
                         display: 'flex',
                         flexDirection: 'column',
@@ -341,11 +353,11 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                       }}
                       onMouseEnter={e => {
                         e.currentTarget.style.borderColor = '#3b82f6'
-                        e.currentTarget.style.background = '#0f172a'
+                        e.currentTarget.style.background = isLight ? '#f8fafc' : '#0f172a'
                       }}
                       onMouseLeave={e => {
-                        e.currentTarget.style.borderColor = '#1f2937'
-                        e.currentTarget.style.background = '#090d16'
+                        e.currentTarget.style.borderColor = modalBorder
+                        e.currentTarget.style.background = itemBg
                       }}
                     >
                       <div
@@ -353,12 +365,12 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                           width: 70,
                           height: 70,
                           borderRadius: 10,
-                          background: '#020617',
+                          background: isLight ? '#f8fafc' : '#020617',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           overflow: 'hidden',
-                          border: '1px solid #1f2937'
+                          border: `1px solid ${modalBorder}`
                         }}
                       >
                         <img
@@ -377,7 +389,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                           fontWeight: 600,
                           textAlign: 'center',
                           lineHeight: 1.3,
-                          color: '#f3f4f6',
+                          color: modalText,
                           marginTop: 2
                         }}
                       >
@@ -400,7 +412,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
               <div style={{ flex: '1 1 450px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {/* File Drop Zone */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#60a5fa', letterSpacing: '0.05em' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.05em' }}>
                     METODE A: UNGGAH GAMBAR TIM LOKAL (.JPG, .PNG, .WEBP)
                   </span>
                   <div
@@ -412,9 +424,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                     onDrop={handleFileDrop}
                     onClick={() => document.getElementById('logo-file-input-custom').click()}
                     style={{
-                      border: isDragging ? '2px dashed #3b82f6' : '2px dashed #1e293b',
+                      border: isDragging ? '2px dashed #3b82f6' : `2px dashed ${modalBorder}`,
                       borderRadius: '12px',
-                      background: isDragging ? '#0f172a' : '#090d16',
+                      background: isDragging ? (isLight ? '#f1f5f9' : '#0f172a') : (isLight ? '#f8fafc' : '#090d16'),
                       padding: '30px 20px',
                       display: 'flex',
                       flexDirection: 'column',
@@ -434,10 +446,10 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                       style={{ display: 'none' }}
                     />
                     <span style={{ fontSize: '32px', marginBottom: '4px' }}>📁</span>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: '#f3f4f6' }}>
+                    <span style={{ fontSize: '13px', fontWeight: '600', color: modalText }}>
                       Tarik & Lepas gambar di sini
                     </span>
-                    <span style={{ fontSize: '11px', color: '#9ca3af', textAlign: 'center' }}>
+                    <span style={{ fontSize: '11px', color: isLight ? '#64748b' : '#9ca3af', textAlign: 'center' }}>
                       atau klik untuk menjelajah file dari komputer Anda (akan dikompresi otomatis)
                     </span>
                   </div>
@@ -450,7 +462,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
                 {/* Web URL Input */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#60a5fa', letterSpacing: '0.05em' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.05em' }}>
                     METODE B: TEMPELKAN URL LOGO WEB
                   </span>
                   <input
@@ -461,18 +473,18 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                     style={{
                       width: '100%',
                       padding: '11px 14px',
-                      background: '#090d16',
-                      border: '1px solid #1e293b',
+                      background: inputBg,
+                      border: `1px solid ${modalBorder}`,
                       borderRadius: '8px',
-                      color: '#fff',
+                      color: modalText,
                       fontSize: '13px',
                       outline: 'none',
                       transition: 'border-color 0.2s'
                     }}
                     onFocus={e => (e.target.style.borderColor = '#3b82f6')}
-                    onBlur={e => (e.target.style.borderColor = '#1e293b')}
+                    onBlur={e => (e.target.style.borderColor = modalBorder)}
                   />
-                  <span style={{ fontSize: '10px', color: '#9ca3af', lineHeight: '1.4' }}>
+                  <span style={{ fontSize: '10px', color: isLight ? '#64748b' : '#9ca3af', lineHeight: '1.4' }}>
                     Mendukung format gambar .jpg, .png, .webp, dan .svg. Pastikan URL tersebut menggunakan protokol
                     HTTPS dan dapat diakses publik.
                   </span>
@@ -480,7 +492,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
                 {/* Club Name Input */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#60a5fa', letterSpacing: '0.05em' }}>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.05em' }}>
                     NAMA LENGKAP TIM (CLUB FULL NAME)
                   </span>
                   <input
@@ -491,19 +503,19 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                     style={{
                       width: '100%',
                       padding: '11px 14px',
-                      background: '#090d16',
-                      border: '1px solid #1e293b',
+                      background: inputBg,
+                      border: `1px solid ${modalBorder}`,
                       borderRadius: '8px',
-                      color: '#fff',
+                      color: modalText,
                       fontSize: '13px',
                       fontWeight: 600,
                       outline: 'none',
                       transition: 'border-color 0.2s'
                     }}
                     onFocus={e => (e.target.style.borderColor = '#3b82f6')}
-                    onBlur={e => (e.target.style.borderColor = '#1e293b')}
+                    onBlur={e => (e.target.style.borderColor = modalBorder)}
                   />
-                  <span style={{ fontSize: '10px', color: '#9ca3af' }}>
+                  <span style={{ fontSize: '10px', color: isLight ? '#64748b' : '#9ca3af' }}>
                     Wajib diisi. Menentukan label teks lengkap klub pada layout scoreboard.
                   </span>
                 </div>
@@ -517,7 +529,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  borderLeft: '1px solid #1f2937',
+                  borderLeft: `1px solid ${modalBorder}`,
                   paddingLeft: '20px',
                   minHeight: '320px'
                 }}
@@ -525,20 +537,20 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                 <div
                   style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}
                 >
-                  <span style={{ fontSize: '12px', fontWeight: '600', color: '#9ca3af' }}>PREVIEW LOGO BARU</span>
+                  <span style={{ fontSize: '12px', fontWeight: '600', color: isLight ? '#64748b' : '#9ca3af' }}>PREVIEW LOGO BARU</span>
 
                   <div
                     style={{
                       width: '150px',
                       height: '150px',
                       borderRadius: '14px',
-                      background: '#090d16',
-                      border: '1px solid #1e293b',
+                      background: isLight ? '#f8fafc' : '#090d16',
+                      border: `1px solid ${modalBorder}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       overflow: 'hidden',
-                      boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.6)',
+                      boxShadow: isLight ? 'inset 0 2px 8px rgba(0,0,0,0.05)' : 'inset 0 4px 12px rgba(0,0,0,0.6)',
                       position: 'relative'
                     }}
                   >
@@ -563,7 +575,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                         }}
                       >
                         <span style={{ fontSize: '30px' }}>🖼️</span>
-                        <span style={{ fontSize: '10px', textAlign: 'center', fontWeight: '500' }}>Belum Ada Logo</span>
+                        <span style={{ fontSize: '10px', textAlign: 'center', fontWeight: '500', color: modalText }}>Belum Ada Logo</span>
                       </div>
                     )}
                   </div>
@@ -593,8 +605,8 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                     style={{
                       width: '100%',
                       padding: '11px 14px',
-                      background: !customSrc || !customClubName.trim() ? '#1e293b' : '#10b981',
-                      color: !customSrc || !customClubName.trim() ? '#9ca3af' : '#fff',
+                      background: !customSrc || !customClubName.trim() ? (isLight ? '#e2e8f0' : '#1e293b') : '#10b981',
+                      color: !customSrc || !customClubName.trim() ? (isLight ? '#94a3b8' : '#9ca3af') : '#fff',
                       border: 'none',
                       borderRadius: '8px',
                       fontWeight: '700',

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
+
 import Hls from 'hls.js';
+
 import styles from '../streams.module.css';
 
 export default function StreamPlayer({ currentChannel, streamStartTime, streamSyncVod, isMuted = true }) {
@@ -17,6 +19,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
 
     if (currentChannel) {
         let decodedChannel = currentChannel;
+
         if (currentChannel.includes('/api/stream.m3u8?u=')) {
             decodedChannel = atob(new URLSearchParams(currentChannel.split('?')[1]).get('u'));
         } else if (currentChannel.includes('/api/flv-proxy?u=')) {
@@ -46,21 +49,27 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     const youtubeSrc = useMemo(() => {
         if (!isYoutube || !youtubeId) return '';
         let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=${isMuted ? '1' : '0'}&playsinline=1&rel=0&showinfo=0`;
+
         if (streamSyncVod && streamStartTime > 0) {
             const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
+
             url += `&start=${offset}`;
         }
-        return url;
+
+        
+return url;
     }, [isYoutube, youtubeId, streamStartTime, streamSyncVod, isMuted]);
 
     const handleVideoPlay = (e, hlsInstance) => {
         const video = e.target;
+
         if (hlsInstance && hlsInstance.liveSyncPosition) {
             if (hlsInstance.liveSyncPosition > video.currentTime + 3) {
                 video.currentTime = hlsInstance.liveSyncPosition;
             }
         } else if (video.seekable && video.seekable.length > 0) {
             const liveEdge = video.seekable.end(video.seekable.length - 1);
+
             if (liveEdge > video.currentTime + 3) {
                 video.currentTime = liveEdge;
             }
@@ -76,20 +85,28 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
                 flvRef.current.destroy();
                 flvRef.current = null;
             }
-            return;
+
+            
+return;
         }
 
         const video = videoRef.current;
+
         if (!video) return;
 
         let cancelled = false;
 
         import('mpegts.js/dist/mpegts.js').then((mpegtsModule) => {
             const mpegts = mpegtsModule.default || mpegtsModule;
+
             if (cancelled) return;
-            if (!mpegts.isSupported()) { console.warn('mpegts.js is not supported in this browser'); return; }
+
+            if (!mpegts.isSupported()) { console.warn('mpegts.js is not supported in this browser'); 
+
+return; }
 
             if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+
             if (flvRef.current) {
                 flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
             }
@@ -134,15 +151,19 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
                 hlsRef.current.destroy();
                 hlsRef.current = null;
             }
-            return;
+
+            
+return;
         }
 
         const video = videoRef.current;
+
         if (!video) return;
 
         if (flvRef.current) {
             flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
         }
+
         if (hlsRef.current) {
             hlsRef.current.destroy();
             hlsRef.current = null;
@@ -188,6 +209,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
                 hlsRef.current.destroy();
                 hlsRef.current = null;
             }
+
             if (flvRef.current) {
                 flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy();
                 flvRef.current = null;

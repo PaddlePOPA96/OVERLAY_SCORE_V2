@@ -67,6 +67,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
       const t2 = setTimeout(() => {
         setGoalEvent(null)
         const t3 = setTimeout(() => setHideTimer(false), 600)
+
         goalTimeouts.current.push(t3)
       }, 5500)
 
@@ -85,6 +86,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
   const showTimerUI = animateIn && !hideTimer
 
   let logoTranslateX = '-50%'
+
   if (goalEvent === 'left') logoTranslateX = 'calc(-50% - 320px)'
   if (goalEvent === 'right') logoTranslateX = 'calc(-50% + 320px)'
 
@@ -244,6 +246,7 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 className="goal-layer"
                 style={{
                   position: 'absolute',
+
                   // Menarik div menembus batas kiri wrapper untuk nge-pass gradient
                   // Wrapper start di 300px, Gradient start di 285px -> butuh -15px
                   left: '-15px',

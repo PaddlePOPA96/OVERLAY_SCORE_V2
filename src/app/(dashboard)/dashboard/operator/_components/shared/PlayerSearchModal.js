@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import { getClubs, getPlayersByClub, searchAllPlayers } from '@/shared/actions/playerActions'
 
 export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = 'dark', homeTeam, awayTeam }) {
@@ -36,9 +37,12 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
   useEffect(() => {
     if (!clubSearch) {
       setFilteredClubs(clubs)
-      return
+      
+return
     }
+
     const lower = clubSearch.toLowerCase()
+
     setFilteredClubs(clubs.filter(c => c.name.toLowerCase().includes(lower)))
   }, [clubSearch, clubs])
 
@@ -56,10 +60,13 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
   // Global Search Debounce
   useEffect(() => {
     if (activeTab !== 'global') return
+
     if (globalSearchQuery.length < 3) {
       setGlobalResults([])
-      return
+      
+return
     }
+
     const delayDebounceFn = setTimeout(() => {
       setIsLoading(true)
       searchAllPlayers(globalSearchQuery).then(res => {
@@ -67,7 +74,9 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
         setIsLoading(false)
       })
     }, 400)
-    return () => clearTimeout(delayDebounceFn)
+
+    
+return () => clearTimeout(delayDebounceFn)
   }, [globalSearchQuery, activeTab])
 
   // Reset state when closed
@@ -184,6 +193,7 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
         </div>
 
         {activeTab === 'club' ? (
+
           // --- TAB: CLUB ---
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
@@ -281,6 +291,7 @@ export default function PlayerSearchModal({ isOpen, onClose, onSelect, theme = '
             )}
           </div>
         ) : (
+
           // --- TAB: GLOBAL ---
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
             <span style={{ fontWeight: 600, fontSize: 14, color: textColor, marginBottom: '12px' }}>

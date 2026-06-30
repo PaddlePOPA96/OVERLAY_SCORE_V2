@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+
 import { getScale } from '../../_components/overlay-scale.config'
 
 export default function ThirdTitleOverlay({ data }) {
@@ -52,12 +53,15 @@ export default function ThirdTitleOverlay({ data }) {
 
   const layoutType = data.layout || 'B'
   let customMarginTop = layoutType === 'Pildun2' ? '190px' : '260px'
+
   if (layoutType === 'Pildun') customMarginTop = '100px'
 
   const overlayScale = (layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.1 : 1) * 1.3
 
   const pipaLogoSvg = (color, withImage = false, imgUrl = '') => {
     const clipId = 'logoShape-clip'
+
+
     return (
       <svg viewBox="0 0 401 500" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}>
         {withImage && (
@@ -71,9 +75,15 @@ export default function ThirdTitleOverlay({ data }) {
         {withImage && (
           <image
             href={imgUrl}
-            width="100%" height="100%"
-            preserveAspectRatio="xMidYMid slice"
+            x="-110%"
+            y="-2%"
+            width="320%"
+            height="320%"
+            preserveAspectRatio="xMidYMin meet"
             clipPath={`url(#${clipId})`}
+            style={{
+              filter: 'drop-shadow(0px 0px 8px #ffffff) drop-shadow(0px 0px 3px #ffffff) drop-shadow(0px 0px 1px #ffffff)'
+            }}
           />
         )}
       </svg>

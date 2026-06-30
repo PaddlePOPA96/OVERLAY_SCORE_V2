@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { db } from '@/services/firebase/db';
+
 import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
+
+import { db } from '@/services/firebase/db';
 import styles from '../streams.module.css';
 
 export default function ChatPanel({ isChatDisabled }) {
@@ -19,27 +21,34 @@ export default function ChatPanel({ isChatDisabled }) {
     useEffect(() => {
         setIsMounted(true);
         const savedName = localStorage.getItem('chat_username');
+
         if (savedName) {
             setName(savedName);
             setIsNameSet(true);
         }
 
         let savedUid = localStorage.getItem('chat_uid');
+
         if (!savedUid) {
             savedUid = 'uid_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
             localStorage.setItem('chat_uid', savedUid);
         }
+
         setUid(savedUid);
     }, []);
 
     useEffect(() => {
         const chatRef = ref(db, 'live_streams_chat');
+
         const unsubscribe = onValue(chatRef, (snapshot) => {
             const data = snapshot.val();
+
             if (data) {
                 const chatList = Object.keys(data).map(key => {
                     const item = data[key];
-                    return {
+
+                    
+return {
                         id: key,
                         ...item,
                         sortTime: typeof item.timestamp === 'number' ? item.timestamp : Date.now()
@@ -83,12 +92,15 @@ export default function ChatPanel({ isChatDisabled }) {
 
     useEffect(() => {
         let timer = null;
+
         if (cooldown > 0) {
             timer = setInterval(() => {
                 setCooldown((prev) => prev - 1);
             }, 1000);
         }
-        return () => {
+
+        
+return () => {
             if (timer) clearInterval(timer);
         };
     }, [cooldown]);
@@ -98,8 +110,10 @@ export default function ChatPanel({ isChatDisabled }) {
         if (!name.trim() || !message.trim() || cooldown > 0) return;
 
         setIsSending(true);
+
         try {
             const chatRef = ref(db, 'live_streams_chat');
+
             await push(chatRef, {
                 uid: uid,
                 name: name.trim(),
@@ -119,6 +133,7 @@ export default function ChatPanel({ isChatDisabled }) {
     const handleSaveName = async (e) => {
         e.preventDefault();
         const trimmed = name.trim();
+
         if (trimmed) {
             localStorage.setItem('chat_username', trimmed);
             setName(trimmed);
@@ -128,10 +143,13 @@ export default function ChatPanel({ isChatDisabled }) {
             if (uid) {
                 const chatRef = ref(db, 'live_streams_chat');
                 const q = query(chatRef, orderByChild('uid'), equalTo(uid));
+
                 try {
                     const snapshot = await get(q);
+
                     if (snapshot.exists()) {
                         const updates = {};
+
                         snapshot.forEach((childSnapshot) => {
                             updates[childSnapshot.key + '/name'] = trimmed;
                         });
@@ -158,7 +176,9 @@ export default function ChatPanel({ isChatDisabled }) {
                 ) : (
                     chats.map((chat) => {
                         const isMe = chat.uid === uid;
-                        return (
+
+                        
+return (
                             <div
                                 key={chat.id}
                                 className={styles.chatMessage}

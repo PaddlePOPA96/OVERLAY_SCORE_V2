@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import { ref, onValue, update, get } from 'firebase/database'
-import { db } from '@/services/firebase/index'
+
 
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
@@ -10,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
+
+import { db } from '@/services/firebase/index'
 import playerData from '@/data/fix-playerpildun32.json'
 
 const formationMap = {
@@ -113,19 +116,24 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   // Helper function to load data for a specific team
   const loadTeamData = async (teamName) => {
     let team = playerData.find(t => t.negara === teamName);
+
     if (!team) team = playerData[0];
 
     try {
       const snapshot = await get(ref(db, `match_live/global_formation_presets/${teamName}`));
+
       if (snapshot.exists()) {
         const data = snapshot.val();
         
         // Update photo from local json just in case it has changed
         const localTeamData = playerData.find(t => t.negara === teamName);
+
         const updatePhoto = (player) => {
           if (!localTeamData || !player) return player;
           const freshPlayer = localTeamData.pemain.find(p => p.nama_pemain === player.nama_pemain);
-          return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
+
+          
+return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
         };
 
         const updatedPlayers = (data.players || []).map(updatePhoto);
@@ -191,12 +199,14 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       setAwayTeam(savedAwayTeam);
 
       const homeRes = await loadTeamData(savedHomeTeam);
+
       setHomeTeamInfo(homeRes.teamInfo);
       setHomePlayers(homeRes.players);
       setHomeSubstitutes(homeRes.substitutes);
       setHomeFormation(homeRes.formation);
 
       const awayRes = await loadTeamData(savedAwayTeam);
+
       setAwayTeamInfo(awayRes.teamInfo);
       setAwayPlayers(awayRes.players);
       setAwaySubstitutes(awayRes.substitutes);
@@ -210,8 +220,10 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   useEffect(() => {
     if (!roomId) return;
     const dbRef = ref(db, overlayPath);
+
     const unsubscribe = onValue(dbRef, snapshot => {
       const data = snapshot.val();
+
       if (data) {
         setIsVisible(data.isVisible || false);
         setRemoteState(data);
@@ -224,7 +236,9 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
     if (typeof window !== 'undefined') {
       setHostUrl(window.location.origin);
     }
-    return () => unsubscribe();
+
+    
+return () => unsubscribe();
   }, [roomId, overlayPath]);
 
   // Aliases for currently active tab elements
@@ -241,6 +255,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   // Handlers for active tab edits
   const handleTeamChange = async (newTeam) => {
     const res = await loadTeamData(newTeam);
+
     if (activeTab === 'home') {
       setHomeTeam(newTeam);
       setHomeFormation(res.formation);
@@ -260,6 +275,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
 
   const handleFormationChange = (newFormation) => {
     const newPositions = formationPositions[newFormation];
+
     if (!newPositions) return;
 
     if (activeTab === 'home') {
@@ -288,6 +304,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       mode: 'home',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes },
+
       // Keep root data for backward compatibility
       teamInfo: homeTeamInfo,
       players: homePlayers,
@@ -301,6 +318,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       mode: 'away',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes },
+
       // Keep root data for backward compatibility
       teamInfo: awayTeamInfo,
       players: awayPlayers,
@@ -319,12 +337,14 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
 
   const handleUpdateOverlay = () => {
     const currentMode = remoteState?.mode || 'home';
+
     const payload = {
       isVisible: true,
       mode: currentMode,
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes }
     };
+
     if (currentMode === 'home') {
       payload.teamInfo = homeTeamInfo;
       payload.players = homePlayers;
@@ -334,6 +354,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       payload.players = awayPlayers;
       payload.substitutes = awaySubstitutes;
     }
+
     update(ref(db, overlayPath), cleanPayload(payload)).catch(console.error);
   };
 
@@ -371,6 +392,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   const syncFirebase = (updatedPlayers, updatedSubstitutes) => {
     if (!isVisible) return;
     const currentMode = remoteState?.mode || 'home';
+
     const payload = {
       isVisible: true,
       mode: currentMode,
@@ -404,18 +426,21 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
     e.stopPropagation();
     const draggedPlayerId = e.dataTransfer.getData('playerId');
     const draggedType = e.dataTransfer.getData('type');
+
     if (!draggedPlayerId || draggedPlayerId === targetPlayerId) return;
 
     let newPlayers = [...players];
     let newSubstitutes = [...substitutes];
     const getPlayerIndex = (id, type) => type === 'player' ? newPlayers.findIndex(p => p.id === id) : newSubstitutes.findIndex(p => p.id === id);
     const draggedIndex = getPlayerIndex(draggedPlayerId, draggedType);
+
     if (draggedIndex === -1) return;
 
     if (targetType === 'unassign') {
       if (draggedType === 'player' && !newPlayers[draggedIndex].isEmpty) {
         const playerObj = newPlayers[draggedIndex];
         const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
+
         newSubstitutes.push(newSub);
         newPlayers[draggedIndex] = {
           id: `slot-${Date.now()}`,
@@ -425,13 +450,16 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
           type: 'player'
         };
       }
+
       setPlayers(newPlayers);
       setSubstitutes(newSubstitutes);
       syncFirebase(newPlayers, newSubstitutes);
-      return;
+      
+return;
     }
 
     const targetIndex = getPlayerIndex(targetPlayerId, targetType);
+
     if (targetIndex === -1) return;
 
     if (draggedType === 'player' && targetType === 'player') {
@@ -439,6 +467,7 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       const p2 = newPlayers[targetIndex];
       const tempTop = p1.styleTop;
       const tempLeft = p1.styleLeft;
+
       p1.styleTop = p2.styleTop;
       p1.styleLeft = p2.styleLeft;
       p2.styleTop = tempTop;
@@ -447,23 +476,29 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       const subObj = newSubstitutes[draggedIndex];
       const playerObj = newPlayers[targetIndex];
       const newPlayer = { ...subObj, styleTop: playerObj.styleTop, styleLeft: playerObj.styleLeft, type: 'player', id: `player-${Date.now()}` };
+
       if (playerObj.isEmpty) {
         newSubstitutes.splice(draggedIndex, 1);
       } else {
         const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
+
         newSubstitutes[draggedIndex] = newSub;
       }
+
       newPlayers[targetIndex] = newPlayer;
     } else if (draggedType === 'player' && targetType === 'sub') {
       const playerObj = newPlayers[draggedIndex];
       const subObj = newSubstitutes[targetIndex];
+
       if (playerObj.isEmpty) return;
       const newPlayer = { ...subObj, styleTop: playerObj.styleTop, styleLeft: playerObj.styleLeft, type: 'player', id: `player-${Date.now()}` };
       const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
+
       newPlayers[draggedIndex] = newPlayer;
       newSubstitutes[targetIndex] = newSub;
     } else if (draggedType === 'sub' && targetType === 'sub') {
       const temp = newSubstitutes[draggedIndex];
+
       newSubstitutes[draggedIndex] = newSubstitutes[targetIndex];
       newSubstitutes[targetIndex] = temp;
     }
@@ -492,7 +527,9 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
       if (p.id === draggedPlayerId) {
         return { ...p, styleTop, styleLeft };
       }
-      return p;
+
+      
+return p;
     });
 
     setPlayers(updatedPlayers);

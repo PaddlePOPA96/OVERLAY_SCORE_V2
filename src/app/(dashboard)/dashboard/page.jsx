@@ -10,9 +10,10 @@ import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Grid from '@mui/material/Grid'
 
+import { ref, onValue } from 'firebase/database'
+
 import { useAuth } from '@/shared/components/providers/AuthContext'
 import { useUserRole } from '@/features/iam/hooks/useUserRole'
-import { ref, onValue } from 'firebase/database'
 import { db } from '@/services/firebase/db'
 import {
   usePremierLeagueMatches,
@@ -121,13 +122,17 @@ function DashboardPageInner() {
 
   useEffect(() => {
     const permsRef = ref(db, 'ucl_data/settings/roles_permissions')
+
     const unsubscribe = onValue(permsRef, snapshot => {
       const val = snapshot.val()
+
       if (val) {
         setRolePermissions(val)
       }
     })
-    return () => unsubscribe()
+
+    
+return () => unsubscribe()
   }, [])
 
   const hasPermission = (permissionKey) => {
@@ -135,8 +140,10 @@ function DashboardPageInner() {
     if (role === 'superadmin') return true
     if (!rolePermissions || Object.keys(rolePermissions).length === 0) return true
     const roleConfig = rolePermissions[role]
+
     if (!roleConfig) return true
-    return !!roleConfig[permissionKey]
+    
+return !!roleConfig[permissionKey]
   }
 
   const renderRestricted = (title) => (

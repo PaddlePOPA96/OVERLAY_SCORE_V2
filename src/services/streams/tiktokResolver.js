@@ -6,7 +6,8 @@ export function resolveInstagram(url) {
     execFile('yt-dlp', ['-j', '-f', '1/best', url], (error, stdout, stderr) => {
       if (error) {
         console.error('yt-dlp exec error:', stderr)
-        return reject(new Error('Failed to resolve Instagram Reels URL'))
+        
+return reject(new Error('Failed to resolve Instagram Reels URL'))
       }
 
       try {

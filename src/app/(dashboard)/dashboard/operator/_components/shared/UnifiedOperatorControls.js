@@ -144,272 +144,242 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
     return (
       <div className={`op-tab-pane ${activeTab === 'scoreboard' ? 'active' : 'inactive'}`}>
 
-        {/* ── Overlay Live Toggle ── */}
-        <div className='op-overlay-toggle' style={{ marginBottom: '12px' }}>
-          <div className='op-overlay-toggle-label'>
-            <span style={{ fontSize: '18px' }}>{isLive ? '🟢' : '🔴'}</span>
+        {/* ── Overlay Status Header Banner ── */}
+        <div className="neo-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 0 12px 0', background: '#ffffff', padding: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '50%', background: isLive ? '#22c55e' : '#ff2a2a', border: '1.5px solid #000' }}></span>
             <div>
-              <div>Overlay</div>
-              <span className={`op-overlay-toggle-status ${isLive ? 'live' : 'off'}`}>
-                {isLive ? 'LIVE' : 'OFFLINE'}
+              <div style={{ fontWeight: '900', fontSize: '13px', color: '#000000', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Overlay Display</div>
+              <span style={{ fontSize: '11px', fontWeight: '900', color: isLive ? '#22c55e' : '#ff2a2a' }}>
+                {isLive ? 'LIVE ON AIR' : 'OFFLINE'}
               </span>
             </div>
           </div>
           <button
-            className={`op-toggle-big ${isLive ? 'on' : 'off'}`}
+            className={`neo-btn-lg ${isLive ? 'neo-btn-danger' : 'neo-btn-primary'}`}
+            style={{ padding: '8px 16px', fontSize: '11px', height: '36px' }}
             onClick={() => actions.toggleOverlay()}
           >
-            <span className='op-toggle-big-knob' />
+            {isLive ? 'TURN OFF' : 'GO LIVE'}
           </button>
         </div>
 
-        {/* ── 1. TIMER & PERIOD CONTROLS ── */}
-        <div style={cardStyle}>
-          <div style={{ ...headerStyle, borderBottom: timerOpen ? `1px solid ${borderCol}` : 'none' }} onClick={() => setTimerOpen(!timerOpen)}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* ── Responsive Columns Grid ── */}
+        <div className="op-scoreboard-grid">
+
+          {/* CARD 1: TIMER & PERIOD CONTROLS */}
+          <div className="neo-card" style={{ marginBottom: '0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '8px', textTransform: 'uppercase' }}>
               ⏱️ Timer & Period Controls
-            </span>
-            <i className={timerOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'} style={{ fontSize: '18px', color: labelColor }} />
-          </div>
-          {timerOpen && (
-            <div style={bodyStyle}>
-              {/* Timer Display */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div className='op-timer-display' style={{ padding: '6px 10px', marginBottom: '2px', borderRadius: '8px' }}>
-                  <span className='op-timer-time' style={{ fontSize: '20px', minWidth: '70px' }}>{formatTime(displayTime)}</span>
+            </h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flex: 1, justifyContent: 'space-between' }}>
+              {/* Time Display Header Card (Vibrant high-contrast dark block) */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: '#000000', border: '3px solid #000', borderRadius: '10px' }}>
+                <div>
+                  <div style={{ fontSize: '10px', fontWeight: '900', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '2px', letterSpacing: '0.05em' }}>Match Time</div>
+                  <span className='font-mono neon-timer-text' style={{ fontSize: '28px', color: '#FFE600', fontWeight: '950', lineHeight: 1 }}>{formatTime(displayTime)}</span>
                 </div>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   <button
-                    className={`op-timer-btn ${isRunning ? 'pause' : 'start'}`}
+                    className={`neo-btn-lg ${isRunning ? 'neo-btn-secondary' : 'neo-btn-primary'}`}
                     onClick={() => actions.toggleTimer()}
-                    style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
+                    style={{ height: '36px', padding: '0 12px', fontSize: '11px' }}
                   >
-                    <i className={isRunning ? 'ri-pause-fill' : 'ri-play-fill'} style={{ fontSize: '12px' }} />
                     {isRunning ? 'Pause' : 'Start'}
                   </button>
                   <button
-                    className='op-timer-btn reset'
+                    className='neo-btn-lg neo-btn-outline'
                     onClick={() => actions.resetTimer()}
-                    style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
+                    style={{ height: '36px', padding: '0 12px', fontSize: '11px' }}
                   >
-                    <i className='ri-restart-line' style={{ fontSize: '11px' }} />
                     Reset
                   </button>
                 </div>
+              </div>
 
-                {/* Manual set time */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 0 0' }}>
-                  <span style={{ fontSize: '11px', fontWeight: '600', color: labelColor, minWidth: '55px' }}>Set Time:</span>
-                  <input
-                    className='op-input'
-                    type='number'
-                    style={{ width: '48px', height: '30px', textAlign: 'center', fontSize: '12px', padding: '0 4px' }}
-                    value={manualM}
-                    onChange={e => setManualM(e.target.value)}
-                    min={0}
-                  />
-                  <span style={{ color: labelColor, fontWeight: '700', fontSize: '14px' }}>:</span>
-                  <input
-                    className='op-input'
-                    type='number'
-                    style={{ width: '48px', height: '30px', textAlign: 'center', fontSize: '12px', padding: '0 4px' }}
-                    value={manualS}
-                    onChange={e => setManualS(e.target.value)}
-                    min={0}
-                    max={59}
-                  />
+              {/* Period Block */}
+              <div>
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.05em' }}>⏱️ Period Selection</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '8px' }}>
+                  {[
+                    { val: 1, label: '1st Half' },
+                    { val: 2, label: '2nd Half' },
+                    { val: 3, label: 'Extra Time' }
+                  ].map(p => (
+                    <button
+                      key={p.val}
+                      className={`neo-btn-lg ${period === p.val ? 'neo-btn-primary' : 'neo-btn-outline'}`}
+                      onClick={() => handlePeriodChange(p.val)}
+                      style={{ fontSize: '11px', padding: '10px 4px' }}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className='neo-btn-lg neo-btn-outline'
+                  onClick={() => setIsTimeModalOpen(true)}
+                  style={{ width: '100%', height: '36px', fontSize: '12px' }}
+                >
+                  ⚙️ Set Manual Time
+                </button>
+              </div>
+
+              {/* Match Control Block */}
+              <div>
+                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.05em' }}>🔄 Match Control</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   <button
-                    className='op-timer-btn reset'
-                    style={{ minHeight: '30px', padding: '4px 12px', fontSize: '11px', borderRadius: '6px' }}
-                    onClick={handleSetTime}
+                    className={`neo-btn-lg ${data.switchSides ? 'neo-btn-primary' : 'neo-btn-outline'}`}
+                    onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
+                    style={{ fontSize: '12px', height: '40px' }}
                   >
-                    Set
+                    🔄 Switch Sides
+                  </button>
+                  
+                  <button
+                    className="neo-btn-lg neo-btn-danger"
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.confirm('Reset skor pertandingan? Semua skor dan timer akan direset.')) {
+                        actions.updateMatch({ homeScore: 0, awayScore: 0 })
+                        actions.resetTimer()
+                      }
+                    }}
+                    style={{ fontSize: '12px', height: '40px' }}
+                  >
+                    ⚠️ Reset Match
                   </button>
                 </div>
               </div>
-
-              {/* Period Selection */}
-              <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-                {[
-                  { val: 1, label: '1st Half' },
-                  { val: 2, label: '2nd Half' },
-                  { val: 3, label: 'Extra Time' }
-                ].map(p => (
-                  <button
-                    key={p.val}
-                    className={`op-period-btn-big ${period === p.val ? 'active' : ''}`}
-                    onClick={() => handlePeriodChange(p.val)}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
             </div>
-          )}
-        </div>
-
-        {/* ── 2. SCORE & GOAL CONTROLS ── */}
-        <div style={cardStyle}>
-          <div style={{ ...headerStyle, borderBottom: scoresOpen ? `1px solid ${borderCol}` : 'none' }} onClick={() => setScoresOpen(!scoresOpen)}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              📊 Score & Goal Controls
-            </span>
-            <i className={scoresOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'} style={{ fontSize: '18px', color: labelColor }} />
           </div>
-          {scoresOpen && (
-            <div style={bodyStyle}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                {/* HOME Team */}
-                <div className='op-team-score-card'>
-                  <div className='op-team-score-header'>
-                    <div className='op-team-score-logo' style={{ borderLeft: `3px solid ${data.homeColor || '#3b82f6'}` }}>
-                      {data.homeLogo ? (
-                        <img src={data.homeLogo} alt={homeName} />
-                      ) : (
-                        <span style={{ fontSize: '18px', fontWeight: '800', color: data.homeColor || '#3b82f6' }}>
-                          {homeName.charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <div className='op-team-score-name'>{homeName}</div>
-                      <div className='op-team-score-label'>Home</div>
-                    </div>
-                  </div>
 
-                  {/* Score display */}
-                  <div className='op-score-display'>
-                    <button
-                      className='op-score-adjust-btn'
-                      onClick={() => actions.updateMatch({ homeScore: Math.max(0, homeScore - 1) })}
-                    >
-                      −
-                    </button>
-                    <span className='op-score-num-big'>{homeScore}</span>
-                    <button
-                      className='op-score-adjust-btn'
-                      onClick={() => actions.updateMatch({ homeScore: Math.min(20, homeScore + 1) })}
-                    >
-                      +
-                    </button>
+          {/* CARD 2: SCORES & GOAL TRIGGERS */}
+          <div className="neo-card" style={{ marginBottom: '0', display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '14px', textTransform: 'uppercase' }}>
+              📊 Scores & Goal Triggers
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flex: 1, alignItems: 'center' }}>
+              {/* HOME Team Box */}
+              <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                    {data.homeLogo ? (
+                      <img src={data.homeLogo} alt={homeName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                    ) : (
+                      <span style={{ fontSize: '13px', fontWeight: '900', color: data.homeColor || '#3b82f6' }}>
+                        {homeName.charAt(0)}
+                      </span>
+                    )}
                   </div>
+                  <div>
+                    <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={homeName}>{homeName}</div>
+                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Home</div>
+                  </div>
+                </div>
 
-                  {/* GOAL button */}
+                {/* Score display (High Contrast Black Block) */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
                   <button
-                    className='op-goal-btn-big home'
-                    onClick={() => actions.triggerGoal('home')}
+                    className='neo-btn-lg neo-btn-outline'
+                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                    onClick={() => actions.updateMatch({ homeScore: Math.max(0, homeScore - 1) })}
                   >
-                    <span className='op-goal-emoji'>⚽</span>
-                    GOAL HOME
+                    −
+                  </button>
+                  <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{homeScore}</span>
+                  <button
+                    className='neo-btn-lg neo-btn-outline'
+                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                    onClick={() => actions.updateMatch({ homeScore: Math.min(20, homeScore + 1) })}
+                  >
+                    +
                   </button>
                 </div>
 
-                {/* AWAY Team */}
-                <div className='op-team-score-card'>
-                  <div className='op-team-score-header'>
-                    <div className='op-team-score-logo' style={{ borderLeft: `3px solid ${data.awayColor || '#ef4444'}` }}>
-                      {data.awayLogo ? (
-                        <img src={data.awayLogo} alt={awayName} />
-                      ) : (
-                        <span style={{ fontSize: '18px', fontWeight: '800', color: data.awayColor || '#ef4444' }}>
-                          {awayName.charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <div className='op-team-score-name'>{awayName}</div>
-                      <div className='op-team-score-label'>Away</div>
-                    </div>
-                  </div>
-
-                  {/* Score display */}
-                  <div className='op-score-display'>
-                    <button
-                      className='op-score-adjust-btn'
-                      onClick={() => actions.updateMatch({ awayScore: Math.max(0, awayScore - 1) })}
-                    >
-                      −
-                    </button>
-                    <span className='op-score-num-big'>{awayScore}</span>
-                    <button
-                      className='op-score-adjust-btn'
-                      onClick={() => actions.updateMatch({ awayScore: Math.min(20, awayScore + 1) })}
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  {/* GOAL button */}
-                  <button
-                    className='op-goal-btn-big away'
-                    onClick={() => actions.triggerGoal('away')}
-                  >
-                    <span className='op-goal-emoji'>⚽</span>
-                    GOAL AWAY
-                  </button>
-                </div>
+                {/* GOAL Button */}
+                <button
+                  className='neo-btn-lg'
+                  onClick={() => actions.triggerGoal('home')}
+                  style={{ background: '#00E676', color: '#000000', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
+                >
+                  ⚽ GOAL HOME
+                </button>
               </div>
 
-              {/* ── Tukar Posisi (Switch Sides) ── */}
-              <button
-                className={data.switchSides ? 'op-period-btn-big active' : 'op-period-btn-big'}
-                onClick={() => actions.updateMatch({ switchSides: !data.switchSides })}
-                style={{ width: '100%', marginTop: '6px' }}
-              >
-                🔄 {data.switchSides ? 'Kiri-Kanan Ditukar' : 'Tukar Posisi Tim (Halftime)'}
-              </button>
+              {/* AWAY Team Box */}
+              <div style={{ background: '#f8fafc', border: '3px solid #000', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', borderRadius: '10px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '38px', height: '38px', border: '2px solid #000', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '6px' }}>
+                    {data.awayLogo ? (
+                      <img src={data.awayLogo} alt={awayName} style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }} />
+                    ) : (
+                      <span style={{ fontSize: '13px', fontWeight: '900', color: data.awayColor || '#ef4444' }}>
+                        {awayName.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '15px', fontWeight: '950', color: '#000000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '90px' }} title={awayName}>{awayName}</div>
+                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>Away</div>
+                  </div>
+                </div>
 
-              {/* ── Reset Match ── */}
-              <button
-                className='op-reset-btn'
-                onClick={() => {
-                  if (typeof window !== 'undefined' && window.confirm('Reset skor pertandingan? Semua skor dan timer akan direset.')) {
-                    actions.updateMatch({ homeScore: 0, awayScore: 0 })
-                    actions.resetTimer()
-                  }
-                }}
-                style={{ width: '100%', marginTop: '4px' }}
-              >
-                🔄 Reset Pertandingan
-              </button>
+                {/* Score display (High Contrast Black Block) */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#000000', padding: '8px', border: '3px solid #000', borderRadius: '8px' }}>
+                  <button
+                    className='neo-btn-lg neo-btn-outline'
+                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                    onClick={() => actions.updateMatch({ awayScore: Math.max(0, awayScore - 1) })}
+                  >
+                    −
+                  </button>
+                  <span className="neon-score-text" style={{ fontSize: '28px', fontWeight: '950', color: '#FFE600', minWidth: '40px', textAlign: 'center' }}>{awayScore}</span>
+                  <button
+                    className='neo-btn-lg neo-btn-outline'
+                    style={{ width: '36px', height: '36px', padding: 0, fontSize: '16px' }}
+                    onClick={() => actions.updateMatch({ awayScore: Math.min(20, awayScore + 1) })}
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* GOAL Button */}
+                <button
+                  className='neo-btn-lg'
+                  onClick={() => actions.triggerGoal('away')}
+                  style={{ background: '#FF1744', color: '#ffffff', border: '3px solid #000', height: '48px', fontSize: '12px', fontWeight: '900' }}
+                >
+                  ⚽ GOAL AWAY
+                </button>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* ── 3. GOAL AUDIO CONTROLS ── */}
-        <div style={cardStyle}>
-          <div style={{ ...headerStyle, borderBottom: goalAudioOpen ? `1px solid ${borderCol}` : 'none' }} onClick={() => setGoalAudioOpen(!goalAudioOpen)}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* CARD 3: GOAL AUDIO SETTINGS */}
+          <div className="neo-card" style={{ marginBottom: '0' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '12px', textTransform: 'uppercase' }}>
               🔊 Goal Audio Settings
-            </span>
-            <i className={goalAudioOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'} style={{ fontSize: '18px', color: labelColor }} />
+            </h3>
+            <GoalAudioSettings
+              data={data}
+              updateMatch={actions.updateMatch}
+              stopGoalAudio={actions.stopGoalAudio}
+              previewGoalAudio={actions.previewGoalAudio}
+              theme={theme}
+            />
           </div>
-          {goalAudioOpen && (
-            <div style={bodyStyle}>
-              <GoalAudioSettings
-                data={data}
-                updateMatch={actions.updateMatch}
-                stopGoalAudio={actions.stopGoalAudio}
-                previewGoalAudio={actions.previewGoalAudio}
-                theme={theme}
-              />
-            </div>
-          )}
-        </div>
 
-        {/* ── 4. THIRD TITLE CONTROLS ── */}
-        <div style={cardStyle}>
-          <div style={{ ...headerStyle, borderBottom: thirdContainerOpen ? `1px solid ${borderCol}` : 'none' }} onClick={() => setThirdContainerOpen(!thirdContainerOpen)}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* CARD 4: THIRD TITLE OVERLAY CONTROLS */}
+          <div className="neo-card" style={{ marginBottom: '0' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '12px', textTransform: 'uppercase' }}>
               📝 Third Title / Info Controls
-            </span>
-            <i className={thirdContainerOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'} style={{ fontSize: '18px', color: labelColor }} />
+            </h3>
+            <ThirdTitleControls data={data} actions={actions} theme={theme} />
           </div>
-          {thirdContainerOpen && (
-            <div style={bodyStyle}>
-              <ThirdTitleControls data={data} actions={actions} theme={theme} />
-            </div>
-          )}
+
         </div>
 
         {/* ── Overlay Room URL (compact) ── */}
@@ -573,6 +543,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         isOpen={logoModalOpen}
         onClose={() => setLogoModalOpen(false)}
         defaultClubName={logoTarget === 'home' ? data.homeFullName : data.awayFullName}
+        theme={theme}
         onSelect={({ src, club }) => {
           if (!src || !club) return
           const abbr = makeTeamAbbr(club)

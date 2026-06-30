@@ -1,9 +1,13 @@
 export const dynamic = "force-dynamic";
-import { NextResponse } from 'next/server'
-import { doc, setDoc } from 'firebase/firestore'
-import { dbFirestore } from '@/services/firebase/firestore'
 import fs from 'fs'
+
 import path from 'path'
+
+import { NextResponse } from 'next/server'
+
+import { doc, setDoc } from 'firebase/firestore'
+
+import { dbFirestore } from '@/services/firebase/firestore'
 
 export async function GET(request) {
   try {
@@ -25,11 +29,13 @@ export async function GET(request) {
       if (!clubData.club) continue;
       
       const clubName = clubData.club;
+
       // create safe doc ID (e.g. Zenit -> zenit)
       const safeId = clubName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
 
       try {
         const docRef = doc(dbFirestore, 'clubs', safeId);
+
         await setDoc(docRef, {
           name: clubName,
           players: clubData.players || []
@@ -49,6 +55,7 @@ export async function GET(request) {
 
   } catch (error) {
     console.error('Migration error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    
+return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

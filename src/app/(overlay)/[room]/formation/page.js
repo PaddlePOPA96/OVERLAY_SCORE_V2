@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
+
 import { ref, onValue } from 'firebase/database';
+
 import { db } from '@/services/firebase/index';
 
 export default function FormationOverlay({ params }) {
@@ -14,6 +16,7 @@ export default function FormationOverlay({ params }) {
 
   // Keep track of the latest showState in a ref to avoid resubscribing to Firebase on every animation state change
   const showStateRef = useRef(showState);
+
   useEffect(() => {
     showStateRef.current = showState;
   }, [showState]);
@@ -65,15 +68,18 @@ export default function FormationOverlay({ params }) {
     if (!fullName) return '';
     let names = fullName.split(' ');
     let shortName = names.length > 1 ? names[names.length - 1] : names[0];
+
     if (fullName.toLowerCase().includes('van dijk')) shortName = 'Van Dijk';
     if (fullName.toLowerCase().includes('de jong')) shortName = 'F. de Jong';
-    return shortName;
+    
+return shortName;
   };
 
   const parsePct = (val) => {
     if (typeof val === 'number') return val;
     if (!val) return 0;
-    return parseFloat(val.replace('%', ''));
+    
+return parseFloat(val.replace('%', ''));
   };
 
   // Maps vertical position (top, left) to landscape position for left half (Home) or right half (Away)
@@ -87,13 +93,17 @@ export default function FormationOverlay({ params }) {
     if (isHome) {
       // Home sudah aman, tidak diubah
       const landscapeLeft = 40 - ((topVal - 7) / 73) * 38;
-      return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
+
+      
+return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
     } else {
       // Away: kurangi anchor dan range supaya GK tidak keluar
       // GK (topVal=80): 58 + (73/73)*32 = 58+32 = 90% ✅
       // ST (topVal=7):  58 + (0/73)*32  = 58% ✅
       const landscapeLeft = 57 + ((topVal - 7) / 73) * 32;
-      return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
+
+      
+return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
     }
   };
 
@@ -332,7 +342,9 @@ export default function FormationOverlay({ params }) {
               {/* Render Home Players (Left Side) */}
               {homePlayers?.filter(p => !p.isEmpty).map((player, index) => {
                 const pos = getLandscapePosition(player, true);
-                return (
+
+                
+return (
                   <div
                     key={`home-${player.id}`}
                     style={{
@@ -371,7 +383,9 @@ export default function FormationOverlay({ params }) {
               {/* Render Away Players (Right Side) */}
               {awayPlayers?.filter(p => !p.isEmpty).map((player, index) => {
                 const pos = getLandscapePosition(player, false);
-                return (
+
+                
+return (
                   <div
                     key={`away-${player.id}`}
                     style={{

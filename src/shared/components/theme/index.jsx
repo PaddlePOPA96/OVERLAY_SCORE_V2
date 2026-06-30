@@ -129,6 +129,7 @@ const ThemeProvider = props => {
               main: '#D9FF00',
               contrastText: '#000'
             },
+
             // Force Neo-brutalist bright colors even in dark mode
             background: {
               default: '#F5F4F0',

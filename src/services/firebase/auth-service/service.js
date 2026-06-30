@@ -9,8 +9,10 @@ import { db } from '../index' // Realtime Database
 
 export async function loginWithEmailPassword(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password)
+
   await logLoginEvent(cred.user, 'email_password')
-  return cred.user
+  
+return cred.user
 }
 
 export function validatePasswordStrength(password) {
@@ -29,6 +31,7 @@ export function validatePasswordStrength(password) {
 
 export async function registerWithEmailPassword(email, password) {
   const emailLower = email.toLowerCase()
+
   if (emailLower.includes('+')) {
     throw new Error('Email aliases (menggunakan tanda +) tidak diizinkan.')
   }
@@ -41,6 +44,7 @@ export async function registerWithEmailPassword(email, password) {
   }
 
   const passwordError = validatePasswordStrength(password)
+
   if (passwordError) {
     throw new Error(passwordError)
   }
@@ -68,13 +72,16 @@ export async function loginWithGooglePopup() {
   }
 
   await logLoginEvent(cred.user, 'google_popup')
-  return cred.user
+  
+return cred.user
 }
 
 async function logLoginEvent(user, method) {
   if (!user) return
+
   try {
     const logsRef = collection(dbFirestore, 'login_logs')
+
     await addDoc(logsRef, {
       uid: user.uid,
       email: user.email,
@@ -195,8 +202,10 @@ export async function syncUserToFirestore(user) {
 export async function deleteUserFromDb(uid) {
   // 1. Hapus dari Firebase Auth via API
   const currentUser = auth.currentUser
+
   if (currentUser) {
     const token = await currentUser.getIdToken()
+
     const res = await fetch('/api/auth/delete-user', {
       method: 'POST',
       headers: {
@@ -208,12 +217,14 @@ export async function deleteUserFromDb(uid) {
 
     if (!res.ok) {
       const errorData = await res.json()
+
       throw new Error(`Failed to delete user from Auth: ${errorData.error}`)
     }
   }
 
   // 2. Hapus dari Firestore
   const userRef = doc(dbFirestore, 'users', uid)
+
   await deleteDoc(userRef)
 
   // 3. Hapus dari Realtime Database
@@ -227,6 +238,7 @@ export async function deleteUserFromDb(uid) {
 export async function updateRolePermissions(roleName, newPermissions) {
   // Update di Firestore settings/roles_permissions document
   const settingsRef = doc(dbFirestore, 'settings', 'roles_permissions')
+
   await setDoc(settingsRef, { [roleName]: newPermissions }, { merge: true })
 
   // Update di Realtime Database

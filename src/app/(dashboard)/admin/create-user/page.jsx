@@ -129,12 +129,14 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
     }
 
     const passwordError = validatePasswordStrength(password)
+
     if (passwordError) {
       setCreateStatus({
         type: 'error',
         message: passwordError
       })
-      return
+      
+return
     }
 
     setLoading(true)
@@ -530,29 +532,37 @@ function UserRowItem({ row, isMe }) {
 
 function RolePermissionsConfig() {
   const [selectedRole, setSelectedRole] = useState('user')
+
   const [permissions, setPermissions] = useState({
     user: { ...DEFAULT_PERMISSIONS },
     admin: { ...DEFAULT_PERMISSIONS }
   })
+
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const permsRef = ref(db, 'ucl_data/settings/roles_permissions')
+
     const unsubscribe = onValue(permsRef, snapshot => {
       const val = snapshot.val()
+
       if (val) {
         setPermissions({
           user: { ...DEFAULT_PERMISSIONS, ...(val.user || {}) },
           admin: { ...DEFAULT_PERMISSIONS, ...(val.admin || {}) }
         })
       }
+
       setLoading(false)
     })
-    return () => unsubscribe()
+
+    
+return () => unsubscribe()
   }, [])
 
   const handleToggle = async (key) => {
     const currentRolePerms = permissions[selectedRole]
+
     const updatedRolePerms = {
       ...currentRolePerms,
       [key]: !currentRolePerms[key]

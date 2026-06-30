@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './streams.module.css';
+
 import { onAuthStateChanged } from 'firebase/auth';
+
+import styles from './streams.module.css';
 import { auth } from '@/services/firebase/auth';
 import RunningTextOverlay from '@/features/overlay/components/RunningTextOverlay';
 import StreamNavbar from './components/StreamNavbar';
@@ -31,7 +33,9 @@ export default function StreamsPage() {
 
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (user) => setFirebaseUser(user));
-        return () => unsub();
+
+        
+return () => unsub();
     }, []);
 
     useEffect(() => {
@@ -44,21 +48,27 @@ export default function StreamsPage() {
         const onMouseMove = (e) => {
             if (!isDragging || !containerRef.current) return;
             const containerRect = containerRef.current.getBoundingClientRect();
+
             if (window.innerWidth <= 1000) return;
             let newLeft = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
             if (newLeft < 15) newLeft = 15;
             if (newLeft > 85) newLeft = 85;
             setLeftWidth(newLeft);
         };
+
         const onTouchMove = (e) => {
             if (!isDragging || !containerRef.current) return;
             const containerRect = containerRef.current.getBoundingClientRect();
+
             if (window.innerWidth <= 1000) return;
             let newLeft = ((e.touches[0].clientX - containerRect.left) / containerRect.width) * 100;
+
             if (newLeft < 15) newLeft = 15;
             if (newLeft > 85) newLeft = 85;
             setLeftWidth(newLeft);
         };
+
         const onMouseUp = () => setIsDragging(false);
 
         if (isDragging) {

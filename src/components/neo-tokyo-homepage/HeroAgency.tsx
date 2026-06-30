@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+
 import { motion, AnimatePresence } from "framer-motion";
+
 import { HeroSidebarScores } from "./HeroSidebarScores";
 
 export function HeroAgency() {

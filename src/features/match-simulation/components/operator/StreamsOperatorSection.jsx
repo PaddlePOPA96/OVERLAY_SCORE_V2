@@ -1,13 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
+import { ref, onValue, remove, set } from 'firebase/database';
+
+import { doc, onSnapshot } from 'firebase/firestore';
+
+import { Paper, Typography, Box, Chip, Switch, FormControlLabel } from '@mui/material';
+
 import { db } from '@/services/firebase/db';
 import { dbFirestore } from '@/services/firebase/firestore';
-import { ref, onValue, remove, set } from 'firebase/database';
-import { doc, onSnapshot } from 'firebase/firestore';
+
 import { useAuth } from '@/shared/components/providers/AuthContext';
 import StreamUrlManager from './StreamUrlManager';
-import { Paper, Typography, Box, Chip, Switch, FormControlLabel } from '@mui/material';
+
 
 export default function StreamsOperatorSection({ theme }) {
     const isLight = theme === 'light';
@@ -21,21 +27,27 @@ export default function StreamsOperatorSection({ theme }) {
     useEffect(() => {
         if (!user) return;
         const userRef = doc(dbFirestore, 'users', user.uid);
+
         const unsub = onSnapshot(userRef, snap => {
             const role = snap.exists() ? snap.data().role : 'user';
+
             setIsSuperAdmin(role === 'superadmin');
         });
-        return () => unsub();
+
+        
+return () => unsub();
     }, [user]);
 
     // Listen to viewers count & chat disabled state
     useEffect(() => {
         const viewersRef = ref(db, 'stream_viewers');
+
         const unsubViewers = onValue(viewersRef, (snapshot) => {
             setViewersCount(snapshot.exists() ? snapshot.size : 0);
         });
 
         const chatDisabledRef = ref(db, 'settings/stream_chat_disabled');
+
         const unsubChatDisabled = onValue(chatDisabledRef, (snapshot) => {
             setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
         });
@@ -49,12 +61,16 @@ export default function StreamsOperatorSection({ theme }) {
     // Listen to chats
     useEffect(() => {
         const chatRef = ref(db, 'live_streams_chat');
+
         const unsub = onValue(chatRef, (snapshot) => {
             const data = snapshot.val();
+
             if (data) {
                 const chatList = Object.keys(data).map(key => {
                     const item = data[key];
-                    return {
+
+                    
+return {
                         id: key,
                         ...item,
                         sortTime: typeof item.timestamp === 'number' ? item.timestamp : Date.now()
@@ -72,6 +88,7 @@ export default function StreamsOperatorSection({ theme }) {
 
     const handleDeleteChat = async (chatId) => {
         if (!window.confirm("Yakin ingin menghapus pesan ini?")) return;
+
         try {
             await remove(ref(db, `live_streams_chat/${chatId}`));
         } catch (err) {

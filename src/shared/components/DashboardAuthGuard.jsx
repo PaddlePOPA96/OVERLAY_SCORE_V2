@@ -4,9 +4,10 @@ import { useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
 
+import { motion, AnimatePresence } from 'framer-motion'
+
 import { useAuth } from '@/shared/components/providers/AuthContext'
 
-import { motion, AnimatePresence } from 'framer-motion'
 
 export default function DashboardAuthGuard({ children }) {
   const { user, loading } = useAuth()

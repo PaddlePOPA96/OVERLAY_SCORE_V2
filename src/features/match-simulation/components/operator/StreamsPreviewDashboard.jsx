@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { Box, Button, Typography, Paper, Grid, IconButton } from '@mui/material';
+
 import { useScoreboard } from '@/shared/hooks/useScoreboard';
 
 export default function StreamsPreviewDashboard({ roomId, theme }) {
@@ -9,6 +11,7 @@ export default function StreamsPreviewDashboard({ roomId, theme }) {
     const handleScore = (team, increment) => {
         const currentScore = team === 'home' ? (data.homeScore || 0) : (data.awayScore || 0);
         const newScore = Math.max(0, currentScore + increment);
+
         updateMatch({
             [team === 'home' ? 'homeScore' : 'awayScore']: newScore
         });

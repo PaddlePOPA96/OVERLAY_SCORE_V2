@@ -1,6 +1,8 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
+
 import { doc, setDoc } from 'firebase/firestore'
+
 import { dbFirestore } from '@/services/firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
@@ -14,13 +16,16 @@ export async function GET(request) {
 
     // Ambil daftar tim yang bermain di World Cup (WC)
     const url = `${BASE_URL}/competitions/WC/teams`
+
     const res = await fetch(url, {
       headers: { 'X-Auth-Token': API_KEY }
     })
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
-      return NextResponse.json({ error: 'Failed to fetch from API', details: err }, { status: res.status })
+
+      
+return NextResponse.json({ error: 'Failed to fetch from API', details: err }, { status: res.status })
     }
 
     const data = await res.json()
@@ -48,6 +53,7 @@ export async function GET(request) {
 
       try {
         const docRef = doc(dbFirestore, 'clubs', safeId)
+
         await setDoc(docRef, {
           name: countryName,
           players: formattedPlayers
@@ -68,6 +74,7 @@ export async function GET(request) {
 
   } catch (error) {
     console.error('WC Migration error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    
+return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

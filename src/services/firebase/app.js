@@ -1,4 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app'
+
 import { clientEnv } from '@/shared/configs/envConfig'
 
 const firebaseConfig = {

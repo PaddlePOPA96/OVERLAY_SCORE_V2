@@ -1,5 +1,6 @@
 import 'server-only'
 import admin from 'firebase-admin'
+
 import { getParsedServiceAccount, clientEnv, serverEnv } from '@/shared/configs/envConfig'
 
 const serviceAccount = getParsedServiceAccount()

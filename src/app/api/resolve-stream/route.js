@@ -27,9 +27,11 @@ export async function GET(request) {
         // Find iframeStreams array inside the Next.js page data. Quotes might be escaped.
         let matchStr = null;
         const startIndex = html.indexOf('iframeStreams');
+
         if (startIndex !== -1) {
             const arrayStart = html.indexOf('[', startIndex);
             const arrayEnd = html.indexOf(']', arrayStart);
+
             if (arrayStart !== -1 && arrayEnd !== -1) {
                 matchStr = html.substring(arrayStart + 1, arrayEnd);
             }
@@ -39,6 +41,7 @@ export async function GET(request) {
             try {
                 // Unescape backslashes if present
                 const cleanStr = matchStr.replace(/\\"/g, '"');
+
                 // Add brackets back to make it valid JSON array
                 const streamsStr = `[${cleanStr}]`;
                 const streams = JSON.parse(streamsStr);
@@ -47,6 +50,7 @@ export async function GET(request) {
                     // If user manually requested a specific server index (1-based)
                     if (serverIndex && !isNaN(serverIndex)) {
                         const index = parseInt(serverIndex) - 1;
+
                         if (index >= 0 && index < streams.length && streams[index].src) {
                             return NextResponse.json({ url: streams[index].src });
                         }
@@ -54,9 +58,11 @@ export async function GET(request) {
 
                     // Auto-select priority: echo > delta > anything else (to avoid overloaded admin servers)
                     const echoServer = streams.find(s => s.name?.toLowerCase() === 'echo');
+
                     if (echoServer && echoServer.src) return NextResponse.json({ url: echoServer.src });
 
                     const deltaServer = streams.find(s => s.name?.toLowerCase() === 'delta');
+
                     if (deltaServer && deltaServer.src) return NextResponse.json({ url: deltaServer.src });
 
                     // Fallback to the very first one

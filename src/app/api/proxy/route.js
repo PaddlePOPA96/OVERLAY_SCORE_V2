@@ -34,9 +34,11 @@ export async function GET(request) {
 
         // Set Origin. For this particular CDN, the origin needs to match the referer's origin.
         let origin = parsedUrl.origin;
+
         try {
             if (referer) {
                 const refererUrl = new URL(referer);
+
                 origin = refererUrl.origin;
             }
         } catch (e) {
@@ -59,10 +61,13 @@ export async function GET(request) {
 
         if (!response.ok) {
             console.error(`Proxy error: ${response.status} ${response.statusText} for ${url}`);
+
             // Provide more detail in development to debug 403s
             const errText = await response.text().catch(() => '');
+
             console.error(`Proxy error response body: ${errText}`);
-            return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, { status: response.status });
+            
+return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, { status: response.status });
         }
 
         const contentType = response.headers.get('content-type') || '';
@@ -73,6 +78,7 @@ export async function GET(request) {
             
             // Rewrite lines that are not comments or empty (which are URLs)
             const lines = text.split('\n');
+
             const rewrittenLines = lines.map(line => {
                 line = line.trim();
                 if (!line || line.startsWith('#')) return line;
@@ -81,6 +87,8 @@ export async function GET(request) {
                 try {
                     // Resolve relative URL against the base URL
                     const absoluteUrl = new URL(line, url).toString();
+
+
                     // Point back to our proxy
                     return `/api/proxy?url=${encodeURIComponent(absoluteUrl)}&referer=${encodeURIComponent(referer)}`;
                 } catch (e) {
@@ -102,6 +110,7 @@ export async function GET(request) {
         const bodyBuffer = await response.arrayBuffer();
         
         const responseHeaders = new Headers();
+
         if (contentType) responseHeaders.set('Content-Type', contentType);
         responseHeaders.set('Access-Control-Allow-Origin', '*');
         
@@ -114,6 +123,7 @@ export async function GET(request) {
         
     } catch (error) {
         console.error('Proxy exception:', error);
-        return new NextResponse(error.message, { status: 500 });
+        
+return new NextResponse(error.message, { status: 500 });
     }
 }

@@ -1,11 +1,13 @@
 'use server'
 
 import { unstable_cache } from 'next/cache'
+
 import playerData from '@/data/fix-player.json'
 
 export async function getClubs() {
   try {
     const clubs = []
+
     if (playerData && Array.isArray(playerData.players)) {
       playerData.players.forEach(clubData => {
         if (clubData.club) {
@@ -13,12 +15,16 @@ export async function getClubs() {
         }
       })
     }
+
+
     // Sort alphabetically
     clubs.sort((a, b) => a.name.localeCompare(b.name))
-    return clubs
+    
+return clubs
   } catch (error) {
     console.error("Failed to fetch clubs from local JSON:", error)
-    return []
+    
+return []
   }
 }
 
@@ -29,6 +35,7 @@ export async function getPlayersByClub(clubId) {
     if (!playerData || !Array.isArray(playerData.players)) return []
     
     const clubData = playerData.players.find(c => c.club === clubId)
+
     if (!clubData || !clubData.players) return []
     
     return clubData.players.map(p => ({
@@ -37,7 +44,8 @@ export async function getPlayersByClub(clubId) {
     }))
   } catch (error) {
     console.error(`Failed to fetch players for club ${clubId} from JSON:`, error)
-    return []
+    
+return []
   }
 }
 
@@ -46,6 +54,7 @@ export async function searchAllPlayers(query) {
 
   try {
     const allPlayers = []
+
     if (playerData && Array.isArray(playerData.players)) {
       playerData.players.forEach(clubData => {
         if (clubData.players && Array.isArray(clubData.players)) {
@@ -60,15 +69,20 @@ export async function searchAllPlayers(query) {
     
     const lowerQuery = query.toLowerCase().trim()
     const results = []
+
     for (const p of allPlayers) {
       if (p.name.toLowerCase().includes(lowerQuery)) {
         results.push(p)
       }
+
       if (results.length >= 50) break
     }
-    return results
+
+    
+return results
   } catch (error) {
     console.error("Failed to fetch flat players from local json:", error)
-    return []
+    
+return []
   }
 }
