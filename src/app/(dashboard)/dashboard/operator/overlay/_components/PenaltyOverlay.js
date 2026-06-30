@@ -66,7 +66,7 @@ export default function PenaltyOverlay({ data }) {
     <div
       style={{
         position: 'absolute',
-        bottom: '50px',
+        top: 'calc(50% + 140px)',
         left: '50%',
         transform: 'translateX(-50%)',
         width: '760px',
