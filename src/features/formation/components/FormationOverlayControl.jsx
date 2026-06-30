@@ -81,6 +81,12 @@ const formationPositions = {
     { top: '60%', left: '66%' }, { top: '40%', left: '10%' }, { top: '40%', left: '32%' },
     { top: '40%', left: '54%' }, { top: '40%', left: '76%' }, { top: '25%', left: '43%' },
     { top: '10%', left: '32%' }, { top: '10%', left: '54%' }
+  ],
+  "4-2-1-3": [
+    { top: '80%', left: '43%' }, { top: '63%', left: '10%' }, { top: '63%', left: '32%' },
+    { top: '63%', left: '54%' }, { top: '63%', left: '76%' }, { top: '47%', left: '32%' },
+    { top: '47%', left: '54%' }, { top: '32%', left: '43%' }, { top: '17%', left: '15%' },
+    { top: '10%', left: '43%' }, { top: '17%', left: '71%' }
   ]
 };
 
