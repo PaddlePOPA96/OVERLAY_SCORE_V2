@@ -8,6 +8,7 @@ import { db } from '@/services/firebase/db';
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
   const [token, setToken] = useState('');
+  const [drmKey, setDrmKey] = useState('');
   const [inputValue, setInputValue] = useState('');
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState({ text: '', isError: false });
@@ -15,6 +16,7 @@ export default function StreamUrlManager({ theme }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [newPresetTitle, setNewPresetTitle] = useState('');
   const [newPresetUrl, setNewPresetUrl] = useState('');
+  const [newPresetDrmKey, setNewPresetDrmKey] = useState('');
   const [syncVod, setSyncVod] = useState(false);
   const [useProxy, setUseProxy] = useState(false);
   const [title, setTitle] = useState('');
@@ -24,6 +26,7 @@ export default function StreamUrlManager({ theme }) {
   const [multiMode, setMultiMode] = useState(false);
   const [url2, setUrl2] = useState('');
   const [token2, setToken2] = useState('');
+  const [drmKey2, setDrmKey2] = useState('');
   const [inputValue2, setInputValue2] = useState('');
   const isLight = theme === 'light';
 
@@ -42,6 +45,12 @@ export default function StreamUrlManager({ theme }) {
       if (snapshot.exists()) {
         setToken(snapshot.val());
       }
+    });
+
+    const drmRef = ref(db, 'settings/stream_drm_key');
+    const unsubDrm = onValue(drmRef, (snapshot) => {
+      if (snapshot.exists()) setDrmKey(snapshot.val());
+      else setDrmKey('');
     });
 
     const multiModeRef = ref(db, 'settings/stream_multi_mode');
@@ -63,6 +72,12 @@ export default function StreamUrlManager({ theme }) {
     const unsubToken2 = onValue(token2Ref, (snapshot) => {
       if (snapshot.exists()) setToken2(snapshot.val());
       else setToken2('');
+    });
+
+    const drm2Ref = ref(db, 'settings/stream_drm_key_2');
+    const unsubDrm2 = onValue(drm2Ref, (snapshot) => {
+      if (snapshot.exists()) setDrmKey2(snapshot.val());
+      else setDrmKey2('');
     });
 
     const presetsRef = ref(db, 'settings/stream_presets');
@@ -139,6 +154,8 @@ export default function StreamUrlManager({ theme }) {
       unsubMultiMode();
       unsubUrl2();
       unsubToken2();
+      unsubDrm();
+      unsubDrm2();
     };
   }, []);
 
@@ -247,7 +264,7 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
       await set(ref(db, 'settings/stream_token'), pendingToken.trim());
       await set(ref(db, 'settings/stream_start_time'), Date.now());
       setInputValue('');
-      saveToHistory(pendingUrl.trim());
+      saveToHistory(pendingUrl.trim(), drmKey);
       setFeedback({ text: '✓ Pengaturan Stream Kiri berhasil disimpan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
@@ -267,7 +284,7 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
       await set(ref(db, 'settings/stream_token_2'), pendingToken2.trim());
       await set(ref(db, 'settings/stream_start_time'), Date.now());
       setInputValue2('');
-      saveToHistory(pendingUrl2.trim());
+      saveToHistory(pendingUrl2.trim(), drmKey2);
       setFeedback({ text: '✓ Pengaturan Stream Kanan berhasil disimpan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
@@ -296,31 +313,38 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
     await set(ref(db, 'settings/stream_multi_mode'), newValue);
   };
 
-  const saveToHistory = (url) => {
+  const saveToHistory = (url, drm = '') => {
     if (!url || !url.trim()) return;
     const isExist = presets.some(p => p.url === url.trim());
 
     if (!isExist) {
       const title = "History " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const newPresetRef = push(ref(db, 'settings/stream_presets'));
+      const dataToSave = { title, url: url.trim() };
+      
+      if (drm.trim()) {
+        dataToSave.drmKey = drm.trim();
+      }
 
-      set(newPresetRef, { title, url: url.trim() }).catch(console.error);
+      set(newPresetRef, dataToSave).catch(console.error);
     }
   };
 
-  const applyPreset = async (presetUrl, target = 'left') => {
+  const applyPreset = async (presetUrl, drm = '', target = 'left') => {
     setSaving(true);
 
     try {
       if (target === 'left') {
         await set(ref(db, 'settings/stream_url'), presetUrl);
         await set(ref(db, 'settings/stream_token'), '');
+        await set(ref(db, 'settings/stream_drm_key'), drm);
         await set(ref(db, 'settings/stream_start_time'), Date.now());
         setInputValue('');
         setFeedback({ text: '✓ Preset Kiri berhasil diterapkan!', isError: false });
       } else {
         await set(ref(db, 'settings/stream_url_2'), presetUrl);
         await set(ref(db, 'settings/stream_token_2'), '');
+        await set(ref(db, 'settings/stream_drm_key_2'), drm);
         await set(ref(db, 'settings/stream_start_time'), Date.now());
         setInputValue2('');
         setFeedback({ text: '✓ Preset Kanan berhasil diterapkan!', isError: false });
@@ -337,6 +361,7 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
   const handleOpenModal = () => {
     setNewPresetTitle('');
     setNewPresetUrl(resolvedLiveUrl || '');
+    setNewPresetDrmKey(drmKey || '');
     setModalOpen(true);
   };
 
@@ -348,8 +373,13 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
     if (!newPresetTitle.trim() || !newPresetUrl.trim()) return;
 
     const newPresetRef = push(ref(db, 'settings/stream_presets'));
+    const dataToSave = { title: newPresetTitle.trim(), url: newPresetUrl.trim() };
+    
+    if (newPresetDrmKey.trim()) {
+      dataToSave.drmKey = newPresetDrmKey.trim();
+    }
 
-    set(newPresetRef, { title: newPresetTitle.trim(), url: newPresetUrl.trim() }).then(() => {
+    set(newPresetRef, dataToSave).then(() => {
       setModalOpen(false);
     }).catch(err => {
       console.error("Failed to add preset:", err);
@@ -437,6 +467,14 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                 </Button>
               </Box>
 
+              <TextField
+                fullWidth size="small" variant="outlined"
+                label="DRM Key (KID:KEY)"
+                placeholder="Opsional, format hex: KID:KEY (Cth: 1ab2...:3cd4...)"
+                value={drmKey} onChange={(e) => setDrmKey(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_drm_key'), drmKey.trim())}
+                sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+              />
+
               {/* Real-time Feedback Kiri */}
               {inputValue.trim() && (
                 <Box sx={{ mt: 2, p: 1.5, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2 }}>
@@ -450,7 +488,7 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                 <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
                   <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
                   {presets.map(preset => (
-                    <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, 'left')} onDelete={() => handleDeletePreset(preset.id)} color="primary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
+                    <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'left')} onDelete={() => handleDeletePreset(preset.id)} color="primary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
                   ))}
                   <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
                 </Box>
@@ -494,6 +532,14 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                   </Button>
                 </Box>
 
+                <TextField
+                  fullWidth size="small" variant="outlined"
+                  label="DRM Key (KID:KEY) Kanan"
+                  placeholder="Opsional, format hex: KID:KEY"
+                  value={drmKey2} onChange={(e) => setDrmKey2(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_drm_key_2'), drmKey2.trim())}
+                  sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+                />
+
                 {/* Real-time Feedback Kanan */}
                 {inputValue2.trim() && (
                   <Box sx={{ mt: 2, p: 1.5, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2 }}>
@@ -507,7 +553,7 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                   <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
                     <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
                     {presets.map(preset => (
-                      <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, 'right')} onDelete={() => handleDeletePreset(preset.id)} color="secondary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
+                      <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'right')} onDelete={() => handleDeletePreset(preset.id)} color="secondary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
                     ))}
                     <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
                   </Box>
@@ -581,10 +627,18 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
             sx={{ mb: 2, mt: 1, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
           />
           <TextField
-            margin="dense" label="URL Stream (.m3u8)" fullWidth variant="outlined"
+            margin="dense" label="URL Stream (.m3u8 / .mpd)" fullWidth variant="outlined"
             value={newPresetUrl} onChange={(e) => setNewPresetUrl(e.target.value)}
             sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
           />
+          {newPresetUrl.includes('.mpd') && (
+            <TextField
+              margin="dense" label="DRM Key (KID:KEY)" fullWidth variant="outlined"
+              placeholder="Opsional, format hex: KID:KEY (Cth: 1ab2...:3cd4...)"
+              value={newPresetDrmKey} onChange={(e) => setNewPresetDrmKey(e.target.value)}
+              sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+            />
+          )}
         </DialogContent>
         <DialogActions sx={{ bgcolor: isLight ? '#fff' : '#1e293b', p: 2 }}>
           <Button onClick={handleCloseModal} sx={{ color: isLight ? '#666' : '#aaa' }}>Batal</Button>

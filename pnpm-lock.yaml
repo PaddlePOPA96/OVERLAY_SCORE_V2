@@ -77,6 +77,9 @@ importers:
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
+      shaka-player:
+        specifier: ^5.1.12
+        version: 5.1.12
     devDependencies:
       '@iconify/json':
         specifier: ^2.2.218
@@ -3202,6 +3205,10 @@ packages:
   set-harmonic-interval@1.0.1:
     resolution: {integrity: sha512-AhICkFV84tBP1aWqPwLZqFvAwqEoVA9kxNMniGEUvzOlm4vLmOFLiTT3UZ6bziJTy4bOVpzWGTfSCbmaayGx8g==}
     engines: {node: '>=6.9'}
+
+  shaka-player@5.1.12:
+    resolution: {integrity: sha512-luGIzJ/H201aY0Hobs5853vY1eRJXPHH+u3oSWiTAYoufq5s/yIbRZS1QwCsj3f3Fyxc2C3HfptfI0brjE+RIQ==}
+    engines: {node: '>=18'}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -7172,6 +7179,8 @@ snapshots:
       has-property-descriptors: 1.0.2
 
   set-harmonic-interval@1.0.1: {}
+
+  shaka-player@5.1.12: {}
 
   shebang-command@2.0.0:
     dependencies:

@@ -9,6 +9,8 @@ export function useStreamSettings() {
     const [rawUrl2, setRawUrl2] = useState('');
     const [streamToken, setStreamToken] = useState('');
     const [streamToken2, setStreamToken2] = useState('');
+    const [streamDrmKey, setStreamDrmKey] = useState('');
+    const [streamDrmKey2, setStreamDrmKey2] = useState('');
     const [streamStartTime, setStreamStartTime] = useState(0);
     const [streamSyncVod, setStreamSyncVod] = useState(false);
     const [streamUseProxy, setStreamUseProxy] = useState(false);
@@ -105,6 +107,16 @@ export function useStreamSettings() {
             setIsChatDisabled(snapshot.exists() ? snapshot.val() : false);
         });
 
+        const drmRef = ref(db, 'settings/stream_drm_key');
+        const unsubDrm = onValue(drmRef, (snapshot) => {
+            setStreamDrmKey(snapshot.exists() ? snapshot.val() : '');
+        });
+
+        const drm2Ref = ref(db, 'settings/stream_drm_key_2');
+        const unsubDrm2 = onValue(drm2Ref, (snapshot) => {
+            setStreamDrmKey2(snapshot.exists() ? snapshot.val() : '');
+        });
+
         return () => {
             unsubUrl();
             unsubToken();
@@ -119,6 +131,8 @@ export function useStreamSettings() {
             unsubUrl2();
             unsubToken2();
             unsubChatDisabled();
+            unsubDrm();
+            unsubDrm2();
         };
     }, []);
 
@@ -146,7 +160,7 @@ export function useStreamSettings() {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
-                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
@@ -183,7 +197,7 @@ export function useStreamSettings() {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
-                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
@@ -210,5 +224,7 @@ export function useStreamSettings() {
         multiMode,
         currentChannel,
         currentChannel2,
+        streamDrmKey,
+        streamDrmKey2,
     };
 }

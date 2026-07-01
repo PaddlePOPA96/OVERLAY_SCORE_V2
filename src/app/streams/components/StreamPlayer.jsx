@@ -4,10 +4,12 @@ import Hls from 'hls.js';
 
 import styles from '../streams.module.css';
 
-export default function StreamPlayer({ currentChannel, streamStartTime, streamSyncVod, isMuted = true }) {
+export default function StreamPlayer({ currentChannel, streamStartTime, streamSyncVod, isMuted = true, drmKey }) {
     const videoRef = useRef(null);
     const hlsRef = useRef(null);
     const flvRef = useRef(null);
+    const dashRef = useRef(null);
+    const openedUrlRef = useRef('');
 
     let isYoutube = false;
     let youtubeId = '';
@@ -16,6 +18,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     let isFlv = false;
     let isMp4 = false;
     let mp4Url = '';
+    let isMpd = false;
 
     if (currentChannel) {
         let decodedChannel = currentChannel;
@@ -40,6 +43,8 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
         } else if (decodedChannel.toLowerCase().includes('.mp4')) {
             isMp4 = true;
             mp4Url = decodedChannel;
+        } else if (decodedChannel.includes('.mpd')) {
+            isMpd = true;
         } else if (!decodedChannel.includes('.m3u8') && !decodedChannel.includes('.mp4') && !decodedChannel.includes('.ts')) {
             isGenericIframe = true;
             genericIframeUrl = decodedChannel;
@@ -107,6 +112,8 @@ return; }
 
             if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
 
+            if (dashRef.current) { dashRef.current.reset(); dashRef.current.destroy(); dashRef.current = null; }
+
             if (flvRef.current) {
                 flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
             }
@@ -146,7 +153,68 @@ return; }
     }, [currentChannel, isFlv]);
 
     useEffect(() => {
-        if (isYoutube || isGenericIframe || isFlv || isMp4) {
+        if (!isMpd || !currentChannel) {
+            if (dashRef.current) {
+                dashRef.current.destroy();
+                dashRef.current = null;
+            }
+            return;
+        }
+
+        const video = videoRef.current;
+        if (!video) return;
+
+        let cancelled = false;
+
+        import('shaka-player').then((shakaModule) => {
+            if (cancelled) return;
+
+            const shaka = shakaModule.default || shakaModule;
+            shaka.polyfill.installAll();
+
+            if (!shaka.Player.isBrowserSupported()) {
+                console.error('Browser not supported for Shaka player!');
+                return;
+            }
+
+            if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+            if (flvRef.current) { flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null; }
+            if (dashRef.current) { dashRef.current.destroy(); dashRef.current = null; }
+
+            const player = new shaka.Player(video);
+            let config = { abr: { enabled: true } };
+
+            if (drmKey && drmKey.includes(':')) {
+                try {
+                    const [kid, key] = drmKey.split(':');
+                    config.drm = {
+                        clearKeys: {
+                            [kid.trim()]: key.trim()
+                        }
+                    };
+                } catch (e) {
+                    console.error('Failed to parse DRM Key:', e);
+                }
+            }
+
+            player.configure(config);
+
+            player.getNetworkingEngine().registerRequestFilter((type, request) => {
+                request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0';
+            });
+
+            player.load(currentChannel).then(() => {
+                video.play().catch(e => console.error("Play blocked:", e));
+            }).catch(e => console.error("Shaka load failed:", e));
+            
+            dashRef.current = player;
+        }).catch((err) => console.error('Failed to load shaka-player:', err));
+
+        return () => { cancelled = true; };
+    }, [currentChannel, isMpd, drmKey]);
+
+    useEffect(() => {
+        if (isYoutube || isGenericIframe || isFlv || isMp4 || isMpd) {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
                 hlsRef.current = null;
@@ -162,6 +230,10 @@ return;
 
         if (flvRef.current) {
             flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
+        }
+
+        if (dashRef.current) {
+            dashRef.current.destroy(); dashRef.current = null;
         }
 
         if (hlsRef.current) {
@@ -201,7 +273,7 @@ return;
                 });
             }
         }
-    }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4]);
+    }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4, isMpd]);
 
     useEffect(() => {
         return () => {
@@ -214,8 +286,26 @@ return;
                 flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy();
                 flvRef.current = null;
             }
+
+            if (dashRef.current) {
+                dashRef.current.destroy();
+                dashRef.current = null;
+            }
         };
     }, []);
+
+    useEffect(() => {
+        if (process.env.NODE_ENV === 'development' && isGenericIframe && genericIframeUrl) {
+            if (openedUrlRef.current !== genericIframeUrl) {
+                openedUrlRef.current = genericIframeUrl;
+                try {
+                    window.open(genericIframeUrl, '_blank');
+                } catch (e) {
+                    console.error('Failed to auto-open tab:', e);
+                }
+            }
+        }
+    }, [isGenericIframe, genericIframeUrl]);
 
     if (isYoutube && youtubeId) {
         return (
@@ -230,6 +320,50 @@ return;
             ></iframe>
         );
     } else if (isGenericIframe && genericIframeUrl) {
+        if (process.env.NODE_ENV === 'development') {
+            return (
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: '#111',
+                    color: '#fff',
+                    gap: '12px',
+                    padding: '20px',
+                    textAlign: 'center',
+                    border: '1px dashed #ef4444',
+                    borderRadius: '8px'
+                }}>
+                    <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold', color: '#ef4444' }}>
+                        ⚠️ [Dev Mode] Proteksi Debugger Freeze Aktif
+                    </p>
+                    <p style={{ margin: 0, fontSize: '12px', color: '#aaa', maxWidth: '80%' }}>
+                        Link iframe ini (<strong>{genericIframeUrl}</strong>) memiliki skrip anti-devtools yang dapat membekukan console local Anda. Link telah dibuka otomatis di tab baru.
+                    </p>
+                    <a
+                        href={genericIframeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            padding: '8px 16px',
+                            backgroundColor: '#ef4444',
+                            color: '#fff',
+                            borderRadius: '4px',
+                            textDecoration: 'none',
+                            fontWeight: 'bold',
+                            fontSize: '12px',
+                            marginTop: '5px'
+                        }}
+                    >
+                        Buka Ulang di Tab Baru
+                    </a>
+                </div>
+            );
+        }
+
         return (
             <iframe
                 key={`iframe-${streamStartTime}`}

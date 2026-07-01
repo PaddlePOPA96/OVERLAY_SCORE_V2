@@ -7,10 +7,13 @@ import { onAuthStateChanged } from 'firebase/auth';
 import styles from './streams.module.css';
 import { auth } from '@/services/firebase/auth';
 import RunningTextOverlay from '@/features/overlay/components/RunningTextOverlay';
+import dynamic from 'next/dynamic';
+
 import StreamNavbar from './components/StreamNavbar';
-import StreamPlayer from './components/StreamPlayer';
 import ChatPanel from './components/ChatPanel';
 import { useStreamSettings } from './hooks/useStreamSettings';
+
+const StreamPlayer = dynamic(() => import('./components/StreamPlayer'), { ssr: false });
 
 export default function StreamsPage() {
     const [firebaseUser, setFirebaseUser] = useState(null);
@@ -29,6 +32,8 @@ export default function StreamsPage() {
         multiMode,
         currentChannel,
         currentChannel2,
+        streamDrmKey,
+        streamDrmKey2,
     } = useStreamSettings();
 
     useEffect(() => {
@@ -125,6 +130,7 @@ return () => unsub();
                             streamStartTime={streamStartTime}
                             streamSyncVod={streamSyncVod}
                             isMuted={false}
+                            drmKey={streamDrmKey}
                         />
                     </div>
                 </div>
@@ -147,6 +153,7 @@ return () => unsub();
                                 streamStartTime={streamStartTime}
                                 streamSyncVod={streamSyncVod}
                                 isMuted={true}
+                                drmKey={streamDrmKey2}
                             />
                         </div>
                         {!isMinimal && (
