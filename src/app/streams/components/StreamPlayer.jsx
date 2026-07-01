@@ -181,7 +181,7 @@ return; }
             if (flvRef.current) { flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null; }
             if (dashRef.current) { dashRef.current.destroy(); dashRef.current = null; }
 
-            const player = new shaka.Player(video);
+            const player = new shaka.Player();
             let config = { abr: { enabled: true } };
 
             if (drmKey && drmKey.includes(':')) {
@@ -199,10 +199,15 @@ return; }
 
             player.configure(config);
 
-            player.load(currentChannel).then(() => {
+            player.attach(video).then(() => {
+                if (cancelled) return;
+                return player.load(currentChannel);
+            }).then(() => {
+                if (cancelled) return;
                 video.play().catch(e => console.error("Play blocked:", e));
             }).catch(e => {
-                console.error("Shaka load failed!");
+                if (cancelled) return;
+                console.error("Shaka attach or load failed!");
                 if (e && typeof e === 'object') {
                     console.error("Error Code:", e.code, "Category:", e.category, "Data:", e.data);
                 } else {
@@ -317,7 +322,7 @@ return;
                 className={styles.video}
                 src={youtubeSrc}
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                 allowFullScreen
                 style={{ width: '100%', height: '100%', border: 'none', display: 'block', pointerEvents: 'auto' }}
             ></iframe>
