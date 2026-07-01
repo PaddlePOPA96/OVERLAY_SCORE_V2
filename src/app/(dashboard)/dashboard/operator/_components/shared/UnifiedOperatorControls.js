@@ -863,24 +863,26 @@ return sliced
   )
 
   return (
-    <div className='operator-b-controls' style={{ width: '100%', maxWidth: '100%' }}>
-      <div className='op-tabs'>
-        <button className={`op-tab-btn ${activeTab === 'scoreboard' ? 'active' : ''}`} onClick={() => changeTab('scoreboard')}>
-          <i className='ri-gamepad-line' />
-          🎮 Scoreboard
-        </button>
-        <button className={`op-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => changeTab('settings')}>
-          <i className='ri-settings-3-line' />
-          ⚙️ Pengaturan Tim
-        </button>
-      </div>
-      <div className='op-tab-container'>
-        {renderScoreboardTab()}
-        {renderSettingsTab()}
+    <>
+      <div className='operator-b-controls' style={{ width: '100%', maxWidth: '100%' }}>
+        <div className='op-tabs'>
+          <button className={`op-tab-btn ${activeTab === 'scoreboard' ? 'active' : ''}`} onClick={() => changeTab('scoreboard')}>
+            <i className='ri-gamepad-line' />
+            🎮 Scoreboard
+          </button>
+          <button className={`op-tab-btn ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => changeTab('settings')}>
+            <i className='ri-settings-3-line' />
+            ⚙️ Pengaturan Tim
+          </button>
+        </div>
+        <div className='op-tab-container'>
+          {renderScoreboardTab()}
+          {renderSettingsTab()}
+        </div>
       </div>
 
       {isTimeModalOpen && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: '#ffffff', border: '4px solid #000000', padding: '24px', width: '320px', borderRadius: '12px', boxShadow: '8px 8px 0px rgba(0,0,0,1)', color: '#000000' }}>
             <h3 style={{ fontSize: '18px', fontWeight: '900', marginBottom: '16px', textTransform: 'uppercase', borderBottom: '4px solid #000', paddingBottom: '8px', color: '#000000', textAlign: 'center' }}>Set Manual Time</h3>
             <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
@@ -923,6 +925,6 @@ return sliced
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
