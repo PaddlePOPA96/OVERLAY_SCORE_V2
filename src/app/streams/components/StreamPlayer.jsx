@@ -199,13 +199,16 @@ return; }
 
             player.configure(config);
 
-            player.getNetworkingEngine().registerRequestFilter((type, request) => {
-                request.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:151.0) Gecko/20100101 Firefox/151.0';
-            });
-
             player.load(currentChannel).then(() => {
                 video.play().catch(e => console.error("Play blocked:", e));
-            }).catch(e => console.error("Shaka load failed:", e));
+            }).catch(e => {
+                console.error("Shaka load failed!");
+                if (e && typeof e === 'object') {
+                    console.error("Error Code:", e.code, "Category:", e.category, "Data:", e.data);
+                } else {
+                    console.error(e);
+                }
+            });
             
             dashRef.current = player;
         }).catch((err) => console.error('Failed to load shaka-player:', err));
