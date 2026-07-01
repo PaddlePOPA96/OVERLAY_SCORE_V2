@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove } from 'firebase/database';
+import { ref, push, onValue, serverTimestamp, get, query, orderByChild, equalTo, update, onDisconnect, set, remove, limitToLast } from 'firebase/database';
 
 import { db } from '@/services/firebase/db';
 import styles from '../streams.module.css';
@@ -39,8 +39,9 @@ export default function ChatPanel({ isChatDisabled }) {
 
     useEffect(() => {
         const chatRef = ref(db, 'live_streams_chat');
+        const chatQuery = query(chatRef, limitToLast(100));
 
-        const unsubscribe = onValue(chatRef, (snapshot) => {
+        const unsubscribe = onValue(chatQuery, (snapshot) => {
             const data = snapshot.val();
 
             if (data) {

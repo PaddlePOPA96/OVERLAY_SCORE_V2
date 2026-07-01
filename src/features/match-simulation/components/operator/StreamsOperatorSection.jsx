@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { ref, onValue, remove, set } from 'firebase/database';
+import { ref, onValue, remove, set, query, limitToLast } from 'firebase/database';
 
 import { doc, onSnapshot } from 'firebase/firestore';
 
@@ -61,8 +61,9 @@ return () => unsub();
     // Listen to chats
     useEffect(() => {
         const chatRef = ref(db, 'live_streams_chat');
+        const chatQuery = query(chatRef, limitToLast(200));
 
-        const unsub = onValue(chatRef, (snapshot) => {
+        const unsub = onValue(chatQuery, (snapshot) => {
             const data = snapshot.val();
 
             if (data) {

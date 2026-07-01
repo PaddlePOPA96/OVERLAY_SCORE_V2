@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 
 import Hls from 'hls.js';
 
@@ -10,6 +10,20 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     const flvRef = useRef(null);
     const dashRef = useRef(null);
     const openedUrlRef = useRef('');
+
+    const [shakaModule, setShakaModule] = useState(null);
+    const [mpegtsModule, setMpegtsModule] = useState(null);
+
+    // Pre-load dynamic player libraries once on mount to speed up stream loading/switching
+    useEffect(() => {
+        import('shaka-player').then((mod) => {
+            setShakaModule(mod.default || mod);
+        }).catch((err) => console.error('Pre-loading shaka-player failed:', err));
+
+        import('mpegts.js/dist/mpegts.js').then((mod) => {
+            setMpegtsModule(mod.default || mod);
+        }).catch((err) => console.error('Pre-loading mpegts.js failed:', err));
+    }, []);
 
     let isYoutube = false;
     let youtubeId = '';
@@ -82,7 +96,7 @@ return url;
     };
 
     useEffect(() => {
-        if (!isFlv || !currentChannel) {
+        if (!isFlv || !currentChannel || !mpegtsModule) {
             if (flvRef.current) {
                 flvRef.current.pause();
                 flvRef.current.unload();
@@ -90,70 +104,63 @@ return url;
                 flvRef.current.destroy();
                 flvRef.current = null;
             }
-
-            
-return;
+            return;
         }
 
         const video = videoRef.current;
-
         if (!video) return;
 
         let cancelled = false;
+        const mpegts = mpegtsModule;
 
-        import('mpegts.js/dist/mpegts.js').then((mpegtsModule) => {
-            const mpegts = mpegtsModule.default || mpegtsModule;
+        if (!mpegts.isSupported()) {
+            console.warn('mpegts.js is not supported in this browser');
+            return;
+        }
 
+        if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+        if (dashRef.current) { dashRef.current.destroy(); dashRef.current = null; }
+
+        if (flvRef.current) {
+            flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
+        }
+
+        const flvPlayer = mpegts.createPlayer({
+            type: 'flv',
+            url: currentChannel,
+            isLive: true,
+            hasAudio: true,
+            hasVideo: true,
+            cors: true,
+        }, {
+            enableWorker: true,
+            enableStashBuffer: false,
+            stashInitialSize: 64,
+            lazyLoad: false,
+            lazyLoadMaxDuration: 3 * 60,
+            autoCleanupSourceBuffer: true,
+            autoCleanupMaxBackwardDuration: 3 * 60,
+            autoCleanupMinBackwardDuration: 2 * 60,
+        });
+
+        flvPlayer.attachMediaElement(video);
+        flvPlayer.load();
+        setTimeout(() => {
             if (cancelled) return;
+            video.play().catch((err) => console.log('FLV Autoplay blocked:', err));
+        }, 50);
 
-            if (!mpegts.isSupported()) { console.warn('mpegts.js is not supported in this browser'); 
+        flvPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail, errorInfo) => {
+            console.error('FLV Error:', errorType, errorDetail, errorInfo);
+        });
 
-return; }
-
-            if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
-
-            if (dashRef.current) { dashRef.current.reset(); dashRef.current.destroy(); dashRef.current = null; }
-
-            if (flvRef.current) {
-                flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
-            }
-
-            const flvPlayer = mpegts.createPlayer({
-                type: 'flv',
-                url: currentChannel,
-                isLive: true,
-                hasAudio: true,
-                hasVideo: true,
-                cors: true,
-            }, {
-                enableWorker: false,
-                enableStashBuffer: false,
-                stashInitialSize: 128,
-                lazyLoad: false,
-                lazyLoadMaxDuration: 3 * 60,
-                autoCleanupSourceBuffer: true,
-                autoCleanupMaxBackwardDuration: 3 * 60,
-                autoCleanupMinBackwardDuration: 2 * 60,
-            });
-
-            flvPlayer.attachMediaElement(video);
-            flvPlayer.load();
-            setTimeout(() => {
-                video.play().catch((err) => console.log('FLV Autoplay blocked:', err));
-            }, 500);
-
-            flvPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail, errorInfo) => {
-                console.error('FLV Error:', errorType, errorDetail, errorInfo);
-            });
-
-            flvRef.current = flvPlayer;
-        }).catch((err) => console.error('Failed to load mpegts.js:', err));
+        flvRef.current = flvPlayer;
 
         return () => { cancelled = true; };
-    }, [currentChannel, isFlv]);
+    }, [currentChannel, isFlv, mpegtsModule]);
 
     useEffect(() => {
-        if (!isMpd || !currentChannel) {
+        if (!isMpd || !currentChannel || !shakaModule) {
             if (dashRef.current) {
                 dashRef.current.destroy();
                 dashRef.current = null;
@@ -166,60 +173,63 @@ return; }
 
         let cancelled = false;
 
-        import('shaka-player').then((shakaModule) => {
+        const shaka = shakaModule;
+        shaka.polyfill.installAll();
+
+        if (!shaka.Player.isBrowserSupported()) {
+            console.error('Browser not supported for Shaka player!');
+            return;
+        }
+
+        if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
+        if (flvRef.current) { flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null; }
+        if (dashRef.current) { dashRef.current.destroy(); dashRef.current = null; }
+
+        const player = new shaka.Player();
+        let config = { 
+            abr: { enabled: true },
+            streaming: {
+                bufferingGoal: 4,
+                rebufferingGoal: 2,
+                bufferBehind: 15
+            }
+        };
+
+        if (drmKey && drmKey.includes(':')) {
+            try {
+                const [kid, key] = drmKey.split(':');
+                config.drm = {
+                    clearKeys: {
+                        [kid.trim()]: key.trim()
+                    }
+                };
+            } catch (e) {
+                console.error('Failed to parse DRM Key:', e);
+            }
+        }
+
+        player.configure(config);
+
+        player.attach(video).then(() => {
             if (cancelled) return;
-
-            const shaka = shakaModule.default || shakaModule;
-            shaka.polyfill.installAll();
-
-            if (!shaka.Player.isBrowserSupported()) {
-                console.error('Browser not supported for Shaka player!');
-                return;
+            return player.load(currentChannel);
+        }).then(() => {
+            if (cancelled) return;
+            video.play().catch(e => console.error("Play blocked:", e));
+        }).catch(e => {
+            if (cancelled) return;
+            console.error("Shaka attach or load failed!");
+            if (e && typeof e === 'object') {
+                console.error("Error Code:", e.code, "Category:", e.category, "Data:", e.data);
+            } else {
+                console.error(e);
             }
-
-            if (hlsRef.current) { hlsRef.current.destroy(); hlsRef.current = null; }
-            if (flvRef.current) { flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null; }
-            if (dashRef.current) { dashRef.current.destroy(); dashRef.current = null; }
-
-            const player = new shaka.Player();
-            let config = { abr: { enabled: true } };
-
-            if (drmKey && drmKey.includes(':')) {
-                try {
-                    const [kid, key] = drmKey.split(':');
-                    config.drm = {
-                        clearKeys: {
-                            [kid.trim()]: key.trim()
-                        }
-                    };
-                } catch (e) {
-                    console.error('Failed to parse DRM Key:', e);
-                }
-            }
-
-            player.configure(config);
-
-            player.attach(video).then(() => {
-                if (cancelled) return;
-                return player.load(currentChannel);
-            }).then(() => {
-                if (cancelled) return;
-                video.play().catch(e => console.error("Play blocked:", e));
-            }).catch(e => {
-                if (cancelled) return;
-                console.error("Shaka attach or load failed!");
-                if (e && typeof e === 'object') {
-                    console.error("Error Code:", e.code, "Category:", e.category, "Data:", e.data);
-                } else {
-                    console.error(e);
-                }
-            });
-            
-            dashRef.current = player;
-        }).catch((err) => console.error('Failed to load shaka-player:', err));
+        });
+        
+        dashRef.current = player;
 
         return () => { cancelled = true; };
-    }, [currentChannel, isMpd, drmKey]);
+    }, [currentChannel, isMpd, drmKey, shakaModule]);
 
     useEffect(() => {
         if (isYoutube || isGenericIframe || isFlv || isMp4 || isMpd) {
@@ -252,17 +262,18 @@ return;
         if (Hls.isSupported()) {
             const hls = new Hls({
                 enableWorker: true,
-                lowLatencyMode: false,
-                backBufferLength: 90,
-                liveSyncDurationCount: 3,
-                liveMaxLatencyDurationCount: 6,
-                maxBufferLength: 30,
+                lowLatencyMode: true,
+                backBufferLength: 30,
+                liveSyncDurationCount: 2,
+                liveMaxLatencyDurationCount: 4,
+                maxBufferLength: 8,
+                maxMaxBufferLength: 12,
             });
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 setTimeout(() => {
                     video.play().catch((err) => console.log('Autoplay blocked:', err));
-                }, 500);
+                }, 50);
             });
 
             hls.attachMedia(video);
@@ -274,11 +285,12 @@ return;
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             if (currentChannel) {
                 video.src = currentChannel;
-                video.addEventListener('loadedmetadata', () => {
+                const playOnMetadata = () => {
                     setTimeout(() => {
                         video.play().catch((err) => console.log('Autoplay blocked:', err));
-                    }, 500);
-                });
+                    }, 50);
+                };
+                video.addEventListener('loadedmetadata', playOnMetadata, { once: true });
             }
         }
     }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4, isMpd]);
