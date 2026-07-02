@@ -43,7 +43,14 @@ export async function GET(request) {
         }
         
         // Use custom referer if provided, fallback to the one required by the CDN, or origin
-        const referer = customReferer || 'https://lola30es.mpipzni2naturally32kistomach.ru/';
+        let referer = customReferer;
+        if (!referer) {
+            if (url.includes('folaplay.com')) {
+                referer = 'https://h5.folaplay.com/';
+            } else {
+                referer = 'https://lola30es.mpipzni2naturally32kistomach.ru/';
+            }
+        }
 
         // Set Origin. For this particular CDN, the origin needs to match the referer's origin.
         let origin = parsedUrl.origin;

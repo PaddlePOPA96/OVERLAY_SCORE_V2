@@ -46,6 +46,8 @@ export async function GET(request) {
             decodedReferer = decodedUrl.includes('/delta/') || decodedUrl.includes('/echo/') || decodedUrl.includes('/golf/') 
                 ? 'https://trendy47.club/' 
                 : 'https://embedstreams.top/';
+        } else if (decodedUrl.includes('folaplay.com')) {
+            decodedReferer = 'https://h5.folaplay.com/';
         }
 
         if (!decodedUrl.startsWith('http://') && !decodedUrl.startsWith('https://')) {
