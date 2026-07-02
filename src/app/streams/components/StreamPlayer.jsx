@@ -13,6 +13,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
 
     const [shakaModule, setShakaModule] = useState(null);
     const [mpegtsModule, setMpegtsModule] = useState(null);
+    const [showCatchUp, setShowCatchUp] = useState(false);
 
     // Pre-load dynamic player libraries once on mount to speed up stream loading/switching
     useEffect(() => {
@@ -24,6 +25,62 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
             setMpegtsModule(mod.default || mod);
         }).catch((err) => console.error('Pre-loading mpegts.js failed:', err));
     }, []);
+
+    // Latency tracking to display Catch-up button
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const interval = setInterval(() => {
+            try {
+                if (streamSyncVod && streamStartTime > 0) {
+                    const targetTime = Math.max(0, (Date.now() - streamStartTime) / 1000);
+                    if (Math.abs(targetTime - video.currentTime) > 4) {
+                        setShowCatchUp(true);
+                    } else {
+                        setShowCatchUp(false);
+                    }
+                } else if (video.seekable && video.seekable.length > 0) {
+                    const liveEdge = video.seekable.end(video.seekable.length - 1);
+                    if (liveEdge - video.currentTime > 5) {
+                        setShowCatchUp(true);
+                    } else {
+                        setShowCatchUp(false);
+                    }
+                } else {
+                    setShowCatchUp(false);
+                }
+            } catch (e) {
+                // Ignore errors during transition states
+            }
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, [streamSyncVod, streamStartTime]);
+
+    const catchUpLive = () => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        try {
+            if (streamSyncVod && streamStartTime > 0) {
+                const targetTime = Math.max(0, (Date.now() - streamStartTime) / 1000);
+                video.currentTime = targetTime;
+            } else if (hlsRef.current && hlsRef.current.liveSyncPosition) {
+                video.currentTime = hlsRef.current.liveSyncPosition;
+            } else if (video.seekable && video.seekable.length > 0) {
+                const liveEdge = video.seekable.end(video.seekable.length - 1);
+                video.currentTime = liveEdge;
+            } else if (video.buffered && video.buffered.length > 0) {
+                video.currentTime = video.buffered.end(video.buffered.length - 1) - 0.5;
+            }
+            if (video.paused) {
+                video.play().catch(console.error);
+            }
+        } catch (e) {
+            console.error('Failed to catch up live:', e);
+        }
+    };
 
     let isYoutube = false;
     let youtubeId = '';
@@ -409,15 +466,61 @@ return;
         );
     } else {
         return (
-            <video
-                ref={videoRef}
-                className={styles.video}
-                controls
-                autoPlay
-                playsInline
-                muted={isMuted}
-                onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
-            ></video>
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <style>{`
+                    @keyframes blink {
+                        0% { opacity: 0.5; }
+                        50% { opacity: 1; }
+                        100% { opacity: 0.5; }
+                    }
+                `}</style>
+                <video
+                    ref={videoRef}
+                    className={styles.video}
+                    controls
+                    autoPlay
+                    playsInline
+                    muted={isMuted}
+                    onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
+                ></video>
+                {showCatchUp && (
+                    <button
+                        onClick={catchUpLive}
+                        style={{
+                            position: 'absolute',
+                            top: '12px',
+                            right: '12px',
+                            zIndex: 10,
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '20px',
+                            padding: '6px 12px',
+                            fontSize: '11px',
+                            fontWeight: 'bold',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                            transition: 'all 0.2s',
+                            backdropFilter: 'blur(4px)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                        }}
+                    >
+                        <span style={{
+                            display: 'inline-block',
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            backgroundColor: 'white',
+                            animation: 'blink 1.5s infinite'
+                        }}></span>
+                        Kejar Live 🔴
+                    </button>
+                )}
+            </div>
         );
     }
 }
