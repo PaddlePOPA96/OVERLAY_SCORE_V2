@@ -11,6 +11,18 @@ const ALLOWED_DOMAINS = [
 ];
 
 export async function GET(request) {
+    const originHeader = request.headers.get('origin');
+    const allowedOrigins = [
+        'https://scoreboss.my.id',
+        'https://www.scoreboss.my.id'
+    ];
+    const isOriginAllowed = (url) => {
+        if (!url) return false;
+        if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return true;
+        return allowedOrigins.some(domain => url.startsWith(domain));
+    };
+    const corsOrigin = (originHeader && isOriginAllowed(originHeader)) ? originHeader : 'https://scoreboss.my.id';
+
     const { searchParams } = new URL(request.url);
     const url = searchParams.get('url');
     const customReferer = searchParams.get('referer');
@@ -101,7 +113,7 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
             return new NextResponse(text, {
                 headers: {
                     'Content-Type': 'application/vnd.apple.mpegurl',
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': corsOrigin,
                 }
             });
         }
@@ -112,7 +124,7 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
         const responseHeaders = new Headers();
 
         if (contentType) responseHeaders.set('Content-Type', contentType);
-        responseHeaders.set('Access-Control-Allow-Origin', '*');
+        responseHeaders.set('Access-Control-Allow-Origin', corsOrigin);
         
         // Pass cache headers if any
         if (response.headers.has('cache-control')) {

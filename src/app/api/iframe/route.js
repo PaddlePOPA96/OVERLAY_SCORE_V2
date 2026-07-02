@@ -11,6 +11,18 @@ const ALLOWED_DOMAINS = [
 ];
 
 export async function GET(request) {
+    const originHeader = request.headers.get('origin');
+    const allowedOrigins = [
+        'https://scoreboss.my.id',
+        'https://www.scoreboss.my.id'
+    ];
+    const isOriginAllowed = (url) => {
+        if (!url) return false;
+        if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return true;
+        return allowedOrigins.some(domain => url.startsWith(domain));
+    };
+    const corsOrigin = (originHeader && isOriginAllowed(originHeader)) ? originHeader : 'https://scoreboss.my.id';
+
     try {
         const { searchParams } = new URL(request.url);
         const urlStr = searchParams.get('url');
@@ -60,7 +72,7 @@ export async function GET(request) {
 
             resHeaders.delete('x-frame-options');
             resHeaders.delete('content-security-policy');
-            resHeaders.set('access-control-allow-origin', '*');
+            resHeaders.set('access-control-allow-origin', corsOrigin);
             
 return new NextResponse(bodyBuffer, { headers: resHeaders });
         }
@@ -82,7 +94,7 @@ return new NextResponse(bodyBuffer, { headers: resHeaders });
         const resHeaders = new Headers();
 
         resHeaders.set('Content-Type', contentType);
-        resHeaders.set('Access-Control-Allow-Origin', '*');
+        resHeaders.set('Access-Control-Allow-Origin', corsOrigin);
         
         return new NextResponse(htmlText, { headers: resHeaders });
 

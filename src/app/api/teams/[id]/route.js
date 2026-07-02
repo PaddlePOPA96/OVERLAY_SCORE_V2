@@ -5,12 +5,16 @@ import { ref, set } from 'firebase/database'
 
 import { db } from '@/services/firebase/db'
 
-const API_KEY = process.env.FOOTBALL_DATA_API_KEY || '0ea6f9faf31246dcb907c52fa33062b6'
+const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 
 const BASE_URL = 'https://api.football-data.org/v4'
 
 export async function GET(_req, { params }) {
   try {
+    if (!API_KEY) {
+      return NextResponse.json({ error: 'FOOTBALL_DATA_API_KEY not configured' }, { status: 500 })
+    }
+
     const id = params?.id
 
     if (!id) {

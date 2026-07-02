@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 import admin from 'firebase-admin'
 
 import { verifyIdToken } from '@/services/firebase/admin'
+import { doc, getDoc } from 'firebase/firestore'
+import { dbFirestore } from '@/services/firebase/firestore'
 
 export async function POST(req) {
   try {
@@ -19,15 +21,25 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }
 
-    // Optional: We can check if the caller is superadmin by checking Firestore role,
-    // but the token might not have custom claims for role. We will trust the token for now,
-    // or we can fetch the user's role from Firestore to be safe.
+    const uid = decodedToken.uid
+
+    // Check if the caller is admin/superadmin
+    const userDoc = await getDoc(doc(dbFirestore, 'users', uid))
+    const role = userDoc.exists() ? userDoc.data().role : 'user'
+
+    if (!['superadmin', 'admin'].includes(role)) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })
+    }
     
     const body = await req.json()
     const { targetUid } = body
 
     if (!targetUid) {
       return NextResponse.json({ error: 'Missing targetUid' }, { status: 400 })
+    }
+
+    if (targetUid === uid) {
+      return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 })
     }
 
     // Delete the user from Firebase Auth

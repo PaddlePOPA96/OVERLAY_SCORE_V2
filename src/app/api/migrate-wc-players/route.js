@@ -1,15 +1,39 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc } from 'firebase/firestore'
 
 import { dbFirestore } from '@/services/firebase/firestore'
+import { verifyIdToken } from '@/services/firebase/admin'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'
 
 export async function GET(request) {
   try {
+    // Authorization check
+    const authHeader = request.headers.get('Authorization')
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized: Missing or invalid token' }, { status: 401 })
+    }
+
+    const token = authHeader.split('Bearer ')[1]
+    const verification = await verifyIdToken(token)
+
+    if (!verification.success) {
+      return NextResponse.json({ error: `Unauthorized: ${verification.error || 'Invalid token'}` }, { status: 401 })
+    }
+
+    // Check if user has admin/superadmin role
+    const uid = verification.uid
+    const userDoc = await getDoc(doc(dbFirestore, 'users', uid))
+    const role = userDoc.exists() ? userDoc.data().role : 'user'
+
+    if (!['superadmin', 'admin'].includes(role)) {
+      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 })
+    }
+
     if (!API_KEY) {
       return NextResponse.json({ error: 'FOOTBALL_DATA_API_KEY not configured' }, { status: 500 })
     }

@@ -8,6 +8,18 @@ const ALLOWED_DOMAINS = [
 ];
 
 export async function GET(request) {
+    const originHeader = request.headers.get('origin');
+    const allowedOrigins = [
+        'https://scoreboss.my.id',
+        'https://www.scoreboss.my.id'
+    ];
+    const isOriginAllowed = (url) => {
+        if (!url) return false;
+        if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return true;
+        return allowedOrigins.some(domain => url.startsWith(domain));
+    };
+    const corsOrigin = (originHeader && isOriginAllowed(originHeader)) ? originHeader : 'https://scoreboss.my.id';
+
     try {
         const { searchParams } = new URL(request.url);
         const encodedUrl = searchParams.get('u');
@@ -53,7 +65,7 @@ export async function GET(request) {
         return new NextResponse(readable, {
             headers: {
                 'Content-Type': 'video/x-flv',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': corsOrigin,
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Transfer-Encoding': 'chunked',
             },

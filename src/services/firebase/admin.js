@@ -33,14 +33,6 @@ export async function verifyIdToken(token) {
 
     return { success: true, ...decodedToken }
   } catch (error) {
-    // BYPASS IF NO SERVICE ACCOUNT (Local Dev only)
-    if (!serverEnv.FIREBASE_SERVICE_ACCOUNT_KEY && serverEnv.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
-      console.warn('⚠️ [Dev Mode] Skipping ID Token verification because FIREBASE_SERVICE_ACCOUNT_KEY is missing.')
-
-      return { success: true, uid: 'dev-user', email: 'dev@local', role: 'admin', isDev: true }
-    }
-
     console.error('verifyIdToken error:', error)
 
     return { success: false, error: error.message }
