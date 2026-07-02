@@ -2,6 +2,32 @@ import React, { useEffect, useRef, useMemo, useState } from 'react';
 
 import Hls from 'hls.js';
 
+class CustomManifestLoader extends Hls.DefaultConfig.loader {
+    load(context, config, callbacks) {
+        if (context.type === 'manifest') {
+            const onSuccess = callbacks.onSuccess;
+            callbacks.onSuccess = (response, stats, ctx, networkDetails) => {
+                let manifestText = response.data;
+                if (typeof manifestText === 'string') {
+                    const lines = manifestText.split('\n');
+                    const rewrittenLines = lines.map(line => {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.startsWith('#EXT-X-STREAM-INF:')) {
+                            if (!trimmedLine.includes('CODECS=')) {
+                                return `${trimmedLine},CODECS="avc1.64001f,mp4a.40.2"`;
+                            }
+                        }
+                        return line;
+                    });
+                    response.data = rewrittenLines.join('\n');
+                }
+                onSuccess(response, stats, ctx, networkDetails);
+            };
+        }
+        super.load(context, config, callbacks);
+    }
+}
+
 import styles from '../streams.module.css';
 
 export default function StreamPlayer({ currentChannel, streamStartTime, streamSyncVod, isMuted = true, drmKey }) {
@@ -325,6 +351,7 @@ return;
                 liveMaxLatencyDurationCount: 4,
                 maxBufferLength: 8,
                 maxMaxBufferLength: 12,
+                pLoader: CustomManifestLoader,
             });
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
