@@ -63,23 +63,32 @@ export async function GET(request) {
 
         const fetchHeaders = new Headers();
         
-        // Forward ALL headers from the original browser request to perfectly spoof the client
-        request.headers.forEach((value, key) => {
-            const lowerKey = key.toLowerCase();
+        if (decodedUrl.includes('folaplay.com')) {
+            fetchHeaders.set('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36');
+            fetchHeaders.set('Accept', '*/*');
+            fetchHeaders.set('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8');
+            fetchHeaders.set('Connection', 'keep-alive');
+            fetchHeaders.set('Referer', 'https://h5.folaplay.com/');
+            fetchHeaders.set('Origin', 'https://h5.folaplay.com');
+        } else {
+            // Forward ALL headers from the original browser request to perfectly spoof the client
+            request.headers.forEach((value, key) => {
+                const lowerKey = key.toLowerCase();
 
 
-            // Skip headers that should not be forwarded
-            if (!['host', 'referer', 'origin', 'connection', 'content-length', 'accept-encoding'].includes(lowerKey)) {
-                fetchHeaders.set(key, value);
+                // Skip headers that should not be forwarded
+                if (!['host', 'referer', 'origin', 'connection', 'content-length', 'accept-encoding'].includes(lowerKey) && !lowerKey.startsWith('x-')) {
+                    fetchHeaders.set(key, value);
+                }
+            });
+
+            if (decodedReferer) {
+                fetchHeaders.set('Referer', decodedReferer);
+
+                try {
+                    fetchHeaders.set('Origin', new URL(decodedReferer).origin);
+                } catch (e) {}
             }
-        });
-
-        if (decodedReferer) {
-            fetchHeaders.set('Referer', decodedReferer);
-
-            try {
-                fetchHeaders.set('Origin', new URL(decodedReferer).origin);
-            } catch (e) {}
         }
 
         const response = await fetch(decodedUrl, {
