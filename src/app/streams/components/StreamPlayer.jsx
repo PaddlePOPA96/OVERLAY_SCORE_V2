@@ -4,21 +4,28 @@ import Hls from 'hls.js';
 
 class CustomManifestLoader extends Hls.DefaultConfig.loader {
     load(context, config, callbacks) {
+        console.log('[HLS Proxy] Loading playlist:', context.url);
         if (context.type === 'manifest') {
             const onSuccess = callbacks.onSuccess;
             callbacks.onSuccess = (response, stats, ctx, networkDetails) => {
                 let manifestText = response.data;
                 if (typeof manifestText === 'string') {
+                    console.log('[HLS Proxy] Intercepted manifest text, length:', manifestText.length);
                     const lines = manifestText.split('\n');
+                    let injected = false;
                     const rewrittenLines = lines.map(line => {
                         const trimmedLine = line.trim();
                         if (trimmedLine.startsWith('#EXT-X-STREAM-INF:')) {
                             if (!trimmedLine.includes('CODECS=')) {
+                                injected = true;
                                 return `${trimmedLine},CODECS="avc1.64001f,mp4a.40.2"`;
                             }
                         }
                         return line;
                     });
+                    if (injected) {
+                        console.log('[HLS Proxy] Successfully injected CODECS into manifest!');
+                    }
                     response.data = rewrittenLines.join('\n');
                 }
                 onSuccess(response, stats, ctx, networkDetails);
