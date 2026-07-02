@@ -411,22 +411,33 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
       <Box display="flex" flexDirection="column" gap={3}>
         
         {/* TOP LEVEL SWITCHES */}
-        <Box display="flex" flexWrap="wrap" gap={3} sx={{ pb: 3, borderBottom: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
-          <FormControlLabel
-            control={<Switch checked={multiMode} onChange={handleToggleMultiMode} color="primary" />}
-            label={<Typography variant="body2" sx={{ color: isLight ? '#222' : '#eee', fontWeight: 'bold' }}>Mode Multi Stream (Layar Ganda)</Typography>}
-            sx={{ m: 0 }}
-          />
-          <FormControlLabel
-            control={<Switch checked={syncVod} onChange={handleToggleSync} color="primary" size="small" />}
-            label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Sync Waktu VOD</Typography>}
-            sx={{ m: 0 }}
-          />
-          <FormControlLabel
-            control={<Switch checked={useProxy} onChange={handleToggleProxy} color="primary" size="small" />}
-            label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Proxy Siluman (Sembunyikan URL)</Typography>}
-            sx={{ m: 0 }}
-          />
+        <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={3} sx={{ pb: 3, borderBottom: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
+          <Box display="flex" flexWrap="wrap" gap={3}>
+            <FormControlLabel
+              control={<Switch checked={multiMode} onChange={handleToggleMultiMode} color="primary" />}
+              label={<Typography variant="body2" sx={{ color: isLight ? '#222' : '#eee', fontWeight: 'bold' }}>Mode Multi Stream (Layar Ganda)</Typography>}
+              sx={{ m: 0 }}
+            />
+            <FormControlLabel
+              control={<Switch checked={syncVod} onChange={handleToggleSync} color="primary" size="small" />}
+              label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Sync Waktu VOD</Typography>}
+              sx={{ m: 0 }}
+            />
+            <FormControlLabel
+              control={<Switch checked={useProxy} onChange={handleToggleProxy} color="primary" size="small" />}
+              label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Proxy Siluman (Sembunyikan URL)</Typography>}
+              sx={{ m: 0 }}
+            />
+          </Box>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            onClick={() => window.open('/streams', '_blank')}
+            sx={{ textTransform: 'none', fontWeight: 'bold', px: 2 }}
+          >
+            Buka Halaman /streams ↗
+          </Button>
         </Box>
 
         {/* STREAM MANAGER GRID */}
@@ -484,15 +495,16 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
               )}
 
               {/* Presets Kiri */}
-              {presets.length > 0 && (
-                <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
-                  <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
-                  {presets.map(preset => (
-                    <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'left')} onDelete={() => handleDeletePreset(preset.id)} color="primary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
-                  ))}
-                  <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
-                </Box>
-              )}
+              <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
+                <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
+                {presets.map(preset => (
+                  <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'left')} onDelete={() => handleDeletePreset(preset.id)} color="primary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
+                ))}
+                {presets.length === 0 && (
+                  <Typography variant="caption" sx={{ color: isLight ? '#aaa' : '#666', fontStyle: 'italic', mr: 1 }}>Belum ada preset</Typography>
+                )}
+                <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
+              </Box>
             </Box>
           </Grid>
 
@@ -549,15 +561,16 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                 )}
 
                 {/* Presets Kanan */}
-                {presets.length > 0 && (
-                  <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
-                    <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
-                    {presets.map(preset => (
-                      <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'right')} onDelete={() => handleDeletePreset(preset.id)} color="secondary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
-                    ))}
-                    <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
-                  </Box>
-                )}
+                <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
+                  <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
+                  {presets.map(preset => (
+                    <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'right')} onDelete={() => handleDeletePreset(preset.id)} color="secondary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
+                  ))}
+                  {presets.length === 0 && (
+                    <Typography variant="caption" sx={{ color: isLight ? '#aaa' : '#666', fontStyle: 'italic', mr: 1 }}>Belum ada preset</Typography>
+                  )}
+                  <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
+                </Box>
               </Box>
             </Grid>
           )}
