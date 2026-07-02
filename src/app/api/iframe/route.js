@@ -7,7 +7,8 @@ const ALLOWED_DOMAINS = [
     'trendy47.club',
     'embedstreams.top',
     'strmd.st',
-    'lola30es.mpipzni2naturally32kistomach.ru'
+    'lola30es.mpipzni2naturally32kistomach.ru',
+    'folaplay.com'
 ];
 
 export async function GET(request) {

@@ -9,7 +9,8 @@ const ALLOWED_DOMAINS = [
     'trendy47.club',
     'embedstreams.top',
     'strmd.st',
-    'lola30es.mpipzni2naturally32kistomach.ru'
+    'lola30es.mpipzni2naturally32kistomach.ru',
+    'folaplay.com'
 ];
 
 export async function GET(request) {
@@ -90,9 +91,16 @@ export async function GET(request) {
 
         const m3u8Text = await response.text();
 
-        // Rewrite relative URLs to absolute URLs
+        // Rewrite relative URLs to absolute URLs and inject codecs if missing
         const rewrittenLines = m3u8Text.split('\n').map(line => {
             const trimmedLine = line.trim();
+
+            if (trimmedLine.startsWith('#EXT-X-STREAM-INF:')) {
+                if (!trimmedLine.includes('CODECS=')) {
+                    return `${line.trim()},CODECS="avc1.64001f,mp4a.40.2"`;
+                }
+                return line;
+            }
 
             if (!trimmedLine || trimmedLine.startsWith('#')) {
                 return line;

@@ -156,11 +156,11 @@ export function useStreamSettings() {
                     finalUrl = finalUrl.replace(/{token}/gi, streamToken).replace(/\[token\]/gi, streamToken);
                 }
 
-                if (finalUrl.includes('.flv') && streamUseProxy) {
+                if (finalUrl.includes('.flv') && (streamUseProxy || finalUrl.includes('folaplay.com'))) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
-                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                } else if ((streamUseProxy || finalUrl.includes('folaplay.com')) && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;
@@ -193,11 +193,11 @@ export function useStreamSettings() {
                     finalUrl = finalUrl.replace(/{token}/gi, streamToken2).replace(/\[token\]/gi, streamToken2);
                 }
                 
-                if (finalUrl.includes('.flv') && streamUseProxy) {
+                if (finalUrl.includes('.flv') && (streamUseProxy || finalUrl.includes('folaplay.com'))) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/flv-proxy?u=${encodedUrl}`;
-                } else if (streamUseProxy && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
+                } else if ((streamUseProxy || finalUrl.includes('folaplay.com')) && !finalUrl.includes('.flv') && !finalUrl.toLowerCase().includes('.mp4') && !finalUrl.includes('.mpd') && !finalUrl.includes('youtube.com') && !finalUrl.includes('youtu.be') && !finalUrl.includes('trendy47.club') && !finalUrl.includes('statusnode.is') && !finalUrl.includes('.html')) {
                     const encodedUrl = btoa(finalUrl);
 
                     finalUrl = `/api/stream.m3u8?u=${encodedUrl}`;

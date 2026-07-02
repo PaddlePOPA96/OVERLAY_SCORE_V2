@@ -7,7 +7,8 @@ const ALLOWED_DOMAINS = [
     'trendy47.club',
     'embedstreams.top',
     'strmd.st',
-    'lola30es.mpipzni2naturally32kistomach.ru'
+    'lola30es.mpipzni2naturally32kistomach.ru',
+    'folaplay.com'
 ];
 
 export async function GET(request) {
@@ -92,13 +93,21 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
             const lines = text.split('\n');
 
             const rewrittenLines = lines.map(line => {
-                line = line.trim();
-                if (!line || line.startsWith('#')) return line;
+                const trimmedLine = line.trim();
+
+                if (trimmedLine.startsWith('#EXT-X-STREAM-INF:')) {
+                    if (!trimmedLine.includes('CODECS=')) {
+                        return `${trimmedLine},CODECS="avc1.64001f,mp4a.40.2"`;
+                    }
+                    return line;
+                }
+
+                if (!trimmedLine || trimmedLine.startsWith('#')) return line;
                 
                 // It's a URL
                 try {
                     // Resolve relative URL against the base URL
-                    const absoluteUrl = new URL(line, url).toString();
+                    const absoluteUrl = new URL(trimmedLine, url).toString();
 
 
                     // Point back to our proxy
