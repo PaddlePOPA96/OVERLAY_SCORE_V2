@@ -107,21 +107,45 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
           overflow: visible; 
           pointer-events: none;
         }
-        .f1 { --start-scale: calc(1 - 3 * 0.01); --glow-color: rgba(255, 53, 3, 0.5); color: #FF3503; z-index: 4; animation-delay: 0.7s; transition-delay: 0.24s; }
-        .f2 { --start-scale: calc(1 - 2 * 0.01); --glow-color: rgba(133, 179, 250, 0.5); color: #85B3FA; z-index: 3; animation-delay: 0.92s; transition-delay: 0.16s; }
-        .f3 { --start-scale: calc(1 - 1 * 0.01); --glow-color: rgba(0, 194, 75, 0.5); color: #00C24B; z-index: 2; animation-delay: 1.14s; transition-delay: 0.08s; }
-        .f4 { --start-scale: calc(1 - 0 * 0.01); --glow-color: rgba(90, 14, 19, 0.5); color: #5A0E13; z-index: 1; animation-delay: 1.36s; transition-delay: 0s; }
+        .f1 { --start-scale: calc(1 - 5 * 0.02); --glow-color: rgba(191, 0, 115, 0.5); color: #ffffff; z-index: 6; --open-delay: 1.00s; --close-delay: 0.70s; transition-delay: 0s; }
+        .f2 { --start-scale: calc(1 - 4 * 0.02); --glow-color: rgba(0, 68, 255, 0.5); color: #0044ff; z-index: 5; --open-delay: 0.92s; --close-delay: 0.78s; transition-delay: 0s; }
+        .f3 { --start-scale: calc(1 - 3 * 0.02); --glow-color: rgba(255, 0, 51, 0.5); color: #ff0033; z-index: 4; --open-delay: 0.84s; --close-delay: 0.86s; transition-delay: 0s; }
+        .f4 { --start-scale: calc(1 - 2 * 0.02); --glow-color: rgba(0, 255, 102, 0.5); color: #00ff66; z-index: 3; --open-delay: 0.76s; --close-delay: 0.94s; transition-delay: 0s; }
+        .f5 { --start-scale: calc(1 - 1 * 0.02); --glow-color: rgba(204, 255, 0, 0.5); color: #ccff00; z-index: 2; --open-delay: 0.68s; --close-delay: 1.02s; transition-delay: 0s; }
+        .f6 { --start-scale: calc(1 - 0 * 0.02); --glow-color: rgba(0, 0, 0, 0.5); color: #000000; z-index: 1; --open-delay: 0.60s; --close-delay: 1.10s; transition-delay: 0s; }
         
+        .animate-open {
+          animation-name: smoothOpen;
+          animation-duration: 0.6s;
+          animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+          animation-fill-mode: both;
+          animation-delay: var(--open-delay);
+        }
+        
+        @keyframes smoothOpen {
+          0% { transform: scaleX(0) scaleY(1) translate3d(0,0,0); opacity: 0; }
+          100% { transform: scaleX(var(--start-scale)) scaleY(1) translate3d(0,0,0); opacity: 1; }
+        }
+
         .animate-close {
           animation-name: smoothClose;
           animation-duration: 0.6s;
           animation-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
-          animation-fill-mode: forwards;
+          animation-fill-mode: both;
+          animation-delay: var(--close-delay);
         }
         
         @keyframes smoothClose {
           0% { transform: scaleX(var(--start-scale)) scaleY(1) translate3d(0,0,0); opacity: 1; }
           100% { transform: scaleX(0) scaleY(1) translate3d(0,0,0); opacity: 0; }
+        }
+
+        @keyframes b2fSwitchZoom {
+          0% { transform: scale(0.5); opacity: 0; animation-timing-function: ease; }
+          25% { transform: scale(1.30); opacity: 1; animation-timing-function: ease; }
+          60% { transform: scale(1.25); opacity: 1; animation-timing-function: ease; }
+          90% { transform: scale(1.30); opacity: 1; animation-timing-function: ease; }
+          100% { transform: scale(1); opacity: 1; animation-timing-function: ease; }
         }
 
         /* -- ANIMASI GOAL DARI ATAS KE BAWAH (DIPERHALUS & DIPERPANJANG) -- */
@@ -150,6 +174,112 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
           35% { transform: translateY(0); } /* Jatuh dengan mulus di 35% waktu (sekitar 0.5s) */
           100% { transform: translateY(0); } /* Diam sebentar menahan posisi sebelum loop lagi */
         }
+
+        /* -- 2D VECTOR TRAIL ANIMATION -- */
+        .trail-scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .trail-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .trail-scene svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Base state for paths */
+        .trail-scene svg path {
+            opacity: 1; 
+            transform: translateX(0px);
+            clip-path: inset(0 -20% 0 -20%);
+        }
+
+        /* Disappear Animation */
+        .trail-scene.anim-disappear svg path {
+            animation: swooshLeft 1.2s cubic-bezier(0.85, 0, 0.15, 1) both;
+            animation-delay: calc(var(--slice-delay) + var(--color-delay));
+        }
+
+        @keyframes swooshLeft {
+            0% { 
+                transform: translateX(0px); 
+                clip-path: inset(0 -20% 0 -20%);
+            }
+            30% {
+                transform: translateX(var(--target-x, 0px)); 
+                clip-path: inset(0 -20% 0 -20%);
+            }
+            100% { 
+                transform: translateX(var(--target-x, 0px)); 
+                clip-path: inset(0 120% 0 -20%); 
+            }
+        }
+
+        /* Appear Animation */
+        .trail-scene.anim-appear svg path {
+            animation: swooshRight 1.2s cubic-bezier(0.85, 0, 0.15, 1) both;
+            /* Reverse the color delay so the back layer (black) appears first, ending with white on top */
+            animation-delay: calc(var(--slice-delay) + (0.25s - var(--color-delay)));
+        }
+
+        @keyframes swooshRight {
+            0% { 
+                transform: translateX(var(--target-x, 0px)); 
+                clip-path: inset(0 120% 0 -20%); 
+            }
+            70% {
+                transform: translateX(var(--target-x, 0px)); 
+                clip-path: inset(0 -20% 0 -20%);
+            }
+            100% { 
+                transform: translateX(0px); 
+                clip-path: inset(0 -20% 0 -20%);
+            }
+        }
+
+        /* Slice Delays (Top to Bottom) */
+        .trail-scene svg path:nth-child(1) { --slice-delay: 0s; }
+        .trail-scene svg path:nth-child(2) { --slice-delay: 0.3s; }
+        .trail-scene svg path:nth-child(3) { --slice-delay: 0.6s; }
+        .trail-scene svg path:nth-child(5) { --slice-delay: 0.9s; } /* path 5 is mid-bottom visually */
+        .trail-scene svg path:nth-child(4) { --slice-delay: 1.2s; } /* path 4 is bottom visually */
+
+        /* Color Layers & Delays (Scaled down translations for smaller size) */
+        .back-black path { fill: #000000; --color-delay: 0.25s; --target-x: 16px; }
+        .back-yellow path { fill: #ccff00; --color-delay: 0.20s; --target-x: 13px; }
+        .back-green path { fill: #00ff66; --color-delay: 0.15s; --target-x: 10px; }
+        .back-red path { fill: #ff0033; --color-delay: 0.10s; --target-x: 7px; }
+        .back-blue path { fill: #0044ff; --color-delay: 0.05s; --target-x: 3.5px; }
+        .front path { fill: #ffffff; --color-delay: 0s; --target-x: 0px; }
+
+        /* Fading Logo Overlay */
+        .logo-fade-layer {
+            opacity: 0;
+            will-change: opacity;
+        }
+        .logo-fade-in {
+            animation: fadeIn 0.4s ease forwards;
+            animation-delay: 1.2s; /* Waits for the swooshes to mostly finish */
+        }
+        .logo-fade-out {
+            animation: fadeOut 0.2s ease forwards;
+            animation-delay: 0s; /* Hides instantly when disappearing, revealing the sweeping trails */
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
       `}</style>
 
       <div
@@ -206,14 +336,16 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
             zIndex: 3,
             transform: animateIn ? 'scaleX(1) scaleY(1) translate3d(0,0,0)' : 'scaleX(0) scaleY(1) translate3d(0,0,0)',
             transformOrigin: 'center center',
-            transition: animateIn ? 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1) 0.3s' : 'transform 0s ease 2s',
+            transition: animateIn ? 'transform 0s' : 'transform 0s ease 2s',
             willChange: 'transform',
           }}
         >
-          <svg className={`frame-svg f4${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
-          <svg className={`frame-svg f3${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
-          <svg className={`frame-svg f2${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
-          <svg className={`frame-svg f1${!animateIn ? ' animate-close' : ''}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f6${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f5${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f4${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f3${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f2${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
+          <svg className={`frame-svg f1${animateIn ? ' animate-open' : ' animate-close'}`} viewBox="0 0 1000 120" fill="currentColor" preserveAspectRatio="none"><path d="M 30 10 H 970 Q 1000 10 1000 40 Q 970 45 970 60 Q 970 75 1000 75 Q 1000 110 970 110 H 30 Q 0 110 0 90 Q 30 75 30 60 Q 30 45 0 45 Q 0 10 30 10 Z" /></svg>
         </div>
 
         {/* ── MAIN SCOREBOARD CONTENT WRAPPER ── */}
@@ -321,9 +453,12 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                 zIndex: 30,
                 overflow: 'visible',
                 transform: animateIn ? 'scale(1) translate3d(0,0,0)' : 'scale(0) translate3d(0,0,0)',
+                opacity: animateIn ? 1 : 0,
                 transformOrigin: 'center center',
-                transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s',
-                willChange: 'transform',
+                transition: animateIn
+                  ? 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.3s, opacity 0.4s ease 0.3s'
+                  : 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1) 1.2s, opacity 0.4s ease 1.2s',
+                willChange: 'transform, opacity',
               }}
             >
               <div
@@ -346,16 +481,119 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                   willChange: 'transform',
                 }}
               >
-                <img
-                  src={data.useCustomFifaLogo ? 'https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png' : '/logob2f.jpg'}
-                  alt='Center Logo'
-                  style={{
-                    width: `${data.fifaLogoSize || 96}px`,
-                    height: `${data.fifaLogoSize || 96}px`,
-                    objectFit: 'contain',
-                    ...(data.useCustomFifaLogo && { filter: 'brightness(0) invert(1)' }),
-                  }}
-                />
+                {/* 2D Vector Trail Animation OR B2F Image */}
+                {data.useCustomFifaLogo ? (
+                  <div
+                    className={`trail-scene ${animateIn ? 'anim-appear' : 'anim-disappear'}`}
+                    style={{
+                      width: `${data.fifaLogoSize || 96}px`,
+                      height: `${data.fifaLogoSize || 96}px`,
+                    }}
+                  >
+                    {/* Black Layer (Backmost) */}
+                    <div className="trail-layer back-black">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* Yellow Layer */}
+                    <div className="trail-layer back-yellow">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* Green Layer */}
+                    <div className="trail-layer back-green">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* Red Layer */}
+                    <div className="trail-layer back-red">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* Blue Layer */}
+                    <div className="trail-layer back-blue">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* Front Shape Layer (Topmost trail) */}
+                    <div className="trail-layer front">
+                      <svg viewBox="0 0 401 623">
+                        <path d="M1 99.9345H91.2307H303.461L399.321 104.119C399.321 15.0403 312.059 0.0941371 312.059 0.0941371C312.059 0.0941371 101.322 -0.499329 85.8881 1.29392C70.4539 3.08718 41.96 11.4532 22.3704 38.3563C2.78086 65.2594 1 99.9345 1 99.9345Z" />
+                        <path d="M92 99.9973C92 99.9973 41.9988 111.972 18.254 147.843C13.2309 155.431 7.85595 166.247 5.19408 179.529C-3.11658 229.15 1.03891 209.323 1.03891 209.323H49.5H178.5H242.5H312.097C312.097 209.323 399.5 193.872 399.5 104.793L345 99.9979C345 99.9979 296.434 98.2061 281 99.9994C265.566 101.793 228.5 99.9973 228.5 99.9973H178.5H92Z" />
+                        <path d="M399.36 308.208V209.563H312.098C312.098 209.563 298 209.568 298 209.566C298 209.564 284.5 209.562 284.5 209.562L256 209.566L225.5 209.563L184 209.562L143.5 209.563H103.5H75L1.03906 209.562V308.208H399.36Z" />
+                        <path d="M308.999 419.5H297.999L264.499 419.5L233 419C233 419 205.781 418.998 152 419C98.2184 419.002 125.719 419 89.4995 419H4.5C4.5 419 2.33005 527.596 6.48541 546.129C10.6408 564.661 8.26601 556.292 24.2941 582.597C40.3222 608.903 78.9072 621.457 90.7799 622.055C102.653 622.653 311.014 622.055 311.014 622.055C311.014 622.055 400.058 608.903 400.058 519.824C400.058 430.744 308.999 419.5 308.999 419.5Z" />
+                        <path d="M312.41 419.775H400.266C400.266 419.775 400.266 391.676 383.644 358.196C367.022 324.716 311.222 320.532 311.222 320.532C311.222 320.532 92.769 319.335 87.4264 320.532C82.0838 321.729 63.0878 322.324 38.1557 345.042C13.2235 367.761 4.84717 396.524 4.84717 396.524L4.84917 419.775H64.7071C64.7071 419.775 137.834 419.177 149.707 419.775C161.58 420.373 238.707 419.775 238.707 419.775H277.207H312.41Z" />
+                      </svg>
+                    </div>
+
+                    {/* FIFA Logo (Fades in over the front shape) */}
+                    <div
+                      className={`logo-fade-layer ${animateIn ? 'logo-fade-in' : 'logo-fade-out'}`}
+                      style={{
+                        position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}
+                    >
+                      <img
+                        src='https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png'
+                        alt='FIFA Logo'
+                        style={{
+                          width: `${data.fifaLogoSize || 96}px`,
+                          height: `${data.fifaLogoSize || 96}px`,
+                          objectFit: 'contain',
+                          filter: 'brightness(0) invert(1)',
+                        }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <img
+                    src='/logob2f.jpg'
+                    alt='Center Logo'
+                    style={{
+                      width: `${data.fifaLogoSize || 96}px`,
+                      height: `${data.fifaLogoSize || 96}px`,
+                      objectFit: 'contain',
+                      transform: animateIn ? 'scale(1)' : 'scale(0.5)',
+                      opacity: animateIn ? 1 : 0,
+                      animation: animateIn ? 'b2fSwitchZoom 0.6s ease 0.45s both' : 'none',
+                      transition: animateIn
+                        ? 'none'
+                        : 'transform 0.4s ease-in 0.9s, opacity 0.3s ease 0.9s',
+                      willChange: 'transform, opacity',
+                    }}
+                  />
+                )}
               </div>
             </div>
 
