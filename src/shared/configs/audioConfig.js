@@ -10,6 +10,8 @@ export const audioOptions = [
   { label: 'kenapa nyak', value: '/sounds/kenapa-nya.mp3' },
   { label: 'shapeofmy', value: '/sounds/shapeofmy.mp3' },
   { label: 'whistellop', value: '/sounds/whistleloop.mp3' },
+  { label: 'maripulang', value: '/sounds/mari_pulang.mp3' },
+
 
 
 
