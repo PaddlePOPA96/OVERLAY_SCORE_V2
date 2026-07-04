@@ -17,7 +17,7 @@ export function HeroAgency() {
   const handleDashboardClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     setIsPreloading(true);
-    
+
     // Tunggu animasi preloader selesai (sekitar 1.2 detik) sebelum pindah halaman
     setTimeout(() => {
       router.push("/dashboard");
@@ -27,7 +27,7 @@ export function HeroAgency() {
   const handleStreamClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     setIsPreloading(true);
-    
+
     // Tunggu animasi preloader selesai (sekitar 1.2 detik) sebelum pindah halaman
     setTimeout(() => {
       router.push("/streams");

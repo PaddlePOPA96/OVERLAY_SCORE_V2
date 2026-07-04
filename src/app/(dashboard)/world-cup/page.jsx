@@ -83,6 +83,13 @@ export default function WorldCupPage() {
             >
               Standings Table
             </Button>
+            <Button
+              onClick={() => setWcMode('knockout')}
+              variant={wcMode === 'knockout' ? 'contained' : 'outlined'}
+              className='normal-case font-semibold text-xs'
+            >
+              Knockout Stage
+            </Button>
           </ButtonGroup>
           <Button
             onClick={() => setShowSidebar(!showSidebar)}

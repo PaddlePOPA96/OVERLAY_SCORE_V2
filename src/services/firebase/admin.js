@@ -38,3 +38,6 @@ export async function verifyIdToken(token) {
     return { success: false, error: error.message }
   }
 }
+
+export const adminDb = admin.database()
+export const adminFirestore = admin.firestore()

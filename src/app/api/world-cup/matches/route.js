@@ -1,12 +1,8 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
-import { ref, set, get } from 'firebase/database'
-
 import { doc, getDoc } from 'firebase/firestore'
-
-import { db } from '@/services/firebase/db'
-import { verifyIdToken } from '@/services/firebase/admin'
+import { adminDb, verifyIdToken } from '@/services/firebase/admin'
 import { dbFirestore } from '@/services/firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
@@ -72,7 +68,7 @@ export async function GET(request) {
 
       // Simpan snapshot jadwal & hasil ke Firebase di node ucl_data/wc_matches (karena ucl_data memiliki izin akses baca untuk client)
       try {
-        await set(ref(db, 'ucl_data/wc_matches'), {
+        await adminDb.ref('ucl_data/wc_matches').set({
           lastUpdated: Date.now(),
           data
         })
@@ -83,7 +79,7 @@ export async function GET(request) {
       console.warn('[World Cup] External API failed, attempting fallback to Firebase:', fetchError)
 
       try {
-        const snapshot = await get(ref(db, 'ucl_data/wc_matches'))
+        const snapshot = await adminDb.ref('ucl_data/wc_matches').get()
 
         if (snapshot.exists()) {
           const cached = snapshot.val()

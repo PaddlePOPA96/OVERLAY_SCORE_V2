@@ -2,6 +2,7 @@ import { Header } from "./Header";
 import { HeroAgency } from "./HeroAgency";
 import { Marquee } from "./Marquee";
 import { ScheduleCards } from "./ScheduleCards";
+import { WorldCupKnockoutSection } from "./WorldCupKnockoutSection";
 
 export default function NeoTokyoLanding() {
   return (
@@ -9,7 +10,8 @@ export default function NeoTokyoLanding() {
       <Header />
       <HeroAgency />
       <Marquee />
-      <ScheduleCards />
+      <WorldCupKnockoutSection />
+      {/* <ScheduleCards /> */}
     </main>
   );
 }

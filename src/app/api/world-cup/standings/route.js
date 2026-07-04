@@ -1,10 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
-import { ref, set, get } from 'firebase/database'
-
-import { db } from '@/services/firebase/db'
-import { verifyIdToken } from '@/services/firebase/admin'
+import { adminDb, verifyIdToken } from '@/services/firebase/admin'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
 const BASE_URL = 'https://api.football-data.org/v4'
@@ -55,7 +52,7 @@ export async function GET(request) {
 
       // Simpan snapshot standings ke Firebase di node ucl_data/wc_standings (karena ucl_data memiliki izin akses baca untuk client)
       try {
-        await set(ref(db, 'ucl_data/wc_standings'), {
+        await adminDb.ref('ucl_data/wc_standings').set({
           lastUpdated: Date.now(),
           data
         })
@@ -66,7 +63,7 @@ export async function GET(request) {
       console.warn('[World Cup] External API failed, attempting fallback to Firebase:', fetchError)
 
       try {
-        const snapshot = await get(ref(db, 'ucl_data/wc_standings'))
+        const snapshot = await adminDb.ref('ucl_data/wc_standings').get()
 
         if (snapshot.exists()) {
           const cached = snapshot.val()

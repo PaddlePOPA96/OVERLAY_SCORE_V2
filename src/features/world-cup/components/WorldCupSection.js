@@ -112,7 +112,7 @@ export function WorldCupMain({
         </div>
       </div>
 
-      {mode === 'matches' ? (
+      {mode === 'matches' && (
         <WorldCupMatches
           matches={matches}
           loadingMatches={loading}
@@ -120,13 +120,23 @@ export function WorldCupMain({
           isAdmin={isAdmin}
           onRefreshMatches={onRefreshMatches}
         />
-      ) : (
+      )}
+      {mode === 'table' && (
         <WorldCupTable
           standings={standings}
           loadingStandings={loadingStandings}
           theme={theme}
           isAdmin={isAdmin}
           onRefreshStandings={onRefreshStandings}
+        />
+      )}
+      {mode === 'knockout' && (
+        <WorldCupKnockout
+          matches={matches}
+          loadingMatches={loading}
+          theme={theme}
+          isAdmin={isAdmin}
+          onRefreshMatches={onRefreshMatches}
         />
       )}
     </div>
@@ -485,6 +495,376 @@ return matchDate >= now && matchDate <= deadline
               ) : (
                 <p className='text-xs text-gray-400 italic'>Tidak ada jadwal mendatang.</p>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export function WorldCupKnockout({ matches, loadingMatches, theme, isAdmin, onRefreshMatches }) {
+  const isDark = theme === 'dark'
+  const cardClass = isDark ? 'bg-slate-900/40 border border-slate-700/50' : 'bg-white border border-slate-200 shadow-sm'
+  const headingClass = isDark
+    ? 'text-[11px] md:text-xs uppercase tracking-[0.16em] text-white'
+    : 'text-[11px] md:text-xs uppercase tracking-[0.16em] text-black font-bold'
+  const logoBgClass = isDark ? 'bg-slate-800' : 'bg-white border border-slate-200'
+
+  const stages = ['ROUND_OF_32', 'ROUND_OF_16', 'QUARTER_FINALS', 'SEMI_FINALS', 'FINAL']
+
+  const knockoutMatches = (matches || []).filter(m => ['LAST_32', 'ROUND_OF_32', 'LAST_16', 'ROUND_OF_16', 'QUARTER_FINALS', 'SEMI_FINALS', 'FINAL', 'THIRD_PLACE'].includes(m.stage))
+  
+  const groupedMatches = {
+    'ROUND_OF_32': [],
+    'ROUND_OF_16': [],
+    'QUARTER_FINALS': [],
+    'SEMI_FINALS': [],
+    'FINAL': [],
+    'THIRD_PLACE': []
+  }
+
+  knockoutMatches.forEach(m => {
+    let stage = m.stage
+    if (stage === 'BRONZE_ON_SUNDAY') stage = 'THIRD_PLACE'
+    if (stage === 'LAST_32') stage = 'ROUND_OF_32'
+    if (stage === 'LAST_16') stage = 'ROUND_OF_16'
+    if (groupedMatches[stage]) {
+      groupedMatches[stage].push(m)
+    }
+  })
+
+  // Sort by date to approximate standard bracket progression
+  Object.keys(groupedMatches).forEach(key => {
+    groupedMatches[key].sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate))
+  })
+
+  const formatDateTime = m => {
+    if (!m || !m.utcDate) return '--'
+    const d = new Date(m.utcDate)
+    return d.toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+  }
+
+  const formatStageName = stage => {
+    switch(stage) {
+      case 'ROUND_OF_32': return 'Round of 32'
+      case 'ROUND_OF_16': return 'Round of 16'
+      case 'QUARTER_FINALS': return 'Quarter Finals'
+      case 'SEMI_FINALS': return 'Semi Finals'
+      case 'FINAL': return 'Final'
+      case 'THIRD_PLACE': return 'Third Place'
+      default: return stage
+    }
+  }
+
+  const MatchCard = ({ match, title, isThirdPlace = false }) => {
+    const isFinished = match?.status === 'FINISHED'
+    const isLive = match?.status === 'IN_PLAY' || match?.status === 'PAUSED'
+    
+    let homeWon = false
+    let awayWon = false
+    let homeScore = '-'
+    let awayScore = '-'
+    let isPens = false
+    
+    if (match) {
+      homeScore = match.score?.fullTime?.home ?? (isFinished || isLive ? 0 : '-')
+      awayScore = match.score?.fullTime?.away ?? (isFinished || isLive ? 0 : '-')
+      isPens = match.score?.penalties && (match.score.penalties.home > 0 || match.score.penalties.away > 0)
+      
+      if (isFinished) {
+        if (match.score?.winner === 'HOME_TEAM') {
+          homeWon = true
+        } else if (match.score?.winner === 'AWAY_TEAM') {
+          awayWon = true
+        } else {
+          // Fallback
+          if (isPens && match.score.penalties.home !== match.score.penalties.away) {
+            homeWon = match.score.penalties.home > match.score.penalties.away
+            awayWon = match.score.penalties.away > match.score.penalties.home
+          } else {
+            homeWon = homeScore > awayScore
+            awayWon = awayScore > homeScore
+          }
+        }
+      }
+    }
+
+    const homeLogo = resolveNationalLogo(match?.homeTeam)
+    const awayLogo = resolveNationalLogo(match?.awayTeam)
+    const homeName = match?.homeTeam?.shortName || match?.homeTeam?.name || 'TBD'
+    const awayName = match?.awayTeam?.shortName || match?.awayTeam?.name || 'TBD'
+
+    return (
+      <div className={`flex flex-col w-[200px] md:w-[220px] rounded-xl border shadow-md relative z-10 overflow-hidden ${isDark ? 'bg-slate-900 border-slate-700/80 hover:border-purple-500/50' : 'bg-white border-slate-200 hover:border-purple-400'} transition-colors duration-300`}>
+        {isLive && <div className="absolute top-0 left-0 right-0 h-[2px] bg-green-500 animate-pulse" />}
+        
+        <div className={`flex justify-between items-center px-3 py-1.5 border-b ${isDark ? 'bg-slate-800/60 border-slate-700/80' : 'bg-slate-50 border-slate-200'}`}>
+          <span className={`text-[9px] uppercase tracking-wider font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            {title || (isThirdPlace ? 'Third Place' : 'Match')}
+          </span>
+          {match && match.id && (
+            <span className={`text-[9px] font-mono font-medium px-2 py-0.5 rounded-full ${isFinished ? (isDark ? 'bg-slate-700 text-slate-300' : 'bg-slate-200 text-slate-600') : isLive ? 'bg-green-500/20 text-green-500 font-bold border border-green-500/30' : (isDark ? 'bg-blue-500/10 text-blue-400' : 'bg-blue-50 text-blue-600')}`}>
+              {isFinished ? 'FT' : isLive ? 'LIVE' : formatDateTime(match)}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col p-2 gap-1.5">
+          {/* Home */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 overflow-hidden">
+              {homeLogo ? (
+                <img src={homeLogo} alt={homeName} className={`w-5 h-3.5 md:w-6 md:h-4 rounded-[2px] object-cover ${logoBgClass}`} />
+              ) : (
+                <div className={`w-5 h-3.5 md:w-6 md:h-4 rounded-[2px] ${logoBgClass}`} />
+              )}
+              <span className={`text-xs md:text-sm truncate ${homeWon ? 'font-bold' : 'font-medium'} ${isDark ? (homeWon ? 'text-white' : 'text-slate-400') : (homeWon ? 'text-black' : 'text-slate-500')}`}>
+                {homeName}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0 pl-2">
+              {isPens && <span className="text-[9px] text-slate-400">({match.score.penalties.home})</span>}
+              <span className={`text-xs md:text-sm w-4 text-center ${homeWon ? 'font-bold text-green-500' : (isDark ? 'text-slate-200 font-semibold' : 'text-slate-800 font-semibold')}`}>
+                {homeScore}
+              </span>
+            </div>
+          </div>
+          
+          {/* Away */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 overflow-hidden">
+              {awayLogo ? (
+                <img src={awayLogo} alt={awayName} className={`w-5 h-3.5 md:w-6 md:h-4 rounded-[2px] object-cover ${logoBgClass}`} />
+              ) : (
+                <div className={`w-5 h-3.5 md:w-6 md:h-4 rounded-[2px] ${logoBgClass}`} />
+              )}
+              <span className={`text-xs md:text-sm truncate ${awayWon ? 'font-bold' : 'font-medium'} ${isDark ? (awayWon ? 'text-white' : 'text-slate-400') : (awayWon ? 'text-black' : 'text-slate-500')}`}>
+                {awayName}
+              </span>
+            </div>
+            <div className="flex items-center gap-1 shrink-0 pl-2">
+              {isPens && <span className="text-[9px] text-slate-400">({match.score.penalties.away})</span>}
+              <span className={`text-xs md:text-sm w-4 text-center ${awayWon ? 'font-bold text-green-500' : (isDark ? 'text-slate-200 font-semibold' : 'text-slate-800 font-semibold')}`}>
+                {awayScore}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const getMatchWinner = match => {
+    if (!match || match.status !== 'FINISHED') return null
+    if (match.score?.winner === 'HOME_TEAM') return match.homeTeam
+    if (match.score?.winner === 'AWAY_TEAM') return match.awayTeam
+    
+    // Fallback just in case winner is missing but scores exist
+    const isPens = match.score?.penalties && (match.score.penalties.home > 0 || match.score.penalties.away > 0)
+    let homeWon = false
+    let awayWon = false
+    if (isPens && match.score.penalties.home !== match.score.penalties.away) {
+      homeWon = match.score.penalties.home > match.score.penalties.away
+      awayWon = match.score.penalties.away > match.score.penalties.home
+    } else {
+      homeWon = (match.score?.fullTime?.home ?? 0) > (match.score?.fullTime?.away ?? 0)
+      awayWon = (match.score?.fullTime?.away ?? 0) > (match.score?.fullTime?.home ?? 0)
+    }
+    if (homeWon) return match.homeTeam
+    if (awayWon) return match.awayTeam
+    return null
+  }
+
+  // Recursive component to render a match and its two predecessors
+  const MatchTree = ({ roundIndex, matchIndex, direction = 'ltr' }) => {
+    const roundName = stages[roundIndex]
+    const match = groupedMatches[roundName] ? groupedMatches[roundName][matchIndex] : null
+
+    // Determine propagated teams from previous round
+    let expectedHomeTeam = null
+    let expectedAwayTeam = null
+    if (roundIndex > 0) {
+      const prevRoundName = stages[roundIndex - 1]
+      const feed1 = groupedMatches[prevRoundName] ? groupedMatches[prevRoundName][matchIndex * 2] : null
+      const feed2 = groupedMatches[prevRoundName] ? groupedMatches[prevRoundName][matchIndex * 2 + 1] : null
+      expectedHomeTeam = getMatchWinner(feed1)
+      expectedAwayTeam = getMatchWinner(feed2)
+    }
+
+    let displayMatch = match ? { ...match } : null
+    if (expectedHomeTeam || expectedAwayTeam) {
+      if (!displayMatch) displayMatch = {}
+      if (expectedHomeTeam) displayMatch.homeTeam = expectedHomeTeam
+      if (expectedAwayTeam) displayMatch.awayTeam = expectedAwayTeam
+    }
+
+    // Base case: First round (Round of 32)
+    if (roundIndex === 0) {
+      return (
+        <div className="flex items-center relative py-2">
+          <MatchCard match={displayMatch} title={formatStageName(roundName)} />
+        </div>
+      )
+    }
+
+    const borderColorClass = isDark ? 'border-slate-700' : 'border-slate-300'
+    const isRtl = direction === 'rtl'
+
+    return (
+      <div className={`flex items-center ${isRtl ? 'flex-row-reverse' : ''}`}>
+        {/* Children (previous round matches) */}
+        <div className="flex flex-col relative justify-center">
+          <div className="relative pb-2">
+            <MatchTree roundIndex={roundIndex - 1} matchIndex={matchIndex * 2} direction={direction} />
+            {/* Top Connector Line */}
+            {isRtl ? (
+              <div className={`absolute left-[-24px] md:left-[-32px] top-1/2 bottom-0 w-6 md:w-8 border-l-2 border-t-2 rounded-tl-lg ${borderColorClass}`}></div>
+            ) : (
+              <div className={`absolute right-[-24px] md:right-[-32px] top-1/2 bottom-0 w-6 md:w-8 border-r-2 border-t-2 rounded-tr-lg ${borderColorClass}`}></div>
+            )}
+          </div>
+          <div className="relative pt-2">
+            <MatchTree roundIndex={roundIndex - 1} matchIndex={matchIndex * 2 + 1} direction={direction} />
+            {/* Bottom Connector Line */}
+            {isRtl ? (
+              <div className={`absolute left-[-24px] md:left-[-32px] top-0 bottom-1/2 w-6 md:w-8 border-l-2 border-b-2 rounded-bl-lg ${borderColorClass}`}></div>
+            ) : (
+              <div className={`absolute right-[-24px] md:right-[-32px] top-0 bottom-1/2 w-6 md:w-8 border-r-2 border-b-2 rounded-br-lg ${borderColorClass}`}></div>
+            )}
+          </div>
+        </div>
+
+        {/* Horizontal line joining the children to the current match */}
+        <div className={`w-6 md:w-8 border-t-2 ${borderColorClass}`}></div>
+
+        {/* Current Match */}
+        <div className="relative py-2">
+          <MatchCard match={displayMatch} title={formatStageName(roundName)} />
+        </div>
+      </div>
+    )
+  }
+
+  // The Final Center Tree
+  const CenterBracket = () => {
+    const roundName = 'FINAL'
+    const match = groupedMatches[roundName] ? groupedMatches[roundName][0] : null
+    const borderColorClass = isDark ? 'border-slate-700' : 'border-slate-300'
+    
+    // Inject expected winners into Final
+    let expectedHomeTeam = getMatchWinner(groupedMatches['SEMI_FINALS'] ? groupedMatches['SEMI_FINALS'][0] : null)
+    let expectedAwayTeam = getMatchWinner(groupedMatches['SEMI_FINALS'] ? groupedMatches['SEMI_FINALS'][1] : null)
+
+    let displayMatch = match ? { ...match } : null
+    if (expectedHomeTeam || expectedAwayTeam) {
+      if (!displayMatch) displayMatch = {}
+      if (expectedHomeTeam) displayMatch.homeTeam = expectedHomeTeam
+      if (expectedAwayTeam) displayMatch.awayTeam = expectedAwayTeam
+    }
+
+    return (
+      <div className="flex items-center justify-center">
+        {/* Left Semi-Final Bracket */}
+        <div className="relative">
+          <MatchTree roundIndex={3} matchIndex={0} direction="ltr" />
+          <div className={`absolute right-[-24px] md:right-[-32px] top-1/2 w-6 md:w-8 border-t-2 ${borderColorClass}`}></div>
+        </div>
+
+        {/* The Final Match */}
+        <div className="relative px-[24px] md:px-[32px] flex flex-col gap-6">
+          <MatchCard match={displayMatch} title="🏆 World Cup Final" />
+          
+          {/* Third Place Match positioned right below the Final */}
+          {groupedMatches['THIRD_PLACE']?.length > 0 && (
+            <MatchCard match={groupedMatches['THIRD_PLACE'][0]} isThirdPlace={true} />
+          )}
+        </div>
+
+        {/* Right Semi-Final Bracket */}
+        <div className="relative">
+          <div className={`absolute left-[-24px] md:left-[-32px] top-1/2 w-6 md:w-8 border-t-2 ${borderColorClass}`}></div>
+          <MatchTree roundIndex={3} matchIndex={1} direction="rtl" />
+        </div>
+      </div>
+    )
+  }
+
+  const leftHeaders = ['ROUND_OF_32', 'ROUND_OF_16', 'QUARTER_FINALS', 'SEMI_FINALS']
+  const rightHeaders = ['SEMI_FINALS', 'QUARTER_FINALS', 'ROUND_OF_16', 'ROUND_OF_32']
+
+  return (
+    <div className='space-y-6 w-full'>
+      <div className='flex items-center justify-between px-1 max-w-[1200px] mx-auto'>
+        <p className={headingClass}>Knockout Bracket World Cup 2026</p>
+        {isAdmin && (
+          <button
+            type='button'
+            onClick={onRefreshMatches}
+            className='text-[10px] px-3 py-1 rounded-full border border-slate-500 text-slate-200 hover:bg-slate-700 transition disabled:opacity-60 font-semibold flex items-center gap-1 shadow-sm'
+            disabled={loadingMatches}
+          >
+            {loadingMatches ? (
+              <>
+                <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                Refreshing
+              </>
+            ) : 'Refresh Bracket'}
+          </button>
+        )}
+      </div>
+
+      {loadingMatches ? (
+        <div className={`${cardClass} rounded-xl p-12 max-w-[1200px] mx-auto shadow-md`}>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <svg className="animate-spin h-8 w-8 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <p className='text-center text-slate-400 text-sm font-medium'>Building Knockout Bracket...</p>
+          </div>
+        </div>
+      ) : knockoutMatches.length === 0 ? (
+        <div className={`${cardClass} rounded-xl p-12 max-w-[1200px] mx-auto shadow-md`}>
+          <p className='text-center text-slate-400 text-sm'>
+            The Knockout Stage has not begun yet or no data is available.
+          </p>
+        </div>
+      ) : (
+        <div className={`rounded-xl shadow-md ${isDark ? 'bg-slate-900/40 border border-slate-800' : 'bg-slate-50 border border-slate-200'} overflow-hidden relative`}>
+          {/* Scrollable Container */}
+          <div className="overflow-x-auto overflow-y-auto p-4 md:p-8 cursor-grab active:cursor-grabbing w-full min-h-[500px] max-h-[800px] webkit-scrollbar-modern">
+            <div className="flex flex-col min-w-max items-center w-max mx-auto">
+              
+              {/* Bracket Headers */}
+              <div className="flex mb-8 w-full justify-between items-center px-2">
+                <div className="flex">
+                  {leftHeaders.map((stage, i) => (
+                    <div key={`left-${stage}`} className={`w-[200px] md:w-[220px] ${i < leftHeaders.length - 1 ? 'mr-[24px] md:mr-[32px]' : ''}`}>
+                      <h3 className={`text-center py-2 rounded-lg font-bold text-[10px] md:text-xs uppercase tracking-widest border-b-2 border-purple-500/50 shadow-sm ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-white text-slate-600 border'}`}>
+                        {formatStageName(stage)}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="w-[200px] md:w-[220px] mx-[24px] md:mx-[32px]">
+                   <h3 className={`text-center py-2 rounded-lg font-bold text-[10px] md:text-xs uppercase tracking-widest border-b-2 border-yellow-500/50 shadow-sm ${isDark ? 'bg-slate-800 text-yellow-500' : 'bg-white text-yellow-600 border'}`}>
+                     GRAND FINAL
+                   </h3>
+                </div>
+
+                <div className="flex">
+                  {rightHeaders.map((stage, i) => (
+                    <div key={`right-${stage}`} className={`w-[200px] md:w-[220px] ${i > 0 ? 'ml-[24px] md:ml-[32px]' : ''}`}>
+                      <h3 className={`text-center py-2 rounded-lg font-bold text-[10px] md:text-xs uppercase tracking-widest border-b-2 border-purple-500/50 shadow-sm ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-white text-slate-600 border'}`}>
+                        {formatStageName(stage)}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Center Aligned Dual-Tree Structure */}
+              <CenterBracket />
+              
             </div>
           </div>
         </div>
