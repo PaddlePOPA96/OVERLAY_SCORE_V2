@@ -160,6 +160,45 @@ export function NeoBrutalBracket({ matches }: { matches: any[] }) {
     )
   }
 
+  const stagesList = ['ROUND_OF_32', 'ROUND_OF_16', 'QUARTER_FINALS', 'SEMI_FINALS', 'FINAL']
+
+  const getMatchWinner = (m: any) => {
+    if (!m || !m.score || m.status !== 'FINISHED') return null
+    if (m.score.winner === 'HOME_TEAM') return m.homeTeam
+    if (m.score.winner === 'AWAY_TEAM') return m.awayTeam
+    if (m.score.fullTime?.home > m.score.fullTime?.away) return m.homeTeam
+    if (m.score.fullTime?.away > m.score.fullTime?.home) return m.awayTeam
+    if (m.score.penalties?.home > m.score.penalties?.away) return m.homeTeam
+    if (m.score.penalties?.away > m.score.penalties?.home) return m.awayTeam
+    return null
+  }
+
+  const getExpectedMatch = (stage: string, index: number): any => {
+    const realMatch = grouped[stage] && grouped[stage][index]
+    if (realMatch && (realMatch.homeTeam || realMatch.awayTeam)) {
+      return realMatch
+    }
+    
+    const stageIdx = stagesList.indexOf(stage)
+    if (stageIdx <= 0) return realMatch || null
+    
+    const prevStage = stagesList[stageIdx - 1]
+    const prevHomeMatch = getExpectedMatch(prevStage, index * 2)
+    const prevAwayMatch = getExpectedMatch(prevStage, index * 2 + 1)
+    
+    const expHome = getMatchWinner(prevHomeMatch)
+    const expAway = getMatchWinner(prevAwayMatch)
+    
+    if (expHome || expAway) {
+      const fakeMatch = realMatch ? { ...realMatch } : {}
+      if (expHome) fakeMatch.homeTeam = expHome
+      if (expAway) fakeMatch.awayTeam = expAway
+      return fakeMatch
+    }
+    
+    return realMatch || null
+  }
+
   const tabs = [
     { id: 'ROUND_OF_32', label: '32 BESAR' },
     { id: 'ROUND_OF_16', label: '16 BESAR' },
@@ -169,8 +208,8 @@ export function NeoBrutalBracket({ matches }: { matches: any[] }) {
 
   const renderContent = () => {
     if (activeTab === 'SEMI_FINAL_FINAL') {
-      const sfMatches = [(grouped['SEMI_FINALS'] || [])[0] || null, (grouped['SEMI_FINALS'] || [])[1] || null]
-      const finalMatch = (grouped['FINAL'] || [])[0] || null
+      const sfMatches = [getExpectedMatch('SEMI_FINALS', 0), getExpectedMatch('SEMI_FINALS', 1)]
+      const finalMatch = getExpectedMatch('FINAL', 0)
       const thirdPlace = (grouped['THIRD_PLACE'] || [])[0] || null
       let displayFinal = finalMatch
 
@@ -180,7 +219,7 @@ export function NeoBrutalBracket({ matches }: { matches: any[] }) {
              {/* Left SF */}
              <div className="flex items-center justify-center w-full xl:w-auto">
                 <MiniTree 
-                  match1={(grouped['QUARTER_FINALS'] || [])[0] || null} match2={(grouped['QUARTER_FINALS'] || [])[1] || null} nextMatch={sfMatches[0]} 
+                  match1={getExpectedMatch('QUARTER_FINALS', 0)} match2={getExpectedMatch('QUARTER_FINALS', 1)} nextMatch={sfMatches[0]} 
                   title1="QUARTER FINAL" titleNext="SEMI FINAL" isRtl={false} 
                 />
              </div>
@@ -198,7 +237,7 @@ export function NeoBrutalBracket({ matches }: { matches: any[] }) {
              {/* Right SF */}
              <div className="flex items-center justify-center w-full xl:w-auto">
                 <MiniTree 
-                  match1={(grouped['QUARTER_FINALS'] || [])[2] || null} match2={(grouped['QUARTER_FINALS'] || [])[3] || null} nextMatch={sfMatches[1]} 
+                  match1={getExpectedMatch('QUARTER_FINALS', 2)} match2={getExpectedMatch('QUARTER_FINALS', 3)} nextMatch={sfMatches[1]} 
                   title1="QUARTER FINAL" titleNext="SEMI FINAL" isRtl={true} 
                 />
              </div>
@@ -222,8 +261,8 @@ export function NeoBrutalBracket({ matches }: { matches: any[] }) {
     else if (activeTab === 'ROUND_OF_16') { nextStage = 'QUARTER_FINALS'; expectedCount = 8; expectedNextCount = 4; }
     else if (activeTab === 'QUARTER_FINALS') { nextStage = 'SEMI_FINALS'; expectedCount = 4; expectedNextCount = 2; }
 
-    const currentMatches = Array.from({ length: expectedCount }).map((_, i) => (grouped[activeTab] || [])[i] || null)
-    const nextMatches = Array.from({ length: expectedNextCount }).map((_, i) => (grouped[nextStage] || [])[i] || null)
+    const currentMatches = Array.from({ length: expectedCount }).map((_, i) => getExpectedMatch(activeTab, i))
+    const nextMatches = Array.from({ length: expectedNextCount }).map((_, i) => getExpectedMatch(nextStage, i))
 
     const trees = []
     for (let i = 0; i < expectedNextCount; i++) {
