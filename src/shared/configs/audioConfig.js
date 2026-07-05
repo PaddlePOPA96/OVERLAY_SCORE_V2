@@ -11,7 +11,7 @@ export const audioOptions = [
   { label: 'shapeofmy', value: '/sounds/shapeofmy.mp3' },
   { label: 'whistellop', value: '/sounds/whistleloop.mp3' },
   { label: 'maripulang', value: '/sounds/mari_pulang.mp3' },
-  { label: 'HAALAND', value: '/sounds/haalandhaaland.mp3.mp3' },
+  { label: 'HAALAND', value: '/sounds/haalandhaaland.mp3' },
 
 
 
