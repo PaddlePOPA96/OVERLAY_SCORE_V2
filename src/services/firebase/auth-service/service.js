@@ -273,7 +273,12 @@ export async function deleteUserFromDb(uid) {
     if (!res.ok) {
       const errorData = await res.json()
 
-      throw new Error(`Failed to delete user from Auth: ${errorData.error}`)
+      // Jika user sudah tidak ada di Firebase Auth, biarkan proses berlanjut untuk menghapus data 'hantu' di DB
+      if (errorData.error && errorData.error.toLowerCase().includes('no user record')) {
+        console.warn('User tidak ditemukan di Firebase Auth. Melanjutkan penghapusan data di database.')
+      } else {
+        throw new Error(`Failed to delete user from Auth: ${errorData.error}`)
+      }
     }
   }
 
