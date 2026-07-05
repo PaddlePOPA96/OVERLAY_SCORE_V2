@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { auth } from '@/services/firebase/auth'
+import { db } from '@/services/firebase/db'
+import { ref, get } from 'firebase/database'
 
 import LogoPickerModal from '../LogoPickerModal'
 import { makeTeamAbbr } from '@/data/logoData'
@@ -13,6 +16,8 @@ import ThirdTitleControls from './ThirdTitleControls'
 export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('scoreboard')
   const [logoModalOpen, setLogoModalOpen] = useState(false)
+  const [userRole, setUserRole] = useState(null)
+  const [canChangeLogo, setCanChangeLogo] = useState(true)
 
   // Load persisted active tab on mount
   useEffect(() => {
@@ -23,7 +28,31 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
         setActiveTab(savedTab)
       }
     }
+
+    if (auth.currentUser) {
+      get(ref(db, `users/${auth.currentUser.uid}/role`)).then((snap) => {
+        if (snap.exists()) {
+          const role = snap.val()
+          setUserRole(role)
+
+          get(ref(db, `ucl_data/settings/roles_permissions/${role}`)).then((permSnap) => {
+            if (permSnap.exists()) {
+              const perms = permSnap.val()
+              if (perms.change_tournament_logo === false) {
+                setCanChangeLogo(false)
+              }
+            }
+          })
+        }
+      })
+    }
   }, [])
+
+  useEffect(() => {
+    if (!canChangeLogo && !data.useCustomFifaLogo) {
+      actions.updateMatch({ useCustomFifaLogo: true })
+    }
+  }, [canChangeLogo, data.useCustomFifaLogo, actions])
 
   const changeTab = (tab) => {
     setActiveTab(tab)
@@ -791,11 +820,18 @@ return sliced
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ fontSize: '12px', fontWeight: '600', color: !data.useCustomFifaLogo ? '#fbbf24' : labelColor, opacity: !data.useCustomFifaLogo ? 1 : 0.5 }}>Logo B2F</span>
           <button
-            onClick={() => actions.updateMatch({ useCustomFifaLogo: !data.useCustomFifaLogo })}
-            style={{
-              width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer', position: 'relative',
-              background: data.useCustomFifaLogo ? '#3b82f6' : '#374151', transition: 'background 0.2s ease'
+            onClick={() => {
+              if (!canChangeLogo) return; // Tidak ada izin ganti logo
+              actions.updateMatch({ useCustomFifaLogo: !data.useCustomFifaLogo });
             }}
+            style={{
+              width: '44px', height: '24px', borderRadius: '12px', border: 'none', 
+              cursor: !canChangeLogo ? 'not-allowed' : 'pointer', position: 'relative',
+              background: data.useCustomFifaLogo ? '#3b82f6' : '#374151', 
+              transition: 'background 0.2s ease',
+              opacity: !canChangeLogo ? 0.5 : 1
+            }}
+            title={!canChangeLogo ? 'Role Anda tidak diizinkan mengubah Logo Turnamen' : 'Ganti Logo'}
           >
             <span style={{
               position: 'absolute', top: '2px', width: '20px', height: '20px', borderRadius: '50%', background: '#fff',

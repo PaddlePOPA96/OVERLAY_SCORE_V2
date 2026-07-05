@@ -441,7 +441,8 @@ const DEFAULT_PERMISSIONS = {
   ucl: true,
   world_cup: true,
   streams_operator: true,
-  streams: true
+  streams: true,
+  change_tournament_logo: true
 }
 
 const PERMISSION_ITEMS = [
@@ -453,7 +454,8 @@ const PERMISSION_ITEMS = [
   { key: 'ucl', label: 'UCL Standings', desc: 'UEFA Champions League standings' },
   { key: 'world_cup', label: 'World Cup 2026', desc: 'FIFA World Cup 2026 matches' },
   { key: 'streams_operator', label: 'Live Streams Config', desc: 'Manage streaming URLs' },
-  { key: 'streams', label: 'Live Streams Preview', desc: 'View current active live streams' }
+  { key: 'streams', label: 'Live Streams Preview', desc: 'View current active live streams' },
+  { key: 'change_tournament_logo', label: 'Ubah Logo Turnamen', desc: 'Izinkan ganti logo B2F/FIFA' }
 ]
 
 function UserRowItem({ row, isMe }) {
