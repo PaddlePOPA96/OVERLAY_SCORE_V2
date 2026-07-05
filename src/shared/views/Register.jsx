@@ -45,7 +45,7 @@ const Register = ({ mode }) => {
       setStatus({
         type: 'error',
         message:
-          'Registration is disabled. Please contact the administrator via Telegram (081331890624) for manual account activation after payment.'
+          'Registration is disabled. Please contact the administrator via discord (paddlepopa) for manual account activation after payment.'
       })
 
       return
