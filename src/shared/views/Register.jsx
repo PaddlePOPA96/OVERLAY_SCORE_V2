@@ -26,6 +26,7 @@ const Register = ({ mode }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [passcode, setPasscode] = useState('')
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState({ type: '', message: '' })
 
@@ -62,7 +63,7 @@ const Register = ({ mode }) => {
     setLoading(true)
 
     try {
-      const user = await registerWithEmailPassword(email, password)
+      const user = await registerWithEmailPassword(email, password, passcode)
 
       router.push('/')
     } catch (err) {
@@ -141,6 +142,19 @@ const Register = ({ mode }) => {
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
+              />
+              <TextField
+                fullWidth
+                label='Passcode (4 Angka)'
+                type='number'
+                value={passcode}
+                onChange={e => {
+                  const val = e.target.value
+                  if (val.length <= 4) setPasscode(val)
+                }}
+                required
+                placeholder='Contoh: 1234'
+                inputProps={{ maxLength: 4, minLength: 4 }}
               />
 
               <Button fullWidth variant='contained' type='submit' size='large' disabled={loading}>

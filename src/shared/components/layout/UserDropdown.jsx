@@ -63,6 +63,9 @@ const UserDropdown = () => {
 
   const handleLogout = async e => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('dashboardPasscodeVerified')
+      }
       await signOut(auth)
       handleDropdownClose(e, '/login')
     } catch (err) {

@@ -6,6 +6,7 @@ import { ref, set, get, child } from 'firebase/database'
 import { auth, googleProvider } from '../auth'
 import { dbFirestore } from '../firestore'
 import { db } from '../index' // Realtime Database
+import { hashPasscode } from '@/shared/utils/hash'
 
 export async function loginWithEmailPassword(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password)
@@ -29,7 +30,7 @@ export function validatePasswordStrength(password) {
   return null
 }
 
-export async function registerWithEmailPassword(email, password) {
+export async function registerWithEmailPassword(email, password, passcode) {
   const emailLower = email.toLowerCase()
 
   if (emailLower.includes('+')) {
@@ -48,8 +49,34 @@ export async function registerWithEmailPassword(email, password) {
   if (passwordError) {
     throw new Error(passwordError)
   }
+  
+  if (passcode.length !== 4 || isNaN(passcode)) {
+    throw new Error('Passcode harus berupa 4 angka.')
+  }
+
+  const hashedPasscode = await hashPasscode(passcode)
 
   const cred = await createUserWithEmailAndPassword(auth, emailLower, password)
+
+  // Simpan passcode ke Firestore dan RTDB saat registrasi
+  try {
+    await setDoc(doc(dbFirestore, 'users', cred.user.uid), {
+      email: cred.user.email,
+      role: 'user',
+      passcode: hashedPasscode,
+      createdAt: new Date().toISOString(),
+      syncedAt: new Date().toISOString()
+    })
+
+    await set(ref(db, `users/${cred.user.uid}`), {
+      role: 'user',
+      email: cred.user.email,
+      passcode: hashedPasscode,
+      syncedAt: new Date().toISOString()
+    })
+  } catch (err) {
+    console.error('Failed to save passcode during registration:', err)
+  }
 
   // Send Email Verification
   try {
@@ -73,7 +100,7 @@ export async function loginWithGooglePopup() {
 
   await logLoginEvent(cred.user, 'google_popup')
   
-return cred.user
+  return cred.user
 }
 
 async function logLoginEvent(user, method) {
@@ -100,7 +127,7 @@ export async function sendResetPassword(email) {
 // Fungsi baru untuk membuat user dengan role tertentu (admin/user)
 // Menggunakan secondary Firebase App agar sesi admin tidak terganggu
 
-export async function createUserWithRole(email, password, role) {
+export async function createUserWithRole(email, password, role, passcode) {
   // Ambil config dari app utama
   const { initializeApp, deleteApp, getApps } = await import('firebase/app')
   const { getAuth, createUserWithEmailAndPassword: createUser, signOut } = await import('firebase/auth')
@@ -112,6 +139,12 @@ export async function createUserWithRole(email, password, role) {
   const secondaryAuth = getAuth(secondaryApp)
 
   try {
+    if (passcode.length !== 4 || isNaN(passcode)) {
+      throw new Error('Passcode harus berupa 4 angka.')
+    }
+
+    const hashedPasscode = await hashPasscode(passcode)
+
     // 1. Buat user di secondary auth (tidak mengganti sesi admin)
     const cred = await createUser(secondaryAuth, email, password)
     const user = cred.user
@@ -120,13 +153,15 @@ export async function createUserWithRole(email, password, role) {
     await setDoc(doc(dbFirestore, 'users', user.uid), {
       email: user.email,
       role: role,
+      passcode: hashedPasscode,
       createdAt: new Date().toISOString()
     })
 
     // 3. Simpan Role di Realtime Database
     await set(ref(db, `users/${user.uid}`), {
       role: role,
-      email: user.email
+      email: user.email,
+      passcode: hashedPasscode
     })
 
     // 4. Sign out dari secondary instance
@@ -186,13 +221,33 @@ export async function syncUserToFirestore(user) {
     // Ambil data terbaru dari Firestore untuk memastikan role yang sinkron
     const dbSnap = await getDoc(userRef)
     const currentRole = dbSnap.exists() ? dbSnap.data().role : 'user'
+    
+    // Auto-migrate passcode for existing users
+    const defaultPasscode = user.email === 'admin@admin.com' || user.uid === 'JvsaI3GrseURaVqrwcQGJZnOLPp1' ? '0000' : '1234'
+    let currentPasscode = defaultPasscode
 
-    if (!rtdbSnap.exists() || rtdbSnap.val().role !== currentRole) {
+    if (dbSnap.exists() && dbSnap.data().passcode) {
+      currentPasscode = dbSnap.data().passcode
+    } else if (rtdbSnap.exists() && rtdbSnap.val().passcode) {
+      currentPasscode = rtdbSnap.val().passcode
+    }
+
+    // If currentPasscode is exactly 4 digits, it means it's not hashed yet (SHA-256 is 64 chars)
+    if (currentPasscode.length === 4) {
+      currentPasscode = await hashPasscode(currentPasscode)
+    }
+
+    if (!rtdbSnap.exists() || rtdbSnap.val().role !== currentRole || rtdbSnap.val().passcode !== currentPasscode) {
       await set(ref(db, `users/${user.uid}`), {
         role: currentRole,
         email: user.email,
+        passcode: currentPasscode,
         syncedAt: new Date().toISOString()
       })
+      
+      if (dbSnap.exists() && dbSnap.data().passcode !== currentPasscode) {
+        await updateDoc(userRef, { passcode: currentPasscode })
+      }
     }
   } catch (err) {
     console.error('Failed to sync user role to Realtime Database.', err)

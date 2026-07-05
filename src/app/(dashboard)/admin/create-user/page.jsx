@@ -54,6 +54,7 @@ export default function AdminUserManagementPage({ activeTab = 'manage-users' }) 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [passcode, setPasscode] = useState('')
   const [loading, setLoading] = useState(false)
   const [createStatus, setCreateStatus] = useState({ type: '', message: '' })
 
@@ -142,7 +143,7 @@ return
     setLoading(true)
 
     try {
-      await createUserWithRole(email, password, 'user')
+      await createUserWithRole(email, password, 'user', passcode)
       setCreateStatus({
         type: 'success',
         message: 'User successfully created and synchronized to Firestore!'
@@ -150,6 +151,7 @@ return
       setEmail('')
       setPassword('')
       setConfirmPassword('')
+      setPasscode('')
     } catch (error) {
       setCreateStatus({
         type: 'error',
@@ -269,6 +271,20 @@ return
                         </InputAdornment>
                       )
                     }}
+                  />
+                  <TextField
+                    fullWidth
+                    label='Passcode (4 Angka)'
+                    type='number'
+                    value={passcode}
+                    onChange={e => {
+                      const val = e.target.value
+                      if (val.length <= 4) setPasscode(val)
+                    }}
+                    required
+                    placeholder='Contoh: 1234'
+                    size='small'
+                    inputProps={{ maxLength: 4, minLength: 4 }}
                   />
                   <Button
                     fullWidth

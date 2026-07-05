@@ -529,6 +529,9 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('dashboardPasscodeVerified')
+      }
       await signOut(auth)
     } finally {
       if (typeof window !== 'undefined') {

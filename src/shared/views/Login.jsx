@@ -76,6 +76,8 @@ const Login = ({ mode }) => {
     if (!user) return
 
     if (typeof window !== 'undefined') {
+      localStorage.removeItem('dashboardPasscodeVerified')
+
       if (remember) {
         window.localStorage.setItem('scoreboard-remember', '1')
         window.localStorage.setItem('scoreboard-email', user.email || email || '')
