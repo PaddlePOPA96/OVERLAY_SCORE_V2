@@ -94,7 +94,7 @@ const Register = ({ mode }) => {
             </div>
 
             <Alert severity='warning' className='text-xs'>
-              Registration can only be completed by the administrator. Contact Telegram: <strong>081331890624</strong>{' '}
+              Registration can only be completed by the administrator. Contact discord: <strong>@paddlepopa</strong>{' '}
               to activate your license.
             </Alert>
 
