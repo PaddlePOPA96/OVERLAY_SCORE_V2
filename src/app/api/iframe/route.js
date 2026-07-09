@@ -8,7 +8,8 @@ const ALLOWED_DOMAINS = [
     'embedstreams.top',
     'strmd.st',
     'lola30es.mpipzni2naturally32kistomach.ru',
-    'folaplay.com'
+    'folaplay.com',
+    'cloudfront.net'
 ];
 
 export async function GET(request) {

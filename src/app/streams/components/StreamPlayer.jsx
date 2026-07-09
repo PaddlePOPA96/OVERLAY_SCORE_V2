@@ -2,39 +2,6 @@ import React, { useEffect, useRef, useMemo, useState } from 'react';
 
 import Hls from 'hls.js';
 
-class CustomManifestLoader extends Hls.DefaultConfig.loader {
-    load(context, config, callbacks) {
-        console.log('[HLS Proxy] Loading playlist:', context.url);
-        if (context.type === 'manifest') {
-            const onSuccess = callbacks.onSuccess;
-            callbacks.onSuccess = (response, stats, ctx, networkDetails) => {
-                let manifestText = response.data;
-                if (typeof manifestText === 'string') {
-                    console.log('[HLS Proxy] Intercepted manifest text, length:', manifestText.length);
-                    const lines = manifestText.split('\n');
-                    let injected = false;
-                    const rewrittenLines = lines.map(line => {
-                        const trimmedLine = line.trim();
-                        if (trimmedLine.startsWith('#EXT-X-STREAM-INF:')) {
-                            if (!trimmedLine.includes('CODECS=')) {
-                                injected = true;
-                                return `${trimmedLine},CODECS="avc1.64001f,mp4a.40.2"`;
-                            }
-                        }
-                        return line;
-                    });
-                    if (injected) {
-                        console.log('[HLS Proxy] Successfully injected CODECS into manifest!');
-                    }
-                    response.data = rewrittenLines.join('\n');
-                }
-                onSuccess(response, stats, ctx, networkDetails);
-            };
-        }
-        super.load(context, config, callbacks);
-    }
-}
-
 import styles from '../streams.module.css';
 
 export default function StreamPlayer({ currentChannel, streamStartTime, streamSyncVod, isMuted = true, drmKey }) {
@@ -47,6 +14,20 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     const [shakaModule, setShakaModule] = useState(null);
     const [mpegtsModule, setMpegtsModule] = useState(null);
     const [showCatchUp, setShowCatchUp] = useState(false);
+    const [playError, setPlayError] = useState(null);
+    const [reloadKey, setReloadKey] = useState(0);
+
+    const safePlay = (videoElement) => {
+        if (!videoElement) return;
+        videoElement.play().catch((err) => {
+            console.log('[Autoplay] Blocked:', err);
+            if (err.name === 'NotAllowedError') {
+                videoElement.muted = true;
+                console.log('[Autoplay] Retrying playing in muted mode...');
+                videoElement.play().catch((err2) => console.error('[Autoplay] Muted play failed too:', err2));
+            }
+        });
+    };
 
     // Pre-load dynamic player libraries once on mount to speed up stream loading/switching
     useEffect(() => {
@@ -186,6 +167,7 @@ return url;
     };
 
     useEffect(() => {
+        setPlayError(null);
         if (!isFlv || !currentChannel || !mpegtsModule) {
             if (flvRef.current) {
                 flvRef.current.pause();
@@ -237,19 +219,25 @@ return url;
         flvPlayer.load();
         setTimeout(() => {
             if (cancelled) return;
-            video.play().catch((err) => console.log('FLV Autoplay blocked:', err));
+            safePlay(video);
         }, 50);
 
         flvPlayer.on(mpegts.Events.ERROR, (errorType, errorDetail, errorInfo) => {
             console.error('FLV Error:', errorType, errorDetail, errorInfo);
+            setPlayError({
+                type: 'flv',
+                message: 'Gagal Memuat FLV Stream',
+                details: `Terjadi kesalahan saat memproses media stream FLV (${errorType}: ${errorDetail}).`
+            });
         });
 
         flvRef.current = flvPlayer;
 
         return () => { cancelled = true; };
-    }, [currentChannel, isFlv, mpegtsModule]);
+    }, [currentChannel, isFlv, mpegtsModule, reloadKey]);
 
     useEffect(() => {
+        setPlayError(null);
         if (!isMpd || !currentChannel || !shakaModule) {
             if (dashRef.current) {
                 dashRef.current.destroy();
@@ -264,7 +252,19 @@ return url;
         let cancelled = false;
 
         const shaka = shakaModule;
-        shaka.polyfill.installAll();
+        const needsPolyfill = typeof window !== 'undefined' && (
+            !window.MediaSource || 
+            !navigator.requestMediaKeySystemAccess ||
+            (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent))
+        );
+        if (needsPolyfill && !window.__shaka_polyfilled) {
+            window.__shaka_polyfilled = true;
+            try {
+                shaka.polyfill.installAll();
+            } catch (e) {
+                console.error('Failed to install Shaka polyfills:', e);
+            }
+        }
 
         if (!shaka.Player.isBrowserSupported()) {
             console.error('Browser not supported for Shaka player!');
@@ -305,23 +305,34 @@ return url;
             return player.load(currentChannel);
         }).then(() => {
             if (cancelled) return;
-            video.play().catch(e => console.error("Play blocked:", e));
+            safePlay(video);
         }).catch(e => {
             if (cancelled) return;
             console.error("Shaka attach or load failed!");
             if (e && typeof e === 'object') {
                 console.error("Error Code:", e.code, "Category:", e.category, "Data:", e.data);
+                setPlayError({
+                    type: 'dash',
+                    message: 'Gagal Memuat DASH Stream',
+                    details: `Shaka error: Code ${e.code} (Kategori: ${e.category}). Periksa kunci DRM atau ketersediaan media.`
+                });
             } else {
                 console.error(e);
+                setPlayError({
+                    type: 'dash',
+                    message: 'Gagal Memuat DASH Stream',
+                    details: String(e)
+                });
             }
         });
         
         dashRef.current = player;
 
         return () => { cancelled = true; };
-    }, [currentChannel, isMpd, drmKey, shakaModule]);
+    }, [currentChannel, isMpd, drmKey, shakaModule, reloadKey]);
 
     useEffect(() => {
+        setPlayError(null);
         if (isYoutube || isGenericIframe || isFlv || isMp4 || isMpd) {
             if (hlsRef.current) {
                 hlsRef.current.destroy();
@@ -358,13 +369,73 @@ return;
                 liveMaxLatencyDurationCount: 4,
                 maxBufferLength: 8,
                 maxMaxBufferLength: 12,
-                pLoader: CustomManifestLoader,
+            });
+
+            hls.on(Hls.Events.MANIFEST_LOADED, (event, data) => {
+                if (data && data.levels) {
+                    data.levels.forEach(level => {
+                        if (!level.codecs) {
+                            level.codecs = 'avc1.64001f,mp4a.40.2';
+                        }
+                    });
+                }
             });
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 setTimeout(() => {
-                    video.play().catch((err) => console.log('Autoplay blocked:', err));
+                    safePlay(video);
                 }, 50);
+            });
+
+            let mediaRecoveryAttempts = 0;
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.details === Hls.ErrorDetails.BUFFER_ADD_CODEC_ERROR || data.details === Hls.ErrorDetails.MANIFEST_INCOMPATIBLE_CODECS_ERROR) {
+                    console.warn('Codec error: Browser lacks support or configuration.');
+                    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                        console.log('Falling back to native Safari HLS playback.');
+                        hls.destroy();
+                        hlsRef.current = null;
+                        video.src = currentChannel;
+                        safePlay(video);
+                    } else {
+                        setPlayError({
+                            type: 'codec',
+                            message: 'Codec Video Tidak Didukung',
+                            details: 'Browser Anda tidak mendukung codec HEVC (H.265) pada stream ini. Silakan gunakan Safari (macOS/iOS) atau gunakan stream alternatif H.264 (AVC).'
+                        });
+                    }
+                } else if (data.fatal) {
+                    switch (data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.warn('Fatal network error, attempting to recover...');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            mediaRecoveryAttempts++;
+                            if (mediaRecoveryAttempts <= 2) {
+                                console.warn(`Fatal media error, attempting to recover (attempt ${mediaRecoveryAttempts})...`);
+                                hls.recoverMediaError();
+                            } else {
+                                console.error('Fatal media error recovery failed multiple times. Giving up.');
+                                setPlayError({
+                                    type: 'codec',
+                                    message: 'Gagal Mendekode Video',
+                                    details: 'Browser Anda gagal mendekode segmen video. Ini biasanya disebabkan oleh ketidakcocokan codec HEVC/H.265 pada browser/perangkat Anda.'
+                                });
+                                hls.destroy();
+                            }
+                            break;
+                        default:
+                            console.error('Fatal error, destroying HLS instance:', data);
+                            setPlayError({
+                                type: 'fatal',
+                                message: 'Gagal Memuat Video',
+                                details: `Terjadi kesalahan saat memproses media stream (${data.details}).`
+                            });
+                            hls.destroy();
+                            break;
+                    }
+                }
             });
 
             hls.attachMedia(video);
@@ -378,13 +449,13 @@ return;
                 video.src = currentChannel;
                 const playOnMetadata = () => {
                     setTimeout(() => {
-                        video.play().catch((err) => console.log('Autoplay blocked:', err));
+                        safePlay(video);
                     }, 50);
                 };
                 video.addEventListener('loadedmetadata', playOnMetadata, { once: true });
             }
         }
-    }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4, isMpd]);
+    }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4, isMpd, reloadKey]);
 
     useEffect(() => {
         return () => {
@@ -500,7 +571,7 @@ return;
         );
     } else {
         return (
-            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
                 <style>{`
                     @keyframes blink {
                         0% { opacity: 0.5; }
@@ -517,7 +588,7 @@ return;
                     muted={isMuted}
                     onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
                 ></video>
-                {showCatchUp && (
+                {showCatchUp && !playError && (
                     <button
                         onClick={catchUpLive}
                         style={{
@@ -553,6 +624,79 @@ return;
                         }}></span>
                         Kejar Live 🔴
                     </button>
+                )}
+                {playError && (
+                    <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#151515',
+                        color: '#fff',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 20,
+                        padding: '24px',
+                        boxSizing: 'border-box',
+                        textAlign: 'center',
+                        fontFamily: "'Roboto', 'Inter', sans-serif"
+                    }}>
+                        <div style={{
+                            fontSize: '48px',
+                            marginBottom: '12px',
+                            animation: 'blink 2s infinite'
+                        }}>
+                            ⚠️
+                        </div>
+                        <h3 style={{
+                            margin: '0 0 8px 0',
+                            fontSize: '20px',
+                            fontWeight: '900',
+                            textTransform: 'uppercase',
+                            color: '#FF00FF',
+                            letterSpacing: '0.5px'
+                        }}>
+                            {playError.message}
+                        </h3>
+                        <p style={{
+                            margin: '0 0 16px 0',
+                            fontSize: '13px',
+                            color: '#ccc',
+                            maxWidth: '480px',
+                            lineHeight: '1.6'
+                        }}>
+                            {playError.details}
+                        </p>
+                        <div style={{
+                            display: 'flex',
+                            gap: '12px',
+                            marginTop: '8px'
+                        }}>
+                            <button
+                                onClick={() => {
+                                    setPlayError(null);
+                                    setReloadKey(prev => prev + 1);
+                                }}
+                                style={{
+                                    backgroundColor: '#D9FF00',
+                                    color: '#000',
+                                    border: '3px solid #000',
+                                    padding: '8px 16px',
+                                    fontSize: '12px',
+                                    fontWeight: '900',
+                                    textTransform: 'uppercase',
+                                    cursor: 'pointer',
+                                    boxShadow: '4px 4px 0px #000',
+                                    transition: 'all 0.1s active'
+                                }}
+                            >
+                                Coba Lagi 🔄
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
         );

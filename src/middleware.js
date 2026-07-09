@@ -38,7 +38,12 @@ export function middleware(request) {
       )
     }
 
-    if (request.nextUrl.pathname.startsWith('/api/cron')) {
+    if (
+      request.nextUrl.pathname.startsWith('/api/cron') ||
+      request.nextUrl.pathname.startsWith('/api/stream.m3u8') ||
+      request.nextUrl.pathname.startsWith('/api/proxy') ||
+      request.nextUrl.pathname.startsWith('/api/flv-proxy')
+    ) {
       return NextResponse.next()
     }
 

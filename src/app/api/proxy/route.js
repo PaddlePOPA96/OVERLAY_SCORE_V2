@@ -8,7 +8,8 @@ const ALLOWED_DOMAINS = [
     'embedstreams.top',
     'strmd.st',
     'lola30es.mpipzni2naturally32kistomach.ru',
-    'folaplay.com'
+    'folaplay.com',
+    'cloudfront.net'
 ];
 
 export async function GET(request) {
@@ -107,6 +108,20 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
                         return `${trimmedLine},CODECS="avc1.64001f,mp4a.40.2"`;
                     }
                     return line;
+                }
+
+                if (trimmedLine.startsWith('#EXT-X-MEDIA:')) {
+                    const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                    if (uriMatch) {
+                        const relativeUri = uriMatch[1];
+                        try {
+                            const absoluteUri = new URL(relativeUri, url).toString();
+                            const proxyUrl = `/api/proxy?url=${encodeURIComponent(absoluteUri)}&referer=${encodeURIComponent(referer)}`;
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                        } catch (e) {
+                            return line;
+                        }
+                    }
                 }
 
                 if (!trimmedLine || trimmedLine.startsWith('#')) return line;

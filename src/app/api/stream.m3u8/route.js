@@ -10,7 +10,8 @@ const ALLOWED_DOMAINS = [
     'embedstreams.top',
     'strmd.st',
     'lola30es.mpipzni2naturally32kistomach.ru',
-    'folaplay.com'
+    'folaplay.com',
+    'cloudfront.net'
 ];
 
 export async function GET(request) {
@@ -111,6 +112,26 @@ export async function GET(request) {
                     return `${line.trim()},CODECS="avc1.64001f,mp4a.40.2"`;
                 }
                 return line;
+            }
+
+            if (trimmedLine.startsWith('#EXT-X-MEDIA:')) {
+                const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                if (uriMatch) {
+                    const relativeUri = uriMatch[1];
+                    try {
+                        const absoluteUri = new URL(relativeUri, decodedUrl).href;
+                        const encodedAbsoluteUri = Buffer.from(absoluteUri).toString('base64');
+                        const host = request.headers.get('host');
+                        const protocol = host.includes('localhost') ? 'http' : 'https';
+                        let proxyUrl = `${protocol}://${host}/api/stream.m3u8?u=${encodedAbsoluteUri}`;
+                        if (decodedReferer) {
+                            proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
+                        }
+                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                    } catch (e) {
+                        return line;
+                    }
+                }
             }
 
             if (!trimmedLine || trimmedLine.startsWith('#')) {
