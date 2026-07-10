@@ -10,14 +10,19 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
   // Form states
   const [layout, setLayout] = useState('single')
   const [chatUrl, setChatUrl] = useState('')
+  const [title, setTitle] = useState('NAMA TOURNAMENT')
   
   // Names states
   const [nameSingle, setNameSingle] = useState('BUNG ALDO')
   const [nameDual1, setNameDual1] = useState('BUNG ALDO')
   const [nameDual2, setNameDual2] = useState('BUNG HUI')
-  const [nameTripleMain, setNameTripleMain] = useState('MAIN EVENT')
-  const [nameTriple1, setNameTriple1] = useState('BUNG ALDO')
-  const [nameTriple2, setNameTriple2] = useState('BUNG HUI')
+  const [nameTripleMain, setNameTripleMain] = useState('BUNG ALDO')
+  const [nameTriple1, setNameTriple1] = useState('BUNG HUI')
+  const [nameTriple2, setNameTriple2] = useState('BUNG GUEST')
+  const [nameQuad1, setNameQuad1] = useState('PLAYER 1')
+  const [nameQuad2, setNameQuad2] = useState('PLAYER 2')
+  const [nameQuad3, setNameQuad3] = useState('PLAYER 3')
+  const [nameQuad4, setNameQuad4] = useState('PLAYER 4')
   
   // Status states
   const [loading, setLoading] = useState(false)
@@ -36,6 +41,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
       if (data) {
         if (data.layout) setLayout(data.layout)
         if (data.chatUrl) setChatUrl(data.chatUrl)
+        if (data.title) setTitle(data.title)
         if (data.names) {
           if (data.names.single) setNameSingle(data.names.single)
           if (data.names.dual1) setNameDual1(data.names.dual1)
@@ -43,6 +49,10 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
           if (data.names.tripleMain) setNameTripleMain(data.names.tripleMain)
           if (data.names.triple1) setNameTriple1(data.names.triple1)
           if (data.names.triple2) setNameTriple2(data.names.triple2)
+          if (data.names.quad1) setNameQuad1(data.names.quad1)
+          if (data.names.quad2) setNameQuad2(data.names.quad2)
+          if (data.names.quad3) setNameQuad3(data.names.quad3)
+          if (data.names.quad4) setNameQuad4(data.names.quad4)
         }
       }
     })
@@ -64,13 +74,18 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
       const payload = {
         layout,
         chatUrl: finalChatUrl,
+        title,
         names: {
           single: nameSingle,
           dual1: nameDual1,
           dual2: nameDual2,
           tripleMain: nameTripleMain,
           triple1: nameTriple1,
-          triple2: nameTriple2
+          triple2: nameTriple2,
+          quad1: nameQuad1,
+          quad2: nameQuad2,
+          quad3: nameQuad3,
+          quad4: nameQuad4
         },
         updatedAt: Date.now()
       }
@@ -96,6 +111,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
     { id: 'single', label: '1 Cam' },
     { id: 'dual', label: 'Dual Cam' },
     { id: 'triple', label: 'Triple Cam' },
+    { id: 'quad', label: 'Quad Cam' },
     { id: 'chat', label: '1 Cam + Chat' }
   ]
 
@@ -155,6 +171,22 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
 
           <div className="flex flex-col gap-5">
             
+            {/* Title Settings */}
+            <div>
+              <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                Judul Overlay (Title)
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="Contoh: EL CLASICO MATCH"
+                className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+              />
+            </div>
+
+            <hr className={`border-t ${isDark ? 'border-slate-800' : 'border-slate-200'}`} />
+
             {/* Layout Selection */}
             <div>
               <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -238,21 +270,54 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
                     type="text"
                     value={nameTripleMain}
                     onChange={e => setNameTripleMain(e.target.value)}
-                    placeholder="Label Main Event (Kiri Besar)"
+                    placeholder="Kamera 1"
                     className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
                   />
                   <input
                     type="text"
                     value={nameTriple1}
                     onChange={e => setNameTriple1(e.target.value)}
-                    placeholder="Nama Caster 1 (Kanan Atas)"
+                    placeholder="Kamera 2"
                     className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
                   />
                   <input
                     type="text"
                     value={nameTriple2}
                     onChange={e => setNameTriple2(e.target.value)}
-                    placeholder="Nama Caster 2 (Kanan Bawah)"
+                    placeholder="Kamera 3"
+                    className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                  />
+                </div>
+              ) : null}
+
+              {layout === 'quad' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={nameQuad1}
+                    onChange={e => setNameQuad1(e.target.value)}
+                    placeholder="Kamera 1 (Kiri Atas)"
+                    className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                  />
+                  <input
+                    type="text"
+                    value={nameQuad2}
+                    onChange={e => setNameQuad2(e.target.value)}
+                    placeholder="Kamera 2 (Kanan Atas)"
+                    className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                  />
+                  <input
+                    type="text"
+                    value={nameQuad3}
+                    onChange={e => setNameQuad3(e.target.value)}
+                    placeholder="Kamera 3 (Kiri Bawah)"
+                    className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
+                  />
+                  <input
+                    type="text"
+                    value={nameQuad4}
+                    onChange={e => setNameQuad4(e.target.value)}
+                    placeholder="Kamera 4 (Kanan Bawah)"
                     className={`w-full p-3 rounded-lg border text-sm focus:ring-2 focus:ring-violet-500 outline-none transition-all ${isDark ? 'bg-slate-850 border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-900'}`}
                   />
                 </div>

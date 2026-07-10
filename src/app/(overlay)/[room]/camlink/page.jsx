@@ -12,13 +12,18 @@ export default function CamlinkOverlayPage() {
   
   const [layout, setLayout] = useState('single')
   const [chatUrl, setChatUrl] = useState('')
+  const [title, setTitle] = useState('NAMA TOURNAMENT')
   const [names, setNames] = useState({
     single: 'BUNG ALDO',
     dual1: 'BUNG ALDO',
     dual2: 'BUNG HUI',
-    tripleMain: 'MAIN EVENT',
-    triple1: 'BUNG ALDO',
-    triple2: 'BUNG HUI'
+    tripleMain: 'BUNG ALDO',
+    triple1: 'BUNG HUI',
+    triple2: 'BUNG ALDO',
+    quad1: 'PLAYER 1',
+    quad2: 'PLAYER 2',
+    quad3: 'PLAYER 3',
+    quad4: 'PLAYER 4'
   })
 
   useEffect(() => {
@@ -29,7 +34,7 @@ export default function CamlinkOverlayPage() {
     document.body.style.backgroundColor = '#000'
 
     return () => {
-      // Revert styles when unmounting (though overlays usually don't unmount in OBS)
+      // Revert styles when unmounting
       document.body.style.margin = ''
       document.body.style.padding = ''
       document.body.style.overflow = ''
@@ -46,6 +51,7 @@ export default function CamlinkOverlayPage() {
       if (data) {
         if (data.layout) setLayout(data.layout)
         if (data.chatUrl) setChatUrl(data.chatUrl)
+        if (data.title) setTitle(data.title)
         if (data.names) {
           setNames(prev => ({ ...prev, ...data.names }))
         }
@@ -60,7 +66,9 @@ export default function CamlinkOverlayPage() {
       <div className={styles.bgOuter}></div>
 
       <div className={styles.titleContainer}>
-        <img src="/camlink/tittle.webp" alt="Title" className={styles.titleImg} />
+        <div key={title} className={styles.titleBox}>
+          {title}
+        </div>
       </div>
 
       <div className={styles.mainFrame}>
@@ -84,17 +92,31 @@ export default function CamlinkOverlayPage() {
           </div>
 
           {/* Triple Cam Layout */}
-          <div className={`${styles.layout} ${layout === 'triple' ? styles.active : ''}`}>
-            <div className={`${styles.camBox} ${styles.camMain}`}>
+          <div className={`${styles.layout} ${styles.layoutTripleWrap} ${layout === 'triple' ? styles.active : ''}`}>
+            <div className={`${styles.camBox} ${styles.camTripleWrapItem}`}>
               {names.tripleMain && <div className={styles.namePlate}>{names.tripleMain}</div>}
             </div>
-            <div className={styles.sideCams}>
-              <div className={`${styles.camBox} ${styles.camSmall}`}>
-                {names.triple1 && <div className={styles.namePlate}>{names.triple1}</div>}
-              </div>
-              <div className={`${styles.camBox} ${styles.camSmall}`}>
-                {names.triple2 && <div className={styles.namePlate}>{names.triple2}</div>}
-              </div>
+            <div className={`${styles.camBox} ${styles.camTripleWrapItem}`}>
+              {names.triple1 && <div className={styles.namePlate}>{names.triple1}</div>}
+            </div>
+            <div className={`${styles.camBox} ${styles.camTripleWrapItem}`}>
+              {names.triple2 && <div className={styles.namePlate}>{names.triple2}</div>}
+            </div>
+          </div>
+
+          {/* Quad Cam Layout */}
+          <div className={`${styles.layout} ${styles.layoutGrid} ${layout === 'quad' ? styles.active : ''}`}>
+            <div className={`${styles.camBox} ${styles.camGridItem}`}>
+              {names.quad1 && <div className={styles.namePlate}>{names.quad1}</div>}
+            </div>
+            <div className={`${styles.camBox} ${styles.camGridItem}`}>
+              {names.quad2 && <div className={styles.namePlate}>{names.quad2}</div>}
+            </div>
+            <div className={`${styles.camBox} ${styles.camGridItem}`}>
+              {names.quad3 && <div className={styles.namePlate}>{names.quad3}</div>}
+            </div>
+            <div className={`${styles.camBox} ${styles.camGridItem}`}>
+              {names.quad4 && <div className={styles.namePlate}>{names.quad4}</div>}
             </div>
           </div>
 
@@ -135,6 +157,12 @@ export default function CamlinkOverlayPage() {
             </div>
           </div>
 
+        </div>
+      </div>
+
+      <div className={styles.titleContainer}>
+        <div className={styles.titleBox}>
+          {title}
         </div>
       </div>
     </div>
