@@ -66,7 +66,7 @@ export default function CamlinkOverlayPage() {
       <div className={styles.bgOuter}></div>
 
       <div className={styles.titleContainer}>
-        <div key={title} className={styles.titleBox}>
+        <div className={styles.titleBox}>
           {title}
         </div>
       </div>
