@@ -221,6 +221,9 @@ return !!roleConfig[permissionKey]
             {hasPermission('tiktok_overlay') && (
               <NavItem currentParam={activeSection} href="/dashboard?s=tiktok-overlay" icon="ri-video-line">Tiktok & IG Overlay</NavItem>
             )}
+            {hasPermission('tiktok_overlay') && (
+              <NavItem currentParam={activeSection} href="/dashboard?s=camlink-overlay" icon="ri-camera-lens-line">Camlink Overlay</NavItem>
+            )}
             <NavItem currentParam={activeSection} href="/dashboard?s=formation" icon="ri-group-line">Team Formation</NavItem>
           </NavSection>
 

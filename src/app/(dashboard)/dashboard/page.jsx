@@ -46,6 +46,10 @@ const TikTokOverlayControl = dynamic(() => import('@/features/tiktok/components/
   ssr: false
 })
 
+const CamlinkOverlayControl = dynamic(() => import('@/features/camlink/components/CamlinkOverlayControl'), {
+  ssr: false
+})
+
 const FormationOverlayControl = dynamic(() => import('@/features/formation/components/FormationOverlayControl'), {
   ssr: false
 })
@@ -249,6 +253,21 @@ return !!roleConfig[permissionKey]
             {hasPermission('tiktok_overlay') ? (
               <TikTokOverlayControl theme={theme} roomId={roomId} />
             ) : renderRestricted('Tiktok & IG Video Overlay')}
+          </RequireLogin>
+        </div>
+      )}
+
+      {/* ── CAMLINK OVERLAY ── */}
+      {activeSection === 'camlink-overlay' && (
+        <div>
+          <header className='mb-4'>
+            <h1 className='text-2xl font-bold text-textPrimary'>Camlink Overlay (OBS)</h1>
+            <p className='text-textSecondary text-sm'>Configure and set camera layouts for the OBS overlay.</p>
+          </header>
+          <RequireLogin title='Camlink Overlay'>
+            {hasPermission('tiktok_overlay') ? (
+              <CamlinkOverlayControl theme={theme} roomId={roomId} />
+            ) : renderRestricted('Camlink Overlay')}
           </RequireLogin>
         </div>
       )}
