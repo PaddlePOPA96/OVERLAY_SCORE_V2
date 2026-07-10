@@ -372,13 +372,8 @@ return;
             });
 
             hls.on(Hls.Events.MANIFEST_LOADED, (event, data) => {
-                if (data && data.levels) {
-                    data.levels.forEach(level => {
-                        if (!level.codecs) {
-                            level.codecs = 'avc1.64001f,mp4a.40.2';
-                        }
-                    });
-                }
+                // Do not force level.codecs here.
+                // hls.js will automatically probe the init.mp4 to extract the correct codec (e.g. AV1 or HEVC)
             });
 
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
