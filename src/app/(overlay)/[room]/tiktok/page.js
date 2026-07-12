@@ -24,6 +24,7 @@ export default function TikTokOverlay(props) {
   const [volume, setVolume] = useState(0.1)
   const [showDuration, setShowDuration] = useState(25)
   const [layout, setLayout] = useState('glassmorphism')
+  const [platform, setPlatform] = useState('tiktok')
   const [isPlaying, setIsPlaying] = useState(false)
   const [triggeredAt, setTriggeredAt] = useState(0)
 
@@ -117,10 +118,11 @@ return () => {
       if (data) {
         setVideoId(data.videoId || '')
         setVideoUrl(data.videoUrl || '')
-        setSender(data.sender || 'Anonymous')
+        setSender(data.sender || '')
         setMessage(data.message || '')
         setVolume(data.volume !== undefined ? data.volume : 0.1)
         setLayout(data.layout || 'glassmorphism')
+        setPlatform(data.platform || 'tiktok')
         setIsPlaying(data.isPlaying || false)
         setTriggeredAt(data.triggeredAt || 0)
       } else {
@@ -272,32 +274,34 @@ return () => {
         }}
       >
         {/* Donor Banner Info Header */}
-        <div className="p-5 flex flex-col gap-1.5 border-b border-white/5 relative">
-          <div className="flex items-center justify-between">
-            <span
-              style={{ color: styles.senderColor }}
-              className="text-lg font-black tracking-wide drop-shadow-md truncate max-w-[280px]"
-            >
-              {sender}
-            </span>
-            <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-violet-500/20 text-violet-300 rounded border border-violet-500/30">
-              {videoUrl?.includes('instagram') || videoUrl?.includes('fbcdn') ? 'Instagram Reel' : 'TikTok Video'}
-            </span>
-          </div>
-
-          {message && (
-            <div
-              style={{
-                background: styles.messageBg,
-                color: styles.textColor,
-                borderLeft: `3px solid ${styles.senderColor}`
-              }}
-              className="px-3 py-2 rounded-r-lg text-xs leading-relaxed italic font-medium break-words max-h-16 overflow-y-auto"
-            >
-              {message}
+        {(sender || message) && (
+          <div className="p-5 flex flex-col gap-1.5 border-b border-white/5 relative">
+            <div className="flex items-center justify-between">
+              <span
+                style={{ color: styles.senderColor }}
+                className="text-lg font-black tracking-wide drop-shadow-md truncate max-w-[280px]"
+              >
+                {sender}
+              </span>
+              <span className="px-2 py-0.5 text-[9px] font-black uppercase tracking-wider bg-violet-500/20 text-violet-300 rounded border border-violet-500/30">
+                {platform === 'instagram' || videoUrl?.includes('instagram') || videoUrl?.includes('fbcdn') ? 'Instagram Post' : 'TikTok Video'}
+              </span>
             </div>
-          )}
-        </div>
+
+            {message && (
+              <div
+                style={{
+                  background: styles.messageBg,
+                  color: styles.textColor,
+                  borderLeft: `3px solid ${styles.senderColor}`
+                }}
+                className="px-3 py-2 rounded-r-lg text-xs leading-relaxed italic font-medium break-words max-h-16 overflow-y-auto"
+              >
+                {message}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Embedded TikTok Video Wrapper (9:16 Aspect Ratio) */}
         <div className="bg-black/95 relative w-full h-[580px] overflow-hidden flex items-center justify-center">
@@ -311,6 +315,22 @@ return () => {
               onEnded={handleOverlayEnd}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
+          ) : platform === 'instagram' ? (
+            <div className="w-full h-full relative overflow-hidden bg-white flex items-center justify-center">
+              <iframe
+                src={`https://www.instagram.com/p/${videoId}/embed`}
+                className="w-full border-none absolute"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                title="Instagram Alert"
+                style={{
+                  height: 'calc(100% + 110px)',
+                  top: '-55px',
+                  left: 0
+                }}
+              />
+              {/* Overlay transparent div to prevent clicking on iframe */}
+              <div className="absolute inset-0 z-10 bg-transparent"></div>
+            </div>
           ) : (
             <iframe
               src={`https://www.tiktok.com/embed/v2/${videoId}`}

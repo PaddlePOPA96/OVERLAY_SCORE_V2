@@ -1,28 +1,53 @@
 import { execFile } from 'child_process'
 
-export function resolveInstagram(url) {
+export function resolveInstagram(targetUrl) {
   return new Promise((resolve, reject) => {
+    let videoId = null
+    const match = targetUrl.match(/(?:p|reel|tv)\/([^\/?#&]+)/)
+    if (match) {
+      videoId = match[1]
+    }
+
     // Jalankan yt-dlp dengan execFile yang lebih aman
-    execFile('yt-dlp', ['-j', '-f', '1/best', url], (error, stdout, stderr) => {
+    execFile('yt-dlp', ['-j', '-f', '1/best', targetUrl], (error, stdout, stderr) => {
       if (error) {
-        console.error('yt-dlp exec error:', stderr)
-        
-return reject(new Error('Failed to resolve Instagram Reels URL'))
+        console.warn('yt-dlp exec error for Instagram, falling back to regex:', stderr)
+        if (videoId) {
+          return resolve({
+            videoId,
+            videoUrl: null,
+            title: 'Instagram Post',
+            duration: 25,
+            cover: '',
+            finalUrl: targetUrl
+          })
+        }
+        return reject(new Error('Failed to resolve Instagram Reels URL'))
       }
 
       try {
         const data = JSON.parse(stdout)
 
         resolve({
-          videoId: data.display_id || data.id || 'instagram_video',
+          videoId: data.display_id || data.id || videoId || 'instagram_video',
           videoUrl: data.url || null,
           title: data.title || data.description || 'Instagram Reel',
           duration: Math.round(data.duration) || 25,
           cover: data.thumbnail || '',
-          finalUrl: url
+          finalUrl: targetUrl
         })
       } catch (parseErr) {
         console.error('yt-dlp json parse error:', parseErr)
+        if (videoId) {
+           return resolve({
+             videoId,
+             videoUrl: null,
+             title: 'Instagram Post',
+             duration: 25,
+             cover: '',
+             finalUrl: targetUrl
+           })
+        }
         reject(new Error('Failed to parse Instagram Reels metadata'))
       }
     })

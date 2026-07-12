@@ -179,14 +179,16 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
         videoId: data.videoId,
         videoUrl: data.videoUrl || '',
         cover: data.cover || '',
-        sender: sender.trim() || 'Anonymous',
+        sender: sender.trim(),
         message: message.trim(),
         alertSound,
         volume: parseFloat(volume),
         showDuration: parseInt(duration) || data.duration || 25,
         layout,
         isPlaying: true,
-        triggeredAt: Date.now()
+        triggeredAt: Date.now(),
+        finalUrl: data.finalUrl || tiktokUrl.trim(),
+        platform: data.finalUrl?.includes('instagram') || tiktokUrl.includes('instagram') ? 'instagram' : 'tiktok'
       }
 
       // Update overlay in Realtime DB
@@ -245,14 +247,15 @@ export default function TikTokOverlayControl({ theme = 'dark', roomId = 'default
         videoId: item.videoId,
         videoUrl: item.videoUrl || '',
         cover: item.cover || '',
-        sender: item.sender || 'Anonymous',
+        sender: item.sender || '',
         message: item.message || '',
         alertSound,
         volume: parseFloat(volume),
         showDuration: parseInt(duration) || 25,
         layout,
         isPlaying: true,
-        triggeredAt: Date.now()
+        triggeredAt: Date.now(),
+        platform: item.videoUrl?.includes('instagram') || item.videoId?.includes('instagram') ? 'instagram' : 'tiktok'
       }
 
       await update(ref(db, overlayPath), payload)
