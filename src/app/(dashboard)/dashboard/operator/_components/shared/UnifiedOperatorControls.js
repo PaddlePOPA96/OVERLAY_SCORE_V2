@@ -12,6 +12,7 @@ import LayoutSelector from './LayoutSelector'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
 import ThirdTitleControls from './ThirdTitleControls'
+import CamlinkControls from './CamlinkControls'
 
 export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('scoreboard')
@@ -24,7 +25,7 @@ export default function UnifiedOperatorControls({ data, actions, displayTime, fo
     if (typeof window !== 'undefined') {
       const savedTab = localStorage.getItem('operatorActiveTab')
 
-      if (savedTab === 'scoreboard' || savedTab === 'settings') {
+      if (savedTab === 'scoreboard' || savedTab === 'settings' || savedTab === 'camlink') {
         setActiveTab(savedTab)
       }
     }
@@ -910,10 +911,17 @@ return sliced
             <i className='ri-settings-3-line' />
             ⚙️ Pengaturan Tim
           </button>
+          <button className={`op-tab-btn ${activeTab === 'camlink' ? 'active' : ''}`} onClick={() => changeTab('camlink')}>
+            <i className='ri-camera-lens-line' />
+            🎥 Camlink
+          </button>
         </div>
         <div className='op-tab-container'>
           {renderScoreboardTab()}
           {renderSettingsTab()}
+          <div className={`op-tab-pane ${activeTab === 'camlink' ? 'active' : 'inactive'}`}>
+            <CamlinkControls roomId={roomId} theme={theme} />
+          </div>
         </div>
       </div>
 
