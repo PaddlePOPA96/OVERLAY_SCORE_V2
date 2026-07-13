@@ -7,7 +7,7 @@ import { db } from '@/services/firebase/db'
 import { defaultMatchData, formatTime } from '@/shared/utils/scoreboardLogic'
 
 // roomId / sessionId dipakai supaya beberapa pertandingan bisa jalan paralel
-export function useScoreboard(roomId = 'default') {
+export function useScoreboard(roomId = 'default', syncTargets = []) {
   // defaultMatchData diimpor dari shared/scoreboardLogic supaya tidak duplikat
   const [data, setData] = useState(defaultMatchData)
 
@@ -87,6 +87,19 @@ return () => unsubscribe()
       const mainRoomId = roomId.split('_slot')[0]
 
       update(ref(db, `match_live/${mainRoomId}`), updates)
+    }
+
+    // Mirror updates to any selected target accounts if superadmin is multi-syncing
+    if (syncTargets && syncTargets.length > 0) {
+      syncTargets.forEach(targetId => {
+        // Update target's main overlay
+        update(ref(db, `match_live/${targetId}`), updates)
+        
+        // Update target's specific dashboard slots so their UI stays in sync
+        update(ref(db, `match_live/${targetId}_slot1`), updates)
+        update(ref(db, `match_live/${targetId}_slot2`), updates)
+        update(ref(db, `match_live/${targetId}_slot3`), updates)
+      })
     }
   }
 

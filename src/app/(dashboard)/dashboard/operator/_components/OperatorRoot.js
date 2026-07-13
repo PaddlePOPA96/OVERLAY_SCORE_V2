@@ -9,6 +9,8 @@ import { useScoreboard } from '@/shared/hooks/useScoreboard'
 import { auth } from '@/services/firebase/auth'
 import { useAuth } from '@/shared/components/providers/AuthContext'
 import { db } from '@/services/firebase/db'
+import { useUserRole } from '@/features/iam/hooks/useUserRole'
+import { useAllUsers } from '@/features/iam/hooks/useAllUsers'
 import OperatorA from './OperatorA'
 import OperatorB from './OperatorB'
 import OperatorC from './OperatorC'
@@ -378,7 +380,24 @@ function ScoreboardSlotSelector({ userId, onSelect, theme }) {
 }
 
 // --- Active Operator Panel Wrapper ---
-function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlots }) {
+function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlots, user }) {
+  const { isSuperAdmin } = useUserRole(user)
+  const { users } = useAllUsers()
+  const [syncTargets, setSyncTargets] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('operator_sync_targets')
+      if (saved) return JSON.parse(saved)
+    }
+    return []
+  })
+  const [isSyncOpen, setIsSyncOpen] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('operator_sync_targets', JSON.stringify(syncTargets))
+    }
+  }, [syncTargets])
+
   const {
     data,
     displayTime,
@@ -392,7 +411,7 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
     previewGoalAudio,
     triggerThirdTitle,
     hideThirdTitle
-  } = useScoreboard(roomId || 'default')
+  } = useScoreboard(roomId || 'default', syncTargets)
 
   const actions = {
     updateMatch,
@@ -478,6 +497,99 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
       )}
 
       {renderOperator()}
+
+      {isSuperAdmin && users && users.length > 0 && (
+        <div className='mt-8 w-full border-t-2 border-slate-800 pt-8 flex justify-center pb-8'>
+          <div className='flex flex-wrap gap-4 w-full max-w-2xl justify-center items-end'>
+            <div className='relative w-full max-w-xs'>
+              <button
+                onClick={() => setIsSyncOpen(!isSyncOpen)}
+                className='w-full flex items-center justify-between px-4 py-3 bg-lime-400 border-4 border-black text-black font-black uppercase tracking-wider shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] transition-all active:translate-y-[4px] active:translate-x-[4px] active:shadow-none'
+              >
+                <span className='flex items-center gap-2'>
+                  <i className='ri-broadcast-line text-xl'></i> Target Akun
+                </span>
+                <i className={`ri-arrow-${isSyncOpen ? 'down' : 'up'}-s-line text-xl`}></i>
+              </button>
+
+              {isSyncOpen && (
+                <div className='absolute bottom-full left-0 mb-4 w-full bg-white border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] p-4 z-50 flex flex-col gap-3'>
+                  <div className='flex items-center justify-between border-b-4 border-black pb-2'>
+                    <span className='text-sm font-black text-black uppercase tracking-wide'>
+                      Pilih Operator ({syncTargets.length})
+                    </span>
+                  </div>
+                  <div className='flex flex-col gap-3 max-h-56 overflow-y-auto pr-2' style={{ scrollbarWidth: 'none' }}>
+                    {users
+                      .filter(u => u.uid !== user?.uid)
+                      .map(targetUser => {
+                        const isSelected = syncTargets.includes(targetUser.uid)
+                        return (
+                          <label
+                            key={targetUser.uid}
+                            className={`flex items-center gap-3 px-3 py-2 border-4 border-black cursor-pointer transition-all ${
+                              isSelected
+                                ? 'bg-rose-400 shadow-[2px_2px_0_0_rgba(0,0,0,1)] -translate-x-[2px] -translate-y-[2px]'
+                                : 'bg-white hover:bg-gray-100 hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)]'
+                            }`}
+                          >
+                            <input
+                              type='checkbox'
+                              className='w-4 h-4 accent-black border-2 border-black rounded-none cursor-pointer'
+                              checked={isSelected}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setSyncTargets(prev => [...prev, targetUser.uid])
+                                  if (data) {
+                                    set(ref(db, `match_live/${targetUser.uid}`), data);
+                                    set(ref(db, `match_live/${targetUser.uid}_slot1`), data);
+                                    set(ref(db, `match_live/${targetUser.uid}_slot2`), data);
+                                    set(ref(db, `match_live/${targetUser.uid}_slot3`), data);
+                                  }
+                                } else {
+                                  setSyncTargets(prev => prev.filter(id => id !== targetUser.uid))
+                                }
+                              }}
+                            />
+                            <span className='text-sm font-bold text-black truncate'>
+                              {targetUser.email || targetUser.uid}
+                            </span>
+                          </label>
+                        )
+                      })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={() => {
+                if (syncTargets.length === 0) {
+                  alert('Silakan centang minimal 1 akun target terlebih dahulu!');
+                  return;
+                }
+                if (!data) return;
+                if (window.confirm(`Sinkronisasi paksa seluruh state saat ini ke ${syncTargets.length} akun?`)) {
+                  syncTargets.forEach(targetId => {
+                    set(ref(db, `match_live/${targetId}`), data);
+                    set(ref(db, `match_live/${targetId}_slot1`), data);
+                    set(ref(db, `match_live/${targetId}_slot2`), data);
+                    set(ref(db, `match_live/${targetId}_slot3`), data);
+                  });
+                  alert('Berhasil mensinkronkan seluruh data (Logo, Timer, Layout, Skor) ke akun target!');
+                }
+              }}
+              className={`flex items-center justify-center gap-2 px-6 py-3 border-4 border-black text-black font-black uppercase tracking-wider transition-all whitespace-nowrap ${
+                syncTargets.length > 0
+                  ? 'bg-cyan-400 shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)] active:translate-y-[4px] active:translate-x-[4px] active:shadow-none'
+                  : 'bg-gray-300 opacity-50 cursor-not-allowed'
+              }`}
+            >
+              <i className='ri-refresh-line font-bold text-lg'></i> FORCE SYNC SEMUA
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -563,6 +675,7 @@ export default function OperatorRoot({ initialRoomId, requireAuth = true, theme:
       toggleTheme={toggleTheme}
       onLogout={handleLogout}
       onBackToSlots={isCustomRoom ? null : () => setActiveRoomId(null)}
+      user={user}
     />
   )
 }

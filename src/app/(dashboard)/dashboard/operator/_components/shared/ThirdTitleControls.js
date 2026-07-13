@@ -26,6 +26,22 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  // Sync local state with live data if it's currently showing
+  useEffect(() => {
+    if (data?.thirdTitle && data.thirdTitle.isShowing) {
+      if (data.thirdTitle.eventType) {
+        setEventType(data.thirdTitle.eventType)
+      }
+      if (data.thirdTitle.playerName) {
+        setSelectedPlayer({
+          name: data.thirdTitle.playerName,
+          img_url: data.thirdTitle.playerImg,
+          club: 'Live Data' // fallback since club isn't in thirdTitle
+        })
+      }
+    }
+  }, [data?.thirdTitle?.triggerId, data?.thirdTitle?.isShowing])
+
   // Map pildunData to clubs on load
   useEffect(() => {
     const mappedClubs = pildunData.map(d => ({ id: d.negara, name: d.negara }))
