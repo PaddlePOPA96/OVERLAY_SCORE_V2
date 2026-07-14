@@ -32,7 +32,7 @@ export default function CamlinkOverlayPage() {
     document.body.style.margin = '0'
     document.body.style.padding = '0'
     document.body.style.overflow = 'hidden'
-    document.body.style.backgroundColor = '#000'
+    document.body.style.backgroundColor = 'transparent'
 
     return () => {
       // Revert styles when unmounting
