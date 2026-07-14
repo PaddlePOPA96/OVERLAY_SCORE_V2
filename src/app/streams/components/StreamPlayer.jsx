@@ -197,9 +197,11 @@ return url;
             flvRef.current.pause(); flvRef.current.unload(); flvRef.current.detachMediaElement(); flvRef.current.destroy(); flvRef.current = null;
         }
 
+        const absoluteUrl = currentChannel.startsWith('/') ? `${window.location.origin}${currentChannel}` : currentChannel;
+
         const flvPlayer = mpegts.createPlayer({
             type: 'flv',
-            url: currentChannel,
+            url: absoluteUrl,
             isLive: true,
             hasAudio: true,
             hasVideo: true,

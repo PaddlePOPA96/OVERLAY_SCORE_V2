@@ -41,9 +41,11 @@ export async function GET(request) {
             return new NextResponse('Domain not allowed', { status: 403 });
         }
 
+        const clientUserAgent = request.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+        
         const response = await fetch(decodedUrl, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
+                'User-Agent': clientUserAgent,
                 'Accept': '*/*',
                 'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
                 'Origin': 'https://h5.folaplay.com',

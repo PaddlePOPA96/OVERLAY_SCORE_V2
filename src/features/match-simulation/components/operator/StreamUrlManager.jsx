@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-import { ref, onValue, set, push, remove } from 'firebase/database';
-import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel, Grid } from '@mui/material';
+import { ref, onValue, set, push, remove, update } from 'firebase/database';
+import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel, Grid, List, ListItem, Checkbox } from '@mui/material';
 
 import { db } from '@/services/firebase/db';
 
@@ -13,6 +13,9 @@ export default function StreamUrlManager({ theme }) {
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState({ text: '', isError: false });
   const [presets, setPresets] = useState([]);
+  const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
+  const [playlistTarget, setPlaylistTarget] = useState('left');
+  const [selectedPresets, setSelectedPresets] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [newPresetTitle, setNewPresetTitle] = useState('');
   const [newPresetUrl, setNewPresetUrl] = useState('');
@@ -395,6 +398,52 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
     });
   };
 
+  const handleOpenPlaylist = (target) => {
+    setPlaylistTarget(target);
+    setSelectedPresets([]);
+    setPlaylistModalOpen(true);
+  };
+
+  const handleClosePlaylist = () => {
+    setPlaylistModalOpen(false);
+  };
+
+  const handleTogglePresetSelection = (id) => {
+    setSelectedPresets(prev => 
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAllPresets = () => {
+    if (selectedPresets.length === presets.length && presets.length > 0) {
+      setSelectedPresets([]);
+    } else {
+      setSelectedPresets(presets.map(p => p.id));
+    }
+  };
+
+  const handleDeleteSelectedPresets = () => {
+    if (selectedPresets.length === 0) return;
+    if (!window.confirm(`Yakin ingin menghapus ${selectedPresets.length} history terpilih?`)) return;
+    
+    const updates = {};
+    selectedPresets.forEach(id => {
+      updates[id] = null;
+    });
+    
+    update(ref(db, 'settings/stream_presets'), updates).then(() => {
+      setSelectedPresets([]);
+    }).catch(err => {
+      console.error("Failed to delete presets:", err);
+      alert("Gagal menghapus history.");
+    });
+  };
+  
+  const handleApplyPresetFromModal = (url, drm) => {
+    applyPreset(url, drm, playlistTarget);
+    setPlaylistModalOpen(false);
+  };
+
   return (
     <Paper
       elevation={0}
@@ -495,15 +544,11 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
               )}
 
               {/* Presets Kiri */}
-              <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
-                <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
-                {presets.map(preset => (
-                  <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'left')} onDelete={() => handleDeletePreset(preset.id)} color="primary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
-                ))}
-                {presets.length === 0 && (
-                  <Typography variant="caption" sx={{ color: isLight ? '#aaa' : '#666', fontStyle: 'italic', mr: 1 }}>Belum ada preset</Typography>
-                )}
-                <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
+              <Box display="flex" gap={2} mt={3} alignItems="center">
+                <Button variant="outlined" size="small" onClick={() => handleOpenPlaylist('left')} sx={{ textTransform: 'none', borderRadius: 2 }}>
+                  Buka History Playlist ({presets.length})
+                </Button>
+                <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '12px', color: isLight ? '#666' : '#aaa' }}>+ Tambah Baru</Button>
               </Box>
             </Box>
           </Grid>
@@ -561,15 +606,11 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
                 )}
 
                 {/* Presets Kanan */}
-                <Box display="flex" gap={1} flexWrap="wrap" mt={3} alignItems="center">
-                  <Typography variant="caption" sx={{ color: isLight ? '#888' : '#888', mr: 1 }}>History:</Typography>
-                  {presets.map(preset => (
-                    <Chip key={preset.id} label={preset.title} onClick={() => applyPreset(preset.url, preset.drmKey || '', 'right')} onDelete={() => handleDeletePreset(preset.id)} color="secondary" variant="outlined" size="small" sx={{ borderColor: isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.15)' }} />
-                  ))}
-                  {presets.length === 0 && (
-                    <Typography variant="caption" sx={{ color: isLight ? '#aaa' : '#666', fontStyle: 'italic', mr: 1 }}>Belum ada preset</Typography>
-                  )}
-                  <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '11px', color: isLight ? '#666' : '#aaa', minWidth: 'auto', p: 0.5 }}>+ Tambah</Button>
+                <Box display="flex" gap={2} mt={3} alignItems="center">
+                  <Button variant="outlined" color="secondary" size="small" onClick={() => handleOpenPlaylist('right')} sx={{ textTransform: 'none', borderRadius: 2 }}>
+                    Buka History Playlist ({presets.length})
+                  </Button>
+                  <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '12px', color: isLight ? '#666' : '#aaa' }}>+ Tambah Baru</Button>
                 </Box>
               </Box>
             </Grid>
@@ -656,6 +697,71 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
         <DialogActions sx={{ bgcolor: isLight ? '#fff' : '#1e293b', p: 2 }}>
           <Button onClick={handleCloseModal} sx={{ color: isLight ? '#666' : '#aaa' }}>Batal</Button>
           <Button onClick={handleSavePresetModal} variant="contained" color="primary" disableElevation disabled={!newPresetTitle.trim() || !newPresetUrl.trim()}>Simpan</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Playlist / History Modal */}
+      <Dialog open={playlistModalOpen} onClose={handleClosePlaylist} fullWidth maxWidth="md" PaperProps={{ sx: { bgcolor: isLight ? '#fff' : '#1e293b', color: isLight ? '#000' : '#fff' } }}>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6" fontWeight="bold">History Playlist ({playlistTarget === 'left' ? 'Kiri' : 'Kanan'})</Typography>
+          <Box>
+            <Button size="small" onClick={handleSelectAllPresets} sx={{ mr: 1, textTransform: 'none' }}>
+              {selectedPresets.length === presets.length && presets.length > 0 ? 'Deselect All' : 'Select All'}
+            </Button>
+            <Button size="small" color="error" variant="contained" disableElevation onClick={handleDeleteSelectedPresets} disabled={selectedPresets.length === 0} sx={{ textTransform: 'none' }}>
+              Hapus Terpilih ({selectedPresets.length})
+            </Button>
+          </Box>
+        </DialogTitle>
+        <DialogContent dividers sx={{ p: 0 }}>
+          {presets.length === 0 ? (
+            <Box p={4} textAlign="center">
+              <Typography color="textSecondary" sx={{ color: isLight ? '#666' : '#aaa' }}>Belum ada history playlist.</Typography>
+            </Box>
+          ) : (
+            <List sx={{ width: '100%', bgcolor: 'transparent' }}>
+              {presets.map((preset) => {
+                const isSelected = selectedPresets.includes(preset.id);
+                return (
+                  <ListItem
+                    key={preset.id}
+                    disablePadding
+                    sx={{ borderBottom: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}
+                  >
+                    <Box display="flex" alignItems="center" width="100%" p={1}>
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={() => handleTogglePresetSelection(preset.id)}
+                        color="primary"
+                        sx={{ color: isLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)' }}
+                      />
+                      <Box flex={1} overflow="hidden" mr={2}>
+                        <Typography variant="subtitle2" fontWeight="bold" noWrap sx={{ color: isLight ? '#000' : '#fff' }}>
+                          {preset.title}
+                        </Typography>
+                        <Typography variant="caption" noWrap display="block" sx={{ color: isLight ? '#666' : '#aaa' }}>
+                          {preset.url}
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color={playlistTarget === 'left' ? 'primary' : 'secondary'}
+                        disableElevation
+                        onClick={() => handleApplyPresetFromModal(preset.url, preset.drmKey || '')}
+                        sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
+                      >
+                        Terapkan
+                      </Button>
+                    </Box>
+                  </ListItem>
+                );
+              })}
+            </List>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button onClick={handleClosePlaylist} sx={{ color: isLight ? '#666' : '#aaa', textTransform: 'none' }}>Tutup</Button>
         </DialogActions>
       </Dialog>
     </Paper>
