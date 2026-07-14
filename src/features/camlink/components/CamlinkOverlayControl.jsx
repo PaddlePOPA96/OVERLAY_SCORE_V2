@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ref, onValue, update } from 'firebase/database'
+import { ref, onValue, update, get } from 'firebase/database'
 import { db } from '@/services/firebase/index'
 
 export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'default' }) {
@@ -37,13 +37,13 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
     if (!roomId) return
     const dbRef = ref(db, overlayPath)
 
-    const unsubscribe = onValue(dbRef, snapshot => {
+    // Load initial form data ONCE so it doesn't overwrite unsaved typing
+    get(dbRef).then(snapshot => {
       const data = snapshot.val()
       if (data) {
         if (data.layout) setLayout(data.layout)
         if (data.chatUrl) setChatUrl(data.chatUrl)
         if (data.title) setTitle(data.title)
-        if (data.isVisible !== undefined) setIsVisible(data.isVisible)
         if (data.names) {
           if (data.names.single) setNameSingle(data.names.single)
           if (data.names.dual1) setNameDual1(data.names.dual1)
@@ -56,6 +56,14 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
           if (data.names.quad3) setNameQuad3(data.names.quad3)
           if (data.names.quad4) setNameQuad4(data.names.quad4)
         }
+      }
+    })
+
+    // Listen to real-time visibility updates only
+    const unsubscribe = onValue(dbRef, snapshot => {
+      const data = snapshot.val()
+      if (data && data.isVisible !== undefined) {
+        setIsVisible(data.isVisible)
       }
     })
 
