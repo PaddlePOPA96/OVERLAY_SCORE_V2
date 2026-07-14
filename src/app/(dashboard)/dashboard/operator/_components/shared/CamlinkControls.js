@@ -23,7 +23,7 @@ export default function CamlinkControls({ roomId, theme = 'dark' }) {
 
   useEffect(() => {
     if (!roomId) return
-    const dbRef = ref(db, `match_live/${roomId}/camlink_overlay`)
+    const dbRef = ref(db, `match_live/global_camlink_overlay`)
     const unsubscribe = onValue(dbRef, snapshot => {
       const val = snapshot.val()
       if (val) {
@@ -40,7 +40,7 @@ export default function CamlinkControls({ roomId, theme = 'dark' }) {
 
   const handleSave = () => {
     if (!roomId) return
-    const dbRef = ref(db, `match_live/${roomId}/camlink_overlay`)
+    const dbRef = ref(db, `match_live/global_camlink_overlay`)
     set(dbRef, {
       layout,
       title,

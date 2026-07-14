@@ -30,11 +30,11 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
 
-  const overlayPath = `match_live/${roomId}/camlink_overlay`
+  // Ubah ke global_camlink_overlay agar tidak kereset saat ganti room
+  const overlayPath = `match_live/global_camlink_overlay`
 
   // Fetch current state from Firebase
   useEffect(() => {
-    if (!roomId) return
     const dbRef = ref(db, overlayPath)
 
     // Load initial form data ONCE so it doesn't overwrite unsaved typing
@@ -68,7 +68,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
     })
 
     return () => unsubscribe()
-  }, [roomId, overlayPath])
+  }, [])
 
   const handleUpdate = async () => {
     setLoading(true)

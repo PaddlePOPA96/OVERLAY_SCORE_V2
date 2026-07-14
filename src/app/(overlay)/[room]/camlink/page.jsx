@@ -44,7 +44,8 @@ export default function CamlinkOverlayPage() {
   }, [])
 
   useEffect(() => {
-    const overlayPath = `match_live/${roomId}/camlink_overlay`
+    // Ubah ke global_camlink_overlay agar sinkron dengan semua room
+    const overlayPath = `match_live/global_camlink_overlay`
     const dbRef = ref(db, overlayPath)
 
     const unsubscribe = onValue(dbRef, snapshot => {
@@ -61,7 +62,7 @@ export default function CamlinkOverlayPage() {
     })
 
     return () => unsubscribe()
-  }, [roomId])
+  }, [])
 
   return (
     <div className={styles.bodyWrapper} style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.5s ease', pointerEvents: isVisible ? 'auto' : 'none' }}>
