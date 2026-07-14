@@ -13,6 +13,7 @@ export default function CamlinkOverlayPage() {
   const [layout, setLayout] = useState('single')
   const [chatUrl, setChatUrl] = useState('')
   const [title, setTitle] = useState('NAMA TOURNAMENT')
+  const [isVisible, setIsVisible] = useState(true)
   const [names, setNames] = useState({
     single: 'BUNG ALDO',
     dual1: 'BUNG ALDO',
@@ -52,6 +53,7 @@ export default function CamlinkOverlayPage() {
         if (data.layout) setLayout(data.layout)
         if (data.chatUrl) setChatUrl(data.chatUrl)
         if (data.title) setTitle(data.title)
+        if (data.isVisible !== undefined) setIsVisible(data.isVisible)
         if (data.names) {
           setNames(prev => ({ ...prev, ...data.names }))
         }
@@ -62,7 +64,7 @@ export default function CamlinkOverlayPage() {
   }, [roomId])
 
   return (
-    <div className={styles.bodyWrapper}>
+    <div className={styles.bodyWrapper} style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.5s ease', pointerEvents: isVisible ? 'auto' : 'none' }}>
       <div className={styles.bgOuter}></div>
 
       <div className={styles.titleContainer}>

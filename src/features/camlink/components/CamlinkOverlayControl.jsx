@@ -11,6 +11,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
   const [layout, setLayout] = useState('single')
   const [chatUrl, setChatUrl] = useState('')
   const [title, setTitle] = useState('NAMA TOURNAMENT')
+  const [isVisible, setIsVisible] = useState(true)
   
   // Names states
   const [nameSingle, setNameSingle] = useState('BUNG ALDO')
@@ -42,6 +43,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
         if (data.layout) setLayout(data.layout)
         if (data.chatUrl) setChatUrl(data.chatUrl)
         if (data.title) setTitle(data.title)
+        if (data.isVisible !== undefined) setIsVisible(data.isVisible)
         if (data.names) {
           if (data.names.single) setNameSingle(data.names.single)
           if (data.names.dual1) setNameDual1(data.names.dual1)
@@ -72,6 +74,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
       }
 
       const payload = {
+        isVisible: true,
         layout,
         chatUrl: finalChatUrl,
         title,
@@ -95,6 +98,21 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
       setTimeout(() => setSuccessMsg(''), 3000)
     } catch (err) {
       setError(`Gagal update overlay: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleHide = async () => {
+    setLoading(true)
+    setError('')
+    setSuccessMsg('')
+    try {
+      await update(ref(db, overlayPath), { isVisible: false })
+      setSuccessMsg('Overlay berhasil disembunyikan!')
+      setTimeout(() => setSuccessMsg(''), 3000)
+    } catch (err) {
+      setError(`Gagal sembunyikan overlay: ${err.message}`)
     } finally {
       setLoading(false)
     }
@@ -135,7 +153,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
           <div className="flex gap-2">
             <button
               onClick={copyObsUrl}
-              className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg transition-all text-xs cursor-pointer shadow-md shadow-violet-600/10 whitespace-nowrap"
+              className="px-4 py-2 bg-[#a78bfa] hover:bg-[#8b5cf6] text-black font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all text-xs cursor-pointer whitespace-nowrap uppercase tracking-wider"
             >
               Copy Link
             </button>
@@ -143,7 +161,7 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
               href={`/${roomId}/camlink`}
               target="_blank"
               rel="noreferrer"
-              className={`px-4 py-2 border rounded-lg font-semibold text-xs flex items-center transition-all cursor-pointer whitespace-nowrap ${isDark ? 'border-slate-700 text-slate-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'}`}
+              className="px-4 py-2 border-2 border-black font-black text-xs flex items-center transition-all cursor-pointer whitespace-nowrap uppercase tracking-wider bg-white text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]"
             >
               Test Page
             </a>
@@ -197,12 +215,12 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
                   <button
                     key={l.id}
                     onClick={() => setLayout(l.id)}
-                    className={`p-3 rounded-lg border font-semibold text-sm transition-all text-center cursor-pointer ${
+                    className={`p-3 border-2 font-bold text-sm transition-all text-center cursor-pointer uppercase tracking-wider ${
                       layout === l.id 
-                        ? 'bg-violet-600 border-violet-500 text-white shadow-lg shadow-violet-600/30' 
+                        ? 'bg-[#c4b5fd] border-black text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] translate-x-[-2px] translate-y-[-2px]' 
                         : isDark 
-                          ? 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-750' 
-                          : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'
+                          ? 'bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:border-black hover:text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1' 
+                          : 'bg-white border-black text-black hover:bg-slate-100 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1'
                     }`}
                   >
                     {l.label}
@@ -326,14 +344,30 @@ export default function CamlinkOverlayControl({ theme = 'dark', roomId = 'defaul
 
             {/* Action Buttons */}
             <div className="mt-4">
-              <button
-                onClick={handleUpdate}
-                disabled={loading}
-                className="w-full md:w-auto py-3 px-8 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all cursor-pointer shadow-lg hover:shadow-emerald-600/25 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                <i className="ri-save-3-line text-lg" />
-                {loading ? 'Menyimpan...' : 'Terapkan ke Layar (Update)'}
-              </button>
+              <div className="flex items-center justify-between mb-3">
+                <span className={`text-sm font-bold flex items-center gap-2 ${isVisible ? 'text-emerald-500' : (isDark ? 'text-slate-400' : 'text-slate-500')}`}>
+                  <span className={`w-3 h-3 rounded-full ${isVisible ? 'bg-emerald-500 animate-pulse' : 'bg-slate-500'}`}></span>
+                  Status: {isVisible ? 'LIVE (Tampil di OBS)' : 'HIDDEN (Disembunyikan)'}
+                </span>
+              </div>
+              <div className="flex flex-col md:flex-row gap-3">
+                <button
+                  onClick={handleUpdate}
+                  disabled={loading}
+                  className="flex-1 py-3 px-8 bg-[#34d399] hover:bg-[#10b981] text-black font-black border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center gap-2 uppercase tracking-wider"
+                >
+                  <i className="ri-save-3-line text-xl" />
+                  {loading ? 'Menyimpan...' : 'Terapkan & Tampilkan'}
+                </button>
+                <button
+                  onClick={handleHide}
+                  disabled={loading || !isVisible}
+                  className={`flex-1 py-3 px-8 text-black font-black border-2 border-black transition-all flex items-center justify-center gap-2 uppercase tracking-wider ${!isVisible ? 'bg-slate-300 opacity-50 cursor-not-allowed' : 'bg-[#fb7185] hover:bg-[#e11d48] cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]'}`}
+                >
+                  <i className="ri-eye-off-line text-xl" />
+                  Sembunyikan
+                </button>
+              </div>
             </div>
           </div>
         </div>
