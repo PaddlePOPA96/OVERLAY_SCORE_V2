@@ -69,10 +69,38 @@ function resolveClubLogo(league, apiName) {
 
 function SeparatorItem({ dateText }) {
   return (
-    <div className='inline-flex items-center gap-1.5 px-4 py-1 mx-2 rounded bg-purple-950/60 border border-purple-500/30 text-purple-300 font-bold text-xs tracking-wider uppercase shadow-inner'>
-      <span>📅</span>
-      <span>{dateText}</span>
+    <div className='inline-flex items-center gap-4 px-6 text-[#fde047] font-black text-xl tracking-widest uppercase'>
+      <span className='tracking-tighter'>[ {dateText} ]</span>
+      <span className='text-[#fde047] font-black text-2xl'>/</span>
     </div>
+  )
+}
+
+function ClockItem() {
+  const [timeParts, setTimeParts] = useState({ h: '00', m: '00' })
+
+  useEffect(() => {
+    const updateTime = () => {
+      const d = new Date()
+      // format as hour and minute
+      const formatter = new Intl.DateTimeFormat('id-ID', { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', hour12: false })
+      const parts = formatter.formatToParts(d)
+      const h = parts.find(p => p.type === 'hour')?.value || '00'
+      const m = parts.find(p => p.type === 'minute')?.value || '00'
+      setTimeParts({ h, m })
+    }
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <span className='text-black font-sans font-black text-3xl tracking-wide whitespace-nowrap flex items-center justify-center'>
+      <span>{timeParts.h}</span>
+      <span className='animate-blink mx-1 -mt-1'>:</span>
+      <span>{timeParts.m}</span>
+    </span>
   )
 }
 
@@ -108,41 +136,29 @@ function MatchItem({ match, activeSource }) {
   const awayName = match.awayTeam?.tla || match.awayTeam?.shortName || match.awayTeam?.name || 'TBA'
 
   return (
-    <div className='inline-flex items-center gap-4 px-8 border-r border-white/10 h-10'>
+    <div className='inline-flex items-center gap-4 px-6 h-full text-white font-black text-xl leading-none uppercase whitespace-nowrap'>
       {/* Home */}
-      <div className='flex items-center gap-2'>
-        <span className='text-white font-bold text-lg leading-none'>
-          {homeName}
-        </span>
-        {homeLogo && <img src={homeLogo} alt='' className='w-6 h-6 object-contain' />}
-      </div>
+      <span className='flex items-center gap-3'>
+        {homeName}
+        {homeLogo && <img src={homeLogo} alt='' className='w-8 h-8 object-contain drop-shadow-[2px_2px_0_rgba(255,255,255,0.5)]' />}
+      </span>
 
       {/* Score Box */}
-      <div
-        className={`px-3 py-0.5 rounded flex items-center gap-2 ${
-          isLive
-            ? 'bg-red-600/90 text-white animate-pulse'
-            : showScore
-              ? 'bg-slate-700/50 text-yellow-400'
-              : 'bg-slate-800/80 text-slate-300 border border-slate-700/50'
-        }`}
-      >
-        <span className='font-mono font-bold text-xl leading-none'>
-          {showScore
-            ? `${match.score.fullTime.home ?? 0}-${match.score.fullTime.away ?? 0}`
-            : timeText
-          }
-        </span>
-        {isLive && <span className='text-[10px] uppercase font-bold tracking-tight'>LIVE</span>}
-      </div>
+      <span className={`font-mono text-2xl px-4 ${isLive ? 'text-[#ff90e8] animate-pulse' : 'text-[#fde047]'}`}>
+        {showScore
+          ? `${match.score.fullTime.home ?? 0} - ${match.score.fullTime.away ?? 0}`
+          : timeText
+        }
+        {isLive && <span className='ml-3 text-xs uppercase bg-[#ff90e8] text-black border-2 border-black px-1.5 py-0.5 tracking-tight shadow-[2px_2px_0_0_#fff] animate-none inline-block -translate-y-1'>LIVE</span>}
+      </span>
 
       {/* Away */}
-      <div className='flex items-center gap-2'>
-        {awayLogo && <img src={awayLogo} alt='' className='w-6 h-6 object-contain' />}
-        <span className='text-white font-bold text-lg leading-none'>
-          {awayName}
-        </span>
-      </div>
+      <span className='flex items-center gap-3'>
+        {awayLogo && <img src={awayLogo} alt='' className='w-8 h-8 object-contain drop-shadow-[2px_2px_0_rgba(255,255,255,0.5)]' />}
+        {awayName}
+      </span>
+
+      <span className='ml-8 text-[#fde047] font-black text-2xl'>/</span>
     </div>
   )
 }
@@ -189,6 +205,23 @@ export default function RunningTextOverlay({ isPageMode = false }) {
   }
 
   useEffect(() => {
+    if (activeSource === 'custom-text') {
+      const texts = settings?.runningText?.customTexts || (settings?.runningText?.customText ? [settings?.runningText?.customText] : ['YOUR CUSTOM TEXT HERE'])
+      
+      const newItems = texts.filter(t => t.trim()).map((text, idx) => ({
+        isCustom: true,
+        id: `custom-${idx}`,
+        text: text
+      }))
+      
+      if (newItems.length === 0) {
+        newItems.push({ isCustom: true, id: 'custom-default', text: 'YOUR CUSTOM TEXT HERE' })
+      }
+
+      setTickerItems(newItems)
+      return
+    }
+
     if (!activeMatches || activeMatches.length === 0) {
       setTickerItems([])
       
@@ -264,7 +297,7 @@ return
 
       setTickerItems([...live, ...recent])
     }
-  }, [activeMatches, activeSource])
+  }, [activeMatches, activeSource, settings?.runningText?.customText, settings?.runningText?.customTexts])
 
   // Guard: avoid hydration mismatch
   if (!mounted) return null
@@ -286,18 +319,6 @@ return
   const safeY = isNaN(Number(rawY)) ? 0 : Number(rawY)
   const safeScale = isNaN(Number(rawScale)) ? 1 : Number(rawScale)
 
-  // Resolve active static header text based on active source and live matches
-  const hasLive = tickerItems.some(i => !i.isSeparator && (i.status === 'IN_PLAY' || i.status === 'PAUSED'))
-  let labelText = ''
-
-  if (activeSource === 'premier-league') {
-    labelText = hasLive ? 'EPL LIVE' : 'PREMIER LEAGUE'
-  } else if (activeSource === 'champions-league') {
-    labelText = hasLive ? 'UCL LIVE' : 'CHAMPIONS LEAGUE'
-  } else {
-    labelText = hasLive ? 'WORLD CUP LIVE' : 'WORLD CUP'
-  }
-
   return (
     <div
       className='fixed inset-0 overflow-hidden flex flex-col justify-end bg-transparent pb-8 pointer-events-none'
@@ -308,33 +329,51 @@ return
         zIndex: 20
       }}
     >
-      <div className='w-full h-16 bg-gradient-to-r from-slate-900/95 to-slate-800/95 border-y border-purple-500/30 flex items-center shadow-2xl backdrop-blur-md relative z-50 pointer-events-auto'>
+      <div className='w-full h-16 bg-black border-t-4 border-b-4 border-black flex items-center relative z-50 pointer-events-auto shadow-[0px_-4px_0px_0px_#fde047]'>
         {/* Label (Static) */}
-        <div className='h-full bg-purple-800 px-6 flex items-center justify-center z-20 shadow-lg shrink-0 border-r border-purple-500/30 relative'>
-          <span className='text-white font-bold uppercase tracking-widest text-sm text-shadow'>
-            {labelText}
-          </span>
+        <div className='h-full bg-[#fde047] px-8 flex items-center justify-center z-20 shrink-0 relative min-w-[180px] border-r-8 border-black -skew-x-12 -ml-6 pl-10 shadow-[8px_0px_0px_0px_#fff]'>
+          <div className='skew-x-12 flex items-center justify-center'>
+            <ClockItem />
+          </div>
         </div>
 
         {/* Ticker Content */}
         <div className='relative flex-1 h-full overflow-hidden flex items-center z-0'>
-          <div className='ticker-track flex items-center whitespace-nowrap pl-4'>
+          <div className='ticker-track flex items-center whitespace-nowrap h-full'>
             {tickerItems.map((item, index) => {
+              if (item.isCustom) {
+                return (
+                  <div key={item.id} className='inline-flex items-center gap-6 px-6 h-full'>
+                    <span className='text-white font-black text-2xl uppercase tracking-widest'>
+                      {item.text}
+                    </span>
+                    <span className='text-[#fde047] font-black text-2xl'>/</span>
+                  </div>
+                )
+              }
               if (item.isSeparator) {
                 return <SeparatorItem key={item.key || `sep-${index}`} dateText={item.dateText} />
               }
 
-              
-return <MatchItem key={item.id} match={item} activeSource={activeSource} />
+              return <MatchItem key={item.id} match={item} activeSource={activeSource} />
             })}
             {/* Duplicates for seamless loop  */}
             {tickerItems.map((item, index) => {
+              if (item.isCustom) {
+                return (
+                  <div key={`dup-${item.id}`} className='inline-flex items-center gap-6 px-6 h-full'>
+                    <span className='text-white font-black text-2xl uppercase tracking-widest'>
+                      {item.text}
+                    </span>
+                    <span className='text-[#fde047] font-black text-2xl'>/</span>
+                  </div>
+                )
+              }
               if (item.isSeparator) {
                 return <SeparatorItem key={`dup-${item.key || `sep-${index}`}`} dateText={item.dateText} />
               }
 
-              
-return <MatchItem key={`dup-${item.id}`} match={item} activeSource={activeSource} />
+              return <MatchItem key={`dup-${item.id}`} match={item} activeSource={activeSource} />
             })}
           </div>
         </div>
@@ -346,11 +385,18 @@ return <MatchItem key={`dup-${item.id}`} match={item} activeSource={activeSource
         .ticker-track {
             display: inline-flex;
             width: max-content;
-            animation: marquee ${Math.max(20, tickerItems.length * 10)}s linear infinite;
+            animation: marquee ${Math.max(40, tickerItems.length * 20)}s linear infinite;
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-blink {
+          animation: blink 1s step-end infinite;
         }
         .text-shadow {
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
