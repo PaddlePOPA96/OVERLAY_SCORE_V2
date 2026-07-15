@@ -7,11 +7,11 @@ import pildunData from '@/data/fix-playerpildun32.json'
 export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null)
   const [eventType, setEventType] = useState('goal') // goal, yellow_card, red_card, mvp
-  
+
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('club') // 'club' or 'global'
-  
+
   // Club Mode State
   const [clubs, setClubs] = useState([])
   const [filteredClubs, setFilteredClubs] = useState([])
@@ -72,7 +72,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   useEffect(() => {
     if (!clubSearch) {
       setFilteredClubs(clubs)
-      
+
       return
     }
 
@@ -110,7 +110,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
     if (globalSearchQuery.length < 3) {
       setGlobalResults([])
-      
+
       return
     }
 
@@ -145,7 +145,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   const handleShow = () => {
     if (!selectedPlayer) {
       alert('Pilih pemain terlebih dahulu!')
-      
+
       return
     }
 
@@ -163,12 +163,12 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
       case 'goal': return '⚽ GOAL'
       case 'yellow_card': return '🟨 YELLOW CARD'
       case 'red_card': return '🟥 RED CARD'
-      case 'mvp': return '🏆 MVP'
+      case 'goat': return '🐐 GOAT'
       default: return type.toUpperCase()
     }
   }
 
-  const displayedPlayers = playerSearch 
+  const displayedPlayers = playerSearch
     ? players.filter(p => p.name.toLowerCase().includes(playerSearch.toLowerCase()))
     : players
 
@@ -195,7 +195,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      
+
       {/* Event Type Grid Selector (Rendered directly in card) */}
       <div>
         <div style={{ fontSize: '10px', fontWeight: 'bold', color: isLight ? '#475569' : '#9ca3af', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.05em' }}>
@@ -227,13 +227,13 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
           👤 Target Player
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
-          <div 
-            className="neo-btn-lg neo-btn-outline" 
-            style={{ 
-              flex: 1, 
-              justifyContent: 'flex-start', 
-              background: isLight ? '#ffffff' : '#090d16', 
-              color: modalText, 
+          <div
+            className="neo-btn-lg neo-btn-outline"
+            style={{
+              flex: 1,
+              justifyContent: 'flex-start',
+              background: isLight ? '#ffffff' : '#090d16',
+              color: modalText,
               cursor: 'default',
               boxShadow: 'none',
               border: `3px solid ${isLight ? '#cbd5e1' : '#000000'}`,
@@ -264,7 +264,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
         >
           {isShowing ? 'Update Live' : '▶ Show Overlay'}
         </button>
-        
+
         <button
           onClick={handleHide}
           disabled={!isShowing}
@@ -281,8 +281,8 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
           <div className="neo-modal-content" style={{ background: modalBg, color: modalText, border: `3px solid ${isLight ? '#cbd5e1' : '#000000'}`, boxShadow: isLight ? '5px 5px 0px 0px rgba(0,0,0,0.1)' : '5px 5px 0px 0px #000000' }}>
             <div className="neo-modal-header" style={{ borderBottom: `1px solid ${modalBorder}` }}>
               <span className="neo-modal-title" style={{ color: isLight ? '#2563eb' : '#FFE600' }}>Select Player</span>
-              <button 
-                className="neo-btn-lg neo-btn-outline" 
+              <button
+                className="neo-btn-lg neo-btn-outline"
                 style={{ padding: '6px 12px', fontSize: '12px', background: isLight ? '#f1f5f9' : '#1f2937', color: modalText }}
                 onClick={() => setIsModalOpen(false)}
               >
@@ -291,18 +291,18 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
             </div>
 
             <div className="neo-modal-body">
-              
+
               {/* Player Search Tab Menu */}
               <div>
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
-                  <button 
+                  <button
                     onClick={() => setActiveTab('club')}
                     className={`neo-btn-lg ${activeTab === 'club' ? 'neo-btn-primary' : 'neo-btn-outline'}`}
                     style={{ flex: 1, padding: '8px', fontSize: '12px' }}
                   >
                     Select From Club
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveTab('global')}
                     className={`neo-btn-lg ${activeTab === 'global' ? 'neo-btn-primary' : 'neo-btn-outline'}`}
                     style={{ flex: 1, padding: '8px', fontSize: '12px' }}
@@ -317,7 +317,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {selectedClub && (
-                        <button 
+                        <button
                           onClick={() => {
                             setSelectedClub(null)
                             setPlayerSearch('')
@@ -345,11 +345,11 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                           className="op-input"
                           style={{ width: '100%', padding: '8px 12px', fontSize: '13px', background: isLight ? '#ffffff' : '#090d16', color: modalText }}
                         />
-                        
+
                         {(homeTeam || awayTeam) && !clubSearch && (
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                             {homeTeam && homeTeam !== 'HOME' && homeTeam !== 'NRG' && homeTeam !== 'XLG' && (
-                              <button 
+                              <button
                                 onClick={() => handleQuickMatch(homeTeam)}
                                 className="neo-btn-lg neo-btn-outline"
                                 style={{ padding: '8px', fontSize: '11px', textAlign: 'left', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
@@ -358,7 +358,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                               </button>
                             )}
                             {awayTeam && awayTeam !== 'AWAY' && awayTeam !== 'NRG' && awayTeam !== 'XLG' && (
-                              <button 
+                              <button
                                 onClick={() => handleQuickMatch(awayTeam)}
                                 className="neo-btn-lg neo-btn-outline"
                                 style={{ padding: '8px', fontSize: '11px', textAlign: 'left', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
@@ -399,7 +399,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                           className="op-input"
                           style={{ width: '100%', padding: '8px 12px', fontSize: '13px', background: isLight ? '#ffffff' : '#090d16', color: modalText }}
                         />
-                        
+
                         <div className="neo-grid-2" style={{ maxHeight: '200px', overflowY: 'auto', paddingRight: '4px' }}>
                           {isLoading ? (
                             <div style={{ gridColumn: 'span 2', textAlign: 'center', padding: '10px', fontSize: '12px', color: '#64748b' }}>Loading...</div>
@@ -442,7 +442,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                       className="op-input"
                       style={{ width: '100%', padding: '8px 12px', fontSize: '13px', background: isLight ? '#ffffff' : '#090d16', color: modalText }}
                     />
-                    
+
                     <div className="neo-grid-2" style={{ maxHeight: '200px', overflowY: 'auto', paddingRight: '4px' }}>
                       {isLoading ? (
                         <div style={{ gridColumn: 'span 2', textAlign: 'center', padding: '10px', fontSize: '12px', color: '#64748b' }}>Searching...</div>
@@ -462,7 +462,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                               <div style={{ fontSize: '9px', fontWeight: 'bold', color: '#64748b', textTransform: 'uppercase' }}>{p.club}</div>
                             </div>
                           ))}
-                          
+
                           {globalResults.length === 0 && globalSearchQuery.length >= 3 && (
                             <span style={{ gridColumn: 'span 2', textAlign: 'center', fontSize: '12px', color: '#64748b', padding: '10px' }}>
                               No player found.

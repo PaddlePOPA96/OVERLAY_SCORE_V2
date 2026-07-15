@@ -44,7 +44,7 @@ export default function ThirdTitleOverlay({ data }) {
     goal: { icon: '⚽', color: '#2ecc71' },
     yellow_card: { icon: '🟨', color: '#f39c12' },
     red_card: { icon: '🟥', color: '#e74c3c' },
-    mvp: { icon: '⭐', color: '#f1c40f' }
+    goat: { icon: '🐐', color: '#f1c40f' }
   }
 
   const iconData = eventIcons[localData.eventType] || eventIcons.goal
