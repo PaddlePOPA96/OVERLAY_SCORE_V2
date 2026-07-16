@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import AnimatedB2fLogo from '@/components/AnimatedB2fLogo'
 
 export default function LayoutPildun({ data, displayTime, formatTime }) {
   const [isVisible, setIsVisible] = useState(data.showOverlay)
@@ -114,14 +115,23 @@ export default function LayoutPildun({ data, displayTime, formatTime }) {
             </div>
           </div>
 
-          {/* 6. LOGO RESMI PIALA DUNIA FIFA 2026 */}
+          {/* 6. LOGO RESMI PIALA DUNIA FIFA 2026 / ANIMATED B2F LOGO */}
           <div className="absolute left-1/2 -translate-x-1/2 bottom-[-16px] z-30 pointer-events-none">
-            <img 
-              src={data.useCustomFifaLogo ? "https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png" : "/logob2f.jpg"} 
-              alt="Center Logo" 
-              style={{ width: `${data.fifaLogoSize || 165}px`, height: `${data.fifaLogoSize || 165}px`, objectFit: 'contain' }}
-              className="drop-shadow-[0_10px_15px_rgba(0,0,0,0.6)]"
-            />
+            {data.useCustomFifaLogo ? (
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png" 
+                alt="Center Logo" 
+                style={{ width: `${data.fifaLogoSize || 165}px`, height: `${data.fifaLogoSize || 165}px`, objectFit: 'contain' }}
+                className="drop-shadow-[0_10px_15px_rgba(0,0,0,0.6)]"
+              />
+            ) : (
+              <div 
+                style={{ width: `${data.fifaLogoSize || 165}px`, height: `${data.fifaLogoSize || 165}px` }}
+                className="drop-shadow-[0_10px_15px_rgba(0,0,0,0.6)]"
+              >
+                <AnimatedB2fLogo triggerId={data.introId} />
+              </div>
+            )}
           </div>
 
         </div>

@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-
 import { getScale } from './overlay-scale.config'
+import AnimatedB2fLogo from '@/components/AnimatedB2fLogo'
 
 export default function LayoutPildun2({ data, displayTime, formatTime }) {
   const [renderState, setRenderState] = useState(data.showOverlay)
@@ -577,13 +577,10 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                     </div>
                   </div>
                 ) : (
-                  <img
-                    src='/logob2f.jpg'
-                    alt='Center Logo'
+                  <div
                     style={{
                       width: `${data.fifaLogoSize || 96}px`,
                       height: `${data.fifaLogoSize || 96}px`,
-                      objectFit: 'contain',
                       transform: animateIn ? 'scale(1)' : 'scale(0.5)',
                       opacity: animateIn ? 1 : 0,
                       animation: animateIn ? 'b2fSwitchZoom 0.6s ease 0.45s both' : 'none',
@@ -592,7 +589,9 @@ export default function LayoutPildun2({ data, displayTime, formatTime }) {
                         : 'transform 0.4s ease-in 0.9s, opacity 0.3s ease 0.9s',
                       willChange: 'transform, opacity',
                     }}
-                  />
+                  >
+                    <AnimatedB2fLogo triggerId={data.introId} />
+                  </div>
                 )}
               </div>
             </div>

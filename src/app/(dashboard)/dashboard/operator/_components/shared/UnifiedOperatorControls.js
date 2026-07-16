@@ -1,9 +1,12 @@
 'use client'
+import AnimatedB2fLogo from '@/components/AnimatedB2fLogo'
+
 
 import { useState, useEffect } from 'react'
 import { auth } from '@/services/firebase/auth'
 import { db } from '@/services/firebase/db'
 import { ref, get } from 'firebase/database'
+import { Settings, Check, Clock, Edit2, Info, MonitorPlay, Tv, Image as ImageIcon, Maximize2, ShieldAlert } from 'lucide-react'
 
 import LogoPickerModal from '../LogoPickerModal'
 import { makeTeamAbbr } from '@/data/logoData'
@@ -844,14 +847,20 @@ return sliced
         {/* Preview */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{ width: '56px', height: '56px', background: data.useCustomFifaLogo ? '#051B5E' : '#ffb901', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-            <img
-              src={data.useCustomFifaLogo ? 'https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png' : '/logob2f.jpg'}
-              alt='Center Logo'
-              style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', ...(data.useCustomFifaLogo && { filter: 'brightness(0) invert(1)' }) }}
-              onError={e => { e.target.style.display = 'none' }}
-            />
+            {data.useCustomFifaLogo ? (
+              <img
+                src='https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png'
+                alt='Center Logo'
+                style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+                onError={e => { e.target.style.display = 'none' }}
+              />
+            ) : (
+              <div style={{ width: '100%', height: '100%' }}>
+                <AnimatedB2fLogo />
+              </div>
+            )}
           </div>
-          <span style={{ fontSize: '11px', color: '#9ca3af' }}>{data.useCustomFifaLogo ? 'Menggunakan logo FIFA World Cup 2026' : 'Menggunakan logo B2F (logob2f.jpg)'}</span>
+          <span style={{ fontSize: '11px', color: '#9ca3af' }}>{data.useCustomFifaLogo ? 'Menggunakan logo FIFA World Cup 2026' : 'Menggunakan animasi logo B2F'}</span>
         </div>
 
         {/* Size Slider */}
