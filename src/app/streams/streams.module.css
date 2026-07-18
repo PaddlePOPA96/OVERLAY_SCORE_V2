@@ -412,7 +412,7 @@
 
 @media (max-width: 1000px) {
     .wrapper {
-        padding: 80px 16px 16px 16px;
+        padding: 64px 0 0 0;
     }
 
     .navCenter {
@@ -421,13 +421,37 @@
 
     .layout {
         flex-direction: column;
-        gap: 24px;
+        gap: 0;
+    }
+
+    .videoSection {
+        width: 100%;
+        padding: 0 !important;
+    }
+
+    .videoWrapper {
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        position: sticky;
+        top: 64px;
+        z-index: 100;
+    }
+
+    .metaData {
+        padding: 16px;
+        margin-top: 0;
     }
 
     .chatSection {
         width: 100%;
         height: auto;
+        flex: 1;
         min-height: 380px;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        box-shadow: none;
     }
 
     .title {
