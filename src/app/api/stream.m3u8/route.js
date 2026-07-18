@@ -37,15 +37,15 @@ export async function GET(request) {
         }
 
         const decodedUrl = Buffer.from(encodedUrl, 'base64').toString('utf-8');
-        
+
         let decodedReferer = '';
 
         if (encodedReferer) {
             decodedReferer = Buffer.from(encodedReferer, 'base64').toString('utf-8');
         } else if (decodedUrl.includes('strmd.st')) {
             // Delta / Echo servers require trendy47 referer, Admin requires embedstreams
-            decodedReferer = decodedUrl.includes('/delta/') || decodedUrl.includes('/echo/') || decodedUrl.includes('/golf/') 
-                ? 'https://trendy47.club/' 
+            decodedReferer = decodedUrl.includes('/delta/') || decodedUrl.includes('/echo/') || decodedUrl.includes('/golf/')
+                ? 'https://trendy47.club/'
                 : 'https://embedstreams.top/';
         } else if (decodedUrl.includes('folaplay.com')) {
             decodedReferer = 'https://h5.folaplay.com/';
@@ -57,13 +57,13 @@ export async function GET(request) {
 
         const parsedUrl = new URL(decodedUrl);
         const isAllowed = ALLOWED_DOMAINS.some(domain => parsedUrl.hostname.endsWith(domain));
-        
+
         if (!isAllowed) {
             return new NextResponse('Domain not allowed', { status: 403 });
         }
 
         const fetchHeaders = new Headers();
-        
+
         if (decodedUrl.includes('folaplay.com')) {
             fetchHeaders.set('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36');
             fetchHeaders.set('Accept', '*/*');
@@ -88,7 +88,7 @@ export async function GET(request) {
 
                 try {
                     fetchHeaders.set('Origin', new URL(decodedReferer).origin);
-                } catch (e) {}
+                } catch (e) { }
             }
         }
 
@@ -140,7 +140,7 @@ export async function GET(request) {
 
             try {
                 const absoluteUrl = new URL(trimmedLine, decodedUrl).href;
-                
+
                 if (absoluteUrl.includes('.m3u8')) {
                     const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
                     const host = request.headers.get('host');
@@ -151,8 +151,8 @@ export async function GET(request) {
                         proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
                     }
 
-                    
-return proxyUrl;
+
+                    return proxyUrl;
                 }
 
                 return absoluteUrl;
@@ -171,7 +171,7 @@ return proxyUrl;
 
     } catch (error) {
         console.error('M3U8 Proxy Error:', error);
-        
-return new NextResponse(error.message || 'Internal Server Error', { status: error.message?.includes('status: 403') ? 403 : 500 });
+
+        return new NextResponse(error.message || 'Internal Server Error', { status: error.message?.includes('status: 403') ? 403 : 500 });
     }
 }

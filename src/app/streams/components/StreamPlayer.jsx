@@ -16,10 +16,20 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     const [showCatchUp, setShowCatchUp] = useState(false);
     const [playError, setPlayError] = useState(null);
     const [reloadKey, setReloadKey] = useState(0);
-    const [internalMuted, setInternalMuted] = useState(isMuted);
+    const [internalMuted, setInternalMuted] = useState(() => {
+        if (typeof window !== 'undefined' && window.innerWidth <= 1000) {
+            return true;
+        }
+        return isMuted;
+    });
 
     useEffect(() => {
-        setInternalMuted(isMuted);
+        if (typeof window !== 'undefined' && window.innerWidth <= 1000) {
+            // Keep muted on mobile to ensure autoplay succeeds
+            setInternalMuted(true);
+        } else {
+            setInternalMuted(isMuted);
+        }
     }, [isMuted]);
 
     const safePlay = (videoElement) => {
@@ -452,14 +462,14 @@ return;
             }
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             if (currentChannel) {
-                video.src = currentChannel;
-                video.load();
                 const playOnMetadata = () => {
                     setTimeout(() => {
                         safePlay(video);
                     }, 50);
                 };
                 video.addEventListener('loadedmetadata', playOnMetadata, { once: true });
+                video.src = currentChannel;
+                video.load();
             }
         }
     }, [currentChannel, isYoutube, isFlv, isGenericIframe, isMp4, isMpd, reloadKey]);
