@@ -16,17 +16,26 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
     const [showCatchUp, setShowCatchUp] = useState(false);
     const [playError, setPlayError] = useState(null);
     const [reloadKey, setReloadKey] = useState(0);
+    const [internalMuted, setInternalMuted] = useState(isMuted);
+
+    useEffect(() => {
+        setInternalMuted(isMuted);
+    }, [isMuted]);
 
     const safePlay = (videoElement) => {
         if (!videoElement) return;
-        videoElement.play().catch((err) => {
-            console.log('[Autoplay] Blocked:', err);
-            if (err.name === 'NotAllowedError') {
-                videoElement.muted = true;
-                console.log('[Autoplay] Retrying playing in muted mode...');
-                videoElement.play().catch((err2) => console.error('[Autoplay] Muted play failed too:', err2));
-            }
-        });
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+            playPromise.catch((err) => {
+                console.log('[Autoplay] Blocked:', err);
+                if (err.name === 'NotAllowedError') {
+                    videoElement.muted = true;
+                    setInternalMuted(true);
+                    console.log('[Autoplay] Retrying playing in muted mode...');
+                    videoElement.play().catch((err2) => console.error('[Autoplay] Muted play failed too:', err2));
+                }
+            });
+        }
     };
 
     // Pre-load dynamic player libraries once on mount to speed up stream loading/switching
@@ -138,7 +147,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
 
     const youtubeSrc = useMemo(() => {
         if (!isYoutube || !youtubeId) return '';
-        let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=${isMuted ? '1' : '0'}&playsinline=1&rel=0&showinfo=0`;
+        let url = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&controls=1&mute=${internalMuted ? '1' : '0'}&playsinline=1&rel=0&showinfo=0`;
 
         if (streamSyncVod && streamStartTime > 0) {
             const offset = Math.max(0, Math.floor((Date.now() - streamStartTime) / 1000));
@@ -148,7 +157,7 @@ export default function StreamPlayer({ currentChannel, streamStartTime, streamSy
 
         
 return url;
-    }, [isYoutube, youtubeId, streamStartTime, streamSyncVod, isMuted]);
+    }, [isYoutube, youtubeId, streamStartTime, streamSyncVod, internalMuted]);
 
     const handleVideoPlay = (e, hlsInstance) => {
         const video = e.target;
@@ -444,6 +453,7 @@ return;
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             if (currentChannel) {
                 video.src = currentChannel;
+                video.load();
                 const playOnMetadata = () => {
                     setTimeout(() => {
                         safePlay(video);
@@ -563,7 +573,7 @@ return;
                 controls
                 autoPlay
                 playsInline
-                muted={isMuted}
+                muted={internalMuted}
             ></video>
         );
     } else {
@@ -582,7 +592,7 @@ return;
                     controls
                     autoPlay
                     playsInline
-                    muted={isMuted}
+                    muted={internalMuted}
                     onPlay={(e) => handleVideoPlay(e, hlsRef.current)}
                 ></video>
                 {showCatchUp && !playError && (
