@@ -413,6 +413,8 @@
 @media (max-width: 1000px) {
     .wrapper {
         padding: 64px 0 0 0;
+        height: 100dvh; /* Use dynamic viewport height for mobile */
+        overflow: hidden; /* Prevent page-level scroll */
     }
 
     .navCenter {
@@ -422,20 +424,20 @@
     .layout {
         flex-direction: column;
         gap: 0;
+        height: calc(100dvh - 64px);
+        overflow: hidden;
     }
 
     .videoSection {
         width: 100%;
         padding: 0 !important;
+        flex: 0 0 auto;
     }
 
     .videoWrapper {
         border: none;
         box-shadow: none;
         border-radius: 0;
-        position: sticky;
-        top: 64px;
-        z-index: 100;
     }
 
     .metaData {
@@ -445,9 +447,8 @@
 
     .chatSection {
         width: 100%;
-        height: auto;
         flex: 1;
-        min-height: 380px;
+        min-height: 0;
         border-left: none;
         border-right: none;
         border-bottom: none;
