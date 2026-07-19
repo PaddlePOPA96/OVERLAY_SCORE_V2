@@ -384,10 +384,10 @@ return;
         if (Hls.isSupported()) {
             const hls = new Hls({
                 enableWorker: true,
-                lowLatencyMode: true,
+                // lowLatencyMode: true,
                 backBufferLength: 30,
-                liveSyncDurationCount: 2,
-                liveMaxLatencyDurationCount: 4,
+                // liveSyncDurationCount: 2,
+                // liveMaxLatencyDurationCount: 4,
                 maxBufferLength: 8,
                 maxMaxBufferLength: 12,
             });
