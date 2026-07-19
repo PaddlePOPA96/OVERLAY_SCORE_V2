@@ -134,6 +134,29 @@ export async function GET(request) {
                 }
             }
 
+            if (trimmedLine.startsWith('#EXT-X-')) {
+                const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                if (uriMatch) {
+                    const relativeUri = uriMatch[1];
+                    try {
+                        const absoluteUrl = new URL(relativeUri, decodedUrl).href;
+                        if (absoluteUrl.includes('.m3u8')) {
+                            const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
+                            const host = request.headers.get('host');
+                            const protocol = host.includes('localhost') ? 'http' : 'https';
+                            let proxyUrl = `${protocol}://${host}/api/stream.m3u8?u=${encodedAbsoluteUrl}`;
+                            if (decodedReferer) {
+                                proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
+                            }
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                        }
+                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${absoluteUrl}"`);
+                    } catch (e) {
+                        return line;
+                    }
+                }
+            }
+
             if (!trimmedLine || trimmedLine.startsWith('#')) {
                 return line;
             }

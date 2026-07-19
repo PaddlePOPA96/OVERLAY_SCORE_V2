@@ -124,6 +124,20 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
                     }
                 }
 
+                if (trimmedLine.startsWith('#EXT-X-')) {
+                    const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                    if (uriMatch) {
+                        const relativeUri = uriMatch[1];
+                        try {
+                            const absoluteUri = new URL(relativeUri, url).toString();
+                            const proxyUrl = `/api/proxy?url=${encodeURIComponent(absoluteUri)}&referer=${encodeURIComponent(referer)}`;
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                        } catch (e) {
+                            return line;
+                        }
+                    }
+                }
+
                 if (!trimmedLine || trimmedLine.startsWith('#')) return line;
                 
                 // It's a URL
