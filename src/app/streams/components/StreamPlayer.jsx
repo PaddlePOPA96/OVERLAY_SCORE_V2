@@ -456,9 +456,9 @@ return;
 
             hls.attachMedia(video);
             hlsRef.current = hls;
-
             if (currentChannel) {
-                hls.loadSource(currentChannel);
+                const separator = currentChannel.includes('?') ? '&' : '?';
+                hls.loadSource(`${currentChannel}${separator}nocache=${Date.now()}`);
             }
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             if (currentChannel) {
