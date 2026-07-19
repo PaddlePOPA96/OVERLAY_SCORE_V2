@@ -103,6 +103,21 @@ export async function GET(request) {
 
         const m3u8Text = await response.text();
 
+        const resolveUrl = (relative, base) => {
+            try {
+                const baseUrlObj = new URL(base);
+                const resolvedUrlObj = new URL(relative, base);
+                baseUrlObj.searchParams.forEach((val, key) => {
+                    if (!resolvedUrlObj.searchParams.has(key)) {
+                        resolvedUrlObj.searchParams.append(key, val);
+                    }
+                });
+                return resolvedUrlObj.href;
+            } catch (e) {
+                return new URL(relative, base).href;
+            }
+        };
+
         // Rewrite relative URLs to absolute URLs and inject codecs if missing
         const rewrittenLines = m3u8Text.split('\n').map(line => {
             const trimmedLine = line.trim();
@@ -115,11 +130,11 @@ export async function GET(request) {
             }
 
             if (trimmedLine.startsWith('#EXT-X-MEDIA:')) {
-                const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                const uriMatch = trimmedLine.match(/URI=(?:"([^"]+)"|([^",\s]+))/);
                 if (uriMatch) {
-                    const relativeUri = uriMatch[1];
+                    const relativeUri = uriMatch[1] || uriMatch[2];
                     try {
-                        const absoluteUri = new URL(relativeUri, decodedUrl).href;
+                        const absoluteUri = resolveUrl(relativeUri, decodedUrl);
                         const encodedAbsoluteUri = Buffer.from(absoluteUri).toString('base64');
                         const host = request.headers.get('host');
                         const protocol = host.includes('localhost') ? 'http' : 'https';
@@ -127,7 +142,7 @@ export async function GET(request) {
                         if (decodedReferer) {
                             proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
                         }
-                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`).replace(`URI=${relativeUri}`, `URI="${proxyUrl}"`);
                     } catch (e) {
                         return line;
                     }
@@ -135,11 +150,11 @@ export async function GET(request) {
             }
 
             if (trimmedLine.startsWith('#EXT-X-')) {
-                const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                const uriMatch = trimmedLine.match(/URI=(?:"([^"]+)"|([^",\s]+))/);
                 if (uriMatch) {
-                    const relativeUri = uriMatch[1];
+                    const relativeUri = uriMatch[1] || uriMatch[2];
                     try {
-                        const absoluteUrl = new URL(relativeUri, decodedUrl).href;
+                        const absoluteUrl = resolveUrl(relativeUri, decodedUrl);
                         if (absoluteUrl.includes('.m3u8')) {
                             const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
                             const host = request.headers.get('host');
@@ -148,9 +163,9 @@ export async function GET(request) {
                             if (decodedReferer) {
                                 proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
                             }
-                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`).replace(`URI=${relativeUri}`, `URI="${proxyUrl}"`);
                         }
-                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${absoluteUrl}"`);
+                        return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${absoluteUrl}"`).replace(`URI=${relativeUri}`, `URI="${absoluteUrl}"`);
                     } catch (e) {
                         return line;
                     }
@@ -162,7 +177,7 @@ export async function GET(request) {
             }
 
             try {
-                const absoluteUrl = new URL(trimmedLine, decodedUrl).href;
+                const absoluteUrl = resolveUrl(trimmedLine, decodedUrl);
 
                 if (absoluteUrl.includes('.m3u8')) {
                     const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
@@ -173,7 +188,6 @@ export async function GET(request) {
                     if (decodedReferer) {
                         proxyUrl += `&r=${Buffer.from(decodedReferer).toString('base64')}`;
                     }
-
 
                     return proxyUrl;
                 }

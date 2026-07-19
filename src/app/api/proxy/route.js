@@ -93,6 +93,21 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
 
         const contentType = response.headers.get('content-type') || '';
         
+        const resolveUrl = (relative, base) => {
+            try {
+                const baseUrlObj = new URL(base);
+                const resolvedUrlObj = new URL(relative, base);
+                baseUrlObj.searchParams.forEach((val, key) => {
+                    if (!resolvedUrlObj.searchParams.has(key)) {
+                        resolvedUrlObj.searchParams.append(key, val);
+                    }
+                });
+                return resolvedUrlObj.href;
+            } catch (e) {
+                return new URL(relative, base).href;
+            }
+        };
+
         // If it's an m3u8 playlist, we need to rewrite the URLs inside it so they also go through our proxy
         if (contentType.includes('application/vnd.apple.mpegurl') || contentType.includes('application/x-mpegURL') || url.includes('.m3u8')) {
             let text = await response.text();
@@ -111,13 +126,13 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
                 }
 
                 if (trimmedLine.startsWith('#EXT-X-MEDIA:')) {
-                    const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                    const uriMatch = trimmedLine.match(/URI=(?:"([^"]+)"|([^",\s]+))/);
                     if (uriMatch) {
-                        const relativeUri = uriMatch[1];
+                        const relativeUri = uriMatch[1] || uriMatch[2];
                         try {
-                            const absoluteUri = new URL(relativeUri, url).toString();
+                            const absoluteUri = resolveUrl(relativeUri, url);
                             const proxyUrl = `/api/proxy?url=${encodeURIComponent(absoluteUri)}&referer=${encodeURIComponent(referer)}`;
-                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`).replace(`URI=${relativeUri}`, `URI="${proxyUrl}"`);
                         } catch (e) {
                             return line;
                         }
@@ -125,13 +140,13 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
                 }
 
                 if (trimmedLine.startsWith('#EXT-X-')) {
-                    const uriMatch = trimmedLine.match(/URI="([^"]+)"/);
+                    const uriMatch = trimmedLine.match(/URI=(?:"([^"]+)"|([^",\s]+))/);
                     if (uriMatch) {
-                        const relativeUri = uriMatch[1];
+                        const relativeUri = uriMatch[1] || uriMatch[2];
                         try {
-                            const absoluteUri = new URL(relativeUri, url).toString();
+                            const absoluteUri = resolveUrl(relativeUri, url);
                             const proxyUrl = `/api/proxy?url=${encodeURIComponent(absoluteUri)}&referer=${encodeURIComponent(referer)}`;
-                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`);
+                            return trimmedLine.replace(`URI="${relativeUri}"`, `URI="${proxyUrl}"`).replace(`URI=${relativeUri}`, `URI="${proxyUrl}"`);
                         } catch (e) {
                             return line;
                         }
@@ -143,7 +158,7 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
                 // It's a URL
                 try {
                     // Resolve relative URL against the base URL
-                    const absoluteUrl = new URL(trimmedLine, url).toString();
+                    const absoluteUrl = resolveUrl(trimmedLine, url);
 
 
                     // Point back to our proxy
