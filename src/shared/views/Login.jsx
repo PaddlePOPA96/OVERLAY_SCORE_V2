@@ -123,9 +123,16 @@ const Login = ({ mode }) => {
     setLoading(true)
 
     try {
-      const user = await loginWithGooglePopup()
+      const { user, isNewUser } = await loginWithGooglePopup()
 
-      handleAuthSuccess(user)
+      if (isNewUser) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('showNewUserGuide', 'true')
+        }
+        handleAuthSuccess(user)
+      } else {
+        handleAuthSuccess(user)
+      }
     } catch (error) {
       if (error?.message?.includes('Akses ditolak')) {
         setErrorPopup({

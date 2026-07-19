@@ -91,16 +91,10 @@ export async function registerWithEmailPassword(email, password, passcode) {
 export async function loginWithGooglePopup() {
   const cred = await signInWithPopup(auth, googleProvider)
   const additionalInfo = getAdditionalUserInfo(cred)
-
-  if (additionalInfo?.isNewUser) {
-    // Delete the newly created user from Firebase Auth
-    await deleteUser(cred.user)
-    throw new Error('Akses ditolak: Akun Google ini belum terdaftar oleh Admin. Silakan hubungi Admin untuk mendaftarkan email Anda terlebih dahulu.')
-  }
-
+  
   await logLoginEvent(cred.user, 'google_popup')
   
-  return cred.user
+  return { user: cred.user, isNewUser: additionalInfo?.isNewUser || false }
 }
 
 async function logLoginEvent(user, method) {
@@ -306,5 +300,37 @@ export async function updateRolePermissions(roleName, newPermissions) {
     await set(ref(db, `ucl_data/settings/roles_permissions/${roleName}`), newPermissions)
   } catch (err) {
     console.error('Failed to update role permissions in Realtime Database:', err)
+  }
+}
+
+export async function changeUserPasscode(uid, oldPasscode, newPasscode) {
+  if (newPasscode.length !== 4 || isNaN(newPasscode)) {
+    throw new Error('PIN baru harus berupa 4 angka.')
+  }
+
+  const userRef = doc(dbFirestore, 'users', uid)
+  const userSnap = await getDoc(userRef)
+
+  if (!userSnap.exists()) {
+    throw new Error('Data pengguna tidak ditemukan.')
+  }
+
+  const hashedOldPasscode = await hashPasscode(oldPasscode)
+  const currentPasscode = userSnap.data().passcode
+
+  if (currentPasscode !== hashedOldPasscode) {
+    throw new Error('PIN lama yang Anda masukkan salah.')
+  }
+
+  const hashedNewPasscode = await hashPasscode(newPasscode)
+
+  // Update in Firestore
+  await updateDoc(userRef, { passcode: hashedNewPasscode })
+
+  // Update in RTDB
+  try {
+    await set(ref(db, `users/${uid}/passcode`), hashedNewPasscode)
+  } catch (err) {
+    console.error('Failed to update passcode in RTDB:', err)
   }
 }

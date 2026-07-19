@@ -19,6 +19,7 @@ import Button from '@mui/material/Button'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 
 import { auth } from '@/services/firebase/auth'
+import MyProfileModal from './MyProfileModal'
 
 const BadgeContentSpan = styled('span')({
   width: 8,
@@ -34,16 +35,32 @@ const ADMIN_EMAIL = 'admin@admin.com'
 const UserDropdown = () => {
   const [open, setOpen] = useState(false)
   const [user, setUser] = useState(null)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
   const anchorRef = useRef(null)
   const router = useRouter()
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const guide = localStorage.getItem('showNewUserGuide')
+      if (guide === 'true') {
+        setShowGuide(true)
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser)
     })
 
     return () => unsubscribe()
   }, [])
+
+  const closeGuide = () => {
+    setShowGuide(false)
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('showNewUserGuide')
+    }
+  }
 
   const handleDropdownOpen = () => {
     setOpen(prev => !prev)
@@ -120,7 +137,10 @@ const UserDropdown = () => {
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/operator')}>
+                  <MenuItem className='gap-3' onClick={e => {
+                    setProfileModalOpen(true)
+                    setOpen(false)
+                  }}>
                     <i className='ri-user-3-line' />
                     <Typography color='text.primary'>My Profile</Typography>
                   </MenuItem>
@@ -150,6 +170,35 @@ const UserDropdown = () => {
           </Fade>
         )}
       </Popper>
+
+      <MyProfileModal 
+        open={profileModalOpen} 
+        onClose={() => setProfileModalOpen(false)} 
+        user={user} 
+        userRole={userRole}
+      />
+
+      {showGuide && (
+        <div className="absolute top-[60px] right-[20px] z-[9999] w-[320px] bg-[#00ffff] border-4 border-black shadow-[6px_6px_0_0_rgba(0,0,0,1)] p-4 flex flex-col gap-3">
+          {/* Arrow pointing UP */}
+          <div className="absolute -top-[18px] right-[10px] w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[18px] border-b-black"></div>
+          <div className="absolute -top-[12px] right-[10px] w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[18px] border-b-[#00ffff]"></div>
+          
+          <div className="flex justify-between items-start border-b-4 border-black pb-2">
+            <h3 className="font-black uppercase tracking-wider text-black text-sm m-0 flex items-center gap-2">
+              <i className="ri-error-warning-fill text-xl text-[#ff3366]"></i> Info Penting!
+            </h3>
+            <button onClick={closeGuide} className="bg-white border-2 border-black w-7 h-7 flex items-center justify-center hover:bg-[#ff3366] hover:text-white transition-colors shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">
+              <i className="ri-close-line font-bold"></i>
+            </button>
+          </div>
+          <p className="text-xs font-bold text-black leading-relaxed m-0 uppercase tracking-wide">
+            PIN bawaan Anda adalah <span className="bg-[#ff3366] text-white px-2 py-1 mx-1 border-2 border-black text-sm">1234</span>
+            <br/><br/>
+            Klik ikon profil di atas, lalu pilih menu <span className="bg-[#ccff00] px-1 border-2 border-black underline decoration-2">My Profile</span> untuk menggantinya sekarang!
+          </p>
+        </div>
+      )}
     </>
   )
 }
