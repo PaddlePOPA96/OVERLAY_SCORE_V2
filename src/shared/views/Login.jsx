@@ -39,6 +39,7 @@ const Login = ({ mode }) => {
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [googleCooldown, setGoogleCooldown] = useState(false)
   const [status, setStatus] = useState({ type: '', message: '' })
   const [errorPopup, setErrorPopup] = useState({ open: false, title: '', message: '' })
 
@@ -115,12 +116,22 @@ const Login = ({ mode }) => {
         type: 'error',
         message: 'Google login is disabled. Please sign in using your admin-registered email & password.'
       })
+      return
+    }
 
+    if (googleCooldown) {
+      setStatus({ type: 'error', message: 'Mohon tunggu beberapa saat sebelum mencoba login kembali.' })
       return
     }
 
     setStatus({ type: '', message: '' })
     setLoading(true)
+
+    // Set 5 seconds cooldown to prevent spam
+    setGoogleCooldown(true)
+    setTimeout(() => {
+      setGoogleCooldown(false)
+    }, 3600000)
 
     try {
       const { user, isNewUser } = await loginWithGooglePopup()
@@ -253,15 +264,15 @@ const Login = ({ mode }) => {
                 </Typography>
               </div>
             </form>
-            
+
             <Divider className='text-sm text-slate-400'>or</Divider>
-            
+
             <Button
               fullWidth
               variant='outlined'
               size='large'
               onClick={handleGoogleLogin}
-              disabled={loading}
+              disabled={loading || googleCooldown}
               className='text-slate-700 bg-white border-slate-300 hover:bg-slate-50'
               startIcon={
                 <img
