@@ -1,25 +1,15 @@
 'use client'
 
-// MUI Imports
-import { useTheme } from '@mui/material/styles'
-
-// Third-party Imports
 import classnames from 'classnames'
 
 const DirectionalIcon = props => {
-  // Props
   const { ltrIconClass, rtlIconClass, className } = props
 
-  // Hooks
-  const theme = useTheme()
-
+  // Assuming LTR by default without MUI theme
   return (
     <i
       className={classnames(
-        {
-          [ltrIconClass]: theme.direction === 'ltr',
-          [rtlIconClass]: theme.direction === 'rtl'
-        },
+        ltrIconClass,
         className
       )}
     />

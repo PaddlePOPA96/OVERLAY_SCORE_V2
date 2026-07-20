@@ -1,14 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-
-import { useColorScheme } from '@mui/material/styles'
-
-import Button from '@mui/material/Button'
-
-import ButtonGroup from '@mui/material/ButtonGroup'
-
-import Grid from '@mui/material/Grid'
+import Button from '@/components/ui/Button'
 
 import {
   useChampionsLeagueMatches,
@@ -21,11 +14,8 @@ import { ChampionsLeagueBracket } from '@/features/champions-league/components/C
 import { usePremierLeagueMatches, usePremierLeagueNews } from '@/features/premier-league/hooks/usePremierLeagueData'
 import { PremierLeagueRight } from '@/features/premier-league/components/PremierLeagueSidebar'
 
-// MUI Imports
-
 export default function UCLTablePage() {
-  const { mode } = useColorScheme()
-  const isDark = mode === 'dark'
+  const isDark = false // Neobrutalism default
 
   const { uclMatches, loadingUclMatches, reloadUclMatches } = useChampionsLeagueMatches()
   const { uclStandings, loadingUclStandings, reloadUclStandings } = useChampionsLeagueStandings()
@@ -51,65 +41,55 @@ export default function UCLTablePage() {
 
   return (
     <div className='p-4 w-full'>
-      <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+      <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-black pb-4'>
         <div>
-          <h1 className='text-2xl font-bold text-textPrimary'>UEFA Champions League</h1>
-          <p className='text-textSecondary text-sm'>
+          <h1 className='text-4xl font-black uppercase tracking-wider text-black'>UEFA Champions League</h1>
+          <p className='text-slate-700 font-bold mt-2'>
             View Champions League tables, schedules, results, and bracket stages.
           </p>
         </div>
-        <div className='flex gap-2 items-center'>
-          <ButtonGroup variant='outlined' size='small' aria-label='UCL Display Mode'>
-            <Button
+        <div className='flex flex-wrap gap-2 items-center'>
+          <div className='flex bg-white border-2 border-black'>
+            <button
               onClick={() => setUclMode('matches')}
-              variant={uclMode === 'matches' ? 'contained' : 'outlined'}
-              className='normal-case font-semibold text-xs'
+              className={`px-4 py-2 font-bold uppercase text-xs border-r-2 border-black transition-colors ${uclMode === 'matches' ? 'bg-[#00ffff]' : 'hover:bg-slate-100'}`}
             >
               Schedules &amp; Results
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => setUclMode('table')}
-              variant={uclMode === 'table' ? 'contained' : 'outlined'}
-              className='normal-case font-semibold text-xs'
+              className={`px-4 py-2 font-bold uppercase text-xs border-r-2 border-black transition-colors ${uclMode === 'table' ? 'bg-[#00ffff]' : 'hover:bg-slate-100'}`}
             >
               UCL Table
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => setUclMode('bracket')}
-              variant={uclMode === 'bracket' ? 'contained' : 'outlined'}
-              className='normal-case font-semibold text-xs'
+              className={`px-4 py-2 font-bold uppercase text-xs transition-colors ${uclMode === 'bracket' ? 'bg-[#00ffff]' : 'hover:bg-slate-100'}`}
             >
               Playoffs Bracket
-            </Button>
-          </ButtonGroup>
+            </button>
+          </div>
           <Button
             onClick={() => setShowSidebar(!showSidebar)}
-            variant='outlined'
-            color='primary'
-            size='small'
-            className='normal-case font-semibold text-xs'
+            variant='outline'
+            className='bg-white'
           >
             {showSidebar ? '📋 Hide Sidebar' : '📋 Show Sidebar'}
           </Button>
           <Button
             onClick={handleRefresh}
-            variant='text'
-            color='secondary'
-            size='small'
-            className='normal-case font-semibold text-xs'
+            variant='outline'
+            className='bg-[#ccff00]'
           >
             🔄 Refresh
           </Button>
         </div>
       </header>
 
-      <Grid container spacing={6}>
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Column: UCL content */}
-        <Grid item xs={12} lg={showSidebar ? 8 : 12}>
-          <div
-            style={{ background: 'var(--mui-palette-background-paper)' }}
-            className='border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full'
-          >
+        <div className={`w-full ${showSidebar ? 'lg:w-2/3' : 'lg:w-full'}`}>
+          <div className='bg-white border-4 border-black rounded-none p-4 md:p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)] w-full h-full'>
             {uclMode === 'matches' ? (
               <ChampionsLeagueMatches
                 matches={uclMatches}
@@ -136,15 +116,12 @@ export default function UCLTablePage() {
               />
             )}
           </div>
-        </Grid>
+        </div>
 
         {/* Right Column: Shared News & Live Matches */}
         {showSidebar && (
-          <Grid item xs={12} lg={4}>
-            <div
-              style={{ background: 'var(--mui-palette-background-paper)' }}
-              className='border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6'
-            >
+          <div className="w-full lg:w-1/3">
+            <div className='bg-white border-4 border-black rounded-none p-5 shadow-[8px_8px_0_0_rgba(0,0,0,1)] w-full h-full flex flex-col gap-6'>
               <PremierLeagueRight
                 matches={plMatches}
                 loading={loadingPlMatches}
@@ -153,9 +130,9 @@ export default function UCLTablePage() {
                 theme={isDark ? 'dark' : 'light'}
               />
             </div>
-          </Grid>
+          </div>
         )}
-      </Grid>
+      </div>
     </div>
   )
 }

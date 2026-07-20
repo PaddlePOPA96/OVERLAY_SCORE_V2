@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ref, onValue, set } from 'firebase/database'
 import { db } from '@/services/firebase/db'
+import Select from '@/components/ui/Select'
 
 export default function CamlinkControls({ roomId, theme = 'dark' }) {
   const [layout, setLayout] = useState('single')
@@ -72,21 +73,19 @@ export default function CamlinkControls({ roomId, theme = 'dark' }) {
           {/* General Config */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '700', color: labelColor }}>Layout Mode</label>
-              <select
-                className='op-input'
-                value={layout}
-                onChange={e => setLayout(e.target.value)}
-                style={{ width: '100%', height: '40px', padding: '0 10px', background: isLight ? '#ffffff' : '#090d16', border: `2px solid #000`, borderRadius: '8px', color: isLight ? '#0f172a' : '#fff', fontSize: '13px', fontWeight: 'bold' }}
-              >
-                <option value='single'>1 Cam (Single)</option>
-                <option value='dual'>2 Cam (Dual)</option>
-                <option value='triple'>3 Cam (Triple)</option>
-                <option value='quad'>4 Cam (Quad)</option>
-                <option value='chat'>1 Cam + Live Chat</option>
-              </select>
-            </div>
+            <Select
+              label='Layout Mode'
+              value={layout}
+              onChange={e => setLayout(e.target.value)}
+              options={[
+                { value: 'single', label: '1 Cam (Single)' },
+                { value: 'dual', label: '2 Cam (Dual)' },
+                { value: 'triple', label: '3 Cam (Triple)' },
+                { value: 'quad', label: '4 Cam (Quad)' },
+                { value: 'chat', label: '1 Cam + Live Chat' }
+              ]}
+              fullWidth
+            />
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <label style={{ fontSize: '12px', fontWeight: '700', color: labelColor }}>Header Title / Tournament Name</label>

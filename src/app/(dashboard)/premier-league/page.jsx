@@ -1,12 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-
-import { useColorScheme } from '@mui/material/styles'
-
-import Button from '@mui/material/Button'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import Grid from '@mui/material/Grid'
+import Button from '@/components/ui/Button'
 
 import {
   usePremierLeagueMatches,
@@ -18,8 +13,7 @@ import { PremierLeagueRight } from '@/features/premier-league/components/Premier
 import { useAuth } from '@/shared/components/providers/AuthContext'
 
 export default function PremierLeaguePage() {
-  const { mode } = useColorScheme()
-  const isDark = mode === 'dark'
+  const isDark = false // Neobrutalism default
   const { user, loading: loadingAuth } = useAuth()
 
   const { matches, loadingMatches, reloadMatches } = usePremierLeagueMatches()
@@ -36,18 +30,18 @@ export default function PremierLeaguePage() {
   }
 
   if (loadingAuth) {
-    return <div className='p-6 text-textSecondary text-sm'>Loading Premier League Dashboard...</div>
+    return <div className='p-6 text-slate-500 font-bold text-sm'>Loading Premier League Dashboard...</div>
   }
 
   if (!user) {
     return (
       <div className='p-4 w-full'>
-        <div className='p-6 bg-amber-500/10 border border-amber-500/20 rounded-xl text-amber-600 mb-6 max-w-2xl'>
-          <h3 className='font-semibold mb-2 text-lg'>Access Restricted</h3>
-          <p className='text-sm mb-4'>You must be logged in to use the Premier League Dashboard.</p>
-          <Button variant='contained' href='/login' color='warning' className='normal-case shadow-none font-bold'>
-            Go to Login Page
-          </Button>
+        <div className='p-6 bg-[#ffcc00] border-4 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] mb-6 max-w-2xl'>
+          <h3 className='font-black uppercase tracking-wider mb-2 text-2xl'>Access Restricted</h3>
+          <p className='text-sm mb-4 font-bold'>You must be logged in to use the Premier League Dashboard.</p>
+          <a href="/login">
+            <Button variant='primary'>Go to Login Page</Button>
+          </a>
         </div>
       </div>
     )
@@ -55,56 +49,47 @@ export default function PremierLeaguePage() {
 
   return (
     <div className='p-4 w-full'>
-      <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+      <header className='mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-black pb-4'>
         <div>
-          <h1 className='text-2xl font-bold text-textPrimary'>Premier League</h1>
-          <p className='text-textSecondary text-sm'>View schedules, scores, standings, and update soccer results.</p>
+          <h1 className='text-4xl font-black uppercase tracking-wider text-black'>Premier League</h1>
+          <p className='text-slate-700 font-bold mt-2'>View schedules, scores, standings, and update soccer results.</p>
         </div>
-        <div className='flex gap-2 items-center'>
-          <ButtonGroup variant='outlined' size='small' aria-label='Premier League Display Mode'>
-            <Button
+        <div className='flex flex-wrap gap-2 items-center'>
+          <div className='flex bg-white border-2 border-black'>
+            <button
               onClick={() => setPlMode('matches')}
-              variant={plMode === 'matches' ? 'contained' : 'outlined'}
-              className='normal-case font-semibold text-xs'
+              className={`px-4 py-2 font-bold uppercase text-xs border-r-2 border-black transition-colors ${plMode === 'matches' ? 'bg-[#00ffff]' : 'hover:bg-slate-100'}`}
             >
               Schedules &amp; Results
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => setPlMode('table')}
-              variant={plMode === 'table' ? 'contained' : 'outlined'}
-              className='normal-case font-semibold text-xs'
+              className={`px-4 py-2 font-bold uppercase text-xs transition-colors ${plMode === 'table' ? 'bg-[#00ffff]' : 'hover:bg-slate-100'}`}
             >
               Standings Table
-            </Button>
-          </ButtonGroup>
+            </button>
+          </div>
           <Button
             onClick={() => setShowSidebar(!showSidebar)}
-            variant='outlined'
-            color='primary'
-            size='small'
-            className='normal-case font-semibold text-xs'
+            variant='outline'
+            className='bg-white'
           >
             {showSidebar ? '📋 Hide Sidebar' : '📋 Show Sidebar'}
           </Button>
           <Button
             onClick={handleRefresh}
-            variant='text'
-            color='secondary'
-            size='small'
-            className='normal-case font-semibold text-xs'
+            variant='outline'
+            className='bg-[#ccff00]'
           >
             🔄 Refresh
           </Button>
         </div>
       </header>
 
-      <Grid container spacing={6}>
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Column: Matches or Table */}
-        <Grid item xs={12} lg={showSidebar ? 8 : 12}>
-          <div
-            style={{ background: 'var(--mui-palette-background-paper)' }}
-            className='border border-slate-700/10 rounded-xl p-4 md:p-6 shadow-sm w-full h-full'
-          >
+        <div className={`w-full ${showSidebar ? 'lg:w-2/3' : 'lg:w-full'}`}>
+          <div className='bg-white border-4 border-black rounded-none p-4 md:p-6 shadow-[8px_8px_0_0_rgba(0,0,0,1)] w-full h-full'>
             <PremierLeagueMain
               matches={matches}
               loading={loadingMatches}
@@ -117,15 +102,12 @@ export default function PremierLeaguePage() {
               onRefreshMatches={reloadMatches}
             />
           </div>
-        </Grid>
+        </div>
 
         {/* Right Column: Latest News & Live Match */}
         {showSidebar && (
-          <Grid item xs={12} lg={4}>
-            <div
-              style={{ background: 'var(--mui-palette-background-paper)' }}
-              className='border border-slate-700/10 rounded-xl p-5 shadow-sm w-full h-full flex flex-col gap-6'
-            >
+          <div className="w-full lg:w-1/3">
+            <div className='bg-white border-4 border-black rounded-none p-5 shadow-[8px_8px_0_0_rgba(0,0,0,1)] w-full h-full flex flex-col gap-6'>
               <PremierLeagueRight
                 matches={matches}
                 loading={loadingMatches}
@@ -134,9 +116,9 @@ export default function PremierLeaguePage() {
                 theme={isDark ? 'dark' : 'light'}
               />
             </div>
-          </Grid>
+          </div>
         )}
-      </Grid>
+      </div>
     </div>
   )
 }

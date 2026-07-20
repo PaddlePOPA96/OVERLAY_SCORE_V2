@@ -1,17 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
 import { ref, onValue, update, get } from 'firebase/database'
 
-
-import Button from '@mui/material/Button'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-
+import Button from '@/components/ui/Button'
+import Card from '@/components/ui/Card';
+import Select from '@/components/ui/Select';
 import { db } from '@/services/firebase/index'
 import playerData from '@/data/fix-playerpildun32.json'
 
@@ -92,23 +86,19 @@ const formationPositions = {
 
 const availableFormations = Object.keys(formationPositions);
 
-// Helper to remove any undefined properties from object payloads before sending to Firebase
 const cleanPayload = (obj) => JSON.parse(JSON.stringify(obj));
 
-export default function FormationOverlayControl({ theme = 'dark', roomId = 'default' }) {
-  const isDark = theme === 'dark';
+export default function FormationOverlayControl({ theme = 'light', roomId = 'default' }) {
   const overlayPath = `match_live/${roomId}/formation_overlay`;
 
-  const [activeTab, setActiveTab] = useState('home'); // 'home' or 'away'
+  const [activeTab, setActiveTab] = useState('home');
 
-  // Home Team State
   const [homeTeam, setHomeTeam] = useState('Belanda');
   const [homeFormation, setHomeFormation] = useState('3-4-1-2');
   const [homePlayers, setHomePlayers] = useState([]);
   const [homeSubstitutes, setHomeSubstitutes] = useState([]);
   const [homeTeamInfo, setHomeTeamInfo] = useState({});
 
-  // Away Team State
   const [awayTeam, setAwayTeam] = useState('Argentina');
   const [awayFormation, setAwayFormation] = useState('4-3-3');
   const [awayPlayers, setAwayPlayers] = useState([]);
@@ -119,27 +109,19 @@ export default function FormationOverlayControl({ theme = 'dark', roomId = 'defa
   const [remoteState, setRemoteState] = useState(null);
   const [hostUrl, setHostUrl] = useState('');
 
-  // Helper function to load data for a specific team
   const loadTeamData = async (teamName) => {
     let team = playerData.find(t => t.negara === teamName);
-
     if (!team) team = playerData[0];
 
     try {
       const snapshot = await get(ref(db, `match_live/global_formation_presets/${teamName}`));
-
       if (snapshot.exists()) {
         const data = snapshot.val();
-        
-        // Update photo from local json just in case it has changed
         const localTeamData = playerData.find(t => t.negara === teamName);
-
         const updatePhoto = (player) => {
           if (!localTeamData || !player) return player;
           const freshPlayer = localTeamData.pemain.find(p => p.nama_pemain === player.nama_pemain);
-
-          
-return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
+          return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
         };
 
         const updatedPlayers = (data.players || []).map(updatePhoto);
@@ -162,7 +144,6 @@ return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
       console.warn('Could not load preset from Firebase:', error);
     }
 
-    // Fallback to default presets
     const defaultForm = formationMap[team.negara] || '4-3-3';
     const initialPositions = formationPositions[defaultForm] || formationPositions["4-3-3"];
     const teamPlayers = team.pemain || [];
@@ -195,7 +176,6 @@ return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
     };
   };
 
-  // On mount, load initial states for both home and away
   useEffect(() => {
     const initData = async () => {
       const savedHomeTeam = localStorage.getItem('lastFormationTeam_home') || 'Belanda';
@@ -205,14 +185,12 @@ return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
       setAwayTeam(savedAwayTeam);
 
       const homeRes = await loadTeamData(savedHomeTeam);
-
       setHomeTeamInfo(homeRes.teamInfo);
       setHomePlayers(homeRes.players);
       setHomeSubstitutes(homeRes.substitutes);
       setHomeFormation(homeRes.formation);
 
       const awayRes = await loadTeamData(savedAwayTeam);
-
       setAwayTeamInfo(awayRes.teamInfo);
       setAwayPlayers(awayRes.players);
       setAwaySubstitutes(awayRes.substitutes);
@@ -222,14 +200,11 @@ return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
     initData();
   }, []);
 
-  // Fetch Firebase state to show visibility status
   useEffect(() => {
     if (!roomId) return;
     const dbRef = ref(db, overlayPath);
-
     const unsubscribe = onValue(dbRef, snapshot => {
       const data = snapshot.val();
-
       if (data) {
         setIsVisible(data.isVisible || false);
         setRemoteState(data);
@@ -242,12 +217,9 @@ return freshPlayer ? { ...player, link_foto: freshPlayer.link_foto } : player;
     if (typeof window !== 'undefined') {
       setHostUrl(window.location.origin);
     }
-
-    
-return () => unsubscribe();
+    return () => unsubscribe();
   }, [roomId, overlayPath]);
 
-  // Aliases for currently active tab elements
   const selectedTeam = activeTab === 'home' ? homeTeam : awayTeam;
   const selectedFormation = activeTab === 'home' ? homeFormation : awayFormation;
   const players = activeTab === 'home' ? homePlayers : awayPlayers;
@@ -258,10 +230,8 @@ return () => unsubscribe();
   const setSubstitutes = activeTab === 'home' ? setHomeSubstitutes : setAwaySubstitutes;
   const setTeamInfo = activeTab === 'home' ? setHomeTeamInfo : setAwayTeamInfo;
 
-  // Handlers for active tab edits
   const handleTeamChange = async (newTeam) => {
     const res = await loadTeamData(newTeam);
-
     if (activeTab === 'home') {
       setHomeTeam(newTeam);
       setHomeFormation(res.formation);
@@ -281,7 +251,6 @@ return () => unsubscribe();
 
   const handleFormationChange = (newFormation) => {
     const newPositions = formationPositions[newFormation];
-
     if (!newPositions) return;
 
     if (activeTab === 'home') {
@@ -303,15 +272,12 @@ return () => unsubscribe();
     }
   };
 
-  // Firebase update controls
   const handleShowHome = () => {
     update(ref(db, overlayPath), cleanPayload({
       isVisible: true,
       mode: 'home',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes },
-
-      // Keep root data for backward compatibility
       teamInfo: homeTeamInfo,
       players: homePlayers,
       substitutes: homeSubstitutes
@@ -324,8 +290,6 @@ return () => unsubscribe();
       mode: 'away',
       home: { teamInfo: homeTeamInfo, players: homePlayers, substitutes: homeSubstitutes },
       away: { teamInfo: awayTeamInfo, players: awayPlayers, substitutes: awaySubstitutes },
-
-      // Keep root data for backward compatibility
       teamInfo: awayTeamInfo,
       players: awayPlayers,
       substitutes: awaySubstitutes
@@ -343,7 +307,6 @@ return () => unsubscribe();
 
   const handleUpdateOverlay = () => {
     const currentMode = remoteState?.mode || 'home';
-
     const payload = {
       isVisible: true,
       mode: currentMode,
@@ -380,7 +343,6 @@ return () => unsubscribe();
       });
   };
 
-  // Drag and drop mechanics (works transparently based on aliased players/substitutes)
   const handleDragStart = (e, playerId, type) => {
     e.dataTransfer.setData('playerId', playerId);
     e.dataTransfer.setData('type', type);
@@ -398,7 +360,6 @@ return () => unsubscribe();
   const syncFirebase = (updatedPlayers, updatedSubstitutes) => {
     if (!isVisible) return;
     const currentMode = remoteState?.mode || 'home';
-
     const payload = {
       isVisible: true,
       mode: currentMode,
@@ -446,7 +407,6 @@ return () => unsubscribe();
       if (draggedType === 'player' && !newPlayers[draggedIndex].isEmpty) {
         const playerObj = newPlayers[draggedIndex];
         const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
-
         newSubstitutes.push(newSub);
         newPlayers[draggedIndex] = {
           id: `slot-${Date.now()}`,
@@ -456,16 +416,13 @@ return () => unsubscribe();
           type: 'player'
         };
       }
-
       setPlayers(newPlayers);
       setSubstitutes(newSubstitutes);
       syncFirebase(newPlayers, newSubstitutes);
-      
-return;
+      return;
     }
 
     const targetIndex = getPlayerIndex(targetPlayerId, targetType);
-
     if (targetIndex === -1) return;
 
     if (draggedType === 'player' && targetType === 'player') {
@@ -473,7 +430,6 @@ return;
       const p2 = newPlayers[targetIndex];
       const tempTop = p1.styleTop;
       const tempLeft = p1.styleLeft;
-
       p1.styleTop = p2.styleTop;
       p1.styleLeft = p2.styleLeft;
       p2.styleTop = tempTop;
@@ -482,29 +438,23 @@ return;
       const subObj = newSubstitutes[draggedIndex];
       const playerObj = newPlayers[targetIndex];
       const newPlayer = { ...subObj, styleTop: playerObj.styleTop, styleLeft: playerObj.styleLeft, type: 'player', id: `player-${Date.now()}` };
-
       if (playerObj.isEmpty) {
         newSubstitutes.splice(draggedIndex, 1);
       } else {
         const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
-
         newSubstitutes[draggedIndex] = newSub;
       }
-
       newPlayers[targetIndex] = newPlayer;
     } else if (draggedType === 'player' && targetType === 'sub') {
       const playerObj = newPlayers[draggedIndex];
       const subObj = newSubstitutes[targetIndex];
-
       if (playerObj.isEmpty) return;
       const newPlayer = { ...subObj, styleTop: playerObj.styleTop, styleLeft: playerObj.styleLeft, type: 'player', id: `player-${Date.now()}` };
       const newSub = { ...playerObj, styleTop: undefined, styleLeft: undefined, type: 'sub', id: `sub-${Date.now()}` };
-
       newPlayers[draggedIndex] = newPlayer;
       newSubstitutes[targetIndex] = newSub;
     } else if (draggedType === 'sub' && targetType === 'sub') {
       const temp = newSubstitutes[draggedIndex];
-
       newSubstitutes[draggedIndex] = newSubstitutes[targetIndex];
       newSubstitutes[targetIndex] = temp;
     }
@@ -533,9 +483,7 @@ return;
       if (p.id === draggedPlayerId) {
         return { ...p, styleTop, styleLeft };
       }
-
-      
-return p;
+      return p;
     });
 
     setPlayers(updatedPlayers);
@@ -543,15 +491,14 @@ return p;
   };
 
   return (
-    <div className={`p-6 rounded-lg ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-black'} shadow-lg border border-gray-700`}>
+    <div className="p-6 bg-white border-4 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] w-full">
       <style dangerouslySetInnerHTML={{
         __html: `
           .op-pitch-container {
-            background-color: transparent;
+            background-color: #87e074;
             position: relative;
             overflow: hidden;
-            border: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'};
-            border-radius: 4px;
+            border: 4px solid #000;
             width: 100%;
             height: 600px;
           }
@@ -561,7 +508,7 @@ return p;
             left: 50%;
             width: 150px;
             height: 150px;
-            border: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'};
+            border: 4px solid #000;
             border-radius: 50%;
             transform: translate(-50%, -50%);
           }
@@ -571,7 +518,7 @@ return p;
             left: 50%;
             width: 50%;
             height: 18%;
-            border: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'};
+            border: 4px solid #000;
             border-bottom: none;
             transform: translateX(-50%);
           }
@@ -581,7 +528,7 @@ return p;
             left: 50%;
             width: 20%;
             height: 6%;
-            border: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'};
+            border: 4px solid #000;
             border-bottom: none;
             transform: translateX(-50%);
           }
@@ -591,13 +538,13 @@ return p;
             left: 50%;
             width: 100px;
             height: 50px;
-            border: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'};
+            border: 4px solid #000;
             border-bottom: none;
             border-radius: 100px 100px 0 0;
             transform: translateX(-50%);
           }
-          .op-corner-bl { position: absolute; bottom: 0; left: 0; width: 30px; height: 30px; border-right: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'}; border-top: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'}; border-radius: 0 100% 0 0; }
-          .op-corner-br { position: absolute; bottom: 0; right: 0; width: 30px; height: 30px; border-left: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'}; border-top: 3px solid ${isDark ? '#4a4a4a' : '#1a1a1a'}; border-radius: 100% 0 0 0; }
+          .op-corner-bl { position: absolute; bottom: 0; left: 0; width: 30px; height: 30px; border-right: 4px solid #000; border-top: 4px solid #000; border-radius: 0 100% 0 0; }
+          .op-corner-br { position: absolute; bottom: 0; right: 0; width: 30px; height: 30px; border-left: 4px solid #000; border-top: 4px solid #000; border-radius: 100% 0 0 0; }
           .op-player-card {
             position: absolute;
             width: 100px;
@@ -614,16 +561,20 @@ return p;
             z-index: 50;
           }
           .op-player-image-container {
-            width: 90px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             overflow: hidden;
             background-color: transparent;
             position: relative;
             pointer-events: none;
+            border: 3px solid #000;
+            border-radius: 100%;
+            background: white;
+            box-shadow: 2px 2px 0px 0px #000;
           }
           .op-player-image {
-            width: 175%;
-            height: 175%;
+            width: 140%;
+            height: 140%;
             object-fit: cover;
             object-position: top center;
             position: absolute;
@@ -632,92 +583,73 @@ return p;
             transform: translateX(-50%);
           }
           .op-player-name-tag {
-            background-color: #1a1a1a;
-            color: white;
+            background-color: #fff;
+            color: #000;
             font-size: 0.7rem;
-            font-weight: 700;
+            font-weight: 900;
             padding: 4px 6px;
-            border-radius: 4px;
             text-align: center;
             white-space: nowrap;
             width: 105%;
             overflow: hidden;
             text-overflow: ellipsis;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid #000;
+            box-shadow: 2px 2px 0px 0px #000;
             z-index: 10;
             margin-top: -5px;
             pointer-events: none;
+            text-transform: uppercase;
           }
         `
       }} />
 
       {/* Tabs Switcher */}
-      <div className="flex border-b border-gray-700 mb-6 gap-2">
+      <div className="flex border-4 border-black mb-6 bg-slate-100 divide-x-4 divide-black">
         <button
           onClick={() => setActiveTab('home')}
-          className={`flex-1 py-3 font-bold text-sm tracking-wider uppercase border-b-2 transition-all duration-200 rounded-t ${
+          className={`flex-1 py-3 font-black text-sm tracking-wider uppercase transition-colors ${
             activeTab === 'home'
-              ? 'border-blue-500 text-blue-400 bg-blue-500/10'
-              : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700/50'
+              ? 'bg-[#00ffff] text-black'
+              : 'text-black hover:bg-slate-200'
           }`}
         >
           🏠 Home Team Setup ({homeTeam})
         </button>
         <button
           onClick={() => setActiveTab('away')}
-          className={`flex-1 py-3 font-bold text-sm tracking-wider uppercase border-b-2 transition-all duration-200 rounded-t ${
+          className={`flex-1 py-3 font-black text-sm tracking-wider uppercase transition-colors ${
             activeTab === 'away'
-              ? 'border-red-500 text-red-400 bg-red-500/10'
-              : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700/50'
+              ? 'bg-[#ff3366] text-white'
+              : 'text-black hover:bg-slate-200'
           }`}
         >
           ✈️ Away Team Setup ({awayTeam})
         </button>
       </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <span>{activeTab === 'home' ? '🏠 Home' : '✈️ Away'} Formation Control</span>
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-6 pb-4 border-b-4 border-black">
+        <h2 className="text-2xl font-black uppercase tracking-wider text-black">
+          {activeTab === 'home' ? '🏠 Home' : '✈️ Away'} Formation Control
         </h2>
 
-        <div className="flex items-center gap-4">
-          <FormControl size="small" className="min-w-[150px]">
-            <InputLabel id="team-select-label" className={isDark ? "text-gray-300" : ""}>Team</InputLabel>
-            <Select
-              labelId="team-select-label"
-              value={selectedTeam}
-              label="Team"
-              onChange={(e) => handleTeamChange(e.target.value)}
-              className={isDark ? "text-white bg-gray-700" : ""}
-            >
-              {playerData.map(t => (
-                <MenuItem key={t.negara} value={t.negara}>{t.negara}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+        <div className="flex flex-wrap items-center gap-4">
+          <Select 
+            label="Team"
+            value={selectedTeam} 
+            onChange={(e) => handleTeamChange(e.target.value)}
+            className="min-w-[150px]"
+            options={playerData.map(t => ({ value: t.negara, label: t.negara }))}
+          />
 
-          <FormControl size="small" className="min-w-[120px]">
-            <InputLabel id="formation-select-label" className={isDark ? "text-gray-300" : ""}>Formation</InputLabel>
-            <Select
-              labelId="formation-select-label"
-              value={selectedFormation}
-              label="Formation"
-              onChange={(e) => handleFormationChange(e.target.value)}
-              className={isDark ? "text-white bg-gray-700" : ""}
-            >
-              {availableFormations.map(f => (
-                <MenuItem key={f} value={f}>{f}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Select 
+            label="Formation"
+            value={selectedFormation} 
+            onChange={(e) => handleFormationChange(e.target.value)}
+            className="min-w-[120px]"
+            options={availableFormations.map(f => ({ value: f, label: f }))}
+          />
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSavePreset}
-            className="font-bold bg-blue-600 h-[40px] px-6"
-            startIcon={<span className="ri-save-line text-lg"></span>}
-          >
+          <Button variant="primary" onClick={handleSavePreset} className="mt-4 xl:mt-6">
             Save Preset
           </Button>
         </div>
@@ -725,9 +657,11 @@ return p;
 
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
         <div className="lg:w-2/3">
-          <div className="mb-2 text-sm text-gray-400">Drag to swap players, or drop on empty space to move freely ({selectedTeam})</div>
+          <div className="mb-2 text-sm font-bold text-slate-700 bg-[#ccff00] p-2 border-2 border-black inline-block">
+            Drag to swap players, or drop on empty space to move freely ({selectedTeam})
+          </div>
           <div 
-            className="op-pitch-container"
+            className="op-pitch-container shadow-[6px_6px_0_0_rgba(0,0,0,1)]"
             onDragOver={handleDragOver}
             onDrop={handlePitchDrop}
           >
@@ -749,8 +683,8 @@ return p;
                 onDrop={(e) => handleDrop(e, player.id, 'player')}
               >
                 {player.isEmpty ? (
-                  <div className="w-[60px] h-[60px] rounded-full border-[3px] border-dashed border-gray-400 bg-black/20 flex items-center justify-center pointer-events-none mt-4 shadow-lg backdrop-blur-sm">
-                    <span className="ri-add-line text-2xl text-gray-400"></span>
+                  <div className="w-[60px] h-[60px] rounded-full border-4 border-black border-dashed bg-white/50 flex items-center justify-center pointer-events-none mt-4 backdrop-blur-sm">
+                    <span className="ri-add-line text-2xl text-black font-black"></span>
                   </div>
                 ) : (
                   <>
@@ -768,14 +702,14 @@ return p;
         </div>
 
         <div
-          className="lg:w-1/3 flex flex-col h-[600px]"
+          className="lg:w-1/3 flex flex-col h-[640px]"
           onDragOver={handleDragOver}
           onDrop={(e) => handleDrop(e, 'unassign', 'unassign')}
         >
-          <h3 className="font-bold mb-2 flex items-center gap-2">
-            <span className="ri-group-line"></span> Squad / Substitutes
+          <h3 className="font-black mb-2 flex items-center gap-2 uppercase tracking-wider p-2 bg-[#ffcc00] border-2 border-black inline-block self-start">
+            Squad / Substitutes
           </h3>
-          <div className={`flex-1 overflow-y-auto p-4 rounded border ${isDark ? 'border-gray-600 bg-gray-900' : 'border-gray-300 bg-gray-100'} custom-scrollbar`}>
+          <div className="flex-1 overflow-y-auto p-4 border-4 border-black bg-slate-100 shadow-[6px_6px_0_0_rgba(0,0,0,1)] custom-scrollbar">
             {Object.entries({
               'Penjaga Gawang': substitutes.filter(s => s.posisi === 'Penjaga Gawang'),
               'Pemain Bertahan': substitutes.filter(s => s.posisi === 'Pemain Bertahan'),
@@ -783,98 +717,96 @@ return p;
               'Pemain Depan': substitutes.filter(s => s.posisi === 'Pemain Depan')
             }).map(([role, subs]) => (
               <div key={role} className="mb-4">
-                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 border-b border-gray-600 pb-1">{role}</h4>
+                <h4 className="text-xs font-black text-black uppercase tracking-wider mb-2 border-b-2 border-black pb-1">{role}</h4>
                 {subs.map((sub) => (
                   <div
                     key={sub.id}
-                    className={`flex items-center gap-3 p-2 mb-2 rounded cursor-grab ${isDark ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50'} border border-gray-600 shadow-sm`}
+                    className="flex items-center gap-3 p-2 mb-2 bg-white border-2 border-black cursor-grab shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)] transition-all"
                     draggable="true"
                     onDragStart={(e) => handleDragStart(e, sub.id, 'sub')}
                     onDragEnd={handleDragEnd}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, sub.id, 'sub')}
                   >
-                    <img src={sub.link_foto} alt={sub.nama_pemain} className="w-10 h-10 rounded-full object-cover border border-gray-500 pointer-events-none" loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/40' }} />
+                    <img src={sub.link_foto} alt={sub.nama_pemain} className="w-10 h-10 rounded-full object-cover border-2 border-black pointer-events-none bg-slate-200" loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/40' }} />
                     <div className="flex-1 pointer-events-none">
-                      <div className="font-bold text-sm truncate">{sub.nama_pemain}</div>
-                      <div className="text-xs text-gray-400">{sub.posisi}</div>
+                      <div className="font-black text-sm uppercase truncate text-black">{sub.nama_pemain}</div>
+                      <div className="text-xs font-bold text-slate-500 uppercase">{sub.posisi}</div>
                     </div>
                   </div>
                 ))}
-                {subs.length === 0 && <div className="text-xs text-gray-500 italic mb-2">Tidak ada pemain</div>}
+                {subs.length === 0 && <div className="text-xs font-bold text-slate-500 uppercase italic mb-2">Tidak ada pemain</div>}
               </div>
             ))}
-            <div className="mt-8 p-4 border-2 border-dashed border-red-500/50 rounded text-center text-red-500/70 opacity-70 hover:opacity-100 transition-opacity flex flex-col items-center gap-2 pointer-events-none">
-              <span className="ri-delete-bin-line text-2xl"></span>
-              <span className="text-sm font-semibold">Tarik pemain ke sini untuk menghapusnya dari lapangan</span>
+            <div className="mt-8 p-4 border-4 border-dashed border-[#ff3366] bg-[#ff3366]/10 text-center text-[#ff3366] hover:bg-[#ff3366]/20 transition-colors flex flex-col items-center gap-2 pointer-events-none">
+              <i className="ri-delete-bin-line text-2xl font-black"></i>
+              <span className="text-sm font-black uppercase tracking-wider">Tarik pemain ke sini untuk menghapusnya dari lapangan</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Broadcast controls */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-6 pt-4 border-t border-gray-700">
-        <div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-8 pt-6 border-t-4 border-black">
+        <div className="p-2 border-2 border-black bg-white inline-block">
           {isVisible ? (
-            <span className="text-green-500 font-bold flex items-center gap-2">
+            <span className="text-[#ff3366] font-black uppercase tracking-wider flex items-center gap-2">
               <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ff3366] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#ff3366]"></span>
               </span>
               ON AIR: {remoteState?.mode === 'vs' ? 'VS MODE' : remoteState?.mode === 'away' ? 'AWAY TEAM' : 'HOME TEAM'}
             </span>
           ) : (
-            <span className="text-gray-500 font-bold">OFF AIR</span>
+            <span className="text-slate-500 font-black uppercase tracking-wider">OFF AIR</span>
           )}
         </div>
 
         <div className="flex flex-wrap gap-2">
           {isVisible && (
-            <Button variant="contained" color="warning" onClick={handleUpdateOverlay} className="font-bold normal-case h-[40px]">
+            <Button variant="outline" className="bg-[#ffcc00]" onClick={handleUpdateOverlay}>
               Update Live
             </Button>
           )}
-          <Button variant="contained" color="primary" onClick={handleShowHome} className="font-bold normal-case h-[40px]">
+          <Button variant="outline" className="bg-[#00ffff]" onClick={handleShowHome}>
             Show Home
           </Button>
-          <Button variant="contained" color="secondary" onClick={handleShowAway} className="font-bold normal-case h-[40px] bg-purple-600 hover:bg-purple-700">
+          <Button variant="outline" className="bg-[#ff3366] text-white" onClick={handleShowAway}>
             Show Away
           </Button>
-          <Button variant="contained" color="success" onClick={handleShowVS} className="font-bold bg-[#D9FF00] text-black hover:bg-[#b8d900] normal-case h-[40px]">
+          <Button variant="outline" className="bg-[#ccff00]" onClick={handleShowVS}>
             Show VS Mode
           </Button>
           {isVisible && (
-            <Button variant="contained" color="error" onClick={handleHideOverlay} className="font-bold normal-case h-[40px]">
+            <Button variant="outline" className="bg-black text-white" onClick={handleHideOverlay}>
               Hide Overlay
             </Button>
           )}
         </div>
       </div>
 
-      <div className="mt-6 pt-6 border-t border-gray-700">
-        <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+      <div className="mt-6 pt-6 border-t-4 border-black">
+        <label className="block text-sm font-black uppercase tracking-wider mb-2 text-black">
           OBS Overlay URL (Single & VS)
         </label>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-0 border-4 border-black p-1 bg-white">
           <input
             type="text"
             readOnly
             value={`${hostUrl}/${roomId}/formation`}
-            className={`flex-1 p-3 rounded-lg border text-sm outline-none transition-all ${isDark ? 'bg-gray-900 border-gray-700 text-white' : 'bg-gray-100 border-gray-300 text-gray-900'}`}
+            className="flex-1 p-2 font-bold text-sm outline-none bg-transparent"
           />
           <Button
-            variant="outlined"
-            color="inherit"
+            variant="primary"
             onClick={() => {
               navigator.clipboard.writeText(`${hostUrl}/${roomId}/formation`)
               alert('URL Copied!')
             }}
-            className={`normal-case font-bold h-[46px] px-6 ${isDark ? 'border-gray-600' : 'border-gray-400'}`}
           >
             Copy
           </Button>
         </div>
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wider">
           Gunakan URL ini di OBS Browser Source. Set ukuran yang direkomendasikan: 1920x1080.
         </p>
       </div>

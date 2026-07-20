@@ -1,43 +1,20 @@
 'use client'
 
-import { useRef, useState, useEffect } from 'react'
-
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-
-import { styled } from '@mui/material/styles'
-import Badge from '@mui/material/Badge'
-import Avatar from '@mui/material/Avatar'
-import Popper from '@mui/material/Popper'
-import Fade from '@mui/material/Fade'
-import Paper from '@mui/material/Paper'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import Button from '@mui/material/Button'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 
 import { auth } from '@/services/firebase/auth'
 import MyProfileModal from './MyProfileModal'
-
-const BadgeContentSpan = styled('span')({
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
-  cursor: 'pointer',
-  backgroundColor: 'var(--mui-palette-success-main)',
-  boxShadow: '0 0 0 2px var(--mui-palette-background-paper)'
-})
+import { Dropdown, DropdownItem, DropdownDivider } from '@/components/ui/Dropdown'
+import Button from '@/components/ui/Button'
 
 const ADMIN_EMAIL = 'admin@admin.com'
 
 const UserDropdown = () => {
-  const [open, setOpen] = useState(false)
   const [user, setUser] = useState(null)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [showGuide, setShowGuide] = useState(false)
-  const anchorRef = useRef(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -62,29 +39,13 @@ const UserDropdown = () => {
     }
   }
 
-  const handleDropdownOpen = () => {
-    setOpen(prev => !prev)
-  }
-
-  const handleDropdownClose = (event, url) => {
-    if (url) {
-      router.push(url)
-    }
-
-    if (anchorRef.current && anchorRef.current.contains(event?.target)) {
-      return
-    }
-
-    setOpen(false)
-  }
-
-  const handleLogout = async e => {
+  const handleLogout = async () => {
     try {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('dashboardPasscodeVerified')
       }
       await signOut(auth)
-      handleDropdownClose(e, '/login')
+      router.push('/login')
     } catch (err) {
       console.error('Error signing out:', err)
     }
@@ -92,85 +53,52 @@ const UserDropdown = () => {
 
   const username = user?.email ? user.email.split('@')[0] : 'Operator'
   const userRole = user?.email === ADMIN_EMAIL ? 'Superuser' : 'Operator'
+  const initial = username.charAt(0).toUpperCase()
+
+  const UserAvatar = (
+    <div className="relative cursor-pointer hover:-translate-y-[2px] transition-transform">
+      <div className="w-10 h-10 bg-[#ccff00] border-2 border-black flex items-center justify-center font-black text-lg">
+        {initial}
+      </div>
+      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-black rounded-full" />
+    </div>
+  )
 
   return (
     <>
-      <Badge
-        ref={anchorRef}
-        overlap='circular'
-        badgeContent={<BadgeContentSpan onClick={handleDropdownOpen} />}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        className='mis-2'
-      >
-        <Avatar
-          ref={anchorRef}
-          alt={username}
-          onClick={handleDropdownOpen}
-          className='cursor-pointer bs-[38px] is-[38px]'
-        />
-      </Badge>
-      <Popper
-        open={open}
-        transition
-        disablePortal
-        placement='bottom-end'
-        anchorEl={anchorRef.current}
-        className='min-is-[240px] !mbs-4 z-[1]'
-      >
-        {({ TransitionProps, placement }) => (
-          <Fade
-            {...TransitionProps}
-            style={{
-              transformOrigin: placement === 'bottom-end' ? 'right top' : 'left top'
-            }}
-          >
-            <Paper className='shadow-lg'>
-              <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
-                <MenuList>
-                  <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={username} />
-                    <div className='flex items-start flex-col'>
-                      <Typography className='font-medium text-capitalize' color='text.primary'>
-                        {username}
-                      </Typography>
-                      <Typography variant='caption'>{userRole}</Typography>
-                    </div>
-                  </div>
-                  <Divider className='mlb-1' />
-                  <MenuItem className='gap-3' onClick={e => {
-                    setProfileModalOpen(true)
-                    setOpen(false)
-                  }}>
-                    <i className='ri-user-3-line' />
-                    <Typography color='text.primary'>My Profile</Typography>
-                  </MenuItem>
-                  {user?.email === ADMIN_EMAIL && (
-                    <MenuItem className='gap-3' onClick={e => handleDropdownClose(e, '/admin/create-user')}>
-                      <i className='ri-settings-4-line' />
-                      <Typography color='text.primary'>Manage Users</Typography>
-                    </MenuItem>
-                  )}
-                  <Divider className='mlb-1' />
-                  <div className='flex items-center plb-2 pli-4'>
-                    <Button
-                      fullWidth
-                      variant='contained'
-                      color='error'
-                      size='small'
-                      endIcon={<i className='ri-logout-box-r-line' />}
-                      onClick={handleLogout}
-                      sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
-                    >
-                      Logout
-                    </Button>
-                  </div>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Fade>
-        )}
-      </Popper>
+      <Dropdown trigger={UserAvatar} align="right" className="w-56 mt-2">
+        <div className="p-4 border-b-2 border-black bg-slate-50 flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#ccff00] border-2 border-black flex items-center justify-center font-black text-lg shrink-0">
+            {initial}
+          </div>
+          <div className="flex flex-col overflow-hidden">
+            <span className="font-bold text-sm truncate">{username}</span>
+            <span className="text-xs font-bold text-slate-500">{userRole}</span>
+          </div>
+        </div>
+        
+        <DropdownItem onClick={() => setProfileModalOpen(true)}>
+          <i className="ri-user-3-line text-lg w-5 text-center" />
+          <span>My Profile</span>
+        </DropdownItem>
 
+        {user?.email === ADMIN_EMAIL && (
+          <DropdownItem onClick={() => router.push('/admin/create-user')}>
+            <i className="ri-settings-4-line text-lg w-5 text-center" />
+            <span>Manage Users</span>
+          </DropdownItem>
+        )}
+
+        <DropdownDivider />
+        
+        <div className="p-3">
+          <Button fullWidth variant="danger" onClick={handleLogout} startIcon={<i className="ri-logout-box-r-line" />}>
+            Logout
+          </Button>
+        </div>
+      </Dropdown>
+
+      {/* Note: If MyProfileModal still uses MUI, we will need to refactor it next. Assuming it's standard for now or will be refactored soon */}
       <MyProfileModal 
         open={profileModalOpen} 
         onClose={() => setProfileModalOpen(false)} 

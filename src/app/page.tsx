@@ -1,4 +1,4 @@
-import NeoTokyoLanding from "../components/neo-tokyo-homepage";
+import NeoTokyoLanding from "../homepages";
 
 export const metadata = {
   title: 'SCOREBOS - Scoreboard Dashboard & Overlay',

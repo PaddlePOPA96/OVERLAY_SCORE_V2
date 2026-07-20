@@ -14,12 +14,6 @@
     "postinstall": "npm run build:icons"
   },
   "dependencies": {
-    "@emotion/cache": "^11.11.0",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/lab": "5.0.0-alpha.170",
-    "@mui/material": "^5.15.19",
-    "@mui/material-nextjs": "^5.15.11",
     "apexcharts": "^3.49.1",
     "classnames": "^2.5.1",
     "firebase": "^12.14.0",
@@ -46,6 +40,7 @@
     "@iconify/tools": "^4.0.4",
     "@iconify/utils": "^2.1.24",
     "@tailwindcss/postcss": "^4",
+    "@types/react": "19.2.17",
     "autoprefixer": "^10.4.19",
     "critters": "^0.0.25",
     "eslint": "^8.57.0",

@@ -11,6 +11,7 @@ import { Settings, Check, Clock, Edit2, Info, MonitorPlay, Tv, Image as ImageIco
 import LogoPickerModal from '../LogoPickerModal'
 import { makeTeamAbbr } from '@/data/logoData'
 import { Button } from '@/shared/components/ui/button'
+import Select from '@/components/ui/Select'
 import LayoutSelector from './LayoutSelector'
 import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
@@ -739,17 +740,17 @@ return sliced
       >
         <div><LayoutSelector data={data} updateMatch={actions.updateMatch} /></div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label className='op-label' style={{ marginBottom: '2px', color: labelColor }}>Format Match (Series)</label>
-          <select
-            className='op-input'
+          <Select
+            label='Format Match (Series)'
             value={data.seriesType || 'none'}
             onChange={e => actions.updateMatch({ seriesType: e.target.value, homeSeriesScore: 0, awaySeriesScore: 0 })}
-            style={{ width: '100%', height: '40px', padding: '0 10px', background: isLight ? '#ffffff' : '#090d16', border: `1px solid ${borderCol}`, borderRadius: '8px', color: isLight ? '#0f172a' : '#fff', fontSize: '13px' }}
-          >
-            <option value='none'>Single Match (Normal)</option>
-            <option value='bo3'>Best of 3 (BO3)</option>
-            <option value='bo5'>Best of 5 (BO5)</option>
-          </select>
+            options={[
+              { value: 'none', label: 'Single Match (Normal)' },
+              { value: 'bo3', label: 'Best of 3 (BO3)' },
+              { value: 'bo5', label: 'Best of 5 (BO5)' }
+            ]}
+            fullWidth
+          />
         </div>
       </div>
 

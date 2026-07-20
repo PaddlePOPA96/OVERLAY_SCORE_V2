@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-
 import { ref, onValue, set, push, remove, update } from 'firebase/database';
-import { Button, TextField, Box, Typography, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Switch, FormControlLabel, Grid, List, ListItem, Checkbox } from '@mui/material';
-
 import { db } from '@/services/firebase/db';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
+import Checkbox from '@/components/ui/Checkbox';
+import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter } from '@/components/ui/Dialog';
 
 export default function StreamUrlManager({ theme }) {
   const [url, setUrl] = useState('');
@@ -31,69 +32,34 @@ export default function StreamUrlManager({ theme }) {
   const [token2, setToken2] = useState('');
   const [drmKey2, setDrmKey2] = useState('');
   const [inputValue2, setInputValue2] = useState('');
-  const isLight = theme === 'light';
 
   useEffect(() => {
     const urlRef = ref(db, 'settings/stream_url');
-
-    const unsubUrl = onValue(urlRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setUrl(snapshot.val());
-      }
-    });
+    const unsubUrl = onValue(urlRef, (snapshot) => { if (snapshot.exists()) setUrl(snapshot.val()); });
 
     const tokenRef = ref(db, 'settings/stream_token');
-
-    const unsubToken = onValue(tokenRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setToken(snapshot.val());
-      }
-    });
+    const unsubToken = onValue(tokenRef, (snapshot) => { if (snapshot.exists()) setToken(snapshot.val()); });
 
     const drmRef = ref(db, 'settings/stream_drm_key');
-    const unsubDrm = onValue(drmRef, (snapshot) => {
-      if (snapshot.exists()) setDrmKey(snapshot.val());
-      else setDrmKey('');
-    });
+    const unsubDrm = onValue(drmRef, (snapshot) => { if (snapshot.exists()) setDrmKey(snapshot.val()); else setDrmKey(''); });
 
     const multiModeRef = ref(db, 'settings/stream_multi_mode');
-
-    const unsubMultiMode = onValue(multiModeRef, (snapshot) => {
-      if (snapshot.exists()) setMultiMode(snapshot.val());
-      else setMultiMode(false);
-    });
+    const unsubMultiMode = onValue(multiModeRef, (snapshot) => { if (snapshot.exists()) setMultiMode(snapshot.val()); else setMultiMode(false); });
 
     const url2Ref = ref(db, 'settings/stream_url_2');
-
-    const unsubUrl2 = onValue(url2Ref, (snapshot) => {
-      if (snapshot.exists()) setUrl2(snapshot.val());
-      else setUrl2('');
-    });
+    const unsubUrl2 = onValue(url2Ref, (snapshot) => { if (snapshot.exists()) setUrl2(snapshot.val()); else setUrl2(''); });
 
     const token2Ref = ref(db, 'settings/stream_token_2');
-
-    const unsubToken2 = onValue(token2Ref, (snapshot) => {
-      if (snapshot.exists()) setToken2(snapshot.val());
-      else setToken2('');
-    });
+    const unsubToken2 = onValue(token2Ref, (snapshot) => { if (snapshot.exists()) setToken2(snapshot.val()); else setToken2(''); });
 
     const drm2Ref = ref(db, 'settings/stream_drm_key_2');
-    const unsubDrm2 = onValue(drm2Ref, (snapshot) => {
-      if (snapshot.exists()) setDrmKey2(snapshot.val());
-      else setDrmKey2('');
-    });
+    const unsubDrm2 = onValue(drm2Ref, (snapshot) => { if (snapshot.exists()) setDrmKey2(snapshot.val()); else setDrmKey2(''); });
 
     const presetsRef = ref(db, 'settings/stream_presets');
-
     const unsubPresets = onValue(presetsRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-
-        const presetList = Object.keys(data).map(key => ({
-          id: key,
-          ...data[key]
-        }));
-
+        const presetList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
         setPresets(presetList);
       } else {
         setPresets([]);
@@ -101,64 +67,27 @@ export default function StreamUrlManager({ theme }) {
     });
 
     const syncRef = ref(db, 'settings/stream_sync_vod');
-
-    const unsubSync = onValue(syncRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setSyncVod(snapshot.val());
-      }
-    });
+    const unsubSync = onValue(syncRef, (snapshot) => { if (snapshot.exists()) setSyncVod(snapshot.val()); });
 
     const proxyRef = ref(db, 'settings/stream_use_proxy');
-
-    const unsubProxy = onValue(proxyRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setUseProxy(snapshot.val());
-      }
-    });
+    const unsubProxy = onValue(proxyRef, (snapshot) => { if (snapshot.exists()) setUseProxy(snapshot.val()); });
 
     const titleRef = ref(db, 'settings/stream_title');
+    const unsubTitle = onValue(titleRef, (snapshot) => { if (snapshot.exists()) setTitle(snapshot.val()); else setTitle('SELAMAT ULANG TAHUN'); });
 
     const title2Ref = ref(db, 'settings/stream_title_2');
-
-    const unsubTitle2 = onValue(title2Ref, (snapshot) => {
-      if (snapshot.exists()) setTitle2(snapshot.val());
-      else setTitle2('SELAMAT ULANG TAHUN');
-    });
-
-    const unsubTitle = onValue(titleRef, (snapshot) => {
-      if (snapshot.exists()) setTitle(snapshot.val());
-      else setTitle('SELAMAT ULANG TAHUN');
-    });
+    const unsubTitle2 = onValue(title2Ref, (snapshot) => { if (snapshot.exists()) setTitle2(snapshot.val()); else setTitle2('SELAMAT ULANG TAHUN'); });
 
     const headerRef = ref(db, 'settings/stream_header');
-
-    const unsubHeader = onValue(headerRef, (snapshot) => {
-      if (snapshot.exists()) setHeader(snapshot.val());
-      else setHeader('HUITOTOO');
-    });
+    const unsubHeader = onValue(headerRef, (snapshot) => { if (snapshot.exists()) setHeader(snapshot.val()); else setHeader('HUITOTOO'); });
 
     const headerCountryRef = ref(db, 'settings/stream_header_country');
-
-    const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => {
-      if (snapshot.exists()) setHeaderCountry(snapshot.val());
-      else setHeaderCountry('ID');
-    });
+    const unsubHeaderCountry = onValue(headerCountryRef, (snapshot) => { if (snapshot.exists()) setHeaderCountry(snapshot.val()); else setHeaderCountry('ID'); });
 
     return () => {
-      unsubUrl();
-      unsubToken();
-      unsubPresets();
-      unsubSync();
-      unsubProxy();
-      unsubTitle();
-      unsubTitle2();
-      unsubHeader();
-      unsubHeaderCountry();
-      unsubMultiMode();
-      unsubUrl2();
-      unsubToken2();
-      unsubDrm();
-      unsubDrm2();
+      unsubUrl(); unsubToken(); unsubPresets(); unsubSync(); unsubProxy();
+      unsubTitle(); unsubTitle2(); unsubHeader(); unsubHeaderCountry();
+      unsubMultiMode(); unsubUrl2(); unsubToken2(); unsubDrm(); unsubDrm2();
     };
   }, []);
 
@@ -168,100 +97,66 @@ export default function StreamUrlManager({ theme }) {
 
     const pathTokenRegex = /\/token-([a-zA-Z0-9%_\-\.\+=]+)/i;
     const pathMatch = rawUrl.match(pathTokenRegex);
-
     if (pathMatch) {
       extractedToken = pathMatch[1];
       templatedUrl = rawUrl.replace(pathTokenRegex, '/token-{token}');
-      
-return { token: extractedToken, templatedUrl };
+      return { token: extractedToken, templatedUrl };
     }
 
     const queryParams = ['token', 'auth', 'key', 'token_id', 'pass', 'hash'];
-
     try {
       const hasHttp = rawUrl.startsWith('http://') || rawUrl.startsWith('https://');
       const urlObj = new URL(hasHttp ? rawUrl : `http://dummy.com/${rawUrl}`);
-
       for (const param of queryParams) {
         if (urlObj.searchParams.has(param)) {
           extractedToken = urlObj.searchParams.get(param);
           urlObj.searchParams.set(param, '{token}');
-          templatedUrl = hasHttp
-            ? urlObj.toString()
-            : urlObj.toString().replace('http://dummy.com/', '');
-          
-return { token: extractedToken, templatedUrl };
+          templatedUrl = hasHttp ? urlObj.toString() : urlObj.toString().replace('http://dummy.com/', '');
+          return { token: extractedToken, templatedUrl };
         }
       }
     } catch (e) {
       for (const param of queryParams) {
         const regex = new RegExp(`([\?&])${param}=([^&]+)`, 'i');
         const match = rawUrl.match(regex);
-
         if (match) {
           extractedToken = match[2];
           templatedUrl = rawUrl.replace(regex, `$1${param}={token}`);
-          
-return { token: extractedToken, templatedUrl };
+          return { token: extractedToken, templatedUrl };
         }
       }
     }
-
     return { token: '', templatedUrl: rawUrl };
   };
 
   const isUrl = (str) => {
     const trimmed = str.trim();
-
-    
-return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trimmed.includes('.mpd');
+    return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trimmed.includes('.mpd');
   };
 
-  const getPendingValues = (input) => {
+  const getPendingValues = (input, currentUrl, currentToken) => {
     const trimmed = input.trim();
-
-    if (!trimmed) return { pendingUrl: url, pendingToken: token, type: '' };
-
+    if (!trimmed) return { pendingUrl: currentUrl, pendingToken: currentToken, type: '' };
     if (isUrl(trimmed)) {
       const result = extractAndTemplateToken(trimmed);
-
-      if (result.token) {
-        return { pendingUrl: result.templatedUrl, pendingToken: result.token, type: 'url_with_token' };
-      } else {
-        return { pendingUrl: trimmed, pendingToken: '', type: 'url_only' };
-      }
+      if (result.token) return { pendingUrl: result.templatedUrl, pendingToken: result.token, type: 'url_with_token' };
+      else return { pendingUrl: trimmed, pendingToken: '', type: 'url_only' };
     } else {
-      return { pendingUrl: url, pendingToken: trimmed, type: 'token_only' };
+      return { pendingUrl: currentUrl, pendingToken: trimmed, type: 'token_only' };
     }
   };
 
-  const { pendingUrl, pendingToken, type } = getPendingValues(inputValue);
+  const { pendingUrl, pendingToken } = getPendingValues(inputValue, url, token);
   const resolvedLiveUrl = url ? url.replace(/{token}/gi, token).replace(/\[token\]/gi, token) : '';
   const previewUrl = pendingUrl ? pendingUrl.replace(/{token}/gi, pendingToken).replace(/\[token\]/gi, pendingToken) : '';
 
-  const getPendingValues2 = (input) => {
-    const trimmed = input.trim();
-
-    if (!trimmed) return { pendingUrl2: url2, pendingToken2: token2, type2: '' };
-
-    if (isUrl(trimmed)) {
-      const result = extractAndTemplateToken(trimmed);
-
-      if (result.token) return { pendingUrl2: result.templatedUrl, pendingToken2: result.token, type2: 'url_with_token' };
-      else return { pendingUrl2: trimmed, pendingToken2: '', type2: 'url_only' };
-    } else {
-      return { pendingUrl2: url2, pendingToken2: trimmed, type2: 'token_only' };
-    }
-  };
-
-  const { pendingUrl2, pendingToken2, type2 } = getPendingValues2(inputValue2);
+  const { pendingUrl: pendingUrl2, pendingToken: pendingToken2 } = getPendingValues(inputValue2, url2, token2);
   const resolvedLiveUrl2 = url2 ? url2.replace(/{token}/gi, token2).replace(/\[token\]/gi, token2) : '';
   const previewUrl2 = pendingUrl2 ? pendingUrl2.replace(/{token}/gi, pendingToken2).replace(/\[token\]/gi, pendingToken2) : '';
 
   const handleSave = async () => {
     if (!inputValue.trim()) return;
     setSaving(true);
-
     try {
       await set(ref(db, 'settings/stream_url'), pendingUrl.trim());
       await set(ref(db, 'settings/stream_token'), pendingToken.trim());
@@ -271,7 +166,6 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
       setFeedback({ text: '✓ Pengaturan Stream Kiri berhasil disimpan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
-      console.error("Failed to save stream settings:", err);
       setFeedback({ text: '❌ Gagal menyimpan pengaturan.', isError: true });
     } finally {
       setSaving(false);
@@ -281,7 +175,6 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
   const handleSave2 = async () => {
     if (!inputValue2.trim()) return;
     setSaving(true);
-
     try {
       await set(ref(db, 'settings/stream_url_2'), pendingUrl2.trim());
       await set(ref(db, 'settings/stream_token_2'), pendingToken2.trim());
@@ -291,51 +184,26 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
       setFeedback({ text: '✓ Pengaturan Stream Kanan berhasil disimpan!', isError: false });
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
-      console.error("Failed to save stream 2 settings:", err);
       setFeedback({ text: '❌ Gagal menyimpan pengaturan.', isError: true });
     } finally {
       setSaving(false);
     }
   };
 
-  const handleToggleSync = async (e) => {
-    const newValue = e.target.checked;
-
-    await set(ref(db, 'settings/stream_sync_vod'), newValue);
-  };
-
-  const handleToggleProxy = async (e) => {
-    const newValue = e.target.checked;
-
-    await set(ref(db, 'settings/stream_use_proxy'), newValue);
-  };
-
-  const handleToggleMultiMode = async (e) => {
-    const newValue = e.target.checked;
-
-    await set(ref(db, 'settings/stream_multi_mode'), newValue);
-  };
-
-  const saveToHistory = (url, drm = '') => {
-    if (!url || !url.trim()) return;
-    const isExist = presets.some(p => p.url === url.trim());
-
+  const saveToHistory = (historyUrl, drm = '') => {
+    if (!historyUrl || !historyUrl.trim()) return;
+    const isExist = presets.some(p => p.url === historyUrl.trim());
     if (!isExist) {
       const title = "History " + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const newPresetRef = push(ref(db, 'settings/stream_presets'));
-      const dataToSave = { title, url: url.trim() };
-      
-      if (drm.trim()) {
-        dataToSave.drmKey = drm.trim();
-      }
-
+      const dataToSave = { title, url: historyUrl.trim() };
+      if (drm.trim()) dataToSave.drmKey = drm.trim();
       set(newPresetRef, dataToSave).catch(console.error);
     }
   };
 
   const applyPreset = async (presetUrl, drm = '', target = 'left') => {
     setSaving(true);
-
     try {
       if (target === 'left') {
         await set(ref(db, 'settings/stream_url'), presetUrl);
@@ -352,418 +220,292 @@ return /^(https?:\/\/|\/\/)/i.test(trimmed) || trimmed.includes('.m3u8') || trim
         setInputValue2('');
         setFeedback({ text: '✓ Preset Kanan berhasil diterapkan!', isError: false });
       }
-
       setTimeout(() => setFeedback({ text: '', isError: false }), 4000);
     } catch (err) {
-      console.error("Failed to save preset:", err);
+      console.error(err);
     } finally {
       setSaving(false);
     }
   };
 
-  const handleOpenModal = () => {
-    setNewPresetTitle('');
-    setNewPresetUrl(resolvedLiveUrl || '');
-    setNewPresetDrmKey(drmKey || '');
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
   const handleSavePresetModal = () => {
     if (!newPresetTitle.trim() || !newPresetUrl.trim()) return;
-
     const newPresetRef = push(ref(db, 'settings/stream_presets'));
     const dataToSave = { title: newPresetTitle.trim(), url: newPresetUrl.trim() };
-    
-    if (newPresetDrmKey.trim()) {
-      dataToSave.drmKey = newPresetDrmKey.trim();
-    }
-
-    set(newPresetRef, dataToSave).then(() => {
-      setModalOpen(false);
-    }).catch(err => {
-      console.error("Failed to add preset:", err);
-      alert("Gagal menambahkan preset.");
-    });
-  };
-
-  const handleDeletePreset = (presetId) => {
-    if (!window.confirm("Yakin ingin menghapus preset ini?")) return;
-    remove(ref(db, `settings/stream_presets/${presetId}`)).catch(err => {
-      console.error("Failed to delete preset:", err);
-      alert("Gagal menghapus preset.");
-    });
-  };
-
-  const handleOpenPlaylist = (target) => {
-    setPlaylistTarget(target);
-    setSelectedPresets([]);
-    setPlaylistModalOpen(true);
-  };
-
-  const handleClosePlaylist = () => {
-    setPlaylistModalOpen(false);
-  };
-
-  const handleTogglePresetSelection = (id) => {
-    setSelectedPresets(prev => 
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAllPresets = () => {
-    if (selectedPresets.length === presets.length && presets.length > 0) {
-      setSelectedPresets([]);
-    } else {
-      setSelectedPresets(presets.map(p => p.id));
-    }
+    if (newPresetDrmKey.trim()) dataToSave.drmKey = newPresetDrmKey.trim();
+    set(newPresetRef, dataToSave).then(() => setModalOpen(false));
   };
 
   const handleDeleteSelectedPresets = () => {
     if (selectedPresets.length === 0) return;
     if (!window.confirm(`Yakin ingin menghapus ${selectedPresets.length} history terpilih?`)) return;
-    
     const updates = {};
-    selectedPresets.forEach(id => {
-      updates[id] = null;
-    });
-    
-    update(ref(db, 'settings/stream_presets'), updates).then(() => {
-      setSelectedPresets([]);
-    }).catch(err => {
-      console.error("Failed to delete presets:", err);
-      alert("Gagal menghapus history.");
-    });
+    selectedPresets.forEach(id => { updates[id] = null; });
+    update(ref(db, 'settings/stream_presets'), updates).then(() => setSelectedPresets([]));
   };
-  
-  const handleApplyPresetFromModal = (url, drm) => {
-    applyPreset(url, drm, playlistTarget);
-    setPlaylistModalOpen(false);
+
+  const toggleSelection = (id) => {
+    setSelectedPresets(prev => prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]);
   };
+
+  const selectAll = () => {
+    if (selectedPresets.length === presets.length && presets.length > 0) setSelectedPresets([]);
+    else setSelectedPresets(presets.map(p => p.id));
+  };
+
+
+
+  console.log('StreamUrlManager render components:', { Button, Input, Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter, Checkbox });
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 3,
-        mb: 4,
-        border: '1px solid',
-        borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)',
-        borderRadius: 4,
-        bgcolor: isLight ? 'rgba(255,255,255,0.8)' : 'rgba(15, 23, 42, 0.4)',
-        backdropFilter: 'blur(10px)'
-      }}
-    >
-      <Box display="flex" flexDirection="column" gap={3}>
-        
-        {/* TOP LEVEL SWITCHES */}
-        <Box display="flex" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={3} sx={{ pb: 3, borderBottom: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
-          <Box display="flex" flexWrap="wrap" gap={3}>
-            <FormControlLabel
-              control={<Switch checked={multiMode} onChange={handleToggleMultiMode} color="primary" />}
-              label={<Typography variant="body2" sx={{ color: isLight ? '#222' : '#eee', fontWeight: 'bold' }}>Mode Multi Stream (Layar Ganda)</Typography>}
-              sx={{ m: 0 }}
+    <div className="p-6 bg-white border-4 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] flex flex-col gap-6">
+      {/* TOP LEVEL SWITCHES */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-4 border-black pb-4">
+        <div className="flex flex-wrap gap-4">
+          <Checkbox checked={multiMode} onChange={e => set(ref(db, 'settings/stream_multi_mode'), e.target.checked)} label="Mode Multi Stream" />
+          <Checkbox checked={syncVod} onChange={e => set(ref(db, 'settings/stream_sync_vod'), e.target.checked)} label="Sync Waktu VOD" />
+          <Checkbox checked={useProxy} onChange={e => set(ref(db, 'settings/stream_use_proxy'), e.target.checked)} label="Proxy Siluman" />
+        </div>
+        <a href="/streams" target="_blank" className="px-4 py-2 bg-white border-2 border-black font-bold uppercase hover:bg-slate-100 transition-colors">
+          Buka Halaman /streams ↗
+        </a>
+      </div>
+
+      {/* STREAM MANAGER GRID */}
+      <div className="grid grid-cols-1 gap-6"> {/* Menggunakan 1 kolom penuh agar baris memanjang maksimal */}
+
+        {/* STREAM KIRI */}
+        <div className="p-4 bg-slate-100 border-4 border-black flex flex-col gap-4 w-full">
+          <h3 className="text-xl font-black uppercase text-black">🔴 Stream Utama {multiMode && '(Kiri)'}</h3>
+
+          <div className="p-3 bg-white border-2 border-black">
+            <span className="text-xs font-black uppercase text-slate-500 block mb-1">URL AKTIF (RESOLVED)</span>
+            <span className="text-sm font-bold text-black break-all">{resolvedLiveUrl || 'Belum ada siaran aktif'}</span>
+          </div>
+
+          {/* Mengubah flex-row menjadi flex-col agar Input punya lebar 100% penuh tanpa terpotong tombol */}
+          <div className="flex flex-col gap-2 items-end">
+            <Input
+              fullWidth
+              className="w-full" // Memastikan input mengambil 100% lebar layar
+              placeholder="Tempel m3u8 utuh atau token yang sangat panjang di sini..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
             />
-            <FormControlLabel
-              control={<Switch checked={syncVod} onChange={handleToggleSync} color="primary" size="small" />}
-              label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Sync Waktu VOD</Typography>}
-              sx={{ m: 0 }}
+            <Button
+              variant="primary"
+              className="w-full sm:w-auto px-6" // Tombol melebar di hp, tapi proporsional di desktop
+              onClick={handleSave}
+              disabled={saving || !inputValue.trim()}
+            >
+              {saving ? '...' : 'Simpan Stream Utama'}
+            </Button>
+          </div>
+
+          {/* Input DRM sekarang punya baris mandiri yang sangat panjang */}
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-black text-slate-700 uppercase">DRM Key Kiri:</span>
+            <Input
+              fullWidth
+              className="w-full"
+              placeholder="DRM Key (KID:KEY)"
+              value={drmKey}
+              onChange={(e) => setDrmKey(e.target.value)}
+              onBlur={() => set(ref(db, 'settings/stream_drm_key'), drmKey.trim())}
             />
-            <FormControlLabel
-              control={<Switch checked={useProxy} onChange={handleToggleProxy} color="primary" size="small" />}
-              label={<Typography variant="body2" sx={{ color: isLight ? '#666' : '#aaa' }}>Proxy Siluman (Sembunyikan URL)</Typography>}
-              sx={{ m: 0 }}
-            />
-          </Box>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            onClick={() => window.open('/streams', '_blank')}
-            sx={{ textTransform: 'none', fontWeight: 'bold', px: 2 }}
-          >
-            Buka Halaman /streams ↗
-          </Button>
-        </Box>
+          </div>
 
-        {/* STREAM MANAGER GRID */}
-        <Grid container spacing={3}>
-          {/* STREAM KIRI */}
-          <Grid item xs={12} md={multiMode ? 6 : 12}>
-            <Box sx={{ height: '100%', p: 3, borderRadius: 3, bgcolor: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
-              <Typography variant="subtitle1" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff', mb: 2 }}>
-                🔴 Stream Utama {multiMode && '(Kiri)'}
-              </Typography>
-
-              {/* Current Active URL */}
-              <Box sx={{ p: 1.5, mb: 3, bgcolor: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                <Typography variant="caption" display="block" sx={{ color: isLight ? '#888' : '#888', mb: 0.5, fontWeight: 'bold' }}>
-                  URL AKTIF (RESOLVED)
-                </Typography>
-                <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: resolvedLiveUrl ? (isLight ? '#1e293b' : '#cbd5e1') : (isLight ? '#94a3b8' : '#64748b') }}>
-                  {resolvedLiveUrl || 'Belum ada siaran aktif'}
-                </Typography>
-              </Box>
-
-              <Box display="flex" gap={2} alignItems="stretch">
-                <TextField
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  label="URL Aliran / Token Baru"
-                  placeholder="Tempel m3u8 utuh atau token..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  sx={{
-                    '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } },
-                    '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' }
-                  }}
-                />
-                <Button variant="contained" color="primary" disableElevation onClick={handleSave} disabled={saving || !inputValue.trim()} sx={{ textTransform: 'none', fontWeight: 'bold', minWidth: '100px' }}>
-                  {saving ? '...' : 'Simpan'}
-                </Button>
-              </Box>
-
-              <TextField
-                fullWidth size="small" variant="outlined"
-                label="DRM Key (KID:KEY)"
-                placeholder="Opsional, format hex: KID:KEY (Cth: 1ab2...:3cd4...)"
-                value={drmKey} onChange={(e) => setDrmKey(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_drm_key'), drmKey.trim())}
-                sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-              />
-
-              {/* Real-time Feedback Kiri */}
-              {inputValue.trim() && (
-                <Box sx={{ mt: 2, p: 1.5, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2 }}>
-                  <Typography variant="caption" sx={{ display: 'block', color: '#22c55e', fontWeight: 'bold', mb: 0.5 }}>✓ Terdeteksi (Preview):</Typography>
-                  <Typography variant="caption" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: isLight ? '#1e293b' : '#94a3b8' }}>{previewUrl}</Typography>
-                </Box>
-              )}
-
-              {/* Presets Kiri */}
-              <Box display="flex" gap={2} mt={3} alignItems="center">
-                <Button variant="outlined" size="small" onClick={() => handleOpenPlaylist('left')} sx={{ textTransform: 'none', borderRadius: 2 }}>
-                  Buka History Playlist ({presets.length})
-                </Button>
-                <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '12px', color: isLight ? '#666' : '#aaa' }}>+ Tambah Baru</Button>
-              </Box>
-            </Box>
-          </Grid>
-
-          {/* STREAM KANAN */}
-          {multiMode && (
-            <Grid item xs={12} md={6}>
-              <Box sx={{ height: '100%', p: 3, borderRadius: 3, bgcolor: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
-                <Typography variant="subtitle1" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff', mb: 2 }}>
-                  🔴 Stream Kedua (Kanan)
-                </Typography>
-
-                <Box sx={{ p: 1.5, mb: 3, bgcolor: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                  <Typography variant="caption" display="block" sx={{ color: isLight ? '#888' : '#888', mb: 0.5, fontWeight: 'bold' }}>
-                    URL AKTIF (RESOLVED)
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: resolvedLiveUrl2 ? (isLight ? '#1e293b' : '#cbd5e1') : (isLight ? '#94a3b8' : '#64748b') }}>
-                    {resolvedLiveUrl2 || 'Belum ada siaran aktif'}
-                  </Typography>
-                </Box>
-
-                <Box display="flex" gap={2} alignItems="stretch">
-                  <TextField
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    label="URL Aliran / Token Baru"
-                    placeholder="Tempel m3u8 utuh atau token..."
-                    value={inputValue2}
-                    onChange={(e) => setInputValue2(e.target.value)}
-                    sx={{
-                      '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } },
-                      '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' }
-                    }}
-                  />
-                  <Button variant="contained" color="secondary" disableElevation onClick={handleSave2} disabled={saving || !inputValue2.trim()} sx={{ textTransform: 'none', fontWeight: 'bold', minWidth: '100px' }}>
-                    {saving ? '...' : 'Simpan'}
-                  </Button>
-                </Box>
-
-                <TextField
-                  fullWidth size="small" variant="outlined"
-                  label="DRM Key (KID:KEY) Kanan"
-                  placeholder="Opsional, format hex: KID:KEY"
-                  value={drmKey2} onChange={(e) => setDrmKey2(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_drm_key_2'), drmKey2.trim())}
-                  sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff', '& fieldset': { borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' } }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-                />
-
-                {/* Real-time Feedback Kanan */}
-                {inputValue2.trim() && (
-                  <Box sx={{ mt: 2, p: 1.5, bgcolor: isLight ? 'rgba(34, 197, 94, 0.05)' : 'rgba(34, 197, 94, 0.08)', borderRadius: 2 }}>
-                    <Typography variant="caption" sx={{ display: 'block', color: '#22c55e', fontWeight: 'bold', mb: 0.5 }}>✓ Terdeteksi (Preview):</Typography>
-                    <Typography variant="caption" sx={{ fontFamily: 'monospace', wordBreak: 'break-all', color: isLight ? '#1e293b' : '#94a3b8' }}>{previewUrl2}</Typography>
-                  </Box>
-                )}
-
-                {/* Presets Kanan */}
-                <Box display="flex" gap={2} mt={3} alignItems="center">
-                  <Button variant="outlined" color="secondary" size="small" onClick={() => handleOpenPlaylist('right')} sx={{ textTransform: 'none', borderRadius: 2 }}>
-                    Buka History Playlist ({presets.length})
-                  </Button>
-                  <Button variant="text" size="small" color="inherit" onClick={handleOpenModal} sx={{ textTransform: 'none', fontSize: '12px', color: isLight ? '#666' : '#aaa' }}>+ Tambah Baru</Button>
-                </Box>
-              </Box>
-            </Grid>
+          {inputValue.trim() && (
+            <div className="p-3 bg-[#ccff00] border-2 border-black">
+              <span className="text-xs font-black uppercase text-black block mb-1">✓ Terdeteksi (Preview):</span>
+              <span className="text-sm font-bold text-black break-all">{previewUrl}</span>
+            </div>
           )}
-        </Grid>
 
-        {/* TAMPILAN HALAMAN STREAM */}
-        <Box sx={{ p: 3, borderRadius: 3, bgcolor: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}>
-          <Typography variant="subtitle2" sx={{ color: isLight ? '#888' : '#888', mb: 2, fontWeight: 'bold', letterSpacing: 1 }}>
-            PENGATURAN TAMPILAN
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={multiMode ? 6 : 12} md={multiMode ? 3 : 4}>
-              <TextField
-                fullWidth size="small" variant="outlined"
-                label={multiMode ? "Judul Video Kiri" : "Judul Video Stream"}
-                value={title} onChange={(e) => setTitle(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_title'), title.trim())}
-                sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+          <div className="flex flex-wrap gap-2 mt-2">
+            <Button variant="outline" className="bg-white" onClick={() => { setPlaylistTarget('left'); setPlaylistModalOpen(true); }}>
+              Buka History Playlist ({presets.length})
+            </Button>
+            <Button variant="outline" className="bg-white" onClick={() => { setNewPresetTitle(''); setNewPresetUrl(resolvedLiveUrl || ''); setNewPresetDrmKey(drmKey || ''); setModalOpen(true); }}>
+              + Tambah Baru
+            </Button>
+          </div>
+        </div>
+
+        {/* STREAM KANAN */}
+        {multiMode && (
+          <div className="p-4 bg-slate-100 border-4 border-black flex flex-col gap-4 w-full border-t-4 pt-6">
+            <h3 className="text-xl font-black uppercase text-black">🔴 Stream Kedua (Kanan)</h3>
+
+            <div className="p-3 bg-white border-2 border-black">
+              <span className="text-xs font-black uppercase text-slate-500 block mb-1">URL AKTIF (RESOLVED)</span>
+              <span className="text-sm font-bold text-black break-all">{resolvedLiveUrl2 || 'Belum ada siaran aktif'}</span>
+            </div>
+
+            {/* Mengubah menjadi susunan vertikal agar input memanjang */}
+            <div className="flex flex-col gap-2 items-end">
+              <Input
+                fullWidth
+                className="w-full"
+                placeholder="Tempel m3u8 utuh atau token yang sangat panjang di sini..."
+                value={inputValue2}
+                onChange={(e) => setInputValue2(e.target.value)}
               />
-            </Grid>
-            {multiMode && (
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  fullWidth size="small" variant="outlined"
-                  label="Judul Video Kanan"
-                  value={title2} onChange={(e) => setTitle2(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_title_2'), title2.trim())}
-                  sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-                />
-              </Grid>
+              <Button
+                variant="primary"
+                className="w-full sm:w-auto px-6"
+                onClick={handleSave2}
+                disabled={saving || !inputValue2.trim()}
+              >
+                {saving ? '...' : 'Simpan Stream Kedua'}
+              </Button>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-black text-slate-700 uppercase">DRM Key Kanan:</span>
+              <Input
+                fullWidth
+                className="w-full"
+                placeholder="DRM Key Kanan (KID:KEY)"
+                value={drmKey2}
+                onChange={(e) => setDrmKey2(e.target.value)}
+                onBlur={() => set(ref(db, 'settings/stream_drm_key_2'), drmKey2.trim())}
+              />
+            </div>
+
+            {inputValue2.trim() && (
+              <div className="p-3 bg-[#ccff00] border-2 border-black">
+                <span className="text-xs font-black uppercase text-black block mb-1">✓ Terdeteksi (Preview):</span>
+                <span className="text-sm font-bold text-black break-all">{previewUrl2}</span>
+              </div>
             )}
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth size="small" variant="outlined"
-                label="Teks Logo Header"
-                value={header} onChange={(e) => setHeader(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_header'), header.trim())}
-                sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth size="small" variant="outlined"
-                label="Kode Negara (ID/EN)"
-                value={headerCountry} onChange={(e) => setHeaderCountry(e.target.value)} onBlur={() => set(ref(db, 'settings/stream_header_country'), headerCountry.trim())}
-                sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-              />
-            </Grid>
-          </Grid>
-        </Box>
 
-      </Box>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <Button variant="outline" className="bg-white" onClick={() => { setPlaylistTarget('right'); setPlaylistModalOpen(true); }}>
+                Buka History Playlist ({presets.length})
+              </Button>
+              <Button variant="outline" className="bg-white" onClick={() => { setNewPresetTitle(''); setNewPresetUrl(resolvedLiveUrl2 || ''); setNewPresetDrmKey(drmKey2 || ''); setModalOpen(true); }}>
+                + Tambah Baru
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* PENGATURAN TAMPILAN */}
+      <div className="p-4 bg-slate-100 border-4 border-black">
+        <h3 className="text-sm font-black uppercase tracking-wider text-slate-700 mb-4">Pengaturan Tampilan</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <Input
+            placeholder={multiMode ? "Judul Kiri" : "Judul Stream"}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={() => set(ref(db, 'settings/stream_title'), title.trim())}
+          />
+          {multiMode && (
+            <Input
+              placeholder="Judul Kanan"
+              value={title2}
+              onChange={(e) => setTitle2(e.target.value)}
+              onBlur={() => set(ref(db, 'settings/stream_title_2'), title2.trim())}
+            />
+          )}
+          <Input
+            placeholder="Teks Logo Header"
+            value={header}
+            onChange={(e) => setHeader(e.target.value)}
+            onBlur={() => set(ref(db, 'settings/stream_header'), header.trim())}
+          />
+          <Input
+            placeholder="Kode Negara (ID/EN)"
+            value={headerCountry}
+            onChange={(e) => setHeaderCountry(e.target.value)}
+            onBlur={() => set(ref(db, 'settings/stream_header_country'), headerCountry.trim())}
+          />
+        </div>
+      </div>
 
-      {/* Global Feedback Alert */}
-      {(feedback.text && !inputValue.trim() && !inputValue2.trim()) && (
-        <Typography variant="caption" sx={{ display: 'block', mt: 2, textAlign: 'center', color: feedback.isError ? '#ef4444' : '#22c55e', fontWeight: 'bold' }}>
+      {feedback.text && !inputValue.trim() && !inputValue2.trim() && (
+        <div className={`p-4 font-black uppercase border-4 border-black text-center ${feedback.isError ? 'bg-[#ff3366] text-white' : 'bg-[#ccff00] text-black'}`}>
           {feedback.text}
-        </Typography>
+        </div>
       )}
 
-      {/* Add Preset Modal */}
-      <Dialog open={modalOpen} onClose={handleCloseModal} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ color: isLight ? '#000' : '#fff', bgcolor: isLight ? '#fff' : '#1e293b' }}>
-          Tambah Preset Playlist
-        </DialogTitle>
-        <DialogContent sx={{ bgcolor: isLight ? '#fff' : '#1e293b' }}>
-          <TextField
-            autoFocus margin="dense" label="Nama Preset Playlist" fullWidth variant="outlined"
-            value={newPresetTitle} onChange={(e) => setNewPresetTitle(e.target.value)}
-            sx={{ mb: 2, mt: 1, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-          />
-          <TextField
-            margin="dense" label="URL Stream (.m3u8 / .mpd)" fullWidth variant="outlined"
-            value={newPresetUrl} onChange={(e) => setNewPresetUrl(e.target.value)}
-            sx={{ '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
-          />
-          {newPresetUrl.includes('.mpd') && (
-            <TextField
-              margin="dense" label="DRM Key (KID:KEY)" fullWidth variant="outlined"
-              placeholder="Opsional, format hex: KID:KEY (Cth: 1ab2...:3cd4...)"
-              value={newPresetDrmKey} onChange={(e) => setNewPresetDrmKey(e.target.value)}
-              sx={{ mt: 2, '& .MuiOutlinedInput-root': { color: isLight ? '#000' : '#fff' }, '& .MuiInputLabel-root': { color: isLight ? '#666' : '#aaa' } }}
+      {/* Modal Tambah Baru */}
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
+        <DialogHeader>
+          <DialogTitle>Tambah Preset Playlist</DialogTitle>
+        </DialogHeader>
+        <DialogContent className="py-4">
+          <div className="flex flex-col gap-4">
+            <Input
+              placeholder="Nama Preset Playlist"
+              value={newPresetTitle}
+              onChange={(e) => setNewPresetTitle(e.target.value)}
             />
-          )}
+            <Input
+              placeholder="URL Stream (.m3u8 / .mpd)"
+              value={newPresetUrl}
+              onChange={(e) => setNewPresetUrl(e.target.value)}
+            />
+            {newPresetUrl.includes('.mpd') && (
+              <Input
+                placeholder="DRM Key (KID:KEY)"
+                value={newPresetDrmKey}
+                onChange={(e) => setNewPresetDrmKey(e.target.value)}
+              />
+            )}
+          </div>
         </DialogContent>
-        <DialogActions sx={{ bgcolor: isLight ? '#fff' : '#1e293b', p: 2 }}>
-          <Button onClick={handleCloseModal} sx={{ color: isLight ? '#666' : '#aaa' }}>Batal</Button>
-          <Button onClick={handleSavePresetModal} variant="contained" color="primary" disableElevation disabled={!newPresetTitle.trim() || !newPresetUrl.trim()}>Simpan</Button>
-        </DialogActions>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setModalOpen(false)}>Batal</Button>
+          <Button variant="primary" onClick={handleSavePresetModal} disabled={!newPresetTitle.trim() || !newPresetUrl.trim()}>
+            Simpan
+          </Button>
+        </DialogFooter>
       </Dialog>
 
-      {/* Playlist / History Modal */}
-      <Dialog open={playlistModalOpen} onClose={handleClosePlaylist} fullWidth maxWidth="md" PaperProps={{ sx: { bgcolor: isLight ? '#fff' : '#1e293b', color: isLight ? '#000' : '#fff' } }}>
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6" fontWeight="bold">History Playlist ({playlistTarget === 'left' ? 'Kiri' : 'Kanan'})</Typography>
-          <Box>
-            <Button size="small" onClick={handleSelectAllPresets} sx={{ mr: 1, textTransform: 'none' }}>
+      {/* Modal Playlist */}
+      <Dialog open={playlistModalOpen} onClose={() => setPlaylistModalOpen(false)}>
+        <DialogHeader>
+          <DialogTitle>History Playlist ({playlistTarget === 'left' ? 'Kiri' : 'Kanan'})</DialogTitle>
+        </DialogHeader>
+        <DialogContent>
+          <div className="flex justify-between mb-4 mt-2">
+            <Button variant="outline" className="bg-white" onClick={selectAll}>
               {selectedPresets.length === presets.length && presets.length > 0 ? 'Deselect All' : 'Select All'}
             </Button>
-            <Button size="small" color="error" variant="contained" disableElevation onClick={handleDeleteSelectedPresets} disabled={selectedPresets.length === 0} sx={{ textTransform: 'none' }}>
+            <Button variant="outline" className="bg-[#ff3366] text-white" onClick={handleDeleteSelectedPresets} disabled={selectedPresets.length === 0}>
               Hapus Terpilih ({selectedPresets.length})
             </Button>
-          </Box>
-        </DialogTitle>
-        <DialogContent dividers sx={{ p: 0 }}>
-          {presets.length === 0 ? (
-            <Box p={4} textAlign="center">
-              <Typography color="textSecondary" sx={{ color: isLight ? '#666' : '#aaa' }}>Belum ada history playlist.</Typography>
-            </Box>
-          ) : (
-            <List sx={{ width: '100%', bgcolor: 'transparent' }}>
-              {presets.map((preset) => {
-                const isSelected = selectedPresets.includes(preset.id);
-                return (
-                  <ListItem
-                    key={preset.id}
-                    disablePadding
-                    sx={{ borderBottom: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' }}
+          </div>
+          <div className="max-h-[60vh] overflow-y-auto flex flex-col gap-2">
+            {presets.length === 0 ? (
+              <p className="text-center font-bold text-slate-500 py-8">Belum ada history playlist.</p>
+            ) : (
+              presets.map((preset) => (
+                <div key={preset.id} className="flex items-center gap-3 p-3 bg-slate-100 border-2 border-black">
+                  <input
+                    type="checkbox"
+                    checked={selectedPresets.includes(preset.id)}
+                    onChange={() => toggleSelection(preset.id)}
+                    className="w-5 h-5 accent-black border-2 border-black"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-black text-sm text-black truncate">{preset.title}</h4>
+                    <p className="text-xs font-bold text-slate-600 truncate">{preset.url}</p>
+                  </div>
+                  <Button
+                    variant="primary"
+                    onClick={() => { applyPreset(preset.url, preset.drmKey || '', playlistTarget); setPlaylistModalOpen(false); }}
                   >
-                    <Box display="flex" alignItems="center" width="100%" p={1}>
-                      <Checkbox
-                        checked={isSelected}
-                        onChange={() => handleTogglePresetSelection(preset.id)}
-                        color="primary"
-                        sx={{ color: isLight ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)' }}
-                      />
-                      <Box flex={1} overflow="hidden" mr={2}>
-                        <Typography variant="subtitle2" fontWeight="bold" noWrap sx={{ color: isLight ? '#000' : '#fff' }}>
-                          {preset.title}
-                        </Typography>
-                        <Typography variant="caption" noWrap display="block" sx={{ color: isLight ? '#666' : '#aaa' }}>
-                          {preset.url}
-                        </Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        color={playlistTarget === 'left' ? 'primary' : 'secondary'}
-                        disableElevation
-                        onClick={() => handleApplyPresetFromModal(preset.url, preset.drmKey || '')}
-                        sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
-                      >
-                        Terapkan
-                      </Button>
-                    </Box>
-                  </ListItem>
-                );
-              })}
-            </List>
-          )}
+                    Terapkan
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
         </DialogContent>
-        <DialogActions sx={{ p: 2 }}>
-          <Button onClick={handleClosePlaylist} sx={{ color: isLight ? '#666' : '#aaa', textTransform: 'none' }}>Tutup</Button>
-        </DialogActions>
       </Dialog>
-    </Paper>
+    </div>
   );
 }

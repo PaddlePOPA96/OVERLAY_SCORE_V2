@@ -1,37 +1,29 @@
 'use client'
 
-// Next Imports
 import Link from 'next/link'
 
-// MUI Imports
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-
-// Component Imports
+import Button from '@/components/ui/Button'
 import Illustrations from '@/shared/components/Illustrations'
 
-// Hook Imports
-
-
 const UnderMaintenance = ({ mode }) => {
-  // Vars
   const darkImg = '/images/pages/misc-mask-dark.png'
   const lightImg = '/images/pages/misc-mask-light.png'
 
-  // Hooks
   const miscBackground = mode === 'light' ? lightImg : darkImg
 
   return (
     <div className='flex items-center justify-center min-bs-[100dvh] relative p-6 overflow-x-hidden'>
-      <div className='flex items-center flex-col text-center gap-10'>
+      <div className='flex items-center flex-col text-center gap-10 bg-white p-12 border-4 border-black shadow-[8px_8px_0_0_rgba(0,0,0,1)] z-10'>
         <div className='flex flex-col gap-2 is-[90vw] sm:is-[unset]'>
-          <Typography variant='h4'>Under Maintenance! 🚧</Typography>
-          <Typography>Sorry for the inconvenience but we&#39;re performing some maintenance at the moment</Typography>
+          <h1 className='text-4xl font-black uppercase tracking-wider'>Under Maintenance! 🚧</h1>
+          <p className='font-bold text-slate-700'>Sorry for the inconvenience but we&#39;re performing some maintenance at the moment</p>
         </div>
-        <i className='ri-tools-line text-8xl text-primary my-10'></i>
-        <Button href='/' component={Link} variant='contained'>
-          Back to Home
-        </Button>
+        <i className='ri-tools-line text-8xl text-[#ff3366] my-4'></i>
+        <Link href="/">
+          <Button variant='primary' size="lg">
+            Back to Home
+          </Button>
+        </Link>
       </div>
       <Illustrations maskImg={{ src: miscBackground }} />
     </div>

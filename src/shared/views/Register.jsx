@@ -1,23 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import Button from '@mui/material/Button'
-import Alert from '@mui/material/Alert'
-
 import Illustrations from '@/shared/components/Illustrations'
 import Logo from '@/shared/components/layout/Logo'
-
 import { registerWithEmailPassword, loginWithGooglePopup } from '@/services/auth/service'
+
+import Button from '@/components/ui/Button'
+import Input from '@/components/ui/Input'
+import { Card, CardContent } from '@/components/ui/Card'
 
 const REGISTRATION_DISABLED = true
 
@@ -78,34 +71,34 @@ const Register = ({ mode }) => {
 
   return (
     <div className='flex flex-col justify-center items-center min-bs-[100dvh] relative p-6 bg-slate-900/10'>
-      <Card className='flex flex-col sm:is-[450px] z-10 shadow-lg border border-slate-700/10 rounded-2xl'>
+      <Card className='flex flex-col sm:is-[450px] z-10'>
         <CardContent className='p-6 sm:!p-12'>
           <Link href='/' className='flex justify-center items-start mbe-6'>
             <Logo />
           </Link>
           <div className='flex flex-col gap-4'>
             <div>
-              <Typography variant='h4' className='font-bold text-slate-800'>
+              <h1 className='text-3xl font-black uppercase tracking-wider text-black'>
                 Adventure starts here 🚀
-              </Typography>
-              <Typography className='mbs-1 text-slate-500 text-sm'>
+              </h1>
+              <p className='mt-2 text-black font-semibold text-sm'>
                 Create your operator account to customize overlays live!
-              </Typography>
+              </p>
             </div>
 
-            <Alert severity='warning' className='text-xs'>
-              Registration can only be completed by the administrator. Contact discord: <strong>@paddlepopa</strong>{' '}
+            <div className='bg-[#ffcc00] border-4 border-black p-4 font-bold text-sm text-black'>
+              Registration can only be completed by the administrator. Contact discord: <strong className="bg-white px-1 border-2 border-black">@paddlepopa</strong>{' '}
               to activate your license.
-            </Alert>
+            </div>
 
             {status.message && (
-              <Alert severity={status.type === 'error' ? 'error' : 'success'} className='text-xs'>
+              <div className={`p-4 border-4 border-black font-bold text-sm ${status.type === 'error' ? 'bg-[#ff3366] text-white' : 'bg-[#00ffff] text-black'}`}>
                 {status.message}
-              </Alert>
+              </div>
             )}
 
-            <form noValidate autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-4'>
-              <TextField
+            <form noValidate autoComplete='off' onSubmit={handleSubmit} className='flex flex-col gap-4 mt-4'>
+              <Input
                 autoFocus
                 fullWidth
                 label='Email'
@@ -113,29 +106,25 @@ const Register = ({ mode }) => {
                 onChange={e => setEmail(e.target.value)}
                 required
               />
-              <TextField
+              <Input
                 fullWidth
                 label='Password'
                 type={isPasswordShown ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        size='small'
-                        edge='end'
-                        onClick={handleClickShowPassword}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
+                endAdornment={
+                  <button
+                    type="button"
+                    className="p-1 hover:bg-slate-200 transition-colors border-2 border-transparent hover:border-black"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={e => e.preventDefault()}
+                  >
+                    <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
+                  </button>
+                }
               />
-              <TextField
+              <Input
                 fullWidth
                 label='Confirm Password'
                 type={isPasswordShown ? 'text' : 'password'}
@@ -143,7 +132,7 @@ const Register = ({ mode }) => {
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
               />
-              <TextField
+              <Input
                 fullWidth
                 label='Passcode (4 Angka)'
                 type='number'
@@ -154,17 +143,18 @@ const Register = ({ mode }) => {
                 }}
                 required
                 placeholder='Contoh: 1234'
-                inputProps={{ maxLength: 4, minLength: 4 }}
+                maxLength={4}
+                minLength={4}
               />
 
-              <Button fullWidth variant='contained' type='submit' size='large' disabled={loading}>
+              <Button fullWidth variant='primary' type='submit' size='lg' disabled={loading} className="mt-4">
                 {loading ? 'Creating...' : 'Sign Up'}
               </Button>
-              <div className='flex justify-center items-center flex-wrap gap-2 text-sm'>
-                <Typography variant='body2'>Already have an account?</Typography>
-                <Typography component={Link} href='/login' color='primary' className='font-semibold text-sm'>
+              <div className='flex justify-center items-center flex-wrap gap-2 text-sm mt-4'>
+                <span className="font-bold">Already have an account?</span>
+                <Link href='/login' className='font-black text-[#ff3366] hover:underline decoration-2 uppercase'>
                   Sign in instead
-                </Typography>
+                </Link>
               </div>
             </form>
           </div>

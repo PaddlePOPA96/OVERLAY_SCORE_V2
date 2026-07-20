@@ -1,7 +1,4 @@
 import React from 'react';
-
-import { Box, Button, Typography, Paper, Grid, IconButton } from '@mui/material';
-
 import { useScoreboard } from '@/shared/hooks/useScoreboard';
 
 export default function StreamsPreviewDashboard({ roomId, theme }) {
@@ -11,66 +8,68 @@ export default function StreamsPreviewDashboard({ roomId, theme }) {
     const handleScore = (team, increment) => {
         const currentScore = team === 'home' ? (data.homeScore || 0) : (data.awayScore || 0);
         const newScore = Math.max(0, currentScore + increment);
-
         updateMatch({
             [team === 'home' ? 'homeScore' : 'awayScore']: newScore
         });
     };
 
     return (
-        <Box display="flex" flexDirection="column" gap={1.5} height="100%" width="100%">
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>Live Streams & Quick Score</Typography>
-                </Box>
-                <Button variant="outlined" color="primary" size="small" href="/streams" target="_blank" sx={{ textTransform: 'none' }}>
+        <div className="flex flex-col gap-4 h-full w-full">
+            <div className="flex justify-between items-center border-b-4 border-black pb-2">
+                <h2 className="text-xl font-black uppercase tracking-wider text-black">Live Streams & Quick Score</h2>
+                <a 
+                    href="/streams" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-white border-2 border-black font-bold text-xs uppercase hover:bg-slate-100 transition-colors"
+                >
                     Buka di Tab Baru
-                </Button>
-            </Box>
+                </a>
+            </div>
 
             {/* Quick Score Controls */}
-            <Paper elevation={0} sx={{ p: 1, borderRadius: 2, border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)', bgcolor: isLight ? '#fff' : '#1e293b' }}>
-                <Grid container spacing={1} alignItems="center">
+            <div className="p-4 bg-white border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+                <div className="flex flex-row items-center divide-x-4 divide-black">
                     {/* HOME */}
-                    <Grid item xs={6} display="flex" flexDirection="column" alignItems="center" gap={0.5} sx={{ borderRight: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }}>
-                        <Typography variant="caption" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>
+                    <div className="flex-1 flex flex-col items-center gap-2 px-4">
+                        <span className="text-sm font-black uppercase tracking-wider text-black">
                             {data.homeName || 'HOME'}
-                        </Typography>
-                        <Box display="flex" alignItems="center" gap={2}>
-                            <IconButton size="small" onClick={() => handleScore('home', -1)} sx={{ bgcolor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)', color: isLight ? '#000' : '#fff' }}>
-                                <i className="ri-subtract-line"></i>
-                            </IconButton>
-                            <Typography variant="h5" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff', minWidth: '30px', textAlign: 'center' }}>
+                        </span>
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => handleScore('home', -1)} className="w-8 h-8 flex items-center justify-center bg-white border-2 border-black hover:bg-slate-100 font-black text-xl">
+                                -
+                            </button>
+                            <span className="text-3xl font-black min-w-[40px] text-center text-black">
                                 {data.homeScore || 0}
-                            </Typography>
-                            <IconButton size="small" onClick={() => handleScore('home', 1)} sx={{ bgcolor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)', color: isLight ? '#000' : '#fff' }}>
-                                <i className="ri-add-line"></i>
-                            </IconButton>
-                        </Box>
-                    </Grid>
+                            </span>
+                            <button onClick={() => handleScore('home', 1)} className="w-8 h-8 flex items-center justify-center bg-white border-2 border-black hover:bg-slate-100 font-black text-xl">
+                                +
+                            </button>
+                        </div>
+                    </div>
 
                     {/* AWAY */}
-                    <Grid item xs={6} display="flex" flexDirection="column" alignItems="center" gap={0.5}>
-                        <Typography variant="caption" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff' }}>
+                    <div className="flex-1 flex flex-col items-center gap-2 px-4">
+                        <span className="text-sm font-black uppercase tracking-wider text-black">
                             {data.awayName || 'AWAY'}
-                        </Typography>
-                        <Box display="flex" alignItems="center" gap={2}>
-                            <IconButton size="small" onClick={() => handleScore('away', -1)} sx={{ bgcolor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)', color: isLight ? '#000' : '#fff' }}>
-                                <i className="ri-subtract-line"></i>
-                            </IconButton>
-                            <Typography variant="h5" fontWeight="bold" sx={{ color: isLight ? '#000' : '#fff', minWidth: '30px', textAlign: 'center' }}>
+                        </span>
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => handleScore('away', -1)} className="w-8 h-8 flex items-center justify-center bg-white border-2 border-black hover:bg-slate-100 font-black text-xl">
+                                -
+                            </button>
+                            <span className="text-3xl font-black min-w-[40px] text-center text-black">
                                 {data.awayScore || 0}
-                            </Typography>
-                            <IconButton size="small" onClick={() => handleScore('away', 1)} sx={{ bgcolor: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)', color: isLight ? '#000' : '#fff' }}>
-                                <i className="ri-add-line"></i>
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Paper>
+                            </span>
+                            <button onClick={() => handleScore('away', 1)} className="w-8 h-8 flex items-center justify-center bg-white border-2 border-black hover:bg-slate-100 font-black text-xl">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* Iframe Preview */}
-            <Paper elevation={0} sx={{ borderRadius: 2, overflow: 'hidden', height: '680px', border: '1px solid', borderColor: isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)' }}>
+            <div className="flex-1 min-h-[680px] bg-black border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] overflow-hidden">
                 <iframe
                     src="/streams?minimal=true"
                     width="100%"
@@ -79,7 +78,7 @@ export default function StreamsPreviewDashboard({ roomId, theme }) {
                     allowFullScreen
                     title="Live Streams Preview"
                 ></iframe>
-            </Paper>
-        </Box>
+            </div>
+        </div>
     );
 }

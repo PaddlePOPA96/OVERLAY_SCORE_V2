@@ -1,31 +1,27 @@
+import Select from '@/components/ui/Select';
+
 export default function LayoutSelector({ data, updateMatch, description }) {
+  const options = [
+    { value: 'A', label: 'Layout A' },
+    { value: 'B', label: 'Layout B' },
+    { value: 'C', label: 'Layout C' },
+    { value: 'D', label: 'Layout D (Valorant Esports)' },
+    { value: 'E', label: 'Layout E (Valorant Overlay HUD)' },
+    { value: 'Pildun', label: 'Layout Pildun (World Cup 2026)' },
+    { value: 'Pildun2', label: 'Layout Pildun 2 (World Cup New)' },
+  ];
+
   return (
-    <div
-      className='op-section'
-      style={{
-        borderBottom: '1px solid #444',
-        paddingBottom: '10px',
-        marginBottom: '5px'
-      }}
-    >
-      <label className='op-label' htmlFor='operator-layout'>
-        Layout
-      </label>
-      <select
+    <div className='p-4 bg-slate-100 border-4 border-black mb-4'>
+      <Select
         id='operator-layout'
-        className='op-input'
+        label='Layout'
         value={data.layout}
         onChange={e => updateMatch({ layout: e.target.value })}
-      >
-        <option value='A'>Layout A</option>
-        <option value='B'>Layout B</option>
-        <option value='C'>Layout C</option>
-        <option value='D'>Layout D (Valorant Esports)</option>
-        <option value='E'>Layout E (Valorant Overlay HUD)</option>
-        <option value='Pildun'>Layout Pildun (World Cup 2026)</option>
-        <option value='Pildun2'>Layout Pildun 2 (World Cup New)</option>
-      </select>
-      {description && <span className='op-tiny'>{description}</span>}
+        options={options}
+        helperText={description}
+        fullWidth
+      />
     </div>
   )
 }
