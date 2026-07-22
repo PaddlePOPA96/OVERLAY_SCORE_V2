@@ -10,6 +10,7 @@ import LayoutD from '../../_components/LayoutD'
 import LayoutE from '../../_components/LayoutE'
 import LayoutPildun from '../../_components/LayoutPildun'
 import LayoutPildun2 from '../../_components/LayoutPildun2'
+import LayoutAFF from '../../_components/LayoutAFF'
 import { useLayoutSettings } from '@/shared/hooks/useLayoutSettings'
 import ThirdTitleOverlay from './ThirdTitleOverlay'
 import PenaltyOverlay from './PenaltyOverlay'
@@ -200,6 +201,8 @@ return
           <LayoutPildun data={data} displayTime={displayTime} formatTime={formatTime} />
         ) : data.layout === 'Pildun2' ? (
           <LayoutPildun2 data={data} displayTime={displayTime} formatTime={formatTime} />
+        ) : data.layout === 'AFF' ? (
+          <LayoutAFF data={data} displayTime={displayTime} formatTime={formatTime} />
         ) : (
           <LayoutB data={data} displayTime={displayTime} formatTime={formatTime} />
         )}

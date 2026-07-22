@@ -18,6 +18,7 @@ import OperatorD from './OperatorD'
 import OperatorE from './OperatorE'
 import OperatorPildun from './OperatorPildun'
 import OperatorPildun2 from './OperatorPildun2'
+import OperatorAFF from './OperatorAFF'
 
 import LayoutA from './LayoutA'
 import LayoutB from './LayoutB'
@@ -26,6 +27,7 @@ import LayoutD from './LayoutD'
 import LayoutE from './LayoutE'
 import LayoutPildun from './LayoutPildun'
 import LayoutPildun2 from './LayoutPildun2'
+import LayoutAFF from './LayoutAFF'
 
 // --- Scoreboard Slot Card Component ---
 function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) {
@@ -123,6 +125,10 @@ function ScoreboardSlotCard({ slotRoomId, slotNum, onSelect, onDelete, theme }) 
 
     if (data.layout === 'Pildun2') {
       return <LayoutPildun2 data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
+    }
+
+    if (data.layout === 'AFF') {
+      return <LayoutAFF data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
     }
 
     return <LayoutB data={previewData} displayTime={staticTime} formatTime={staticFormatTime} />
@@ -463,6 +469,10 @@ function ActiveOperatorPanel({ roomId, theme, toggleTheme, onLogout, onBackToSlo
 
     if (data.layout === 'Pildun2') {
       return <OperatorPildun2 {...commonProps} />
+    }
+
+    if (data.layout === 'AFF') {
+      return <OperatorAFF {...commonProps} />
     }
 
     return <OperatorB {...commonProps} />

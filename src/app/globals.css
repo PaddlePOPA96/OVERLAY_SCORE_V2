@@ -2794,3 +2794,51 @@ nextjs-portal {
 
 
 
+
+/* AFF Scoreboard Animations */
+.score-pulse {
+  animation: pulse-active 0.3s ease-out;
+}
+@keyframes pulse-active {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); color: #ff9f43; }
+  100% { transform: scale(1); }
+}
+
+@keyframes aff-slide-in {
+  0% { transform: translateY(-150%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes aff-slide-out {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-150%); opacity: 0; }
+}
+.aff-animate-in {
+  animation: aff-slide-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.aff-animate-out {
+  animation: aff-slide-out 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes logo-pop-in {
+  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+  70% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.logo-anim-in {
+  animation: logo-pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.timer-running {
+  animation: pulse-glow 2s infinite alternate;
+}
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 0 5px rgba(0, 242, 254, 0.2);
+    text-shadow: 0 0 5px rgba(255,255,255,0.2);
+  }
+  to {
+    box-shadow: 0 0 15px rgba(1, 108, 92, 0.4);
+    text-shadow: 0 0 12px rgba(255,255,255,0.6);
+  }
+}

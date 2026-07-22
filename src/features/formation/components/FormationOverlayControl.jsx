@@ -7,7 +7,37 @@ import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card';
 import Select from '@/components/ui/Select';
 import { db } from '@/services/firebase/index'
-import playerData from '@/data/fix-playerpildun32.json'
+import pildunData from '@/data/fix-playerpildun32.json'
+import squadsData from '@/data/squadsData.json'
+
+const playerData = [...pildunData];
+
+if (squadsData && squadsData["Indonesia"]) {
+  const indoPlayers = squadsData["Indonesia"].map((playerName, index) => {
+    let posisi = "Cadangan";
+    if (index < 4) posisi = "Penjaga Gawang";
+    else if (index < 20) posisi = "Pemain Bertahan";
+    else if (index < 39) posisi = "Gelandang";
+    else posisi = "Pemain Depan";
+
+    return {
+      nama_pemain: playerName,
+      posisi: posisi,
+      link_foto: `https://ferihui.my.id/Indonesia/${playerName.toLowerCase().replace(/\s+/g, '-')}.webp`
+    };
+  });
+
+  playerData.push({
+    negara: "Indonesia",
+    pemain: indoPlayers,
+    link_bendera: "https://flagcdn.com/w160/id.png",
+    pelatih: "Shin Tae-yong",
+    link_foto_pelatih: ""
+  });
+}
+
+// Sort alphabetically so it's easier to find
+playerData.sort((a, b) => a.negara.localeCompare(b.negara));
 
 const formationMap = {
   "Meksiko": "4-3-3", "Afrika Selatan": "4-2-3-1", "Swiss": "4-2-3-1", "Kanada": "3-4-2-1",
@@ -688,8 +718,23 @@ export default function FormationOverlayControl({ theme = 'light', roomId = 'def
                   </div>
                 ) : (
                   <>
-                    <div className="op-player-image-container">
-                      <img src={player.link_foto} alt={player.nama_pemain} className="op-player-image" loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/50' }} />
+                    <div className="op-player-image-container" style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? { borderRadius: '100%', overflow: 'hidden', transform: 'translateZ(0)', isolation: 'isolate' } : {}}>
+                      <img 
+                        src={player.link_foto} 
+                        alt={player.nama_pemain} 
+                        className="op-player-image" 
+                        loading="lazy" 
+                        decoding="async" 
+                        style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? {
+                          width: '100%',
+                          height: '100%',
+                          transform: 'none',
+                          left: '0',
+                          borderRadius: '100%',
+                          objectFit: 'cover'
+                        } : {}}
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/50' }} 
+                      />
                     </div>
                     <div className="op-player-name-tag">
                       {player.nama_pemain}

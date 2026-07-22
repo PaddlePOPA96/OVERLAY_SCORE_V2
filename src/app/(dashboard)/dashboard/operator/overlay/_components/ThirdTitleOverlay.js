@@ -54,13 +54,19 @@ export default function ThirdTitleOverlay({ data }) {
   const layoutType = data.layout || 'B'
   let customMarginTop = layoutType === 'Pildun2' ? '190px' : '260px'
 
-  if (layoutType === 'Pildun') customMarginTop = '100px'
+  if (layoutType === 'Pildun' || layoutType === 'AFF') customMarginTop = '100px'
 
   const overlayScale = (layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.1 : 1) * 1.3
+  const isAffLogoDisabled = layoutType === 'AFF' && !localData.playerImg
 
   const pipaLogoSvg = (color, withImage = false, imgUrl = '') => {
     const clipId = 'logoShape-clip'
 
+
+    const isIndoImg = imgUrl && imgUrl.includes('ferihui.my.id/Indonesia')
+    const imgProps = isIndoImg 
+      ? { x: "-10%", y: "0%", width: "120%", height: "120%", preserveAspectRatio: "xMidYMid slice" }
+      : { x: "-110%", y: "-2%", width: "320%", height: "320%", preserveAspectRatio: "xMidYMin meet" }
 
     return (
       <svg viewBox="0 0 401 500" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}>
@@ -75,11 +81,11 @@ export default function ThirdTitleOverlay({ data }) {
         {withImage && (
           <image
             href={imgUrl}
-            x="-110%"
-            y="-2%"
-            width="320%"
-            height="320%"
-            preserveAspectRatio="xMidYMin meet"
+            x={imgProps.x}
+            y={imgProps.y}
+            width={imgProps.width}
+            height={imgProps.height}
+            preserveAspectRatio={imgProps.preserveAspectRatio}
             clipPath={`url(#${clipId})`}
             style={{
               filter: 'drop-shadow(0px 0px 8px #ffffff) drop-shadow(0px 0px 3px #ffffff) drop-shadow(0px 0px 1px #ffffff)'
@@ -226,18 +232,20 @@ export default function ThirdTitleOverlay({ data }) {
 
         <div className={`lower-third-container ${animateIn ? 'in' : (isShowing ? 'init' : 'out')}`}>
           {/* LOGO STACK */}
-          <div className="logo-stack">
-            <div className="logo-layer layer-blue">{pipaLogoSvg('#2050ff')}</div>
-            <div className="logo-layer layer-green">{pipaLogoSvg('#20ff20')}</div>
-            <div className="logo-layer layer-red">{pipaLogoSvg('#ff2020')}</div>
+          {!isAffLogoDisabled && (
+            <div className="logo-stack">
+              <div className="logo-layer layer-blue">{pipaLogoSvg('#2050ff')}</div>
+              <div className="logo-layer layer-green">{pipaLogoSvg('#20ff20')}</div>
+              <div className="logo-layer layer-red">{pipaLogoSvg('#ff2020')}</div>
 
-            {/* Base white logo with image inside SVG */}
-            <div className="logo-layer layer-white">{pipaLogoSvg('#ff0000', true, imageUrl)}</div>
-          </div>
+              {/* Base white logo with image inside SVG */}
+              <div className="logo-layer layer-white">{pipaLogoSvg('#ff0000', true, imageUrl)}</div>
+            </div>
+          )}
 
           {/* NAME BAR WRAPPER FOR REVEAL ANIMATION */}
-          <div className="bar-wrapper">
-            <div className="bar">
+          <div className="bar-wrapper" style={isAffLogoDisabled ? { marginLeft: 0 } : {}}>
+            <div className="bar" style={isAffLogoDisabled ? { borderRadius: '34px', paddingLeft: '24px' } : {}}>
               <div className="event-icon" style={{ color: iconData.color }}>
                 {iconData.icon}
               </div>

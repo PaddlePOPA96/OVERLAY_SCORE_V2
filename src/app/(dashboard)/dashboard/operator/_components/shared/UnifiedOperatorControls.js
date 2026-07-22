@@ -17,7 +17,7 @@ import GoalAudioSettings from '../GoalAudioSettings'
 import OverlayRoomControls from '../OverlayRoomControls'
 import ThirdTitleControls from './ThirdTitleControls'
 
-export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark' }) {
+export default function UnifiedOperatorControls({ data, actions, displayTime, formatTime, roomId, theme = 'dark', isAFF = false }) {
   const [activeTab, setActiveTab] = useState('scoreboard')
   const [logoModalOpen, setLogoModalOpen] = useState(false)
   const [userRole, setUserRole] = useState(null)
@@ -712,7 +712,7 @@ return sliced
             <h3 style={{ fontSize: '13px', fontWeight: '950', borderBottom: '3px solid #000', paddingBottom: '6px', marginBottom: '12px', textTransform: 'uppercase' }}>
               📝 Third Title / Info Controls
             </h3>
-            <ThirdTitleControls data={data} actions={actions} theme={theme} />
+            <ThirdTitleControls data={data} actions={actions} theme={theme} isAFF={isAFF} />
           </div>
 
         </div>
@@ -818,7 +818,7 @@ return sliced
 
       {/* ── FIFA / CENTER LOGO SETTINGS ── */}
       <div style={{ background: cardBg, border: cardBorder, borderRadius: '12px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#fbbf24', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>🏆 Logo Tengah (FIFA / Turnamen)</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#fbbf24', borderBottom: `1px solid ${borderCol}`, paddingBottom: '4px', margin: '0' }}>{isAFF ? '🏆 Logo Tengah (AFF / Turnamen)' : '🏆 Logo Tengah (FIFA / Turnamen)'}</h3>
 
         {/* Switch: Logo B2F vs Logo FIFA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -842,7 +842,7 @@ return sliced
               left: data.useCustomFifaLogo ? '22px' : '2px', transition: 'left 0.2s ease', boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
             }} />
           </button>
-          <span style={{ fontSize: '12px', fontWeight: '600', color: data.useCustomFifaLogo ? '#3b82f6' : labelColor, opacity: data.useCustomFifaLogo ? 1 : 0.5 }}>Logo FIFA</span>
+          <span style={{ fontSize: '12px', fontWeight: '600', color: data.useCustomFifaLogo ? '#3b82f6' : labelColor, opacity: data.useCustomFifaLogo ? 1 : 0.5 }}>{isAFF ? 'Logo AFF' : 'Logo FIFA'}</span>
         </div>
 
         {/* Preview */}
@@ -850,7 +850,7 @@ return sliced
           <div style={{ width: '56px', height: '56px', background: data.useCustomFifaLogo ? '#051B5E' : '#ffb901', border: `1px solid ${borderCol}`, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
             {data.useCustomFifaLogo ? (
               <img
-                src='https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png'
+                src={isAFF ? 'https://upload.wikimedia.org/wikipedia/en/7/76/2026_ASEAN_Championship_Logo.svg' : 'https://upload.wikimedia.org/wikipedia/id/thumb/1/17/2026_FIFA_World_Cup_emblem.svg/960px-2026_FIFA_World_Cup_emblem.svg.png'}
                 alt='Center Logo'
                 style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
                 onError={e => { e.target.style.display = 'none' }}
@@ -861,7 +861,7 @@ return sliced
               </div>
             )}
           </div>
-          <span style={{ fontSize: '11px', color: '#9ca3af' }}>{data.useCustomFifaLogo ? 'Menggunakan logo FIFA World Cup 2026' : 'Menggunakan animasi logo B2F'}</span>
+          <span style={{ fontSize: '11px', color: '#9ca3af' }}>{data.useCustomFifaLogo ? `Menggunakan logo ${isAFF ? 'AFF ASEAN Championship' : 'FIFA World Cup 2026'}` : 'Menggunakan animasi logo B2F'}</span>
         </div>
 
         {/* Size Slider */}

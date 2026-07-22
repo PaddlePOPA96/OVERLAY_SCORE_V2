@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Broadcast Scoreboard - 2026 ASEAN Championship</title>
+
+    <!-- Google Fonts for Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;750;800&family=Orbitron:wght@600;700;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+       DESIGN SYSTEM & VARIABLES
+       ========================================================================== */
+        :root {
+            /* Colors */
+            --bg-primary: #0c0d12;
+            --bg-secondary: #161922;
+            --bg-card: rgba(25, 28, 41, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-glow: rgba(0, 242, 254, 0.4);
+
+            /* Accent Colors */
+            --accent-blue: #00f2fe;
+            --accent-green: #00f5a0;
+            --accent-red: #ff3366;
+            --accent-orange: #ff9f43;
+            --accent-teal: #016C5C;
+            --accent-teal-glow: rgba(1, 108, 92, 0.4);
+
+            /* Scoreboard Specific Colors (Matched from Group 1.svg) */
+            --sb-black: #050101;
+            --sb-grey: #D9D9D9;
+            --sb-teal: #016C5C;
+
+            /* Typography */
+            --font-sans: 'Inter', sans-serif;
+            --font-digital: 'Orbitron', 'Share Tech Mono', monospace;
+
+            /* Shadow & Blur */
+            --glass-blur: 16px;
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --btn-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ==========================================================================
+       BASE STYLES
+       ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: transparent;
+            /* Transparent for OBS Green Screen / Alpha overlays */
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==========================================================================
+       LIVE SCOREBOARD OVERLAY SECTION (SCALABLE & PIXEL PERFECT)
+       ========================================================================== */
+        .live-scoreboard-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Scaler container to make the fixed-size scoreboard responsive */
+        .scoreboard-scaler {
+            transform-origin: center center;
+            transform: scale(2.0);
+            /* Scaled up for broadcast view */
+            margin: 40px 0;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .scoreboard-scaler {
+                transform: scale(1.5);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scoreboard-scaler {
+                transform: scale(1.0);
+            }
+        }
+
+        /* Pixel Perfect replication of Group 1.svg (404px x 104px) */
+        .scoreboard-container {
+            width: 404px;
+            height: 104px;
+            position: relative;
+            user-select: none;
+            font-family: var(--font-sans);
+        }
+
+        /* 1. Header Pill (Top Capsule) */
+        .header-pill {
+            position: absolute;
+            left: 83px;
+            top: 0;
+            width: 240px;
+            height: 25px;
+            background: var(--sb-black);
+            border-radius: 9px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .header-pill span {
+            font-family: var(--font-sans);
+            font-weight: 750;
+            font-size: 8.5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* 2. Main Row elements */
+        .scoreboard-main-row {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            width: 404px;
+            height: 40px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .team-group {
+            display: flex;
+            align-items: flex-start;
+            position: absolute;
+            top: 0;
+            height: 40px;
+        }
+
+        .team-a-group {
+            left: 0.5px;
+            width: 182.5px;
+        }
+
+        .team-b-group {
+            right: 0.5px;
+            width: 180.5px;
+        }
+
+        /* Team Name Box */
+        .team-name-box {
+            width: 82px;
+            height: 39px;
+            background: var(--sb-black);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.5px;
+            /* Alignment shift matching 25.5px top */
+        }
+
+        .team-name-box.rounded-left {
+            border-bottom-left-radius: 12px;
+        }
+
+        .team-name-box.rounded-right {
+            border-bottom-right-radius: 12px;
+            width: 80.5px;
+        }
+
+        .team-name-box span {
+            font-weight: 750;
+            font-size: 13.5px;
+            letter-spacing: 0.2px;
+        }
+
+        /* Flag / Logo Box */
+        .flag-box {
+            width: 50px;
+            height: 40px;
+            background: var(--sb-grey);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .flag-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .flag-image.hidden {
+            display: none;
+        }
+
+        /* Simple default geometric flag styles inside box */
+        .flag-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #a1a1a1;
+        }
+
+        /* Score Box Card */
+        .score-box {
+            width: 50px;
+            height: 40px;
+            background: white;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .team-a-group .score-box {
+            border-top-right-radius: 16px;
+        }
+
+        .team-b-group .score-box {
+            border-top-left-radius: 16px;
+        }
+
+        .score-digit {
+            font-family: var(--font-digital);
+            font-weight: 700;
+            font-size: 25px;
+            line-height: 1;
+            text-align: center;
+            transition: transform 0.1s ease;
+        }
+
+        /* Pulse animation on score change */
+        .score-pulse {
+            animation: pulse-active 0.3s ease-out;
+        }
+
+        @keyframes pulse-active {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+                color: var(--accent-orange);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 3. Middle Logo Box Overlay (Z-indexed) */
+        .logo-box {
+            position: absolute;
+            left: 170px;
+            top: -4px;
+            /* Relative to 25px row start, matching absolute Y=21px */
+            width: 66px;
+            height: 55px;
+            background: black;
+            border-radius: 5.8px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-box img {
+            width: 36px;
+            height: 49px;
+            object-fit: contain;
+        }
+
+        /* 4. Bottom Timer Box */
+        .timer-box {
+            position: absolute;
+            left: 143px;
+            top: 65px;
+            width: 120px;
+            height: 39px;
+            background: var(--sb-teal);
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .timer-box span {
+            font-family: var(--font-digital);
+            font-weight: 700;
+            font-size: 19px;
+            color: white;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .timer-running {
+            animation: pulse-glow 2s infinite alternate;
+        }
+
+        @keyframes pulse-glow {
+            from {
+                box-shadow: 0 0 5px rgba(0, 242, 254, 0.2);
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            }
+
+            to {
+                box-shadow: 0 0 15px var(--accent-teal-glow);
+                text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Container -->
+    <div class="app-container">
+
+        <!-- SECTION 1: LIVE BROADCAST SCOREBOARD (MATCHING GROUP 1.svg SPEC) -->
+        <section class="live-scoreboard-section">
+            <div class="scoreboard-scaler">
+                <div class="scoreboard-container" id="scoreboard">
+
+                    <!-- Top Capsule: Tournament Title -->
+                    <div class="header-pill">
+                        <span id="display-tournament-title">2026 ASEAN CHAMPIONSHIP</span>
+                    </div>
+
+                    <!-- Main Row -->
+                    <div class="scoreboard-main-row">
+
+                        <!-- Left Side: Team A Name, Flag, and Score -->
+                        <div class="team-group team-a-group">
+                            <!-- Team Name Box (Black, left-rounded) -->
+                            <div class="team-name-box rounded-left" id="display-team-a-box">
+                                <span id="display-team-a-name">TIM A</span>
+                            </div>
+                            <!-- Flag Box (Grey placeholder / Image) -->
+                            <div class="flag-box" id="display-flag-a-box">
+                                <img id="display-flag-a-img" class="flag-image hidden" alt="Flag A">
+                                <div id="flag-a-placeholder" class="flag-placeholder"></div>
+                            </div>
+                            <!-- Score Box (White background, black text) -->
+                            <div class="score-box" id="display-score-a-box">
+                                <span id="display-score-a" class="score-digit">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Center Logo Overlay -->
+                        <div class="logo-box">
+                            <img id="display-tournament-logo" src="logo.png" alt="Tournament Logo"
+                                onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 49%22><rect width=%2236%22 height=%2249%22 fill=%22%23222%22/><text x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2210%22>LOGO</text></svg>'">
+                        </div>
+
+                        <!-- Right Side: Score, Flag, and Team B Name -->
+                        <div class="team-group team-b-group">
+                            <!-- Score Box (White background, black text) -->
+                            <div class="score-box" id="display-score-b-box">
+                                <span id="display-score-b" class="score-digit">0</span>
+                            </div>
+                            <!-- Flag Box (Grey placeholder / Image) -->
+                            <div class="flag-box" id="display-flag-b-box">
+                                <img id="display-flag-b-img" class="flag-image hidden" alt="Flag B">
+                                <div id="flag-b-placeholder" class="flag-placeholder"></div>
+                            </div>
+                            <!-- Team Name Box (Black, right-rounded) -->
+                            <div class="team-name-box rounded-right" id="display-team-b-box">
+                                <span id="display-team-b-name">TIM B</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Timer (Teal Background, White Text) -->
+                    <div class="timer-box">
+                        <span id="display-timer">00:00</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Scoreboard Controller Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // ASEAN VECTOR FLAGS PRESETS (Offline Friendly)
+            const flagPresets = {
+                id: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="20" fill="#ED2939"/>
+              <rect y="20" width="50" height="20" fill="#FFFFFF"/>
+             </svg>`,
+                th: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#FFFFFF"/>
+              <rect width="50" height="6.6" fill="#A51931"/>
+              <rect y="6.6" width="50" height="6.6" fill="#FFFFFF"/>
+              <rect y="13.2" width="50" height="13.2" fill="#2D2A4A"/>
+              <rect y="26.4" width="50" height="6.6" fill="#FFFFFF"/>
+              <rect y="33" width="50" height="7" fill="#A51931"/>
+             </svg>`,
+                my: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#FFFFFF"/>
+              <rect width="50" height="2.8" fill="#CC0000"/><rect y="5.6" width="50" height="2.8" fill="#CC0000"/><rect y="11.2" width="50" height="2.8" fill="#CC0000"/><rect y="16.8" width="50" height="2.8" fill="#CC0000"/><rect y="22.4" width="50" height="2.8" fill="#CC0000"/><rect y="28" width="50" height="2.8" fill="#CC0000"/><rect y="33.6" width="50" height="2.8" fill="#CC0000"/><rect y="39.2" width="50" height="0.8" fill="#CC0000"/>
+              <rect y="2.8" width="50" height="2.8" fill="#FFFFFF"/><rect y="8.4" width="50" height="2.8" fill="#FFFFFF"/><rect y="14" width="50" height="2.8" fill="#FFFFFF"/><rect y="19.6" width="50" height="2.8" fill="#FFFFFF"/><rect y="25.2" width="50" height="2.8" fill="#FFFFFF"/><rect y="30.8" width="50" height="2.8" fill="#FFFFFF"/><rect y="36.4" width="50" height="2.8" fill="#FFFFFF"/>
+              <rect width="25" height="22.4" fill="#000066"/>
+              <path d="M 11 5 A 6 6 0 1 0 11 17 A 5.2 5.2 0 1 1 11 5 Z" fill="#FFCC00"/>
+              <polygon points="17,11 18,9 19,11 21,11 19.5,12 20.5,14 18,12.5 15.5,14 16.5,12 15,11" fill="#FFCC00"/>
+             </svg>`,
+                vn: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#DA251D"/>
+              <polygon points="25,9 27.5,17 35.5,17 29,22 31.5,30 25,25 18.5,30 21,22 14.5,17 22.5,17" fill="#FFFF00"/>
+             </svg>`,
+                sg: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="20" fill="#EF3A38"/>
+              <rect y="20" width="50" height="20" fill="#FFFFFF"/>
+              <path d="M 11 15 A 5 5 0 1 0 11 5 A 4 4 0 1 1 11 15 Z" fill="#FFFFFF"/>
+              <polygon points="13,8 13.3,9 14.3,9 13.5,9.6 13.8,10.6 13,10 12.2,10.6 12.5,9.6 11.7,9 12.7,9" fill="#FFFFFF"/>
+              <polygon points="16,11 16.3,12 17.3,12 16.5,12.6 16.8,13.6 16,13 15.2,13.6 15.5,12.6 14.7,12 15.7,12" fill="#FFFFFF"/>
+              <polygon points="10,11 10.3,12 11.3,12 10.5,12.6 10.8,13.6 10,13 9.2,13.6 9.5,12.6 8.7,12 9.7,12" fill="#FFFFFF"/>
+              <polygon points="8,8 8.3,9 9.3,9 8.5,9.6 8.8,10.6 8,10 7.2,10.6 7.5,9.6 6.7,9 7.7,9" fill="#FFFFFF"/>
+              <polygon points="10.5,6 10.8,7 11.8,7 11,7.6 11.3,8.6 10.5,8 9.7,8.6 10,7.6 9.2,7 10.2,7" fill="#FFFFFF"/>
+             </svg>`,
+                ph: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="20" fill="#0038A8"/>
+              <rect y="20" width="50" height="20" fill="#CE1126"/>
+              <polygon points="0,0 20,20 0,40" fill="#FFFFFF"/>
+              <circle cx="7" cy="20" r="3.2" fill="#FCD116"/>
+              <circle cx="3" cy="7" r="1" fill="#FCD116"/>
+              <circle cx="3" cy="33" r="1" fill="#FCD116"/>
+              <circle cx="16" cy="20" r="1" fill="#FCD116"/>
+             </svg>`,
+                mm: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="13.3" fill="#FECB00"/>
+              <rect y="13.3" width="50" height="13.4" fill="#109B48"/>
+              <rect y="26.7" width="50" height="13.3" fill="#EA2839"/>
+              <polygon points="25,9 28.5,19 38.5,19 30.5,25 33.5,35 25,29 16.5,35 19.5,25 11.5,19 21.5,19" fill="#FFFFFF"/>
+             </svg>`,
+                kh: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#032A96"/>
+              <rect y="10" width="50" height="20" fill="#E21B1B"/>
+              <path d="M 20,26 L 20,23 L 22,23 L 22,20 L 23,20 L 23,17 L 24,17 L 24,15 L 26,15 L 26,17 L 27,17 L 27,20 L 28,20 L 28,23 L 30,23 L 30,26 Z" fill="#FFFFFF"/>
+              <path d="M 16,26 L 16,23 L 17,23 L 17,21 L 18,21 L 18,18 L 19,18 L 19,21 L 20,21 L 20,23 L 21,23 L 21,26 Z" fill="#FFFFFF"/>
+              <path d="M 29,26 L 29,23 L 30,23 L 30,21 L 31,21 L 31,18 L 32,18 L 32,21 L 33,21 L 33,23 L 34,23 L 34,26 Z" fill="#FFFFFF"/>
+             </svg>`,
+                la: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="10" fill="#CE1126"/>
+              <rect y="10" width="50" height="20" fill="#002F6C"/>
+              <rect y="30" width="50" height="10" fill="#CE1126"/>
+              <circle cx="25" cy="20" r="7.5" fill="#FFFFFF"/>
+             </svg>`,
+                bn: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#FCD116"/>
+              <polygon points="0,7 50,33 50,40 0,14" fill="#FFFFFF"/>
+              <polygon points="0,14 50,40 50,40 0,14" fill="#000000"/>
+              <circle cx="25" cy="18" r="3" fill="#E21C21"/>
+              <path d="M 21 20 C 21 25, 29 25, 29 20" stroke="#E21C21" stroke-width="1.5" fill="none"/>
+             </svg>`,
+                tl: `<svg viewBox="0 0 50 40" width="100%" height="100%">
+              <rect width="50" height="40" fill="#FFC72C"/>
+              <polygon points="0,0 50,20 0,40" fill="#FFC72C"/>
+              <polygon points="0,0 35,20 0,40" fill="#111111"/>
+              <polygon points="0,0 20,20 0,40" fill="#FFFFFF"/>
+              <polygon points="6,20 8.5,19 9,16 9.5,19 12,20 9.5,21 9,24 8.5,21" fill="#FFFFFF" transform="rotate(-15 9 20)"/>
+             </svg>`
+            };
+
+            // URL Query Parser
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const tournamentTitle = urlParams.get('title') || '2026 ASEAN CHAMPIONSHIP';
+            const teamAName = urlParams.get('teamA') || 'TIM A';
+            const teamBName = urlParams.get('teamB') || 'TIM B';
+
+            const initialScoreA = Math.max(0, parseInt(urlParams.get('scoreA')) || 0);
+            const initialScoreB = Math.max(0, parseInt(urlParams.get('scoreB')) || 0);
+
+            const initialTimeParam = urlParams.get('time') || '00:00';
+            const isCountdown = urlParams.get('countdown') === 'true';
+
+            const flagAQuery = urlParams.get('flagA');
+            const flagBQuery = urlParams.get('flagB');
+            const logoQuery = urlParams.get('logo') || 'logo.png';
+
+            // DOM Selectors
+            const displayTournamentTitle = document.getElementById("display-tournament-title");
+            const displayTeamAName = document.getElementById("display-team-a-name");
+            const displayTeamBName = document.getElementById("display-team-b-name");
+            const displayScoreA = document.getElementById("display-score-a");
+            const displayScoreB = document.getElementById("display-score-b");
+            const displayTimer = document.getElementById("display-timer");
+            const displayTournamentLogo = document.getElementById("display-tournament-logo");
+
+            const displayFlagAImg = document.getElementById("display-flag-a-img");
+            const displayFlagBImg = document.getElementById("display-flag-b-img");
+            const flagAPlaceholder = document.getElementById("flag-a-placeholder");
+            const flagBPlaceholder = document.getElementById("flag-b-placeholder");
+
+            // Scoreboard State
+            let scoreA = initialScoreA;
+            let scoreB = initialScoreB;
+            let timerSeconds = parseTime(initialTimeParam);
+            let isTimerRunning = false;
+            let timerInterval = null;
+
+            function parseTime(timeStr) {
+                if (timeStr.includes(':')) {
+                    const parts = timeStr.split(':');
+                    const mins = parseInt(parts[0]) || 0;
+                    const secs = parseInt(parts[1]) || 0;
+                    return (mins * 60) + secs;
+                } else {
+                    const mins = parseInt(timeStr) || 0;
+                    return mins * 60;
+                }
+            }
+
+            // Initial Sync
+            function init() {
+                displayTournamentTitle.textContent = tournamentTitle;
+                displayTeamAName.textContent = teamAName;
+                displayTeamBName.textContent = teamBName;
+                displayScoreA.textContent = scoreA;
+                displayScoreB.textContent = scoreB;
+
+                renderFlag('A', flagAQuery);
+                renderFlag('B', flagBQuery);
+
+                if (logoQuery) {
+                    displayTournamentLogo.src = logoQuery;
+                }
+                updateTimerUI();
+            }
+
+            function renderFlag(team, query) {
+                const placeholder = team === 'A' ? flagAPlaceholder : flagBPlaceholder;
+                const imgEl = team === 'A' ? displayFlagAImg : displayFlagBImg;
+
+                if (!query) {
+                    placeholder.innerHTML = team === 'A' ? flagPresets.id : flagPresets.th;
+                    imgEl.classList.add("hidden");
+                    placeholder.classList.remove("hidden");
+                    return;
+                }
+
+                const cleanQuery = query.toLowerCase().trim();
+
+                if (flagPresets[cleanQuery]) {
+                    placeholder.innerHTML = flagPresets[cleanQuery];
+                    imgEl.classList.add("hidden");
+                    placeholder.classList.remove("hidden");
+                } else {
+                    imgEl.src = query;
+                    imgEl.classList.remove("hidden");
+                    placeholder.classList.add("hidden");
+
+                    imgEl.onerror = () => {
+                        imgEl.classList.add("hidden");
+                        placeholder.classList.remove("hidden");
+                        placeholder.innerHTML = `<span style="font-size:8px;color:#666;font-weight:bold;">ERR</span>`;
+                    };
+                }
+            }
+
+            function modifyScore(team, amount) {
+                if (team === 'A') {
+                    scoreA = Math.max(0, scoreA + amount);
+                    displayScoreA.textContent = scoreA;
+                    animateScoreChange(displayScoreA);
+                } else if (team === 'B') {
+                    scoreB = Math.max(0, scoreB + amount);
+                    displayScoreB.textContent = scoreB;
+                    animateScoreChange(displayScoreB);
+                }
+            }
+
+            function animateScoreChange(element) {
+                element.classList.remove("score-pulse");
+                void element.offsetWidth;
+                element.classList.add("score-pulse");
+                setTimeout(() => {
+                    element.classList.remove("score-pulse");
+                }, 300);
+            }
+
+            function formatTime(totalSeconds) {
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                const padMin = String(mins).padStart(2, '0');
+                const padSec = String(secs).padStart(2, '0');
+                return `${padMin}:${padSec}`;
+            }
+
+            function updateTimerUI() {
+                displayTimer.textContent = formatTime(timerSeconds);
+            }
+
+            function startTimer() {
+                if (isTimerRunning) return;
+                isTimerRunning = true;
+
+                const timerBox = document.querySelector(".timer-box");
+                if (timerBox) timerBox.classList.add("timer-running");
+
+                timerInterval = setInterval(() => {
+                    if (isCountdown) {
+                        if (timerSeconds > 0) {
+                            timerSeconds--;
+                        } else {
+                            pauseTimer();
+                        }
+                    } else {
+                        timerSeconds++;
+                    }
+                    updateTimerUI();
+                }, 1000);
+            }
+
+            function pauseTimer() {
+                if (!isTimerRunning) return;
+                isTimerRunning = false;
+
+                const timerBox = document.querySelector(".timer-box");
+                if (timerBox) timerBox.classList.remove("timer-running");
+
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            function toggleTimer() {
+                if (isTimerRunning) {
+                    pauseTimer();
+                } else {
+                    startTimer();
+                }
+            }
+
+            // Keyboard hotkeys
+            document.addEventListener("keydown", (e) => {
+                switch (e.code) {
+                    case "Space":
+                        e.preventDefault();
+                        toggleTimer();
+                        break;
+
+                    case "KeyQ":
+                        modifyScore('A', 1);
+                        break;
+                    case "KeyA":
+                        modifyScore('A', -1);
+                        break;
+
+                    case "KeyP":
+                        modifyScore('B', 1);
+                        break;
+                    case "KeyL":
+                        modifyScore('B', -1);
+                        break;
+
+                    case "KeyR":
+                        e.preventDefault();
+                        pauseTimer();
+                        timerSeconds = parseTime(initialTimeParam);
+                        updateTimerUI();
+                        break;
+
+                    case "Escape":
+                    case "KeyE":
+                        e.preventDefault();
+                        scoreA = initialScoreA;
+                        scoreB = initialScoreB;
+                        displayScoreA.textContent = scoreA;
+                        displayScoreB.textContent = scoreB;
+                        animateScoreChange(displayScoreA);
+                        animateScoreChange(displayScoreB);
+                        break;
+                }
+            });
+
+            init();
+        });
+    </script>
+</body>
+
+</html>

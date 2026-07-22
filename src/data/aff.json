@@ -1,0 +1,49 @@
+{
+  "aff_logo": "https://upload.wikimedia.org/wikipedia/en/7/76/2026_ASEAN_Championship_Logo.svg",
+  "countries": [
+    {
+      "negara": "Brunei",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Brunei.svg"
+    },
+    {
+      "negara": "Cambodia",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/8/83/Flag_of_Cambodia.svg"
+    },
+    {
+      "negara": "Indonesia",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Flag_of_Indonesia.svg"
+    },
+    {
+      "negara": "Laos",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/5/56/Flag_of_Laos.svg"
+    },
+    {
+      "negara": "Malaysia",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/6/66/Flag_of_Malaysia.svg"
+    },
+    {
+      "negara": "Myanmar",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Flag_of_Myanmar.svg"
+    },
+    {
+      "negara": "Philippines",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/9/99/Flag_of_the_Philippines.svg"
+    },
+    {
+      "negara": "Singapore",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/4/48/Flag_of_Singapore.svg"
+    },
+    {
+      "negara": "Thailand",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg"
+    },
+    {
+      "negara": "Timor-Leste",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/2/26/Flag_of_East_Timor.svg"
+    },
+    {
+      "negara": "Vietnam",
+      "link": "https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg"
+    }
+  ]
+}

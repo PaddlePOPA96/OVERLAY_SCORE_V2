@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 import pildunData from '@/data/fix-playerpildun32.json'
+import squadsData from '@/data/squadsData.json'
 
-export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
+export default function ThirdTitleControls({ data, actions, theme = 'dark', isAFF = false }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null)
   const [eventType, setEventType] = useState('goal') // goal, yellow_card, red_card, mvp
 
@@ -26,6 +27,25 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const activeData = useMemo(() => {
+    let combined = [...pildunData];
+
+    if (squadsData) {
+      const affData = Object.keys(squadsData).map(country => ({
+        negara: country,
+        pemain: (squadsData[country] || []).map(playerName => ({
+          nama_pemain: playerName,
+          link_foto: country === 'Indonesia' 
+            ? `https://ferihui.my.id/Indonesia/${playerName.toLowerCase().replace(/\s+/g, '-')}.webp`
+            : ''
+        }))
+      }));
+      combined = [...combined, ...affData];
+    }
+
+    return combined;
+  }, [squadsData, pildunData])
+
   // Sync local state with live data if it's currently showing
   useEffect(() => {
     if (data?.thirdTitle && data.thirdTitle.isShowing) {
@@ -33,28 +53,41 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
         setEventType(data.thirdTitle.eventType)
       }
       if (data.thirdTitle.playerName) {
+        let playerImg = data.thirdTitle.playerImg
+
+        // Try to resolve the image from activeData if it's empty
+        if (!playerImg && activeData) {
+          for (const d of activeData) {
+            const matchedPlayer = d.pemain.find(p => p.nama_pemain === data.thirdTitle.playerName)
+            if (matchedPlayer && matchedPlayer.link_foto) {
+              playerImg = matchedPlayer.link_foto
+              break
+            }
+          }
+        }
+
         setSelectedPlayer({
           name: data.thirdTitle.playerName,
-          img_url: data.thirdTitle.playerImg,
+          img_url: playerImg,
           club: 'Live Data' // fallback since club isn't in thirdTitle
         })
       }
     }
-  }, [data?.thirdTitle?.triggerId, data?.thirdTitle?.isShowing])
+  }, [data?.thirdTitle?.triggerId, data?.thirdTitle?.isShowing, activeData])
 
-  // Map pildunData to clubs on load
+  // Map activeData to clubs on load
   useEffect(() => {
-    const mappedClubs = pildunData.map(d => ({ id: d.negara, name: d.negara }))
+    const mappedClubs = activeData.map(d => ({ id: d.negara, name: d.negara }))
 
     setClubs(mappedClubs)
     setFilteredClubs(mappedClubs)
 
     // Load saved selection from localStorage
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('selected_country_team')
+      const saved = localStorage.getItem(isAFF ? 'selected_aff_team' : 'selected_country_team')
 
       if (saved) {
-        const countryObj = pildunData.find(d => d.negara === saved)
+        const countryObj = activeData.find(d => d.negara === saved)
 
         if (countryObj) {
           setSelectedClub({ id: saved, name: saved })
@@ -66,7 +99,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
         }
       }
     }
-  }, [])
+  }, [activeData, isAFF])
 
   // Filter clubs locally
   useEffect(() => {
@@ -84,7 +117,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
   // Load players locally when a club/country is selected
   useEffect(() => {
     if (selectedClub) {
-      const countryObj = pildunData.find(d => d.negara === selectedClub.name)
+      const countryObj = activeData.find(d => d.negara === selectedClub.name)
 
       if (countryObj) {
         setPlayers(countryObj.pemain.map(p => ({
@@ -96,15 +129,15 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
 
         // Save to local storage
         if (typeof window !== 'undefined') {
-          localStorage.setItem('selected_country_team', selectedClub.name)
+          localStorage.setItem(isAFF ? 'selected_aff_team' : 'selected_country_team', selectedClub.name)
         }
       } else {
         setPlayers([])
       }
     }
-  }, [selectedClub])
+  }, [selectedClub, activeData, isAFF])
 
-  // Global Search locally inside pildunData
+  // Global Search locally inside activeData
   useEffect(() => {
     if (activeTab !== 'global') return
 
@@ -117,7 +150,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
     const query = globalSearchQuery.toLowerCase()
     const results = []
 
-    pildunData.forEach(d => {
+    activeData.forEach(d => {
       d.pemain.forEach(p => {
         if (p.nama_pemain.toLowerCase().includes(query)) {
           results.push({
@@ -129,7 +162,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
       })
     })
     setGlobalResults(results)
-  }, [globalSearchQuery, activeTab])
+  }, [globalSearchQuery, activeTab, activeData])
 
   // Reset search state when closed (keep selected country)
   useEffect(() => {
@@ -421,7 +454,7 @@ export default function ThirdTitleControls({ data, actions, theme = 'dark' }) {
                               ))}
                               {displayedPlayers.length === 0 && (
                                 <span style={{ gridColumn: 'span 2', textAlign: 'center', fontSize: '12px', color: '#64748b', padding: '10px' }}>
-                                  Player not found.
+                                  Player not found. (DEBUG: squadsData type: {typeof squadsData}, players length: {players.length})
                                 </span>
                               )}
                             </>

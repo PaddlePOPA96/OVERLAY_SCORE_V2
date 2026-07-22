@@ -7,7 +7,7 @@ import pildunData from '@/data/fix-playerpildun32.json'
 
 export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('database')
-  const [league, setLeague] = useState(Object.keys(LOGO_DATA)[0] || '')
+  const [league, setLeague] = useState('England - Premier League')
 
   // Custom logo states
   const [webUrl, setWebUrl] = useState('')
@@ -294,7 +294,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                   maxHeight: '58vh'
                 }}
               >
-                {Object.keys(LOGO_DATA).map(lg => (
+                {Object.keys(LOGO_DATA)
+                  .filter(lg => ['England - Premier League', 'Spain - LaLiga', 'FIFA World Cup'].includes(lg))
+                  .map(lg => (
                   <div
                     key={lg}
                     onClick={() => setLeague(lg)}

@@ -184,13 +184,31 @@ return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
                     animationDelay: `${0.8 + (index * 0.1)}s`
                   }}
                 >
-                  <div className="player-image-container">
+                  <div className="player-image-container" style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? { 
+                    width: '90px', 
+                    height: '90px', 
+                    borderRadius: '50%', 
+                    overflow: 'hidden', 
+                    transform: 'translateZ(0)', 
+                    isolation: 'isolate',
+                    margin: '0 auto',
+                    border: '3px solid #1a1a1a',
+                    backgroundColor: 'white'
+                  } : {}}>
                     <img
                       src={player.link_foto}
                       alt={player.nama_pemain}
                       className="player-image"
                       loading="lazy"
                       decoding="async"
+                      style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? {
+                        width: '100%',
+                        height: '100%',
+                        transform: 'none',
+                        left: '0',
+                        borderRadius: '100%',
+                        objectFit: 'cover'
+                      } : {}}
                       onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/90x100?text=Player' }}
                     />
                   </div>
@@ -206,7 +224,7 @@ return { top: `${clampedTop}%`, left: `${landscapeLeft}%` };
             <div>
               <h2 className="text-xl font-black uppercase text-gray-900 mb-6">Substitution</h2>
               <ul className="space-y-3 text-gray-800 font-semibold text-sm">
-                {substitutes?.map((sub, index) => (
+                {substitutes?.slice(0, 11).map((sub, index) => (
                   <li
                     key={sub.id}
                     className="flex items-center sub-item"
@@ -362,13 +380,31 @@ return (
                         animationDelay: `${0.8 + (index * 0.06)}s`
                       }}
                     >
-                      <div className="player-image-container-landscape">
+                      <div className="player-image-container-landscape" style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? { 
+                        width: '70px', 
+                        height: '70px', 
+                        borderRadius: '50%', 
+                        overflow: 'hidden', 
+                        transform: 'translateZ(0)', 
+                        isolation: 'isolate',
+                        margin: '0 auto',
+                        border: '3px solid #1a1a1a',
+                        backgroundColor: 'white'
+                      } : {}}>
                         <img
                           src={player.link_foto}
                           alt={player.nama_pemain}
                           className="player-image-landscape"
                           loading="lazy"
                           decoding="async"
+                          style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? {
+                            width: '100%',
+                            height: '100%',
+                            transform: 'none',
+                            left: '0',
+                            borderRadius: '100%',
+                            objectFit: 'cover'
+                          } : {}}
                           onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/90x100?text=Player' }}
                         />
                       </div>
@@ -403,13 +439,31 @@ return (
                         animationDelay: `${0.8 + (index * 0.06)}s`
                       }}
                     >
-                      <div className="player-image-container-landscape">
+                      <div className="player-image-container-landscape" style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? { 
+                        width: '70px', 
+                        height: '70px', 
+                        borderRadius: '50%', 
+                        overflow: 'hidden', 
+                        transform: 'translateZ(0)', 
+                        isolation: 'isolate',
+                        margin: '0 auto',
+                        border: '3px solid #1a1a1a',
+                        backgroundColor: 'white'
+                      } : {}}>
                         <img
                           src={player.link_foto}
                           alt={player.nama_pemain}
                           className="player-image-landscape"
                           loading="lazy"
                           decoding="async"
+                          style={player.link_foto?.includes('ferihui.my.id/Indonesia') ? {
+                            width: '100%',
+                            height: '100%',
+                            transform: 'none',
+                            left: '0',
+                            borderRadius: '100%',
+                            objectFit: 'cover'
+                          } : {}}
                           onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/90x100?text=Player' }}
                         />
                       </div>
