@@ -54,10 +54,10 @@ export default function ThirdTitleOverlay({ data }) {
   const layoutType = data.layout || 'B'
   let customMarginTop = layoutType === 'Pildun2' ? '190px' : '260px'
 
-  if (layoutType === 'Pildun' || layoutType === 'AFF') customMarginTop = '100px'
+  if (layoutType === 'Pildun' || layoutType === 'AFF' || layoutType === 'AFF2') customMarginTop = '100px'
 
   const overlayScale = (layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.1 : 1) * 1.3
-  const isAffLogoDisabled = layoutType === 'AFF' && !localData.playerImg
+  const isAffLogoDisabled = (layoutType === 'AFF' || layoutType === 'AFF2') && !localData.playerImg
 
   const pipaLogoSvg = (color, withImage = false, imgUrl = '') => {
     const clipId = 'logoShape-clip'

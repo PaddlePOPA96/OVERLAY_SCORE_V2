@@ -10,6 +10,7 @@ export default function LayoutSelector({ data, updateMatch, description }) {
     { value: 'Pildun', label: 'Layout Pildun (World Cup 2026)' },
     { value: 'Pildun2', label: 'Layout Pildun 2 (World Cup New)' },
     { value: 'AFF', label: 'Layout AFF (ASEAN Championship)' },
+    { value: 'AFF2', label: 'Layout AFF 2 (ASEAN Championship Custom)' },
   ];
 
   return (
