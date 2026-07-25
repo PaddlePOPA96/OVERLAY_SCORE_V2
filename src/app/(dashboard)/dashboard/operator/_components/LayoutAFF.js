@@ -193,10 +193,18 @@ export default function LayoutAFF({ data, displayTime, formatTime }) {
   const transformScale = data.isPreview ? 'scale(1.2)' : 'scale(2.5)'
 
   return (
-    <>
+    <div
+      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
       <div
-        className="flex items-center justify-center p-4 pt-[80px] relative w-full"
-        style={{ transform: transformScale, transformOrigin: 'top center', fontFamily: "'Inter', sans-serif" }}
+        style={{
+          transform: transformScale,
+          transformOrigin: 'center center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
       >
         <div
           className={`relative select-none ${isHiding ? 'aff-animate-out' : 'aff-animate-in'}`}
@@ -324,6 +332,6 @@ export default function LayoutAFF({ data, displayTime, formatTime }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

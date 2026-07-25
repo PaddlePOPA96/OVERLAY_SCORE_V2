@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 
 import { LOGO_DATA, buildLogoSrc } from '@/data/logoData'
 import pildunData from '@/data/fix-playerpildun32.json'
+import affData from '@/data/aff.json'
+
 
 export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSelect, theme = 'dark' }) {
   const [activeTab, setActiveTab] = useState('database')
@@ -31,7 +33,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
 
   const clubs = league === 'FIFA World Cup'
     ? pildunData.map(d => d.negara)
-    : (LOGO_DATA[league] || [])
+    : league === 'ASEAN Championship'
+      ? [...affData.countries.map(d => d.negara), 'ASEAN Championship']
+      : (LOGO_DATA[league] || [])
 
   // Canvas Image Compression Helper
   const processAndCompressFile = file => {
@@ -295,7 +299,7 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                 }}
               >
                 {Object.keys(LOGO_DATA)
-                  .filter(lg => ['England - Premier League', 'Spain - LaLiga', 'FIFA World Cup'].includes(lg))
+                  .filter(lg => ['England - Premier League', 'Italy - Serie A', 'ASEAN Championship', 'FIFA World Cup'].includes(lg))
                   .map(lg => (
                   <div
                     key={lg}
@@ -333,7 +337,9 @@ export default function LogoPickerModal({ isOpen, onClose, defaultClubName, onSe
                 {clubs.map(club => {
                   const src = league === 'FIFA World Cup'
                     ? (pildunData.find(d => d.negara === club)?.link_bendera || '')
-                    : buildLogoSrc(league, club)
+                    : league === 'ASEAN Championship'
+                      ? (club === 'ASEAN Championship' ? affData.aff_logo : (affData.countries.find(d => d.negara === club)?.link || ''))
+                      : buildLogoSrc(league, club)
 
                   return (
                     <button
