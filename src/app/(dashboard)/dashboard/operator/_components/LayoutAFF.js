@@ -195,7 +195,7 @@ export default function LayoutAFF({ data, displayTime, formatTime }) {
   return (
     <div
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
-      style={{ fontFamily: "'Inter', sans-serif" }}
+      style={{ fontFamily: "var(--font-inter), sans-serif" }}
     >
       <div
         style={{

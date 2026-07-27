@@ -1,5 +1,5 @@
 // Third-party Imports
-import { Inter } from 'next/font/google'
+import { Inter, Poppins, Orbitron } from 'next/font/google'
 import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // Style Imports
@@ -79,6 +79,21 @@ export const viewport = {
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
+  display: 'swap'
+})
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
+  display: 'swap'
+})
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-orbitron',
   display: 'swap'
 })
 
@@ -94,7 +109,7 @@ const RootLayout = ({ children }) => {
         <link rel='preconnect' href='https://firestore.googleapis.com' />
         <link rel='preconnect' href='https://securetoken.googleapis.com' />
       </head>
-      <body className={`${inter.className} flex is-full min-bs-full flex-auto flex-col`}>
+      <body className={`${inter.className} ${inter.variable} ${poppins.variable} ${orbitron.variable} flex is-full min-bs-full flex-auto flex-col`}>
         <SecurityGuard />
         {children}
       </body>

@@ -70,7 +70,7 @@ export default function LayoutAFF2({ data, displayTime, formatTime }) {
   return (
     <div
       className="absolute inset-0 flex items-center justify-center pointer-events-none"
-      style={{ fontFamily: "'Poppins', sans-serif" }}
+      style={{ fontFamily: "var(--font-poppins), sans-serif" }}
     >
       <div
         style={{
