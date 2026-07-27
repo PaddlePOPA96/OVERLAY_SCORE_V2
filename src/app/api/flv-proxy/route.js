@@ -11,7 +11,9 @@ export async function GET(request) {
     const originHeader = request.headers.get('origin');
     const allowedOrigins = [
         'https://scoreboss.my.id',
-        'https://www.scoreboss.my.id'
+        'https://www.scoreboss.my.id',
+        'https://tv.alziocell.my.id',
+        'https://alziocell.my.id'
     ];
     const isOriginAllowed = (url) => {
         if (!url) return false;

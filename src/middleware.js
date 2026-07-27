@@ -21,6 +21,8 @@ export function middleware(request) {
     const allowedDomains = [
       'https://scoreboss.my.id',
       'https://www.scoreboss.my.id',
+      'https://tv.alziocell.my.id',
+      'https://alziocell.my.id'
     ]
 
     const isAllowed = (url) => {
