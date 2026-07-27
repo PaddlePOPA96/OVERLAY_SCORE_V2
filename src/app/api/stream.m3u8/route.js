@@ -11,8 +11,27 @@ const ALLOWED_DOMAINS = [
     'strmd.st',
     'lola30es.mpipzni2naturally32kistomach.ru',
     'folaplay.com',
-    'cloudfront.net'
+    'cloudfront.net',
+    'icanplay.my.id',
+    'rctiplus.id',
+    'rctiplus.com'
 ];
+
+const isM3U8Playlist = (urlStr) => {
+    try {
+        const u = new URL(urlStr);
+        // If there's a nested 'url' or 'u' parameter, check that instead
+        let target = u.searchParams.get('url') || u.searchParams.get('u') || urlStr;
+        if (target !== urlStr) {
+            return isM3U8Playlist(target);
+        }
+        const pathname = u.pathname.toLowerCase();
+        return pathname.includes('.m3u8') && !pathname.endsWith('.ts') && !pathname.endsWith('.m4s') && !pathname.endsWith('.mp4');
+    } catch (e) {
+        const lower = urlStr.toLowerCase();
+        return lower.includes('.m3u8') && !lower.includes('.ts') && !lower.includes('.m4s') && !lower.includes('.mp4');
+    }
+};
 
 export async function GET(request) {
     const originHeader = request.headers.get('origin');
@@ -155,7 +174,7 @@ export async function GET(request) {
                     const relativeUri = uriMatch[1] || uriMatch[2];
                     try {
                         const absoluteUrl = resolveUrl(relativeUri, decodedUrl);
-                        if (absoluteUrl.includes('.m3u8')) {
+                        if (isM3U8Playlist(absoluteUrl)) {
                             const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
                             const host = request.headers.get('host');
                             const protocol = host.includes('localhost') ? 'http' : 'https';
@@ -179,7 +198,7 @@ export async function GET(request) {
             try {
                 const absoluteUrl = resolveUrl(trimmedLine, decodedUrl);
 
-                if (absoluteUrl.includes('.m3u8')) {
+                if (isM3U8Playlist(absoluteUrl)) {
                     const encodedAbsoluteUrl = Buffer.from(absoluteUrl).toString('base64');
                     const host = request.headers.get('host');
                     const protocol = host.includes('localhost') ? 'http' : 'https';

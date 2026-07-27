@@ -9,8 +9,27 @@ const ALLOWED_DOMAINS = [
     'strmd.st',
     'lola30es.mpipzni2naturally32kistomach.ru',
     'folaplay.com',
-    'cloudfront.net'
+    'cloudfront.net',
+    'icanplay.my.id',
+    'rctiplus.id',
+    'rctiplus.com'
 ];
+
+const isM3U8Playlist = (urlStr) => {
+    try {
+        const u = new URL(urlStr);
+        // If there's a nested 'url' or 'u' parameter, check that instead
+        let target = u.searchParams.get('url') || u.searchParams.get('u') || urlStr;
+        if (target !== urlStr) {
+            return isM3U8Playlist(target);
+        }
+        const pathname = u.pathname.toLowerCase();
+        return pathname.includes('.m3u8') && !pathname.endsWith('.ts') && !pathname.endsWith('.m4s') && !pathname.endsWith('.mp4');
+    } catch (e) {
+        const lower = urlStr.toLowerCase();
+        return lower.includes('.m3u8') && !lower.includes('.ts') && !lower.includes('.m4s') && !lower.includes('.mp4');
+    }
+};
 
 export async function GET(request) {
     const originHeader = request.headers.get('origin');
@@ -109,7 +128,7 @@ return new NextResponse(`Error proxying: ${response.statusText} - ${errText}`, {
         };
 
         // If it's an m3u8 playlist, we need to rewrite the URLs inside it so they also go through our proxy
-        if (contentType.includes('application/vnd.apple.mpegurl') || contentType.includes('application/x-mpegURL') || url.includes('.m3u8')) {
+        if (contentType.includes('application/vnd.apple.mpegurl') || contentType.includes('application/x-mpegURL') || isM3U8Playlist(url)) {
             let text = await response.text();
             
             // Rewrite lines that are not comments or empty (which are URLs)
