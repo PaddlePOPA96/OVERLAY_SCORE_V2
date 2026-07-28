@@ -50,11 +50,14 @@ export default function ThirdTitleOverlay({ data }) {
   const iconData = eventIcons[localData.eventType] || eventIcons.goal
   const imageUrl = localData.playerImg || '/images/default-player.png'
   const displayName = localData.playerName || 'UNKNOWN'
-
   const layoutType = data.layout || 'B'
   let customMarginTop = layoutType === 'Pildun2' ? '190px' : '260px'
 
-  if (layoutType === 'Pildun' || layoutType === 'AFF' || layoutType === 'AFF2') customMarginTop = '100px'
+  if (layoutType === 'Pildun' || layoutType === 'AFF') {
+    customMarginTop = '100px'
+  } else if (layoutType === 'AFF2') {
+    customMarginTop = '240px'
+  }
 
   const overlayScale = (layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.1 : 1) * 1.3
   const isAffLogoDisabled = (layoutType === 'AFF' || layoutType === 'AFF2') && !localData.playerImg
@@ -62,8 +65,8 @@ export default function ThirdTitleOverlay({ data }) {
   const pipaLogoSvg = (color, withImage = false, imgUrl = '') => {
     const clipId = 'logoShape-clip'
 
-
     const isIndoImg = imgUrl && imgUrl.includes('ferihui.my.id/Indonesia')
+
     const imgProps = isIndoImg 
       ? { x: "-10%", y: "0%", width: "120%", height: "120%", preserveAspectRatio: "xMidYMid slice" }
       : { x: "-110%", y: "-2%", width: "320%", height: "320%", preserveAspectRatio: "xMidYMin meet" }

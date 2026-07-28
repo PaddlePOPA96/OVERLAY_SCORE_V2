@@ -127,7 +127,7 @@ return
     }
   }, [x, y, scale, isMounted])
 
-  if (!isMounted) return null
+  if (!isMounted || !isLoaded) return null
 
   // Check if third title is showing to hide main layout
   const isThirdTitleShowing = data?.thirdTitle?.isShowing === true
