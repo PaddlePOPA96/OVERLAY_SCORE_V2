@@ -52,11 +52,17 @@ export default function ThirdTitleOverlay({ data }) {
   const displayName = localData.playerName || 'UNKNOWN'
   const layoutType = data.layout || 'B'
   let customMarginTop = layoutType === 'Pildun2' ? '190px' : '260px'
+  let customLeft = 750
+  let customJustify = 'flex-start'
+  let customPadding = '40px'
 
   if (layoutType === 'Pildun' || layoutType === 'AFF') {
     customMarginTop = '100px'
   } else if (layoutType === 'AFF2') {
-    customMarginTop = '240px'
+    customMarginTop = '340px'
+    customLeft = 0
+    customJustify = 'center'
+    customPadding = '0px'
   }
 
   const overlayScale = (layoutType === 'Pildun2' ? getScale('PILDUN2', data.isPreview) * 1.1 : 1) * 1.3
@@ -67,7 +73,7 @@ export default function ThirdTitleOverlay({ data }) {
 
     const isIndoImg = imgUrl && imgUrl.includes('ferihui.my.id/Indonesia')
 
-    const imgProps = isIndoImg 
+    const imgProps = isIndoImg
       ? { x: "-10%", y: "0%", width: "120%", height: "120%", preserveAspectRatio: "xMidYMid slice" }
       : { x: "-110%", y: "-2%", width: "320%", height: "320%", preserveAspectRatio: "xMidYMin meet" }
 
@@ -104,14 +110,14 @@ export default function ThirdTitleOverlay({ data }) {
       style={{
         position: 'absolute',
         top: 500,
-        left: 750,
+        left: customLeft,
         width: '100%',
         height: '100%',
         display: 'flex',
         alignItems: 'flex-start',
-        justifyContent: 'flex-start',
+        justifyContent: customJustify,
         marginTop: customMarginTop,
-        paddingLeft: '40px',
+        paddingLeft: customPadding,
         pointerEvents: 'none',
         zIndex: 50,
         fontFamily: '"Inter", "Outfit", system-ui, sans-serif',

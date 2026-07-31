@@ -210,34 +210,46 @@ export default function LayoutAFF2({ data, displayTime, formatTime }) {
           >
             {/* SVG Background for Timer Shape */}
             <svg
-              width="576"
+              width="578"
               height="204"
               viewBox="0 0 576 204"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+              style={{
+                position: "absolute",
+                top: -17, // atau -10, -12
+                left: 0,
+                zIndex: 1,
+              }}
             >
-              {/* TIMER SHAPE */}
-              <path d="M235 142 H341 L331 188 H245 Z" fill="#062258" />
+              {/* Timer Background */}
+              <path
+                fill="#23A5CF"
+                d={`
+  M 145 138
+  H 431
+  L 419 198
+  H 157
+  Z
+`}
+              />
             </svg>
 
             {/* Timer Content */}
             <div
               style={{
                 position: 'absolute',
-                left: '236px',
-                top: '148px',
+                left: ' 236px',
+                top: '138px',
                 width: '104px',
                 height: '34px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: 'white',
-                textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+                textShadow: '1px 1px 3px rgba(255, 255, 255, 0.5)',
                 zIndex: 2
               }}
             >
-              <span className="font-['Orbitron'] font-bold" style={{ fontSize: '20px', letterSpacing: '1px' }}>
+              <span className="font-['Poppins'] font-extrabold" style={{ fontSize: '36px', letterSpacing: '1px' }}>
                 {waktuPertandingan}
               </span>
             </div>
@@ -319,6 +331,7 @@ export default function LayoutAFF2({ data, displayTime, formatTime }) {
                   className={`font-['Poppins'] font-extrabold leading-none ${pulseScoreA ? 'score-pulse' : ''}`}
                   style={{ fontSize: '110px' }}
                 >
+
                   {teamLeftScore}
                 </span>
               </div>
@@ -433,8 +446,8 @@ export default function LayoutAFF2({ data, displayTime, formatTime }) {
                   height: '100%',
                   backgroundColor: '#062258', // Dark blue body matching scoreboard
                   transform: goalEvent === 'left' ? 'skewX(-11.5deg) translateX(-100%)' : 'skewX(-11.5deg) translateX(100%)',
-                  animation: goalEvent === 'left' 
-                    ? 'slideGoalLeftToRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards' 
+                  animation: goalEvent === 'left'
+                    ? 'slideGoalLeftToRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards'
                     : 'slideGoalRightToLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                   transformOrigin: goalEvent === 'left' ? 'left top' : 'right top',
                 }}
@@ -451,7 +464,7 @@ export default function LayoutAFF2({ data, displayTime, formatTime }) {
                   }}
                 />
               </div>
-              
+
               {/* GOAL Text Trails */}
               <div
                 style={{
