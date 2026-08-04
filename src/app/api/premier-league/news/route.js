@@ -1,10 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
-import { ref, get, set } from 'firebase/database'
-
-import { db } from '@/services/firebase/db'
-import { verifyIdToken } from '@/services/firebase/admin'
+import { verifyIdToken, adminDb } from '@/services/firebase/admin'
 
 const NEWS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/news'
 
@@ -14,7 +11,7 @@ export async function GET(request) {
     // This allows the dashboard to load news even before user logs in
 
     // Read cached news from Firebase
-    const snapshot = await get(ref(db, 'pl_data/news/articles'))
+    const snapshot = await adminDb.ref('pl_data/news/articles').once('value')
 
     if (!snapshot.exists()) {
       // Fallback logic if empty? or return empty array.
@@ -65,7 +62,7 @@ export async function POST(request) {
     }))
 
     // 3. Save to Firebase
-    await set(ref(db, 'pl_data/news'), {
+    await adminDb.ref('pl_data/news').set({
       lastUpdated: Date.now(),
       articles
     })

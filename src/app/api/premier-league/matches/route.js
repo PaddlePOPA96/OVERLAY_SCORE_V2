@@ -1,12 +1,9 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
-import { ref, set, get } from 'firebase/database'
-
 import { doc, getDoc } from 'firebase/firestore'
 
-import { db } from '@/services/firebase/db'
-import { verifyIdToken } from '@/services/firebase/admin'
+import { verifyIdToken, adminDb } from '@/services/firebase/admin'
 import { dbFirestore } from '@/services/firebase/firestore'
 
 const API_KEY = process.env.FOOTBALL_DATA_API_KEY
@@ -42,7 +39,9 @@ export async function GET(request) {
     }
 
     // 3. Main Logic
-    const url = `${BASE_URL}/competitions/PL/matches`
+    const currentYear = new Date().getFullYear()
+    const seasonYear = new Date().getMonth() >= 6 ? currentYear : currentYear - 1
+    const url = `${BASE_URL}/competitions/PL/matches?season=${seasonYear}`
 
     if (!API_KEY) {
       throw new Error('Configuration Error: Missing FOOTBALL_DATA_API_KEY in server environment')
@@ -69,7 +68,7 @@ export async function GET(request) {
 
       // Simpan snapshot jadwal & hasil ke Firebase di node terpisah dari match_live
       try {
-        await set(ref(db, 'pl_data/matches'), {
+        await adminDb.ref('pl_data/matches').set({
           lastUpdated: Date.now(),
           data
         })
@@ -81,7 +80,7 @@ export async function GET(request) {
       console.warn('[PL] External API failed, attempting fallback to Firebase:', fetchError)
 
       try {
-        const snapshot = await get(ref(db, 'pl_data/matches'))
+        const snapshot = await adminDb.ref('pl_data/matches').once('value')
 
         if (snapshot.exists()) {
           const cached = snapshot.val()

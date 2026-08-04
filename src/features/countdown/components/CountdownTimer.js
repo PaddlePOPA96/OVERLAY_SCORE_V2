@@ -25,7 +25,7 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
   const [fillColor, setFillColor] = useState('transparent')
   const [timerTitle, setTimerTitle] = useState('')
   const [audioVolume, setAudioVolume] = useState(1)
-  const [audioSource, setAudioSource] = useState('/sounds/brr-brr-patapim-alarm-clock.mp3')
+  const [audioSource, setAudioSource] = useState('/ftesounds/brr-brr-patapim-alarm-clock.mp3')
   const [isSoundModalOpen, setIsSoundModalOpen] = useState(false)
 
   const timerPath = `match_live/${roomId}/countdown_timer`
@@ -38,8 +38,8 @@ export default function CountdownTimer({ theme = 'dark', roomId = 'default' }) {
       serverTimeOffsetRef.current = snap.val() || 0
     })
 
-    
-return () => unsubscribe()
+
+    return () => unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -239,14 +239,14 @@ return () => unsubscribe()
       <div className='flex flex-col items-center justify-center mb-8'>
         {timerTitle && (
           <h2
-            className='text-xl sm:text-2xl md:text-3xl font-bold -mb-2 relative z-10 tracking-widest uppercase text-center'
+            className='text-xl sm:text-2xl md:text-3xl font-extrabold font-[family-name:var(--font-poppins)] -mb-2 relative z-10 tracking-widest uppercase text-center'
             style={{ color: timerColor }}
           >
             {timerTitle}
           </h2>
         )}
         <div
-          className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 font-mono w-full ${isDark ? 'text-white' : 'text-slate-900'}`}
+          className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold font-[family-name:var(--font-poppins)] tabular-nums tracking-tight flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mb-2 w-full ${isDark ? 'text-white' : 'text-slate-900'}`}
         >
           <div className='flex flex-col items-center'>
             <span>{timeParts.d}</span>
@@ -489,11 +489,10 @@ return () => unsubscribe()
               </div>
               <button
                 onClick={toggleTransparentBorder}
-                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${
-                  borderColor === 'transparent'
+                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${borderColor === 'transparent'
                     ? 'bg-slate-700 text-slate-200 border-slate-600'
                     : 'bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30'
-                }`}
+                  }`}
               >
                 {borderColor === 'transparent' ? 'Enable Border' : 'Set Transparent'}
               </button>
@@ -516,11 +515,10 @@ return () => unsubscribe()
               </div>
               <button
                 onClick={toggleTransparentFill}
-                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${
-                  fillColor === 'transparent'
+                className={`text-xs px-3 py-1.5 rounded-md font-semibold border transition-colors w-max ${fillColor === 'transparent'
                     ? 'bg-slate-700 text-slate-200 border-slate-600'
                     : 'bg-red-500/20 text-red-400 border-red-500/50 hover:bg-red-500/30'
-                }`}
+                  }`}
               >
                 {fillColor === 'transparent' ? 'Enable Fill' : 'Set Transparent'}
               </button>

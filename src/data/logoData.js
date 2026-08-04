@@ -19,6 +19,9 @@ export const LOGO_DATA = {
   'England - Premier League': [
     'AFC Bournemouth',
     'Arsenal FC',
+    'Hull City AFC',
+    'Ipswich Town',
+    'Coventry City',
     'Aston Villa',
     'Brentford FC',
     'Brighton & Hove Albion',

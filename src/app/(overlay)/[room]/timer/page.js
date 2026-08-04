@@ -189,8 +189,8 @@ return () => unsubscribe()
           borderRadius: '1.5rem',
           padding: '1.25rem 1.5rem',
           boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
-          fontFamily: 'inherit',
-          fontWeight: 900,
+          fontFamily: 'var(--font-poppins), sans-serif',
+          fontWeight: 800,
           letterSpacing: '-0.02em',
           position: 'relative',
           overflow: 'hidden'
@@ -233,7 +233,7 @@ return () => unsubscribe()
       style={{
         color: timerColor,
         fontSize: '5rem',
-        fontWeight: 900,
+        fontWeight: 800,
         lineHeight: 1,
         paddingBottom: '2.8rem',
         opacity: 0.85,
@@ -255,7 +255,7 @@ return () => unsubscribe()
 
       {timerTitle && (
         <h1
-          className='font-black tracking-widest uppercase text-center mb-6 relative z-10'
+          className='font-extrabold font-[family-name:var(--font-poppins)] tracking-widest uppercase text-center mb-6 relative z-10'
           style={{
             fontSize: '2.5rem',
             color: timerColor,
