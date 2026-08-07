@@ -7,6 +7,19 @@ import Image from 'next/image'
 import '@/app/(dashboard)/dashboard/operator/overlay/layoutA.css'
 import { getScale } from './overlay-scale.config'
 
+const getContrastYIQ = (hexcolor) => {
+  if (!hexcolor) return '#ffffff'
+  hexcolor = hexcolor.replace('#', '')
+  if (hexcolor.length === 3) {
+    hexcolor = hexcolor.split('').map(x => x + x).join('')
+  }
+  const r = parseInt(hexcolor.substr(0, 2), 16) || 0
+  const g = parseInt(hexcolor.substr(2, 2), 16) || 0
+  const b = parseInt(hexcolor.substr(4, 2), 16) || 0
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
+  return yiq >= 128 ? '#000000' : '#ffffff'
+}
+
 export default function LayoutA({ data, displayTime, formatTime }) {
   const [showGoal, setShowGoal] = useState(false)
   const [goalTeam, setGoalTeam] = useState('')
@@ -72,6 +85,8 @@ export default function LayoutA({ data, displayTime, formatTime }) {
   const dynamicStyles = {
     '--score-left-color': data.homeColor || '#0040a0',
     '--score-right-color': data.awayColor || '#b00024',
+    '--score-left-text': getContrastYIQ(data.homeColor || '#0040a0'),
+    '--score-right-text': getContrastYIQ(data.awayColor || '#b00024'),
     '--overlay-scale': overlayScale
   }
 
@@ -101,17 +116,54 @@ export default function LayoutA({ data, displayTime, formatTime }) {
 
   return (
     <div id='layout-a-root' style={dynamicStyles}>
+      <style>{`
+        #layout-a-root .layout-a-team-left { color: var(--score-left-text); }
+        #layout-a-root .layout-a-team-right { color: var(--score-right-text); }
+        #layout-a-root .layout-a-team-left .goal-text-anim { color: var(--score-left-text) !important; }
+        #layout-a-root .layout-a-team-right .goal-text-anim { color: var(--score-right-text) !important; }
+      `}</style>
       <div className={`slide16-9 ${animateIn ? 'layout-a-animate-in' : ''} ${isHiding ? 'layout-a-hide' : ''}`}>
-        <div className={`layout-a-board ${showGoal ? 'goal-anim' : ''}`}>
+          <div 
+          className={`layout-a-board ${showGoal ? 'goal-anim' : ''}`}
+          style={{
+            background: 'transparent',
+            borderRadius: '6px'
+          }}
+        >
+          {/* Left Solid Background */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, bottom: 0, width: '50%',
+            background: 'var(--score-left-color)',
+            zIndex: 1,
+            borderRadius: '6px 0 0 6px'
+          }} />
+          
+          {/* Right Solid Background */}
+          <div style={{
+            position: 'absolute', top: 0, right: 0, bottom: 0, width: '50%',
+            background: 'var(--score-right-color)',
+            zIndex: 1,
+            borderRadius: '0 6px 6px 0'
+          }} />
+
+          {/* Middle Gradient Overlay with Custom SVG Zigzag Shape */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+            background: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(90deg, var(--score-left-color) 25.72%, var(--score-right-color) 75.09%)',
+            clipPath: 'polygon(25.72% 0%, 65.67% 0%, 69.2% 22.5%, 65.67% 45%, 75.09% 100%, 35.02% 100%, 28.35% 76.67%, 32.13% 59.17%)',
+            zIndex: 2,
+          }} />
+
           <div
             className={`layout-a-team layout-a-team-left ${
               showGoal && goalTeam === data.homeName ? 'goal-center' : ''
             }`}
+            style={{ zIndex: 3, background: 'transparent' }}
           >
             {renderLeftContent()}
           </div>
 
-          <div className='layout-a-center'>
+          <div className='layout-a-center' style={{ zIndex: 4 }}>
             <div className='layout-a-center-logo'>
               <Image
                 src='/logo/logo-epl.svg'
@@ -146,6 +198,7 @@ export default function LayoutA({ data, displayTime, formatTime }) {
             className={`layout-a-team layout-a-team-right ${
               showGoal && goalTeam === data.awayName ? 'goal-center' : ''
             }`}
+            style={{ zIndex: 3, background: 'transparent' }}
           >
             {renderRightContent()}
           </div>

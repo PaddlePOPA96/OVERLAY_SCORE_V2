@@ -90,6 +90,8 @@
   display: flex;
   align-items: stretch;
   justify-content: space-between;
+  background: linear-gradient(90deg, var(--score-left-color) 25%, var(--score-right-color) 75%);
+  border-radius: 6px;
   filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.55));
   z-index: 2;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -114,15 +116,11 @@
 }
 
 .layout-a-team-left {
-  background: linear-gradient(90deg, var(--score-left-color), #ffffff);
-  border-radius: 6px 0 0 6px;
   justify-content: flex-start;
   padding-left: 40px;
 }
 
 .layout-a-team-right {
-  background: linear-gradient(270deg, var(--score-right-color), #ffffff);
-  border-radius: 0 6px 6px 0;
   justify-content: flex-end;
   padding-right: 40px;
 }
@@ -136,24 +134,24 @@
 }
 
 /* central chevron cuts */
-.layout-a-team-left::after,
-.layout-a-team-right::after {
+.layout-a-team-left::before {
   content: "";
   position: absolute;
-  top: 0;
-  width: 70px;
-  height: 100%;
-  background: inherit;
+  inset: 0;
+  background: var(--score-left-color);
+  border-radius: 6px 0 0 6px;
+  clip-path: polygon(0 0, 60% 0, 45% 50%, 60% 100%, 0 100%);
+  z-index: -1;
 }
 
-.layout-a-team-left::after {
-  right: -35px;
-  clip-path: polygon(0 0, 100% 0, 60% 50%, 100% 100%, 0 100%, 40% 50%);
-}
-
-.layout-a-team-right::after {
-  left: -35px;
-  clip-path: polygon(40% 0, 100% 0, 100% 100%, 40% 100%, 0 50%);
+.layout-a-team-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--score-right-color);
+  border-radius: 0 6px 6px 0;
+  clip-path: polygon(55% 0, 100% 0, 100% 100%, 55% 100%, 40% 50%);
+  z-index: -1;
 }
 
 .layout-a-team-name {
